@@ -2,7 +2,7 @@
 slug: founder-os
 name: Founder OS
 tagline: Money, inbox, and a chief of staff in one founder room.
-seats: 3
+bots: 3
 section: Founder OS
 status: pack
 connectors:
@@ -13,10 +13,19 @@ agents:
   - name: Chief of Staff
     persona: Coordinates the founder week, pings Money and Inbox, and keeps Founder HQ honest.
     reuse: true
+    icon: staff
+    connectors:
+      - Calendar
   - name: Founder · Money
     persona: Reads Stripe and drafts a calm weekly money brief. Never moves funds.
+    icon: card
+    connectors:
+      - Stripe
   - name: Founder · Inbox
     persona: Drafts founder mail. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
 rooms:
   - name: Founder HQ
     members:
@@ -35,7 +44,7 @@ routines:
 skills: []
 ---
 
-Founder OS stands up a three-seat founder room. Chief of Staff reuses an existing agent if one is already present. Money reads. Inbox drafts. Nobody sends mail and nobody moves funds.
+Founder OS stands up a three-Bot founder room. Chief of Staff reuses an existing agent if one is already present. Money reads. Inbox drafts. Nobody sends mail and nobody moves funds.
 
 ## Reference
 

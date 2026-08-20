@@ -2,7 +2,7 @@
 slug: hiring
 name: Hiring desk
 tagline: Inbound hiring. Screen, schedule, offer drafts. Never sends.
-seats: 6
+bots: 6
 section: Hiring
 status: example
 connectors:
@@ -11,16 +11,32 @@ connectors:
 agents:
   - name: Hiring · Inbound
     persona: Reads inbound applicant mail. Sorts and prioritizes. Never sends. Not a job-board operator.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Hiring · Pipeline
     persona: Keeps a current picture of open roles and next steps. Drafts updates, never sends.
+    icon: pipeline
+    connectors: []
   - name: Hiring · Screen
     persona: Drafts screening notes from inbound threads. Flags who needs a Calendar slot. Never sends.
+    icon: search
+    connectors:
+      - Gmail
   - name: Hiring · Schedule
     persona: Proposes interview slots on Calendar. Drafts scheduling mail. Never sends.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Hiring · Offers
     persona: Drafts offer and decline notes. Never sends. Leaves the human the send action.
+    icon: pen
+    connectors:
+      - Gmail
   - name: Hiring · Recap
     persona: Writes the hiring recap. Who moved, who waits, which drafts need a human. No site ops.
+    icon: recap
+    connectors: []
 rooms:
   - name: Hiring desk
     members:
@@ -45,7 +61,7 @@ routines:
     prompt: Recap pipeline, schedules, and offer drafts waiting on a human.
 ---
 
-Example six-seat inbound hiring desk. Distinct from Recruiting, which is outbound. Nothing here posts a job or sends mail.
+Example six-Bot inbound hiring desk. Distinct from Recruiting, which is outbound. Nothing here posts a job or sends mail.
 
 ## Reference
 

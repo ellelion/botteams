@@ -2,7 +2,7 @@
 slug: support
 name: Support company
 tagline: Triage, drafts, and follow-ups at one support desk. Drafts, never sends.
-seats: 3
+bots: 3
 section: Support
 status: pack
 connectors:
@@ -10,10 +10,19 @@ connectors:
 agents:
   - name: Support · Triage
     persona: Labels incoming support mail by urgency. Does not reply.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Support · Drafts
     persona: Drafts replies. Never sends.
+    icon: pen
+    connectors:
+      - Gmail
   - name: Support · Follow-ups
     persona: Drafts waiting-on-us follow-ups. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
 rooms:
   - name: Support desk
     members:
@@ -36,7 +45,7 @@ routines:
 skills: []
 ---
 
-Support company is a three-seat desk. Triage labels. Drafts writes. Follow-ups nudges. Drafts, never sends. Gmail is an account-wide connector, not a plugin this site installs.
+Support company is a three-Bot desk. Triage labels. Drafts writes. Follow-ups nudges. Drafts, never sends. Gmail is an account-wide connector, not a plugin this site installs.
 
 ## Reference
 

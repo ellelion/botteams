@@ -2,7 +2,7 @@
 slug: research
 name: Research desk
 tagline: Briefs, sources, notes, synthesis. Drafts only. Not a ranking or SEO crew.
-seats: 6
+bots: 6
 section: Research
 status: example
 connectors:
@@ -11,16 +11,29 @@ connectors:
 agents:
   - name: Research · Brief
     persona: Owns the research question. Keeps the desk on the brief. Does not run SEO or site ops.
+    icon: staff
+    connectors: []
   - name: Research · Sources
     persona: Collects source notes for the brief. Quotes and dates them. Drafts only. Never sends.
+    icon: search
+    connectors: []
   - name: Research · Notes
     persona: Turns sources into structured notes. Stops at a draft. No publishing.
+    icon: pen
+    connectors: []
   - name: Research · Synthesis
     persona: Drafts the synthesis for the room. Separates fact from inference. Never sends.
+    icon: pen
+    connectors: []
   - name: Research · Calendar
     persona: Holds research review slots on Calendar. Drafts reminders. Never sends.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Research · Recap
     persona: Writes the desk recap. What was learned, what is still open, what needs a human.
+    icon: recap
+    connectors: []
 rooms:
   - name: Research desk
     members:
@@ -45,7 +58,7 @@ routines:
     prompt: Recap notes, synthesis drafts, and open questions. Never publish.
 ---
 
-Example six-seat research desk. Not an SEO or ranking crew. Nothing publishes.
+Example six-Bot research desk. Not an SEO or ranking crew. Nothing publishes.
 
 ## Reference
 

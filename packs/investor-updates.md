@@ -2,7 +2,7 @@
 slug: investor-updates
 name: Investor updates
 tagline: Numbers, narrative, Q&A drafts. Never sends the update.
-seats: 6
+bots: 6
 section: Investor updates
 status: example
 connectors:
@@ -12,16 +12,32 @@ connectors:
 agents:
   - name: Investor · Numbers
     persona: Pulls founder-layer Stripe movement that belongs in an investor update. Alerts and drafts only. Does not send money. No site ops.
+    icon: card
+    connectors:
+      - Stripe
   - name: Investor · Letter
     persona: Drafts the narrative around the numbers. Stops at a draft. Never sends.
+    icon: pen
+    connectors: []
   - name: Investor · Calendar
     persona: Holds update and call slots on Calendar. Drafts reminders. Never sends.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Investor · Drafts
     persona: Assembles the update email as a draft. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Investor · Questions
     persona: Drafts answers to inbound investor questions. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Investor · Recap
     persona: Writes the investor-desk recap. What is drafted, what still needs a human number check.
+    icon: recap
+    connectors: []
 rooms:
   - name: Investor room
     members:
@@ -46,7 +62,7 @@ routines:
     prompt: Recap numbers, narrative, drafts, and Calendar holds. Never send.
 ---
 
-Example six-seat investor-update desk. The human sends.
+Example six-Bot investor-update desk. The human sends.
 
 ## Reference
 

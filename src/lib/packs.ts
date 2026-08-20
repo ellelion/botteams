@@ -1,41 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-
-export type PackAgent = {
-  name: string;
-  persona: string;
-  reuse?: boolean;
-};
-
-export type PackRoom = {
-  name: string;
-  members: string[];
-};
-
-export type PackRoutine = {
-  name: string;
-  owner: string;
-  schedule: string;
-  prompt: string;
-};
-
-export type PackStatus = "pack" | "example";
-
-export type Pack = {
-  slug: string;
-  name: string;
-  tagline: string;
-  seats: number;
-  section: string;
-  status: PackStatus;
-  connectors: string[];
-  agents: PackAgent[];
-  rooms: PackRoom[];
-  routines: PackRoutine[];
-  skills: string[];
-  body: string;
-};
+import type { Pack, PackAgent, PackRoom, PackRoutine } from "@/lib/types";
+export type { Pack, PackAgent, PackRoom, PackRoutine, PackStatus } from "@/lib/types";
+export { isExample, isVerified } from "@/lib/types";
 
 const PACKS_DIR = path.join(process.cwd(), "packs");
 
@@ -46,18 +14,26 @@ function asStringArray(value: unknown, field: string): string[] {
   return value;
 }
 
-function asAgents(value: unknown): PackAgent[] {
+function asAgents(value: unknown, packConnectors: string[]): PackAgent[] {
   if (!Array.isArray(value) || value.length === 0) {
     throw new Error("agents must be a non-empty array");
   }
+  const allowed = new Set(packConnectors.map((name) => name.trim()));
   return value.map((item, i) => {
     if (!item || typeof item !== "object") throw new Error(`agents[${i}] is invalid`);
     const row = item as Record<string, unknown>;
     if (typeof row.name !== "string" || typeof row.persona !== "string") {
       throw new Error(`agents[${i}] needs name and persona`);
     }
-    const agent: PackAgent = { name: row.name, persona: row.persona };
+    const connectors = row.connectors === undefined ? [] : asStringArray(row.connectors, `agents[${i}].connectors`);
+    for (const name of connectors) {
+      if (!allowed.has(name)) {
+        throw new Error(`agents[${i}] connector "${name}" is not in pack connectors`);
+      }
+    }
+    const agent: PackAgent = { name: row.name, persona: row.persona, connectors };
     if (row.reuse === true) agent.reuse = true;
+    if (typeof row.icon === "string" && row.icon.trim()) agent.icon = row.icon.trim();
     return agent;
   });
 }
@@ -72,7 +48,9 @@ function asRooms(value: unknown): PackRoom[] {
     if (typeof row.name !== "string") throw new Error(`rooms[${i}] needs name`);
     const members = asStringArray(row.members, `rooms[${i}].members`);
     if (members.length === 0) throw new Error(`rooms[${i}].members is empty`);
-    if (members.length > 6) throw new Error(`rooms[${i}] exceeds the 6-seat cap`);
+    if (members.length < 2 || members.length > 6) {
+      throw new Error(`rooms[${i}] must have two to six Bots`);
+    }
     return { name: row.name, members };
   });
 }
@@ -109,20 +87,27 @@ export function parsePack(raw: string, filename: string): Pack {
   }
   if (typeof data.name !== "string") throw new Error(`${filename}: missing name`);
   if (typeof data.tagline !== "string") throw new Error(`${filename}: missing tagline`);
-  if (typeof data.seats !== "number") throw new Error(`${filename}: missing seats`);
+  const bots = typeof data.bots === "number" ? data.bots : data.seats;
+  if (typeof bots !== "number") throw new Error(`${filename}: missing bots`);
   if (typeof data.section !== "string") throw new Error(`${filename}: missing section`);
   if (data.status !== "pack" && data.status !== "example") {
     throw new Error(`${filename}: status must be pack or example`);
   }
+  const connectors = asStringArray(data.connectors, "connectors");
+  const agents = asAgents(data.agents, connectors);
+  const union = new Set<string>();
+  for (const agent of agents) for (const name of agent.connectors) union.add(name);
+  const merged = connectors.slice();
+  for (const name of union) if (!merged.includes(name)) merged.push(name);
   return {
     slug: data.slug,
     name: data.name,
     tagline: data.tagline,
-    seats: data.seats,
+    bots,
     section: data.section,
     status: data.status,
-    connectors: asStringArray(data.connectors, "connectors"),
-    agents: asAgents(data.agents),
+    connectors: merged,
+    agents,
     rooms: asRooms(data.rooms),
     routines: asRoutines(data.routines),
     skills: data.skills === undefined ? [] : asStringArray(data.skills, "skills"),
@@ -142,6 +127,3 @@ export function getPack(slug: string): Pack | null {
   return listPacks().find((pack) => pack.slug === slug) ?? null;
 }
 
-export function isExample(pack: Pack): boolean {
-  return pack.status === "example";
-}
