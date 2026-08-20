@@ -52,7 +52,7 @@ export default async function Image() {
               color: ledger.oxblood,
             }}
           >
-            COMPANY PACKS FOR GROK BOT
+            COMPANY TEAMS FOR GROK BOT
           </div>
           <div style={{ display: "flex", fontSize: 148, marginTop: 12 }}>
             <span>Grok Bot Teams</span>

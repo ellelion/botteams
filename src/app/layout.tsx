@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Fraunces, Outfit } from "next/font/google";
 import "./globals.css";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { createThemeBootstrapScript } from "@/lib/theme";
 
 const outfit = Outfit({ variable: "--font-outfit", subsets: ["latin"], weight: ["300", "400", "500", "600"] });
+const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], weight: ["300", "400", "500", "600"], style: ["normal", "italic"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -24,9 +25,9 @@ function JsonLd({ data }: { data: object }) {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-theme="light" suppressHydrationWarning className={`${outfit.variable} h-full antialiased`}>
+    <html lang="en" data-theme="light" suppressHydrationWarning className={`${outfit.variable} ${fraunces.variable} h-full antialiased`}>
       <head>
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#fcfcfb" />
         <script dangerouslySetInnerHTML={{ __html: createThemeBootstrapScript() }} />
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd()} />

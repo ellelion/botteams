@@ -10,6 +10,7 @@ import { VerifiedChip } from "@/components/VerifiedChip";
 import { BotIcon, PackIcon } from "@/components/icons/LineIcons";
 import { botIconKey, sectionSlug } from "@/lib/bot-icon";
 import { installerPrompt } from "@/lib/installer";
+import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { isExample, isVerified, type Pack } from "@/lib/types";
 
@@ -93,17 +94,17 @@ export function PackIndex({
     if (next === "all") usp.delete("section");
     else usp.set("section", next);
     const qs = usp.toString();
-    router.replace(qs ? `${pathname}?${qs}#packs` : `${pathname}#packs`, { scroll: false });
+    router.replace(qs ? `${pathname}?${qs}#teams` : `${pathname}#teams`, { scroll: false });
   }
 
   return (
-    <section id="packs" className="mt-4">
+    <section id="teams">
       <div className="stats-row">
         <div className="stat">
-          <p className="stat-label">Packs added</p>
+          <p className="stat-label">Teams added</p>
           <p className="stat-value">{addedN}</p>
           <p className="stat-note">
-            From git history of packs/*.md
+            From git history of team files
             {peak ? `. ${peak.count} on ${peak.date}` : ""}.
           </p>
           <Sparkline series={added} className="stat-spark" />
@@ -117,13 +118,13 @@ export function PackIndex({
           <p className="stat-label">Shelf</p>
           <p className="stat-value">{packs.length}</p>
           <p className="stat-note">
-            {packs.length} packs · Verified {verifiedOn}
+            {packs.length} teams · Verified {verifiedOn}
           </p>
         </div>
       </div>
 
       <label className="search-wrap">
-        <span className="sr-only">Search packs</span>
+        <span className="sr-only">Search teams</span>
         <input
           className="search-input"
           type="search"
@@ -134,9 +135,9 @@ export function PackIndex({
       </label>
 
       <div className="apd-shell">
-        <aside className="cat-rail" aria-label="Pack categories">
+        <aside className="cat-rail" aria-label="Team categories">
           <button type="button" className={`cat-item${sectionParam === "all" ? " is-on" : ""}`} onClick={() => setSection("all")}>
-            <span>All packs</span>
+            <span>All teams</span>
             <span>{packs.length}</span>
           </button>
           {categories.map(([name, count]) => {
@@ -153,7 +154,7 @@ export function PackIndex({
         <div>
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="eyebrow">{filtered.length} packs</p>
+              <p className="eyebrow">{filtered.length} teams</p>
               <h2 className="section-title">{en.home.indexTitle}</h2>
             </div>
             <div className="filter-bar">
@@ -228,7 +229,7 @@ function PackExpandable({
   return (
     <article className={`${shellClass}${open ? " is-open" : ""}`}>
       <div className="index-head" onClick={onToggle} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onToggle(); } }}>
-        <button type="button" className="chevron" aria-expanded={open} aria-label={open ? "Collapse pack" : "Expand pack"} onClick={(e) => { e.stopPropagation(); onToggle(); }}>
+        <button type="button" className="chevron" aria-expanded={open} aria-label={open ? "Collapse team" : "Expand team"} onClick={(e) => { e.stopPropagation(); onToggle(); }}>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
             <path d={open ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"} />
           </svg>
@@ -236,11 +237,11 @@ function PackExpandable({
         <PackIcon slug={pack.slug} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <Link href={`/packs/${pack.slug}`} className="index-name" onClick={(e) => e.stopPropagation()}>
+            <Link href={`/teams/${pack.slug}`} className="index-name" onClick={(e) => e.stopPropagation()}>
               {pack.name}
             </Link>
             <span className="pack-card-meta">{pack.section}</span>
-            <span className="pack-card-meta">{pack.bots} bots</span>
+            <span className="pack-card-meta">{`${pack.bots} bots`}</span>
             {copies > 0 ? <span className="pack-card-meta">{copies} copies</span> : <span className="pack-card-meta">0 copies</span>}
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -254,15 +255,15 @@ function PackExpandable({
       </div>
       {open ? (
         <div className="index-body" onClick={(e) => e.stopPropagation()}>
-          <p className="text-[0.92rem] leading-relaxed" style={{ color: "var(--muted)" }}>{pack.tagline}</p>
+          <p className="text-[0.92rem] leading-relaxed" style={{ color: ledger.inkFaint }}>{pack.tagline}</p>
           <ul className="mt-4">
             {pack.agents.map((agent) => (
               <li key={agent.name} className="bot-row">
                 <div className="flex gap-3">
                   <BotIcon name={botIconKey(agent)} />
                   <div className="min-w-0">
-                    <p className="font-medium tracking-[-0.02em]">{agent.name}</p>
-                    <p className="mt-1 text-[0.88rem] leading-relaxed" style={{ color: "var(--muted)" }}>{agent.persona}</p>
+                    <p className="font-display" style={{ fontFamily: ledger.serif }}>{agent.name}</p>
+                    <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{agent.persona}</p>
                     {agent.connectors.length > 0 ? (
                       <div className="mt-2">
                         <ConnectorRow names={agent.connectors} labeled size={16} />

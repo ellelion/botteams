@@ -38,7 +38,7 @@ export function CopyInstallerButton({
   }
 
   return (
-    <button type="button" className="btn-primary" onClick={onCopy}>
+    <button type="button" className="theme-control theme-control-label" onClick={onCopy}>
       {failed ? en.pack.copyFail : copied ? en.pack.copied : en.pack.copy}
     </button>
   );

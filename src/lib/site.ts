@@ -4,14 +4,14 @@ export const site = {
   verifiedOn: "2026-08-21",
   title: "Install a Grok Bot team, not a bot · Grok Bot Teams",
   description:
-    "Public shelf of company packs for Grok Bot. Copy one installer prompt, paste it into Grok Bot, and stand up a named team. Operated by Ellelion LLC. Not affiliated with xAI.",
+    "Public shelf of company teams for Grok Bot. Copy one installer prompt, paste it into Grok Bot, and stand up a named team. Operated by Ellelion LLC. Not affiliated with xAI.",
   url: "https://grokbotteams.ai",
   company: "Ellelion LLC",
   email: "info@ellelion.com",
   github: "https://github.com/ellelion/botteams",
   typeInDomain: "grokbotteam.ai",
   entity:
-    "Grok Bot Teams is a public shelf of company packs for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
+    "Grok Bot Teams is a public shelf of company teams for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
   sisters: [
     { name: "ellelion.com", href: "https://ellelion.com" },
     { name: "skillselion.com", href: "https://skillselion.com" },

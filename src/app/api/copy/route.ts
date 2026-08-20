@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
   if (!/^[a-z0-9-]+$/.test(slug) || !knownSlug(slug)) {
-    return NextResponse.json({ error: "Unknown pack" }, { status: 400 });
+    return NextResponse.json({ error: "Unknown team" }, { status: 400 });
   }
   const counts = incrementCopy(slug);
   return NextResponse.json({ slug, count: counts.bySlug[slug] ?? 0, total: counts.total, bySlug: counts.bySlug });

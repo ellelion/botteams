@@ -9,7 +9,7 @@ export function installerPrompt(pack: Pack): string {
         : "Create this Bot. Use the name exactly.";
       const connectors = agent.connectors.length
         ? `Uses connectors (already on the account): ${agent.connectors.join(", ")}`
-        : "No pack connectors assigned to this Bot.";
+        : "No team connectors assigned to this Bot.";
       return [`### ${agent.name}`, reuse, connectors, "", "Job:", agent.persona].join("\n");
     })
     .join("\n\n");
@@ -32,7 +32,7 @@ export function installerPrompt(pack: Pack): string {
     : "(none listed. Skills cannot be attached at create time anyway.)";
 
   const exampleBanner = pack.status === "example"
-    ? ["NOTE: This is an EXAMPLE pack from the public shelf. Use it to learn the format.", "Do not treat it as a production company recipe.", ""]
+    ? ["NOTE: This is an EXAMPLE team from the public shelf. Use it to learn the format.", "Do not treat it as a production company recipe.", ""]
     : [];
 
   return [
@@ -44,7 +44,7 @@ export function installerPrompt(pack: Pack): string {
     "",
     `Catalog: ${site.url}`,
     `Source: ${site.github}`,
-    `Pack: ${pack.name} (${pack.slug})`,
+    `Team: ${pack.name} (${pack.slug})`,
     `Bots: ${pack.bots}`,
     `Sidebar section name: ${pack.section}`,
     "",
