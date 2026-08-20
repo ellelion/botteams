@@ -1,22 +1,473 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --color-canvas: #f7f7f5;
-  --color-ink: #1a1a18;
-  --color-mute: #6b6b66;
-  --color-line: #e8e8e3;
-  --color-card: #ffffff;
+/* ── Ledger design system tokens ── */
+:root {
+  color-scheme: light;
+  --page: #fcfcfb;
+  --surface: #f3f3f1;
+  --ink: #111111;
+  --ink-soft: #4b4b4b;
+  --muted: #686868;
+  --muted-strong: #565656;
+  --line: #d8d8d5;
+  --line-strong: #b9b9b4;
+  --leader: #c7c7c2;
+  --accent: #0891b2;
+  --accent-text: #097e9a;
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
+  --on-accent: #f5f5f3;
+  --status-live: #2e7d43;
+  --parchment: var(--page);
+  --parchment-deep: var(--surface);
+  --ink-muted: var(--ink-soft);
+  --ink-faint: var(--muted);
+  --oxblood: var(--accent);
+  --oxblood-soft: var(--accent-soft);
+  --green: var(--status-live);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #101010;
+  --surface: #191919;
+  --ink: #f5f5f3;
+  --ink-soft: #c7c7c2;
+  --muted: #999994;
+  --muted-strong: #b1b1ac;
+  --line: #30302e;
+  --line-strong: #555550;
+  --leader: #4a4a46;
+  --accent-text: #0891b2;
+  --status-live: #75c78a;
+}
+
+@theme inline {
+  --color-parchment: var(--page);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-soft);
+  --color-ink-faint: var(--muted);
+  --color-oxblood: var(--accent);
+  --color-line: var(--line);
+  --font-sans: var(--font-outfit);
+  --font-display: var(--font-fraunces);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 html {
-  background: var(--color-canvas);
-  color: var(--color-ink);
+  scroll-behavior: smooth;
+  background: var(--page);
+  color: var(--ink);
 }
 
 body {
-  font-family: var(--font-sans);
-  background: var(--color-canvas);
-  color: var(--color-ink);
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-outfit), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+[id$="-heading"] {
+  scroll-margin-top: calc(var(--masthead-h) + 16px);
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.accent-text {
+  color: var(--accent-text);
+}
+
+.accent-hover:hover,
+.accent-hover:focus-visible {
+  color: var(--accent-text);
+}
+
+.accent-surface-hover:hover,
+.accent-surface-hover:focus-visible {
+  background: var(--accent-soft);
+}
+
+/* The masthead rides along at every width. Anything else that pins
+   (section labels, the homepage index) offsets by --masthead-h so it
+   lands underneath instead of colliding. Keep the two in sync if the
+   padding changes. */
+:root {
+  --masthead-h: 62px;
+}
+
+.site-masthead {
+  position: sticky;
+  top: 0;
+  /* Above main's z-10, so the accent popover paints (and clicks) over the
+     index rows instead of tying with them and losing on DOM order. */
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  /* Opaque, so the page scrolls under it and not through it. */
+  background: var(--page);
+  color: var(--muted);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.site-masthead-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.site-masthead-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Small screens keep the masthead on ONE row. It stays a masthead, not a
+   stacked menu. Everything shrinks instead of wrapping. */
+@media (max-width: 640px) {
+  :root {
+    --masthead-h: 56px;
+  }
+
+  .site-masthead {
+    gap: 10px;
+    font-size: 0.55rem;
+    letter-spacing: 0.16em;
+  }
+
+  .site-masthead-actions {
+    gap: 10px;
+  }
+
+  .site-masthead-nav {
+    gap: 13px;
+  }
+}
+
+:where(a, button):focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+}
+
+.font-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+
+.theme-controls { display: inline-flex; gap: 6px; flex: none; }
+.theme-accent-picker { position: relative; display: inline-flex; }
+.theme-control {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; padding: 0;
+  border: 1px solid var(--line-strong); background: transparent;
+  color: var(--ink); cursor: pointer; font: 500 14px/1 var(--font-outfit);
+  transition: border-color .14s ease, background .14s ease;
+}
+.theme-control:hover { border-color: var(--accent); background: var(--surface); }
+.theme-accent-dot { width: 13px; height: 13px; background: var(--accent); }
+.theme-accent-popover {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 80;
+  display: grid; grid-template-columns: repeat(6, 22px); gap: 6px;
+  padding: 10px; background: var(--page); border: 1px solid var(--line);
+  box-shadow: 0 14px 36px -22px color-mix(in srgb, var(--ink) 45%, transparent);
+}
+.theme-accent-swatch {
+  width: 22px; height: 22px; padding: 0; border: 1px solid var(--line-strong);
+  cursor: pointer; transition: transform .1s ease;
+}
+.theme-accent-swatch:hover { transform: scale(1.1); }
+
+/* Text CTA variant: same chrome as .theme-control, auto width so labels
+   like "Copy installer prompt" are a real button, not a 34px square. */
+.theme-control-label {
+  width: auto;
+  height: 34px;
+  padding: 0 14px;
+  font: 500 0.6rem/1 var(--font-outfit);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Phone-sized controls. Must live AFTER the base .theme-control rule above:
+   same specificity, so source order decides the winner. This also sets the
+   masthead's height, which --masthead-h mirrors. */
+@media (max-width: 640px) {
+  .theme-control {
+    width: 28px;
+    height: 28px;
+  }
+
+  .theme-control-label {
+    width: auto;
+    height: 28px;
+    padding: 0 12px;
+  }
+
+  .theme-accent-popover {
+    grid-template-columns: repeat(4, 22px);
+  }
+}
+.theme-accent-swatch.is-selected { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/*
+ * Entrance + status motion. CSS-only, so content is server-rendered and
+ * VISIBLE without JavaScript. Elements default to opacity:1; the reveal is a
+ * pure-CSS enhancement that only runs when motion is welcome. If CSS fails,
+ * the animation is skipped, or the user prefers reduced motion, the content
+ * simply shows in its final (visible) state. Never a blank page.
+ */
+@keyframes ledger-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ledger-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ledger-anim {
+    animation: ledger-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .ledger-pulse {
+    animation: ledger-pulse 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes cue-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cue-bob {
+    display: inline-block;
+    animation: cue-bob 1.7s ease-in-out infinite;
+  }
+
+  @supports (animation-timeline: view()) {
+    .story-reveal {
+      animation: ledger-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}
+
+/* Character cascade for the hero eyebrow: letters resolve out of a blur,
+   the same blur-to-sharp gesture the wings emblem uses. Default state is
+   fully visible, so no-JS, failed-CSS, and reduced-motion all show plain
+   text rather than an empty line. */
+@keyframes reveal-char {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-char {
+    animation: reveal-char 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+/* Phones read the homepage as one idea per screen: each beat is a viewport
+   panel with a gentle snap stop. `proximity`, not `mandatory`. Mandatory
+   fights the user on long pages and traps flick-scrolls. Phones only; the
+   desktop split-screen wants a continuous column beside the pinned index. */
+@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+
+  .story-beat {
+    scroll-snap-align: start;
+    scroll-margin-top: var(--masthead-h);
+  }
+}
+
+/* Wings emblem: blurred at rest, HD crossfades in on hover. */
+.wings-emblem .wings-hd,
+.wings-emblem .wings-blur {
+  transition: opacity 0.5s ease;
+}
+.wings-emblem .wings-hd {
+  opacity: 0;
+}
+.wings-emblem:hover .wings-hd,
+.wings-emblem:focus-visible .wings-hd {
+  opacity: 1;
+}
+.wings-emblem:hover .wings-blur,
+.wings-emblem:focus-visible .wings-blur {
+  opacity: 0;
+}
+
+/* Theme-adaptive emblem: white wings on dark theme, black wings on light.
+   Crawlers and no-JS clients (no data-theme) get the light set. */
+html[data-theme="dark"] .wings-on-light {
+  display: none;
+}
+html:not([data-theme="dark"]) .wings-on-dark {
+  display: none;
+}
+
+/* Late-mounted wings fade up to whatever opacity their variant sets: a
+   single-keyframe animation interpolates from 0 to the computed value. */
+@keyframes wings-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.wings-video-fade {
+  animation: wings-fade-in 1.2s ease both;
+}
+
+/* Wings background video: blend modes dissolve the clip's own background
+   (screen eats black on the dark theme, multiply eats white on the light
+   theme), so only the wings themselves ghost through behind the hero. */
+.wings-video {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+/* Poster and video stack dead-centre via transform. Grid-cell centering
+   resolved their percentage widths against a circularly-sized track and
+   drifted them left of centre at some viewports. Both share the width
+   rules below, so their boxes stay identical (the LCP contract). */
+.wings-video > * {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.wings-video video,
+.wings-video img.wings-poster {
+  /* Small enough that the full wings always sit inside the frame; the
+     blend mode dissolves the clip's own background, so the wings stay
+     sharp. Only a whisper of edge softening. */
+  width: min(72vh, 44vw);
+  height: auto;
+  opacity: 0.1;
+  /* Radii sized so the fade genuinely reaches the element edges. The
+     source footage lets wing tips touch its frame, and this dissolves
+     that boundary at every moment of the loop. */
+  -webkit-mask-image: radial-gradient(ellipse 56% 56% at 50% 50%, #000 62%, transparent 96%);
+  mask-image: radial-gradient(ellipse 56% 56% at 50% 50%, #000 62%, transparent 96%);
+}
+html[data-theme="dark"] .wings-video video,
+html[data-theme="dark"] .wings-video img.wings-poster {
+  mix-blend-mode: screen;
+}
+html:not([data-theme="dark"]) .wings-video video,
+html:not([data-theme="dark"]) .wings-video img.wings-poster {
+  mix-blend-mode: multiply;
+}
+/* Poster hands off to the video once it mounts. */
+.wings-video img.wings-poster {
+  transition: opacity 1.2s ease;
+}
+.wings-video.wings-live img.wings-poster {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* The still poster stays; only the motion goes. The component also
+     skips fetching the video entirely under reduced motion. */
+  .wings-video video {
+    display: none;
+  }
+}
+
+/* The homepage composition's wings loop: overrides the base
+   width / opacity pair. The mask and blend modes stay identical. */
+.wings-video--altar video,
+.wings-video--altar img.wings-poster {
+  width: min(62vh, 88%);
+  opacity: 0.18;
+}
+
+/* Pack / docs markdown body: inherit the Ledger type, not a blob of raw HTML. */
+.pack-prose h2,
+.pack-prose h3 {
+  margin-top: 1.75rem;
+  color: var(--accent-text);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+.pack-prose p + p {
+  margin-top: 1rem;
+}
+.pack-prose a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.pack-prose a:hover,
+.pack-prose a:focus-visible {
+  color: var(--accent-text);
+}
+.pack-prose ul {
+  margin-top: 0.75rem;
+  padding-left: 1.1rem;
+}
+.pack-prose li + li {
+  margin-top: 0.35rem;
+}
+.pack-prose code {
+  font-family: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, "Cascadia Code", monospace;
+  font-size: 0.85em;
+}
+
+.installer-prompt {
+  max-height: 24rem;
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.hairline-row + .hairline-row {
+  border-top: 1px solid var(--line);
 }

@@ -3,7 +3,7 @@ import { RevealText } from "@/components/home/RevealText";
 import { WingsVideo } from "@/components/home/WingsVideo";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
-import { sponsorSlots } from "../../data/sponsors";
+import { sponsorSlots } from "@/data/sponsors";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import type { Pack } from "@/lib/packs";
@@ -21,7 +21,7 @@ export function HomePage({ packs }: { packs: Pack[] }) {
         </div>
         <div className="relative z-10 col-start-1 row-start-1 grid grid-cols-1 lg:border-r" style={{ borderColor: ledger.hairline }}>
           <div className="col-start-1 row-start-1 min-w-0 lg:pr-16">
-            <section className="story-beat relative flex min-h-[calc(100dvh-var(--masthead-h))] flex-col items-center justify-center py-10 text-center">
+            <section className="story-beat relative flex min-h-[calc(100dvh-var(--masthead-h))] flex-col items-center justify-center py-10 pb-20 text-center">
               <div className="relative z-10">
                 <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>
                   <RevealText text={en.eyebrow} delay={0.05} step={0.016} className="block" />
@@ -32,14 +32,11 @@ export function HomePage({ packs }: { packs: Pack[] }) {
                 <p className="ledger-anim mx-auto mt-6 max-w-md text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft, animationDelay: "0.75s" }}>
                   {en.answer}
                 </p>
-                <p className="ledger-anim mx-auto mt-4 max-w-md text-[0.82rem] leading-relaxed" style={{ color: ledger.inkFaint, animationDelay: "0.9s" }}>
-                  {en.entity}
-                </p>
-                <p className="ledger-anim mx-auto mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label, animationDelay: "1.05s" }}>
+                <p className="ledger-anim mx-auto mt-4 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label, animationDelay: "0.95s" }}>
                   {en.verified} <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
                 </p>
               </div>
-              <a href="#packs" className="accent-hover ledger-anim absolute bottom-5 left-1/2 z-10 inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap text-[0.6rem] uppercase tracking-[0.22em] transition-colors lg:bottom-4" style={{ color: ledger.inkFaint, animationDelay: "1.2s" }}>
+              <a href="#packs" className="accent-hover ledger-anim absolute bottom-5 left-1/2 z-10 inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap text-[0.6rem] uppercase tracking-[0.22em] transition-colors lg:bottom-4" style={{ color: ledger.inkFaint, animationDelay: "1.15s" }}>
                 {en.home.scrollCue} <span className="cue-bob" aria-hidden>↓</span>
               </a>
             </section>
@@ -49,13 +46,16 @@ export function HomePage({ packs }: { packs: Pack[] }) {
               <p className="mt-4 text-[0.78rem] leading-relaxed" style={{ color: ledger.inkFaint }}>{en.home.typeIn}</p>
               <h2 className="mt-12 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.home.sponsorsTitle}</h2>
               <p className="mt-3 text-[0.78rem]" style={{ color: ledger.inkFaint }}>{en.home.sponsorsNote}</p>
-              <ul className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-5">
-                {sponsorSlots.map((slot) => (
-                  <li key={slot.id} className="border px-2 py-3 text-[0.55rem] uppercase tracking-[0.16em]" style={{ borderColor: ledger.hairline, color: ledger.label, fontFamily: ledger.mono }}>
-                    {slot.id} · {slot.label}
-                  </li>
+              <p className="mt-4 border-y py-3 text-[0.55rem] uppercase tracking-[0.16em]" style={{ borderColor: ledger.hairline, color: ledger.label, fontFamily: ledger.mono }}>
+                {sponsorSlots.map((slot, i) => (
+                  <span key={slot.id}>
+                    {i > 0 ? " · " : null}
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                 ))}
-              </ul>
+                {" · "}
+                {en.home.available}
+              </p>
             </section>
           </div>
         </div>

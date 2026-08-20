@@ -19,7 +19,7 @@ export function CopyInstallerButton({ text }: { text: string }) {
   }
 
   return (
-    <button type="button" className="theme-control" style={{ width: "auto", padding: "0 12px" }} onClick={onCopy}>
+    <button type="button" className="theme-control theme-control-label" onClick={onCopy}>
       {failed ? en.pack.copyFail : copied ? en.pack.copied : en.pack.copy}
     </button>
   );
