@@ -8,9 +8,9 @@ import { site } from "@/lib/site";
 export function SiteMasthead() {
   return (
     <header className="site-masthead">
-      <Link href="/" className="accent-hover inline-flex items-center gap-2" aria-label={en.nav.homeAria}>
-        <WingsMark size={44} layoutSize={18} priority />
-        <span className="hidden sm:inline">{en.wordmark}</span>
+      <Link href="/" className="site-wordmark accent-hover inline-flex shrink-0 items-center gap-2" aria-label={en.nav.homeAria}>
+        <WingsMark size={36} layoutSize={18} priority />
+        <span>{en.wordmark}</span>
       </Link>
       <div className="site-masthead-actions">
         <nav className="site-masthead-nav" aria-label={en.nav.mainAria}>
