@@ -18,6 +18,7 @@ export function SiteFooter() {
           </span>
         ))}
       </p>
+      <p>Operated by {site.company}. Not affiliated with xAI.</p>
     </footer>
   );
 }

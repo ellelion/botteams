@@ -6,7 +6,7 @@ export const en = {
   h1: "Install a Grok Bot team, not a bot.",
   eyebrow: "Company packs for Grok Bot",
   answer:
-    "Grok Bot Teams is a public shelf of company packs for Grok Bot. Copy one installer prompt, paste it into Grok Bot, and stand up a named team: agents, a room, a sidebar section, and routines the human confirms. No accounts on this site. No plugin API. No one-click OAuth. Operated by Ellelion LLC. Not affiliated with xAI.",
+    "Copy one installer prompt, paste it into Grok Bot, and stand up a named team: agents, a room, a sidebar section, and routines you confirm. No accounts on this site. No plugin API. No one-click OAuth.",
   entity: site.entity,
   verified: "Verified on",
   nav: {

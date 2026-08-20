@@ -43,24 +43,115 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <JsonLd data={packJsonLd(pack)} />
       <SiteMasthead />
-      <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-16 pt-10">
-        <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>{example ? en.home.exampleBadge : en.home.liveBadge}</p>
-        <h1 className="mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>{pack.name}</h1>
-        <p className="mt-4 text-[1.05rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{pack.tagline}</p>
-        <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>{en.verified} <time dateTime={site.verifiedOn}>{site.verifiedOn}</time> · dateModified {site.updatedAt}</p>
-        {example ? <p className="mt-4 text-[0.9rem]" style={{ color: ledger.inkMuted }}>{en.pack.exampleNote}</p> : null}
-        <p className="mt-4 text-[0.9rem]" style={{ color: ledger.inkMuted }}>{en.pack.installNote}</p>
-        <dl className="mt-8 grid grid-cols-2 gap-4 text-[0.8rem]">
-          <div><dt style={{ color: ledger.label }}>{en.pack.seats}</dt><dd>{pack.seats}</dd></div>
-          <div><dt style={{ color: ledger.label }}>{en.pack.section}</dt><dd>{pack.section}</dd></div>
-        </dl>
-        <section className="mt-8"><h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.agents}</h2><ul className="mt-3 space-y-3">{pack.agents.map((agent) => <li key={agent.name}><p style={{ fontFamily: ledger.serif }}>{agent.name}{agent.reuse ? ` · ${en.pack.reuse}` : ""}</p><p className="text-[0.85rem]" style={{ color: ledger.inkMuted }}>{agent.persona}</p></li>)}</ul></section>
-        <section className="mt-8"><h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.rooms}</h2><ul className="mt-3 space-y-2">{pack.rooms.map((room) => <li key={room.name}>{room.name}: {room.members.join(", ")}</li>)}</ul></section>
-        <section className="mt-8"><h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.routines}</h2><ul className="mt-3 space-y-3">{pack.routines.map((routine) => <li key={routine.name}><p>{routine.name} · {routine.owner} · {routine.schedule}</p><p className="text-[0.85rem]" style={{ color: ledger.inkMuted }}>{routine.prompt}</p></li>)}</ul></section>
-        <section className="mt-8"><h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.connectors}</h2><p className="mt-3">{pack.connectors.join(", ")}</p></section>
-        {pack.body ? <article className="mt-10 space-y-4 text-[0.95rem] leading-relaxed [&_h2]:text-[0.6rem] [&_h2]:uppercase [&_h2]:tracking-[0.26em] [&_a]:underline" style={{ color: ledger.inkSoft }} dangerouslySetInnerHTML={{ __html: renderMarkdown(pack.body) }} /> : null}
-        <div className="mt-10"><CopyInstallerButton text={prompt} /></div>
-        <pre className="mt-4 overflow-x-auto border p-4 text-[0.72rem] leading-relaxed" style={{ borderColor: ledger.hairline, background: ledger.paperDeep, fontFamily: ledger.mono }}><code>{prompt}</code></pre>
+      <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-20 pt-12">
+        <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>
+          {example ? en.home.exampleBadge : en.home.liveBadge}
+        </p>
+        <h1 className="mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>
+          {pack.name}
+        </h1>
+        <p className="mt-4 text-[1.05rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+          {pack.tagline}
+        </p>
+        <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
+          {en.verified} <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
+        </p>
+        {example ? (
+          <p className="mt-6 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+            {en.pack.exampleNote}
+          </p>
+        ) : null}
+        <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+          {en.pack.installNote}
+        </p>
+
+        <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.pack.section}
+          </h2>
+          <p className="mt-3 text-[0.95rem]">
+            {pack.section} · {pack.seats} {en.pack.seats}
+          </p>
+        </section>
+
+        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.pack.agents}
+          </h2>
+          <ul className="mt-4">
+            {pack.agents.map((agent) => (
+              <li key={agent.name} className="hairline-row py-3">
+                <p style={{ fontFamily: ledger.serif }}>
+                  {agent.name}
+                  {agent.reuse ? ` · ${en.pack.reuse}` : ""}
+                </p>
+                <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+                  {agent.persona}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.pack.rooms}
+          </h2>
+          <ul className="mt-4">
+            {pack.rooms.map((room) => (
+              <li key={room.name} className="hairline-row py-3">
+                <p style={{ fontFamily: ledger.serif }}>{room.name}</p>
+                <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+                  {room.members.join(", ")}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.pack.routines}
+          </h2>
+          <ul className="mt-4">
+            {pack.routines.map((routine) => (
+              <li key={routine.name} className="hairline-row py-3">
+                <p style={{ fontFamily: ledger.serif }}>{routine.name}</p>
+                <p className="mt-1 text-[0.62rem] uppercase tracking-[0.14em]" style={{ color: ledger.label }}>
+                  {routine.owner} · {routine.schedule}
+                </p>
+                <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+                  {routine.prompt}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.pack.connectors}
+          </h2>
+          <p className="mt-3 text-[0.95rem] leading-relaxed">{pack.connectors.join(", ")}</p>
+        </section>
+
+        {pack.body ? (
+          <article
+            className="pack-prose mt-10 border-t pt-8 text-[0.95rem] leading-relaxed"
+            style={{ color: ledger.inkSoft }}
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(pack.body) }}
+          />
+        ) : null}
+
+        <div className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <CopyInstallerButton text={prompt} />
+          <pre
+            className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed"
+            style={{ fontFamily: ledger.mono }}
+          >
+            <code>{prompt}</code>
+          </pre>
+        </div>
       </main>
       <SiteFooter />
     </div>
