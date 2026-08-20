@@ -8,6 +8,7 @@ import { VerifiedChip } from "@/components/VerifiedChip";
 import { BotIcon, PackIcon } from "@/components/icons/LineIcons";
 import { botIconKey } from "@/lib/bot-icon";
 import { installerPrompt } from "@/lib/installer";
+import { ledger } from "@/lib/ledger-theme";
 import { renderMarkdown } from "@/lib/markdown";
 import { en } from "@/lib/messages/en";
 import { getPack, listPacks } from "@/lib/packs";
@@ -23,13 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const pack = getPack(slug);
   if (!pack) return {};
-  const title = `${pack.name} pack`;
+  const title = pack.name;
   const description = pack.tagline;
   return {
     title,
     description,
-    alternates: { canonical: `${site.url}/packs/${pack.slug}` },
-    openGraph: { title: `${title} · ${site.name}`, description, url: `${site.url}/packs/${pack.slug}`, type: "website" },
+    alternates: { canonical: `${site.url}/teams/${pack.slug}` },
+    openGraph: { title: `${title} · ${site.name}`, description, url: `${site.url}/teams/${pack.slug}`, type: "website" },
   };
 }
 
@@ -45,52 +46,54 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
   const example = isExample(pack);
   const verified = isVerified(pack);
   return (
-    <div className="site-shell">
+    <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <JsonLd data={packJsonLd(pack)} />
       <SiteMasthead />
-      <main className="page-main max-w-2xl pb-20 pt-16">
-        <div className="flex flex-wrap items-center gap-2">
+      <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-20 pt-12">
+        <div className="flex flex-wrap items-center gap-3">
           <PackIcon slug={pack.slug} />
+          <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>
+            {example ? en.home.exampleBadge : en.home.liveBadge}
+          </p>
           {verified ? <VerifiedChip /> : null}
-          <span className="chip">{example ? en.home.exampleBadge : en.home.liveBadge}</span>
         </div>
-        <h1 className="mt-5 text-[clamp(2.2rem,5vw,3.4rem)] font-medium tracking-[-0.045em] leading-[1.05]">
+        <h1 className="font-display mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>
           {pack.name}
         </h1>
-        <p className="mt-4 text-[1.08rem] leading-relaxed" style={{ color: "var(--muted)" }}>
+        <p className="mt-4 text-[1.05rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           {pack.tagline}
         </p>
-        <p className="mt-3 pack-card-meta">
-          {pack.section} · {pack.bots} bots
+        <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
+          {`${pack.section} · ${pack.bots} bots`}
         </p>
         <div className="mt-5">
           <ConnectorRow names={pack.connectors} labeled size={18} />
         </div>
-        <p className="mt-4 text-[0.92rem] leading-relaxed" style={{ color: "var(--muted)" }}>
+        <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
           {en.pack.connectorsNote}
         </p>
         {example ? (
-          <p className="mt-4 text-[0.92rem] leading-relaxed" style={{ color: "var(--muted)" }}>
+          <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             {en.pack.exampleNote}
           </p>
         ) : null}
-        <p className="mt-4 text-[0.92rem] leading-relaxed" style={{ color: "var(--muted)" }}>
+        <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
           {en.pack.installNote}
         </p>
 
-        <section className="mt-12">
-          <h2 className="text-[1.2rem] font-medium tracking-[-0.03em]">{en.pack.agents}</h2>
-          <ul className="mt-2">
+        <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.agents}</h2>
+          <ul className="mt-4">
             {pack.agents.map((agent) => (
-              <li key={agent.name} className="bot-row">
+              <li key={agent.name} className="hairline-row py-3">
                 <div className="flex gap-3">
                   <BotIcon name={botIconKey(agent)} />
                   <div className="min-w-0">
-                    <p className="font-medium tracking-[-0.02em]">
+                    <p style={{ fontFamily: ledger.serif }}>
                       {agent.name}
                       {agent.reuse ? ` · ${en.pack.reuse}` : ""}
                     </p>
-                    <p className="mt-1 text-[0.9rem] leading-relaxed" style={{ color: "var(--muted)" }}>
+                    <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
                       {agent.persona}
                     </p>
                     {agent.connectors.length > 0 ? (
@@ -105,13 +108,13 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
           </ul>
         </section>
 
-        <section className="mt-10">
-          <h2 className="text-[1.2rem] font-medium tracking-[-0.03em]">{en.pack.rooms}</h2>
-          <ul className="mt-2">
+        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.rooms}</h2>
+          <ul className="mt-4">
             {pack.rooms.map((room) => (
-              <li key={room.name} className="bot-row">
-                <p className="font-medium tracking-[-0.02em]">{room.name}</p>
-                <p className="mt-1 text-[0.9rem] leading-relaxed" style={{ color: "var(--muted)" }}>
+              <li key={room.name} className="hairline-row py-3">
+                <p style={{ fontFamily: ledger.serif }}>{room.name}</p>
+                <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
                   {room.members.join(", ")}
                 </p>
               </li>
@@ -119,16 +122,16 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
           </ul>
         </section>
 
-        <section className="mt-10">
-          <h2 className="text-[1.2rem] font-medium tracking-[-0.03em]">{en.pack.routines}</h2>
-          <ul className="mt-2">
+        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.routines}</h2>
+          <ul className="mt-4">
             {pack.routines.map((routine) => (
-              <li key={routine.name} className="bot-row">
-                <p className="font-medium tracking-[-0.02em]">{routine.name}</p>
-                <p className="mt-1 pack-card-meta">
+              <li key={routine.name} className="hairline-row py-3">
+                <p style={{ fontFamily: ledger.serif }}>{routine.name}</p>
+                <p className="mt-1 text-[0.62rem] uppercase tracking-[0.14em]" style={{ color: ledger.label }}>
                   {en.pack.ownerBot} {routine.owner} · {routine.schedule}
                 </p>
-                <p className="mt-1 text-[0.9rem] leading-relaxed" style={{ color: "var(--muted)" }}>
+                <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
                   {routine.prompt}
                 </p>
               </li>
@@ -136,22 +139,25 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
           </ul>
         </section>
 
-        <section className="mt-10">
-          <h2 className="text-[1.2rem] font-medium tracking-[-0.03em]">{en.pack.section}</h2>
+        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.section}</h2>
           <p className="mt-3">{pack.section}</p>
         </section>
 
         {pack.body ? (
           <article
-            className="pack-prose mt-10 text-[0.95rem] leading-relaxed"
-            style={{ color: "var(--ink-soft)" }}
+            className="pack-prose mt-10 border-t pt-8 text-[0.95rem] leading-relaxed"
+            style={{ color: ledger.inkSoft }}
             dangerouslySetInnerHTML={{ __html: renderMarkdown(pack.body) }}
           />
         ) : null}
 
-        <div className="mt-12">
+        <div className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <CopyInstallerButton text={prompt} slug={pack.slug} />
-          <pre className="installer-prompt mt-4 overflow-x-auto p-4">
+          <pre
+            className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed"
+            style={{ fontFamily: ledger.mono }}
+          >
             <code>{prompt}</code>
           </pre>
         </div>

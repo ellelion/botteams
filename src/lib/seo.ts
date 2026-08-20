@@ -36,10 +36,10 @@ export function packListJsonLd(packs: Pack[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Grok Bot company packs",
+    name: "Grok Bot company teams",
     description: site.entity,
     numberOfItems: packs.length,
-    itemListElement: packs.map((pack, i) => ({ "@type": "ListItem", position: i + 1, name: pack.name, url: `${site.url}/packs/${pack.slug}`, description: pack.tagline })),
+    itemListElement: packs.map((pack, i) => ({ "@type": "ListItem", position: i + 1, name: pack.name, url: `${site.url}/teams/${pack.slug}`, description: pack.tagline })),
   };
 }
 
@@ -48,7 +48,7 @@ export function packJsonLd(pack: Pack) {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: pack.name,
-    url: `${site.url}/packs/${pack.slug}`,
+    url: `${site.url}/teams/${pack.slug}`,
     description: pack.tagline,
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",

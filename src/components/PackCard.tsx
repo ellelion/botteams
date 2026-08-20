@@ -18,7 +18,7 @@ export function PackCard({ pack }: { pack: Pack }) {
         </span>
       </div>
       <h3>
-        <Link href={"/packs/" + pack.slug}>{pack.name}</Link>
+        <Link href={"/teams/" + pack.slug}>{pack.name}</Link>
       </h3>
       <p className="text-[0.92rem] leading-relaxed" style={{ color: "var(--muted)" }}>{pack.tagline}</p>
       <ConnectorRow names={pack.connectors} size={16} />
