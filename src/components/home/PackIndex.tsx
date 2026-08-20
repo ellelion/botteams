@@ -7,14 +7,13 @@ import { ConnectorRow } from "@/components/ConnectorRow";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
 import { Sparkline } from "@/components/Sparkline";
 import { VerifiedChip } from "@/components/VerifiedChip";
-import { BotIcon, PackIcon } from "@/components/icons/LineIcons";
+import { BotIcon } from "@/components/icons/LineIcons";
 import { botIconKey, sectionSlug } from "@/lib/bot-icon";
 import { installerPrompt } from "@/lib/installer";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { isExample, isVerified, type Pack } from "@/lib/types";
 
-type Kind = "all" | "pack" | "example";
 type View = "table" | "cards";
 
 function matchesQuery(pack: Pack, q: string): boolean {
@@ -40,19 +39,10 @@ export function PackIndex({
   added: { date: string; count: number }[];
   verifiedOn: string;
 }) {
-  const addedN = added.reduce((sum, day) => sum + day.count, 0);
-  const peak = added.reduce<{ date: string; count: number } | null>((best, day) => {
-    if (day.count <= 0) return best;
-    if (!best || day.count > best.count) return day;
-    return best;
-  }, null);
-
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
   const sectionParam = params.get("section") ?? "all";
-  const [kind, setKind] = useState<Kind>("all");
-  const [connector, setConnector] = useState("all");
   const [view, setView] = useState<View>("table");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState<string | null>(null);
@@ -73,18 +63,9 @@ export function PackIndex({
     return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   }, [packs]);
 
-  const connectors = useMemo(() => {
-    const set = new Set<string>();
-    for (const pack of packs) for (const name of pack.connectors) set.add(name);
-    return [...set].sort();
-  }, [packs]);
-
   const q = query.trim().toLowerCase();
   const filtered = packs.filter((pack) => {
     if (sectionParam !== "all" && sectionSlug(pack.section) !== sectionParam) return false;
-    if (kind === "pack" && pack.status !== "pack") return false;
-    if (kind === "example" && pack.status !== "example") return false;
-    if (connector !== "all" && !pack.connectors.includes(connector)) return false;
     if (!matchesQuery(pack, q)) return false;
     return true;
   });
@@ -99,28 +80,9 @@ export function PackIndex({
 
   return (
     <section id="teams">
-      <div className="stats-row">
-        <div className="stat">
-          <p className="stat-label">Teams added</p>
-          <p className="stat-value">{addedN}</p>
-          <p className="stat-note">
-            From git history of team files
-            {peak ? `. ${peak.count} on ${peak.date}` : ""}.
-          </p>
-          <Sparkline series={added} className="stat-spark" />
-        </div>
-        <div className="stat">
-          <p className="stat-label">Installer copies</p>
-          <p className="stat-value">{copies.total}</p>
-          <p className="stat-note">Copy installer clicks on this site. Not Grok Bot installs.</p>
-        </div>
-        <div className="stat">
-          <p className="stat-label">Shelf</p>
-          <p className="stat-value">{packs.length}</p>
-          <p className="stat-note">
-            {packs.length} teams · Verified {verifiedOn}
-          </p>
-        </div>
+      <div className="stats-strip">
+        <p className="stats-line">{`${packs.length} teams · ${copies.total} copies · verified ${verifiedOn}`}</p>
+        <Sparkline series={added} className="stat-spark" />
       </div>
 
       <label className="search-wrap">
@@ -134,74 +96,55 @@ export function PackIndex({
         />
       </label>
 
-      <div className="apd-shell">
-        <aside className="cat-rail" aria-label="Team categories">
-          <button type="button" className={`cat-item${sectionParam === "all" ? " is-on" : ""}`} onClick={() => setSection("all")}>
-            <span>All teams</span>
-            <span>{packs.length}</span>
-          </button>
-          {categories.map(([name, count]) => {
-            const slug = sectionSlug(name);
-            return (
-              <button key={name} type="button" className={`cat-item${sectionParam === slug ? " is-on" : ""}`} onClick={() => setSection(slug)}>
-                <span>{name}</span>
-                <span>{count}</span>
-              </button>
-            );
-          })}
-        </aside>
+      <nav className="cat-wrap" aria-label="Team categories">
+        <button type="button" className={`cat-chip${sectionParam === "all" ? " is-on" : ""}`} onClick={() => setSection("all")}>
+          All
+        </button>
+        {categories.map(([name]) => {
+          const slug = sectionSlug(name);
+          return (
+            <button key={name} type="button" className={`cat-chip${sectionParam === slug ? " is-on" : ""}`} onClick={() => setSection(slug)}>
+              {name}
+            </button>
+          );
+        })}
+      </nav>
 
-        <div>
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="eyebrow">{filtered.length} teams</p>
-              <h2 className="section-title">{en.home.indexTitle}</h2>
-            </div>
-            <div className="filter-bar">
-              <button type="button" className={`filter-chip${kind === "all" ? " is-on" : ""}`} onClick={() => setKind("all")}>{en.home.filterAll}</button>
-              <button type="button" className={`filter-chip${kind === "pack" ? " is-on" : ""}`} onClick={() => setKind("pack")}>{en.home.liveBadge}</button>
-              <button type="button" className={`filter-chip${kind === "example" ? " is-on" : ""}`} onClick={() => setKind("example")}>{en.home.exampleBadge}</button>
-              {connectors.map((name) => (
-                <button key={name} type="button" className={`filter-chip${connector === name ? " is-on" : ""}`} onClick={() => setConnector(connector === name ? "all" : name)}>
-                  {name}
-                </button>
-              ))}
-              <button type="button" className={`filter-chip${view === "table" ? " is-on" : ""}`} onClick={() => setView("table")}>{en.home.viewTable}</button>
-              <button type="button" className={`filter-chip${view === "cards" ? " is-on" : ""}`} onClick={() => setView("cards")}>{en.home.viewCards}</button>
-            </div>
-          </div>
-
-          {view === "table" ? (
-            <div className="pack-table">
-              {filtered.map((pack) => (
-                <PackExpandable
-                  key={pack.slug}
-                  pack={pack}
-                  variant="row"
-                  open={open === pack.slug}
-                  copies={copies.bySlug[pack.slug] ?? 0}
-                  onToggle={() => setOpen(open === pack.slug ? null : pack.slug)}
-                  onCopied={(count, total) => setCopies((c) => ({ total, bySlug: { ...c.bySlug, [pack.slug]: count } }))}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="pack-grid">
-              {filtered.map((pack) => (
-                <PackExpandable
-                  key={pack.slug}
-                  pack={pack}
-                  variant="card"
-                  open={open === pack.slug}
-                  copies={copies.bySlug[pack.slug] ?? 0}
-                  onToggle={() => setOpen(open === pack.slug ? null : pack.slug)}
-                  onCopied={(count, total) => setCopies((c) => ({ total, bySlug: { ...c.bySlug, [pack.slug]: count } }))}
-                />
-              ))}
-            </div>
-          )}
+      <div className="mb-3 flex items-baseline justify-between gap-3">
+        <h2 className="section-title">{en.home.indexTitle}</h2>
+        <div className="filter-bar">
+          <button type="button" className={`filter-chip${view === "table" ? " is-on" : ""}`} onClick={() => setView("table")}>{en.home.viewTable}</button>
+          <button type="button" className={`filter-chip${view === "cards" ? " is-on" : ""}`} onClick={() => setView("cards")}>{en.home.viewCards}</button>
         </div>
       </div>
+
+      {view === "table" ? (
+        <div className="pack-table">
+          {filtered.map((pack) => (
+            <PackExpandable
+              key={pack.slug}
+              pack={pack}
+              variant="row"
+              open={open === pack.slug}
+              onToggle={() => setOpen(open === pack.slug ? null : pack.slug)}
+              onCopied={(count, total) => setCopies((c) => ({ total, bySlug: { ...c.bySlug, [pack.slug]: count } }))}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="pack-grid">
+          {filtered.map((pack) => (
+            <PackExpandable
+              key={pack.slug}
+              pack={pack}
+              variant="card"
+              open={open === pack.slug}
+              onToggle={() => setOpen(open === pack.slug ? null : pack.slug)}
+              onCopied={(count, total) => setCopies((c) => ({ total, bySlug: { ...c.bySlug, [pack.slug]: count } }))}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }
@@ -210,14 +153,12 @@ function PackExpandable({
   pack,
   variant,
   open,
-  copies,
   onToggle,
   onCopied,
 }: {
   pack: Pack;
   variant: "row" | "card";
   open: boolean;
-  copies: number;
   onToggle: () => void;
   onCopied: (count: number, total: number) => void;
 }) {
@@ -230,22 +171,19 @@ function PackExpandable({
     <article className={`${shellClass}${open ? " is-open" : ""}`}>
       <div className="index-head" onClick={onToggle} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onToggle(); } }}>
         <button type="button" className="chevron" aria-expanded={open} aria-label={open ? "Collapse team" : "Expand team"} onClick={(e) => { e.stopPropagation(); onToggle(); }}>
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
             <path d={open ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"} />
           </svg>
         </button>
-        <PackIcon slug={pack.slug} />
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
             <Link href={`/teams/${pack.slug}`} className="index-name" onClick={(e) => e.stopPropagation()}>
               {pack.name}
             </Link>
-            <span className="pack-card-meta">{pack.section}</span>
             <span className="pack-card-meta">{`${pack.bots} bots`}</span>
-            {copies > 0 ? <span className="pack-card-meta">{copies} copies</span> : <span className="pack-card-meta">0 copies</span>}
           </div>
-          <div className="mt-2 flex flex-wrap items-center gap-3">
-            <ConnectorRow names={pack.connectors} size={16} />
+          <div className="mt-1 flex flex-wrap items-center gap-2.5">
+            <ConnectorRow names={pack.connectors} size={14} />
             <span className="inline-flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
               {verified ? <VerifiedChip /> : null}
               <span className="chip">{example ? en.home.exampleBadge : en.home.liveBadge}</span>
@@ -255,18 +193,18 @@ function PackExpandable({
       </div>
       {open ? (
         <div className="index-body" onClick={(e) => e.stopPropagation()}>
-          <p className="text-[0.92rem] leading-relaxed" style={{ color: ledger.inkFaint }}>{pack.tagline}</p>
-          <ul className="mt-4">
+          <p className="text-[0.82rem] leading-relaxed" style={{ color: ledger.inkFaint }}>{pack.tagline}</p>
+          <ul className="mt-2">
             {pack.agents.map((agent) => (
               <li key={agent.name} className="bot-row">
-                <div className="flex gap-3">
+                <div className="flex items-start gap-2">
                   <BotIcon name={botIconKey(agent)} />
                   <div className="min-w-0">
-                    <p className="font-display" style={{ fontFamily: ledger.serif }}>{agent.name}</p>
-                    <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{agent.persona}</p>
+                    <p className="text-[0.92rem]" style={{ fontFamily: ledger.serif }}>{agent.name}</p>
+                    <p className="mt-0.5 text-[0.75rem] leading-snug" style={{ color: ledger.inkMuted }}>{agent.persona}</p>
                     {agent.connectors.length > 0 ? (
-                      <div className="mt-2">
-                        <ConnectorRow names={agent.connectors} labeled size={16} />
+                      <div className="mt-1">
+                        <ConnectorRow names={agent.connectors} size={14} />
                       </div>
                     ) : null}
                   </div>
@@ -274,7 +212,7 @@ function PackExpandable({
               </li>
             ))}
           </ul>
-          <div className="mt-4">
+          <div className="mt-3">
             <CopyInstallerButton text={prompt} slug={pack.slug} onCopied={onCopied} />
           </div>
         </div>

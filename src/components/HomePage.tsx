@@ -16,20 +16,20 @@ export function HomePage({ packs }: { packs: Pack[] }) {
   return (
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
-      <main className="relative z-10 grid flex-1 grid-cols-1 items-start gap-6 overflow-clip lg:grid-cols-[6fr_6fr] lg:gap-14">
-        <div className="pointer-events-none col-start-1 row-start-1 row-end-3 sticky top-[var(--masthead-h)] z-0 h-0 w-full self-start lg:row-end-2 lg:pr-16" aria-hidden>
-          <div className="relative h-[calc(100dvh-var(--masthead-h))] w-full">
+      <main className="relative z-10 grid flex-1 grid-cols-1 items-start gap-6 overflow-clip lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
+        <div className="pointer-events-none col-start-1 row-start-1 overflow-hidden sticky top-[var(--masthead-h)] z-0 h-0 w-full min-w-0 self-start lg:pr-16" aria-hidden>
+          <div className="relative h-[calc(100dvh-var(--masthead-h))] w-full overflow-hidden">
             <WingsVideo variant="wings-video--altar" />
           </div>
         </div>
-        <div className="relative z-10 col-start-1 row-start-1 grid grid-cols-1 lg:border-r" style={{ borderColor: ledger.hairline }}>
-          <div className="col-start-1 row-start-1 min-w-0 lg:pr-16">
-            <section className="story-beat relative flex min-h-[calc(100dvh-var(--masthead-h))] flex-col items-center justify-center py-10 pb-20 text-center">
-              <div className="relative z-10">
+        <div className="relative z-10 col-start-1 row-start-1 min-w-0 overflow-hidden grid grid-cols-1 lg:border-r" style={{ borderColor: ledger.hairline }}>
+          <div className="col-start-1 row-start-1 min-w-0 overflow-hidden lg:pr-16">
+            <section className="story-beat relative flex min-h-[calc(100dvh-var(--masthead-h))] flex-col items-center justify-center overflow-hidden py-10 pb-20 text-center">
+              <div className="relative z-10 w-full max-w-full overflow-hidden px-1">
                 <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>
                   <RevealText text={en.eyebrow} delay={0.05} step={0.016} className="block" />
                 </p>
-                <h1 className="font-display ledger-anim mt-8 text-[clamp(2.2rem,5.4vw,4.1rem)] font-light leading-[0.95] tracking-[-0.02em]" style={{ fontFamily: ledger.serif, animationDelay: "0.55s" }}>
+                <h1 className="font-display ledger-anim mx-auto mt-8 w-full max-w-full text-[clamp(1.65rem,3.4vw,2.75rem)] font-light leading-[1.05] tracking-[-0.02em]" style={{ fontFamily: ledger.serif, animationDelay: "0.55s" }}>
                   {en.h1}
                 </h1>
                 <p className="ledger-anim mx-auto mt-6 max-w-md text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft, animationDelay: "0.75s" }}>

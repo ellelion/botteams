@@ -111,21 +111,24 @@ a {
 .site-masthead {
   position: sticky;
   top: 0;
-  /* Above main's z-10, so the accent popover paints (and clicks) over the
-     index rows instead of tying with them and losing on DOM order. */
   z-index: 30;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: nowrap;
   gap: 20px;
   padding-top: 14px;
   padding-bottom: 14px;
-  /* Opaque, so the page scrolls under it and not through it. */
   background: var(--page);
   color: var(--muted);
   font-size: 0.6rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
+}
+
+.site-wordmark {
+  flex: none;
+  white-space: nowrap;
 }
 
 .site-masthead-actions {
@@ -196,13 +199,16 @@ a {
 
 /* Text CTA variant: same chrome as .theme-control, auto width so labels
    like "Copy installer prompt" are a real button, not a 34px square. */
+.theme-control.theme-control-label,
 .theme-control-label {
   width: auto;
+  min-width: 0;
   height: 34px;
   padding: 0 14px;
   font: 500 0.6rem/1 var(--font-outfit);
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* Phone-sized controls. Must live AFTER the base .theme-control rule above:
@@ -214,6 +220,7 @@ a {
     height: 28px;
   }
 
+  .theme-control.theme-control-label,
   .theme-control-label {
     width: auto;
     height: 28px;
@@ -535,9 +542,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .pack-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   min-height: 100%;
-  padding: 14px 0;
+  padding: 0.45rem 0;
   background: transparent;
   border: 0;
   border-bottom: 1px solid var(--line);
@@ -631,8 +638,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 .bot-row {
   display: grid;
-  gap: 8px;
-  padding: 14px 0;
+  gap: 4px;
+  padding: 0.35rem 0;
   border-top: 1px solid var(--line);
 }
 
@@ -663,39 +670,28 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-transform: none;
 }
 
-.stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0;
-  margin: 0 0 18px;
+.stats-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 0 0 12px;
+  padding: 8px 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
-.stat {
-  padding: 10px 12px 12px 0;
-  background: transparent;
-  border: 0;
-}
-.stat + .stat {
-  border-left: 1px solid var(--line);
-  padding-left: 12px;
-}
-.stat-label {
+.stats-line {
   color: var(--muted);
-  font-size: 0.55rem;
+  font-size: 0.6rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
-.stat-value {
-  margin-top: 6px;
-  font-family: var(--font-fraunces), Georgia, serif;
-  font-size: 1.45rem;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1;
+.stat-spark {
+  color: var(--status-live);
+  width: 88px;
+  height: 18px;
 }
-.stat-note { margin-top: 6px; color: var(--muted); font-size: 0.68rem; line-height: 1.4; }
-.stat-spark { margin-top: 8px; color: var(--status-live); }
 
 .search-wrap { display: block; margin-bottom: 14px; }
 .search-input {
@@ -714,44 +710,34 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-bottom-color: var(--ink);
 }
 
-.apd-shell {
-  display: grid;
-  grid-template-columns: 7.25rem minmax(0, 1fr);
-  gap: 18px;
-  align-items: start;
-}
-@media (max-width: 540px) {
-  .apd-shell { grid-template-columns: 1fr; gap: 12px; }
-}
-.cat-rail {
+.cat-wrap {
   display: flex;
-  flex-direction: column;
-  gap: 0;
-  position: sticky;
-  top: 4px;
-}
-.cat-item {
-  display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
-  padding: 0.42rem 0;
+  gap: 0 0.15rem;
+  margin: 0 0 14px;
+}
+.cat-chip {
+  display: inline;
+  padding: 0;
   border: 0;
-  border-bottom: 1px solid var(--line);
   background: transparent;
   color: var(--muted);
-  font: 500 0.55rem/1.25 var(--font-outfit), system-ui, sans-serif;
-  letter-spacing: 0.14em;
+  font: 500 0.55rem/1.6 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   cursor: pointer;
-  text-align: left;
 }
-.cat-item:hover { color: var(--accent-text); background: transparent; }
-.cat-item.is-on { color: var(--ink); background: transparent; font-weight: 500; }
+.cat-chip + .cat-chip::before {
+  content: "·";
+  margin: 0 0.45rem 0 0.3rem;
+  color: var(--line-strong);
+}
+.cat-chip:hover { color: var(--accent-text); }
+.cat-chip.is-on { color: var(--ink); }
 
 .index-row {
-  padding: 10px 0;
+  padding: 0.35rem 0;
   border-bottom: 1px solid var(--line);
 }
 .index-head {
@@ -780,7 +766,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   cursor: pointer;
   flex: none;
 }
-.index-body { padding: 10px 0 6px 32px; }
+.index-body { padding: 0.35rem 0 0.35rem 32px; }
 @media (max-width: 640px) {
   .index-body { padding-left: 8px; }
 }
