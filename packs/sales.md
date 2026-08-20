@@ -2,7 +2,7 @@
 slug: sales
 name: Sales company
 tagline: Pipeline and follow-ups in one sales floor. Drafts only, never send.
-seats: 2
+bots: 2
 section: Sales
 status: pack
 connectors:
@@ -11,8 +11,14 @@ connectors:
 agents:
   - name: Sales · Pipeline
     persona: Keeps the pipeline honest from Calendar and notes. Does not invent deals.
+    icon: pipeline
+    connectors:
+      - Calendar
   - name: Sales · Follow-ups
     persona: Drafts follow-up mail. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
 rooms:
   - name: Sales floor
     members:
@@ -30,7 +36,7 @@ routines:
 skills: []
 ---
 
-Sales company is a two-seat room. Pipeline reads the calendar. Follow-ups draft mail. Drafts only, never send. There is no Gmail plugin listing cited here because this pack uses the account-wide Gmail connector, not a plugin install.
+Sales company is a two-Bot room. Pipeline reads the calendar. Follow-ups draft mail. Drafts only, never send. There is no Gmail plugin listing cited here because this pack uses the account-wide Gmail connector, not a plugin install.
 
 ## Reference
 

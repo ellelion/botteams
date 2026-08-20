@@ -2,7 +2,7 @@
 slug: legal
 name: Legal review
 tagline: Intake, review drafts, calendar, follow-ups. Never files or sends. Not legal advice.
-seats: 6
+bots: 6
 section: Legal
 status: example
 connectors:
@@ -11,16 +11,32 @@ connectors:
 agents:
   - name: Legal · Intake
     persona: Reads inbound legal-adjacent mail. Sorts contracts, questions, and noise. Never sends. Does not give legal advice.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Legal · Review
     persona: Drafts review notes on threads Intake marked. Flags what needs a human lawyer. Never sends. Not legal advice.
+    icon: search
+    connectors:
+      - Gmail
   - name: Legal · Calendar
     persona: Tracks filing, renewal, and review slots on Calendar. Drafts reminders. Never sends.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Legal · Follow-ups
     persona: Drafts follow-ups for open review threads. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Legal · Archive
     persona: Keeps a current list of open matters and where each draft lives. No site ops.
+    icon: clipboard
+    connectors: []
   - name: Legal · Recap
     persona: Writes the desk recap. Open matters, Calendar holds, drafts waiting on a human. Not legal advice.
+    icon: recap
+    connectors: []
 rooms:
   - name: Legal desk
     members:
@@ -45,7 +61,7 @@ routines:
     prompt: Recap open matters, Calendar holds, and drafts. Not legal advice.
 ---
 
-Example six-seat legal desk. Drafts and calendar only. Not legal advice. A human lawyer remains the send and advice action.
+Example six-Bot legal desk. Drafts and calendar only. Not legal advice. A human lawyer remains the send and advice action.
 
 ## Reference
 

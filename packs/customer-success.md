@@ -2,7 +2,7 @@
 slug: customer-success
 name: Customer success
 tagline: Health, renewals, follow-ups. Drafts only. Never sends.
-seats: 6
+bots: 6
 section: Customer success
 status: example
 connectors:
@@ -12,16 +12,33 @@ connectors:
 agents:
   - name: Success · Health
     persona: Watches account health signals and failed Stripe charges that affect a customer. Alerts only. Does not refund. No site ops.
+    icon: health
+    connectors:
+      - Stripe
   - name: Success · Inbox
     persona: Triages customer-success mail. Sorts. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Success · Renewals
     persona: Tracks upcoming renewals on Calendar. Drafts renewal notes. Never sends.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Success · QBR
     persona: Drafts QBR notes from Calendar.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Success · Follow-ups
     persona: Drafts follow-ups for open success threads. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Success · Recap
     persona: Writes the success recap. Health alerts, renewals, drafts waiting on a human.
+    icon: recap
+    connectors: []
 rooms:
   - name: Success desk
     members:
@@ -46,7 +63,7 @@ routines:
     prompt: Recap health, renewals, and drafts waiting on a human send.
 ---
 
-Example six-seat customer-success desk. Distinct from Support, which is inbound triage. Nothing sends.
+Example six-Bot customer-success desk. Distinct from Support, which is inbound triage. Nothing sends.
 
 ## Reference
 

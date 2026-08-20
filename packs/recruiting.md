@@ -2,7 +2,7 @@
 slug: recruiting
 name: Recruiting sourcer
 tagline: Outbound sourcing and sequences. Drafts only. Distinct from Hiring.
-seats: 6
+bots: 6
 section: Recruiting
 status: example
 connectors:
@@ -11,16 +11,31 @@ connectors:
 agents:
   - name: Recruiting · Sourcer
     persona: Keeps a current list of outbound people to reach. Drafts notes. Never sends. Not a job-board operator.
+    icon: search
+    connectors: []
   - name: Recruiting · Outreach
     persona: Drafts outbound sequence mail. Never sends. Leaves the human the send action.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Recruiting · Calendar
     persona: Holds intro calls on Calendar. Drafts scheduling notes. Never sends.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Recruiting · Pipeline
     persona: Tracks outbound pipeline stages. Drafts updates, never sends.
+    icon: pipeline
+    connectors: []
   - name: Recruiting · Inbox
     persona: Triages replies to outbound sequences. Drafts, never sends. Hands scheduling to Recruiting · Calendar.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Recruiting · Recap
     persona: Writes the recruiting recap. Who was drafted, who replied, what needs a human send.
+    icon: recap
+    connectors: []
 rooms:
   - name: Recruiting room
     members:
@@ -45,7 +60,7 @@ routines:
     prompt: Recap outbound drafts, replies, and Calendar holds. Never send.
 ---
 
-Example six-seat outbound recruiting desk. Distinct from Hiring, which is inbound. Sequences stop at drafts.
+Example six-Bot outbound recruiting desk. Distinct from Hiring, which is inbound. Sequences stop at drafts.
 
 ## Reference
 

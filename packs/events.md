@@ -2,7 +2,7 @@
 slug: events
 name: Events desk
 tagline: Run of show, guests, calendar, follow-ups. Never pitches SEO.
-seats: 6
+bots: 6
 section: Events
 status: example
 connectors:
@@ -11,16 +11,33 @@ connectors:
 agents:
   - name: Events · Run of show
     persona: Turns Calendar events into a run of show. Does not publish. No site ops.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Events · Guests
     persona: Drafts guest mail. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Events · Calendar
     persona: Holds event slots on Calendar. Drafts scheduling notes. Never sends.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Events · Inbox
     persona: Triages event mail. Sorts guest threads from noise. Never sends. Ignores SEO pitches.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Events · Follow-up
     persona: Drafts thank-you mail. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Events · Recap
     persona: Writes the events recap. Run of show, drafts, Calendar holds. Never publishes.
+    icon: recap
+    connectors: []
 rooms:
   - name: Events desk
     members:
@@ -45,7 +62,7 @@ routines:
     prompt: Recap run of show, drafts, and Calendar holds. Never publish.
 ---
 
-Example six-seat events desk. Not an SEO or guest-post crew.
+Example six-Bot events desk. Not an SEO or guest-post crew.
 
 ## Reference
 

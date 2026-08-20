@@ -1,43 +1,37 @@
 @import "tailwindcss";
 
-/* ── Ledger design system tokens ── */
 :root {
   color-scheme: light;
-  --page: #fcfcfb;
-  --surface: #f3f3f1;
-  --ink: #111111;
-  --ink-soft: #4b4b4b;
-  --muted: #686868;
-  --muted-strong: #565656;
-  --line: #d8d8d5;
-  --line-strong: #b9b9b4;
-  --leader: #c7c7c2;
+  --page: #ffffff;
+  --surface: #f5f4f2;
+  --ink: #0a0a0a;
+  --ink-soft: #3d3d3d;
+  --muted: #8a8a8a;
+  --muted-strong: #6b6b6b;
+  --line: #eceae6;
+  --line-strong: #d9d6d0;
+  --leader: #d9d6d0;
   --accent: #0891b2;
-  --accent-text: #097e9a;
+  --accent-text: #0a0a0a;
   --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
-  --on-accent: #f5f5f3;
-  --status-live: #2e7d43;
-  --parchment: var(--page);
-  --parchment-deep: var(--surface);
-  --ink-muted: var(--ink-soft);
-  --ink-faint: var(--muted);
-  --oxblood: var(--accent);
-  --oxblood-soft: var(--accent-soft);
-  --green: var(--status-live);
+  --on-accent: #ffffff;
+  --status-live: #1f7a46;
+  --beta: #e8590c;
+  --masthead-h: 64px;
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --page: #101010;
-  --surface: #191919;
+  --page: #0a0a0a;
+  --surface: #141414;
   --ink: #f5f5f3;
   --ink-soft: #c7c7c2;
-  --muted: #999994;
+  --muted: #8a8a8a;
   --muted-strong: #b1b1ac;
-  --line: #30302e;
-  --line-strong: #555550;
-  --leader: #4a4a46;
-  --accent-text: #0891b2;
+  --line: #222222;
+  --line-strong: #3a3a3a;
+  --leader: #3a3a3a;
+  --accent-text: #f5f5f3;
   --status-live: #75c78a;
 }
 
@@ -49,12 +43,10 @@
   --color-oxblood: var(--accent);
   --color-line: var(--line);
   --font-sans: var(--font-outfit);
-  --font-display: var(--font-fraunces);
+  --font-display: var(--font-outfit);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html {
   scroll-behavior: smooth;
@@ -71,103 +63,204 @@ body {
   overflow-x: hidden;
 }
 
-[id$="-heading"] {
-  scroll-margin-top: calc(var(--masthead-h) + 16px);
+a { color: inherit; text-decoration: none; }
+
+:where(a, button):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }
 
-::selection {
-  background: var(--accent-soft);
+.site-shell {
+  position: relative;
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  background: var(--page);
   color: var(--ink);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.accent-text {
-  color: var(--accent-text);
-}
-
-.accent-hover:hover,
-.accent-hover:focus-visible {
-  color: var(--accent-text);
-}
-
-.accent-surface-hover:hover,
-.accent-surface-hover:focus-visible {
-  background: var(--accent-soft);
-}
-
-/* The masthead rides along at every width. Anything else that pins
-   (section labels, the homepage index) offsets by --masthead-h so it
-   lands underneath instead of colliding. Keep the two in sync if the
-   padding changes. */
-:root {
-  --masthead-h: 62px;
 }
 
 .site-masthead {
   position: sticky;
   top: 0;
-  /* Above main's z-10, so the accent popover paints (and clicks) over the
-     index rows instead of tying with them and losing on DOM order. */
   z-index: 30;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding-top: 14px;
-  padding-bottom: 14px;
-  /* Opaque, so the page scrolls under it and not through it. */
-  background: var(--page);
-  color: var(--muted);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  gap: 24px;
+  min-height: var(--masthead-h);
+  padding: 12px 28px;
+  background: color-mix(in srgb, var(--page) 86%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-wordmark {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ink);
 }
 
 .site-masthead-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 18px;
 }
 
 .site-masthead-nav {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 28px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 400;
 }
 
-/* Small screens keep the masthead on ONE row. It stays a masthead, not a
-   stacked menu. Everything shrinks instead of wrapping. */
+.site-masthead-nav a:hover,
+.site-masthead-nav a:focus-visible {
+  color: var(--ink);
+}
+
 @media (max-width: 640px) {
-  :root {
-    --masthead-h: 56px;
-  }
-
-  .site-masthead {
-    gap: 10px;
-    font-size: 0.55rem;
-    letter-spacing: 0.16em;
-  }
-
-  .site-masthead-actions {
-    gap: 10px;
-  }
-
-  .site-masthead-nav {
-    gap: 13px;
-  }
+  :root { --masthead-h: 56px; }
+  .site-masthead { padding: 10px 16px; gap: 12px; }
+  .site-masthead-nav { gap: 16px; font-size: 0.82rem; }
+  .site-wordmark span { display: none; }
 }
 
-:where(a, button):focus-visible {
-  outline: 2px solid var(--accent-text);
-  outline-offset: 3px;
+.btn-primary,
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-family: var(--font-outfit), system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: none;
+  transition: opacity .14s ease, background .14s ease, border-color .14s ease;
+}
+.btn-primary {
+  border: 0;
+  background: var(--ink);
+  color: var(--page);
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-secondary {
+  border: 1px solid var(--line-strong);
+  background: var(--page);
+  color: var(--ink);
+}
+.btn-secondary:hover { background: var(--surface); }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.chip-verified { color: var(--status-live); border-color: color-mix(in srgb, var(--status-live) 35%, var(--line-strong)); }
+.chip-beta {
+  color: var(--beta);
+  border-color: color-mix(in srgb, var(--beta) 35%, var(--line-strong));
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.font-display {
-  font-family: var(--font-fraunces), Georgia, serif;
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font: 500 0.82rem/1 var(--font-outfit), system-ui, sans-serif;
+  cursor: pointer;
+}
+.filter-chip.is-on {
+  background: var(--ink);
+  color: var(--page);
+  border-color: var(--ink);
+}
+
+.pack-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 760px) {
+  .pack-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.pack-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100%;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: none;
+}
+.pack-card h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+.pack-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.pack-card-meta {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.line-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--ink);
+  flex: none;
+}
+
+.pack-table {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+.pack-table-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  gap: 12px 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
 }
 
 .theme-controls { display: inline-flex; gap: 6px; flex: none; }
@@ -176,207 +269,162 @@ a {
   display: inline-flex; align-items: center; justify-content: center;
   width: 34px; height: 34px; padding: 0;
   border: 1px solid var(--line-strong); background: transparent;
+  border-radius: 999px;
   color: var(--ink); cursor: pointer; font: 500 14px/1 var(--font-outfit);
-  transition: border-color .14s ease, background .14s ease;
+  box-shadow: none;
 }
-.theme-control:hover { border-color: var(--accent); background: var(--surface); }
-.theme-accent-dot { width: 13px; height: 13px; background: var(--accent); }
+.theme-control:hover { background: var(--surface); }
+.theme-accent-dot { width: 13px; height: 13px; border-radius: 99px; background: var(--accent); }
 .theme-accent-popover {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 80;
   display: grid; grid-template-columns: repeat(6, 22px); gap: 6px;
   padding: 10px; background: var(--page); border: 1px solid var(--line);
-  box-shadow: 0 14px 36px -22px color-mix(in srgb, var(--ink) 45%, transparent);
+  border-radius: 16px;
+  box-shadow: none;
 }
 .theme-accent-swatch {
   width: 22px; height: 22px; padding: 0; border: 1px solid var(--line-strong);
-  cursor: pointer; transition: transform .1s ease;
-}
-.theme-accent-swatch:hover { transform: scale(1.1); }
-
-/* Text CTA variant: same chrome as .theme-control, auto width so labels
-   like "Copy installer prompt" are a real button, not a 34px square. */
-.theme-control-label {
-  width: auto;
-  height: 34px;
-  padding: 0 14px;
-  font: 500 0.6rem/1 var(--font-outfit);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-/* Phone-sized controls. Must live AFTER the base .theme-control rule above:
-   same specificity, so source order decides the winner. This also sets the
-   masthead's height, which --masthead-h mirrors. */
-@media (max-width: 640px) {
-  .theme-control {
-    width: 28px;
-    height: 28px;
-  }
-
-  .theme-control-label {
-    width: auto;
-    height: 28px;
-    padding: 0 12px;
-  }
-
-  .theme-accent-popover {
-    grid-template-columns: repeat(4, 22px);
-  }
+  border-radius: 99px;
+  cursor: pointer;
 }
 .theme-accent-swatch.is-selected { outline: 2px solid var(--ink); outline-offset: 2px; }
 
-/*
- * Entrance + status motion. CSS-only, so content is server-rendered and
- * VISIBLE without JavaScript. Elements default to opacity:1; the reveal is a
- * pure-CSS enhancement that only runs when motion is welcome. If CSS fails,
- * the animation is skipped, or the user prefers reduced motion, the content
- * simply shows in its final (visible) state. Never a blank page.
- */
-@keyframes ledger-rise {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+.connector-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.connector-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 0;
+}
+.connector-mark {
+  display: block;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex: none;
+}
+.connector-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.connector-name {
+  font-size: 0.82rem;
+  line-height: 1.2;
+  color: var(--ink-soft);
 }
 
-@keyframes ledger-pulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.35;
-    transform: scale(0.8);
-  }
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 72px 24px 56px;
+  overflow: hidden;
+}
+.hero h1 {
+  max-width: 18ch;
+  font-size: clamp(2.6rem, 6vw, 4.4rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+.hero .lede {
+  max-width: 36rem;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.5;
+}
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin-bottom: 18px;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 28px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .ledger-anim {
-    animation: ledger-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-  .ledger-pulse {
-    animation: ledger-pulse 1.8s ease-in-out infinite;
-  }
+.page-main {
+  width: min(1080px, calc(100% - 48px));
+  margin: 0 auto;
+  flex: 1;
+  padding-bottom: 80px;
 }
 
-@keyframes cue-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(5px);
-  }
+.section-title {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .cue-bob {
-    display: inline-block;
-    animation: cue-bob 1.7s ease-in-out infinite;
-  }
-
-  @supports (animation-timeline: view()) {
-    .story-reveal {
-      animation: ledger-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 55%;
-    }
-  }
+.pack-prose h2, .pack-prose h3 {
+  margin-top: 1.75rem;
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pack-prose p + p { margin-top: 1rem; }
+.pack-prose a { text-decoration: underline; text-underline-offset: 2px; }
+.pack-prose ul { margin-top: 0.75rem; padding-left: 1.1rem; }
+.pack-prose li + li { margin-top: 0.35rem; }
+.pack-prose code,
+.installer-prompt {
+  font-family: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, "Cascadia Code", monospace;
+}
+.installer-prompt {
+  max-height: 24rem;
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  font-size: 0.72rem;
+  line-height: 1.55;
 }
 
-/* Character cascade for the hero eyebrow: letters resolve out of a blur,
-   the same blur-to-sharp gesture the wings emblem uses. Default state is
-   fully visible, so no-JS, failed-CSS, and reduced-motion all show plain
-   text rather than an empty line. */
-@keyframes reveal-char {
-  from {
-    opacity: 0;
-    filter: blur(8px);
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-    transform: none;
-  }
+.hairline-row + .hairline-row { border-top: 1px solid var(--line); }
+
+.bot-row {
+  display: grid;
+  gap: 8px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .reveal-char {
-    animation: reveal-char 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
-}
+html[data-theme="dark"] .wings-on-light { display: none; }
+html:not([data-theme="dark"]) .wings-on-dark { display: none; }
 
-/* Phones read the homepage as one idea per screen: each beat is a viewport
-   panel with a gentle snap stop. `proximity`, not `mandatory`. Mandatory
-   fights the user on long pages and traps flick-scrolls. Phones only; the
-   desktop split-screen wants a continuous column beside the pinned index. */
-@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-snap-type: y proximity;
-  }
+@keyframes wings-fade-in { from { opacity: 0; } }
+.wings-video-fade { animation: wings-fade-in 1.2s ease both; }
 
-  .story-beat {
-    scroll-snap-align: start;
-    scroll-margin-top: var(--masthead-h);
-  }
-}
-
-/* Wings emblem: blurred at rest, HD crossfades in on hover. */
-.wings-emblem .wings-hd,
-.wings-emblem .wings-blur {
-  transition: opacity 0.5s ease;
-}
-.wings-emblem .wings-hd {
-  opacity: 0;
-}
-.wings-emblem:hover .wings-hd,
-.wings-emblem:focus-visible .wings-hd {
-  opacity: 1;
-}
-.wings-emblem:hover .wings-blur,
-.wings-emblem:focus-visible .wings-blur {
-  opacity: 0;
-}
-
-/* Theme-adaptive emblem: white wings on dark theme, black wings on light.
-   Crawlers and no-JS clients (no data-theme) get the light set. */
-html[data-theme="dark"] .wings-on-light {
-  display: none;
-}
-html:not([data-theme="dark"]) .wings-on-dark {
-  display: none;
-}
-
-/* Late-mounted wings fade up to whatever opacity their variant sets: a
-   single-keyframe animation interpolates from 0 to the computed value. */
-@keyframes wings-fade-in {
-  from {
-    opacity: 0;
-  }
-}
-.wings-video-fade {
-  animation: wings-fade-in 1.2s ease both;
-}
-
-/* Wings background video: blend modes dissolve the clip's own background
-   (screen eats black on the dark theme, multiply eats white on the light
-   theme), so only the wings themselves ghost through behind the hero. */
 .wings-video {
   position: absolute;
   inset: 0;
   pointer-events: none;
   overflow: hidden;
 }
-/* Poster and video stack dead-centre via transform. Grid-cell centering
-   resolved their percentage widths against a circularly-sized track and
-   drifted them left of centre at some viewports. Both share the width
-   rules below, so their boxes stay identical (the LCP contract). */
 .wings-video > * {
   position: absolute;
   left: 50%;
@@ -385,89 +433,175 @@ html:not([data-theme="dark"]) .wings-on-dark {
 }
 .wings-video video,
 .wings-video img.wings-poster {
-  /* Small enough that the full wings always sit inside the frame; the
-     blend mode dissolves the clip's own background, so the wings stay
-     sharp. Only a whisper of edge softening. */
   width: min(72vh, 44vw);
   height: auto;
-  opacity: 0.1;
-  /* Radii sized so the fade genuinely reaches the element edges. The
-     source footage lets wing tips touch its frame, and this dissolves
-     that boundary at every moment of the loop. */
+  opacity: 0.07;
   -webkit-mask-image: radial-gradient(ellipse 56% 56% at 50% 50%, #000 62%, transparent 96%);
   mask-image: radial-gradient(ellipse 56% 56% at 50% 50%, #000 62%, transparent 96%);
 }
 html[data-theme="dark"] .wings-video video,
-html[data-theme="dark"] .wings-video img.wings-poster {
-  mix-blend-mode: screen;
-}
+html[data-theme="dark"] .wings-video img.wings-poster { mix-blend-mode: screen; opacity: 0.1; }
 html:not([data-theme="dark"]) .wings-video video,
-html:not([data-theme="dark"]) .wings-video img.wings-poster {
-  mix-blend-mode: multiply;
-}
-/* Poster hands off to the video once it mounts. */
-.wings-video img.wings-poster {
-  transition: opacity 1.2s ease;
-}
-.wings-video.wings-live img.wings-poster {
-  opacity: 0;
-}
+html:not([data-theme="dark"]) .wings-video img.wings-poster { mix-blend-mode: multiply; }
+.wings-video img.wings-poster { transition: opacity 1.2s ease; }
+.wings-video.wings-live img.wings-poster { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
-  /* The still poster stays; only the motion goes. The component also
-     skips fetching the video entirely under reduced motion. */
-  .wings-video video {
-    display: none;
-  }
+  .wings-video video { display: none; }
 }
-
-/* The homepage composition's wings loop: overrides the base
-   width / opacity pair. The mask and blend modes stay identical. */
 .wings-video--altar video,
 .wings-video--altar img.wings-poster {
-  width: min(62vh, 88%);
-  opacity: 0.18;
+  width: min(58vh, 70%);
+  opacity: 0.08;
 }
 
-/* Pack / docs markdown body: inherit the Ledger type, not a blob of raw HTML. */
-.pack-prose h2,
-.pack-prose h3 {
-  margin-top: 1.75rem;
-  color: var(--accent-text);
-  font-size: 0.6rem;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes ledger-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ledger-anim { animation: ledger-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+}
+
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.spec-table th,
+.spec-table td {
+  text-align: left;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.spec-table th {
+  color: var(--muted);
   font-weight: 500;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
+  width: 28%;
 }
-.pack-prose p + p {
-  margin-top: 1rem;
-}
-.pack-prose a {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.pack-prose a:hover,
-.pack-prose a:focus-visible {
-  color: var(--accent-text);
-}
-.pack-prose ul {
-  margin-top: 0.75rem;
-  padding-left: 1.1rem;
-}
-.pack-prose li + li {
-  margin-top: 0.35rem;
-}
-.pack-prose code {
-  font-family: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, "Cascadia Code", monospace;
+.spec-table code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: 0.85em;
 }
 
-.installer-prompt {
-  max-height: 24rem;
-  overflow: auto;
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 8px 0 28px;
+}
+@media (min-width: 800px) {
+  .stats-row { grid-template-columns: 1fr 1fr 1fr; }
+}
+.stat {
+  padding: 18px 20px;
   background: var(--surface);
   border: 1px solid var(--line);
+  border-radius: 18px;
+}
+.stat-label { color: var(--muted); font-size: 0.8rem; }
+.stat-value {
+  margin-top: 6px;
+  font-size: 1.8rem;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.stat-note { margin-top: 8px; color: var(--muted); font-size: 0.78rem; line-height: 1.4; }
+.stat-spark { margin-top: 10px; color: var(--status-live); }
+
+.search-wrap { display: block; margin-bottom: 18px; }
+.search-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--page);
+  color: var(--ink);
+  font: 400 0.95rem/1 var(--font-outfit), system-ui, sans-serif;
+}
+.search-input::placeholder { color: var(--muted); }
+
+.apd-shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: start;
+}
+@media (min-width: 960px) {
+  .apd-shell { grid-template-columns: 200px minmax(0, 1fr); gap: 36px; }
+}
+.cat-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  position: sticky;
+  top: calc(var(--masthead-h) + 12px);
+}
+.cat-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font: 400 0.88rem/1.2 var(--font-outfit), system-ui, sans-serif;
+  cursor: pointer;
+  text-align: left;
+}
+.cat-item:hover { color: var(--ink); background: var(--surface); }
+.cat-item.is-on { color: var(--ink); background: var(--surface); font-weight: 500; }
+
+.index-row {
+  padding: 12px 4px 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.index-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+.index-name {
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+.index-name:hover { text-decoration: underline; text-underline-offset: 3px; }
+.chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-top: 2px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  flex: none;
+}
+.index-body { padding: 12px 0 8px 40px; }
+@media (max-width: 640px) {
+  .index-body { padding-left: 8px; }
 }
 
-.hairline-row + .hairline-row {
-  border-top: 1px solid var(--line);
-}
+.page-main { width: min(1120px, calc(100% - 40px)); }

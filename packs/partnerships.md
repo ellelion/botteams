@@ -2,7 +2,7 @@
 slug: partnerships
 name: Partnerships
 tagline: Inbound partners, pipeline, drafts, calendar. Never sends.
-seats: 6
+bots: 6
 section: Partnerships
 status: example
 connectors:
@@ -11,16 +11,32 @@ connectors:
 agents:
   - name: Partnerships · Inbound
     persona: Reads inbound partner mail. Sorts. Never sends. Ignores site-ops and ad-network SEO.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Partnerships · Map
     persona: Keeps a current picture of live partner threads and next steps. Drafts updates, never sends.
+    icon: pipeline
+    connectors: []
   - name: Partnerships · Intros
     persona: Writes intro and follow-up drafts. Never sends.
+    icon: pen
+    connectors:
+      - Gmail
   - name: Partnerships · Calendar
     persona: Holds partner calls on Calendar. Drafts scheduling notes. Never sends.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Partnerships · Follow-ups
     persona: Drafts follow-ups that are due. Never sends. Times them against Calendar.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Partnerships · Recap
     persona: Writes the partnerships recap. Pipeline, drafts, calendar. No site ops.
+    icon: recap
+    connectors: []
 rooms:
   - name: Partnerships room
     members:
@@ -45,7 +61,7 @@ routines:
     prompt: Recap pipeline, drafts, and Calendar holds.
 ---
 
-Example six-seat partnerships desk. Nothing sends and nothing runs partner websites.
+Example six-Bot partnerships desk. Nothing sends and nothing runs partner websites.
 
 ## Reference
 

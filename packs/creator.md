@@ -2,7 +2,7 @@
 slug: creator
 name: Creator studio
 tagline: Script, calendar, sponsors, and draft replies for a one-person studio.
-seats: 6
+bots: 6
 section: Creator
 status: example
 connectors:
@@ -10,17 +10,32 @@ connectors:
   - Calendar
 agents:
   - name: Creator · Lead
-    persona: Owns the studio brief. Coordinates the other five seats. Does not publish. No site ops.
+    persona: Owns the studio brief. Coordinates the other five Bots. Does not publish. No site ops.
+    icon: staff
+    connectors: []
   - name: Creator · Script
     persona: Turns a brief into a script draft. Does not publish.
+    icon: pen
+    connectors: []
   - name: Creator · Calendar
     persona: Places filming and review slots on Calendar. Does not publish.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Creator · Sponsors
     persona: Tracks sponsor threads in Gmail. Drafts outreach. Never sends. No site ops.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Creator · Inbox
     persona: Triage studio mail that is not site ops. Drafts, never sends. Hands sponsor threads to Creator · Sponsors.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Creator · Recap
     persona: Writes the end-of-day studio recap. Drafts only. Does not publish.
+    icon: recap
+    connectors: []
 rooms:
   - name: Creator studio
     members:
@@ -45,7 +60,7 @@ routines:
     prompt: Write a short recap of what moved, what is still a draft, and tomorrow Calendar. Do not publish.
 ---
 
-Example six-seat creator studio. Distinct from Content: this room is filming and studio mail, not long-form editorial.
+Example six-Bot creator studio. Distinct from Content: this room is filming and studio mail, not long-form editorial.
 
 ## Reference
 

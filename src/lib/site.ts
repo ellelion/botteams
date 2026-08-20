@@ -1,7 +1,7 @@
 export const site = {
   name: "Grok Bot Teams",
-  updatedAt: "2026-08-20",
-  verifiedOn: "2026-08-20",
+  updatedAt: "2026-08-21",
+  verifiedOn: "2026-08-21",
   title: "Install a Grok Bot team, not a bot · Grok Bot Teams",
   description:
     "Public shelf of company packs for Grok Bot. Copy one installer prompt, paste it into Grok Bot, and stand up a named team. Operated by Ellelion LLC. Not affiliated with xAI.",
@@ -23,3 +23,10 @@ export const APD_HOME = "https://agentpluginsdirectory.com";
 export const SKILLSELION_HOME = "https://skillselion.com";
 export const STRIPE_BEST_PRACTICES =
   "https://skillselion.com/skills/stripe/ai/stripe-best-practices";
+
+export const XAI_DOCS = {
+  overview: "https://docs.x.ai/grok-bot/overview",
+  bots: "https://docs.x.ai/grok-bot/bots",
+  chat: "https://docs.x.ai/grok-bot/chat-and-collaboration",
+  routines: "https://docs.x.ai/grok-bot/skills-routines-and-automations",
+} as const;

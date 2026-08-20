@@ -1,24 +1,28 @@
 import Link from "next/link";
-import { isExample, type Pack } from "@/lib/packs";
+import { ConnectorRow } from "@/components/ConnectorRow";
+import { VerifiedChip } from "@/components/VerifiedChip";
+import { PackIcon } from "@/components/icons/LineIcons";
+import { en } from "@/lib/messages/en";
+import { isExample, isVerified, type Pack } from "@/lib/types";
 
 export function PackCard({ pack }: { pack: Pack }) {
   const example = isExample(pack);
+  const verified = isVerified(pack);
   return (
-    <article className="flex flex-col rounded-xl border border-line bg-card p-6">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-[16px] font-medium tracking-[-0.01em] text-ink">{pack.name}</h2>
-        <p className="text-[12px] text-mute">{example ? "Example" : pack.seats + " seats"}</p>
+    <article className="pack-card">
+      <div className="pack-card-top">
+        <PackIcon slug={pack.slug} />
+        <span className="inline-flex flex-wrap justify-end gap-1.5">
+          {verified ? <VerifiedChip /> : null}
+          <span className="chip">{example ? en.home.exampleBadge : en.home.liveBadge}</span>
+        </span>
       </div>
-      <p className="mt-3 flex-1 text-[14px] leading-6 text-mute">{pack.tagline}</p>
-      <div className="mt-6 flex items-center justify-between gap-3">
-        <Link
-          href={"/packs/" + pack.slug}
-          className="inline-flex h-8 w-fit items-center rounded-lg bg-ink px-3 text-[13px] font-medium text-canvas"
-        >
-          Install
-        </Link>
-        {example ? <p className="text-[12px] text-mute">{pack.seats} seats</p> : null}
-      </div>
+      <h3>
+        <Link href={"/packs/" + pack.slug}>{pack.name}</Link>
+      </h3>
+      <p className="text-[0.92rem] leading-relaxed" style={{ color: "var(--muted)" }}>{pack.tagline}</p>
+      <ConnectorRow names={pack.connectors} size={16} />
+      <p className="pack-card-meta">{pack.section} · {pack.bots} bots</p>
     </article>
   );
 }

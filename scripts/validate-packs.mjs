@@ -8,7 +8,7 @@ const matter = require("gray-matter");
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const packsDir = path.join(root, "packs");
-const REQUIRED = ["slug", "name", "tagline", "seats", "section", "status", "connectors", "agents", "rooms", "routines"];
+const REQUIRED = ["slug", "name", "tagline", "section", "status", "connectors", "agents", "rooms", "routines"];
 
 function fail(message) {
   console.error("validate-packs: " + message);
@@ -35,17 +35,29 @@ for (const file of files) {
     if (data[key] === undefined || data[key] === null || data[key] === "") fail(file + ": missing " + key);
   }
   if (data.slug !== slug) fail(file + ": slug must equal filename (" + slug + ")");
-  if (typeof data.seats !== "number") fail(file + ": seats must be a number");
+  const bots = typeof data.bots === "number" ? data.bots : data.seats;
+  if (typeof bots !== "number") fail(file + ": bots must be a number");
+  if (data.seats !== undefined && data.bots === undefined) fail(file + ": rename seats to bots");
   if (data.status !== "pack" && data.status !== "example") fail(file + ": status must be pack or example");
   if (!Array.isArray(data.connectors)) fail(file + ": connectors must be an array");
+  const packConnectors = new Set((data.connectors || []).map((name) => String(name)));
   if (!Array.isArray(data.agents) || data.agents.length === 0) fail(file + ": agents must be a non-empty array");
-  else data.agents.forEach((agent, i) => {
-    if (!isNonEmptyString(agent?.name) || !isNonEmptyString(agent?.persona)) fail(file + ": agents[" + i + "] needs name and persona");
-  });
+  else {
+    if (data.agents.length !== bots) fail(file + ": bots count must equal agents length");
+    data.agents.forEach((agent, i) => {
+      if (!isNonEmptyString(agent?.name) || !isNonEmptyString(agent?.persona)) fail(file + ": agents[" + i + "] needs name and persona");
+      if (agent.connectors !== undefined) {
+        if (!Array.isArray(agent.connectors)) fail(file + ": agents[" + i + "].connectors must be an array");
+        else agent.connectors.forEach((name) => {
+          if (!packConnectors.has(name)) fail(file + ": agents[" + i + "] connector \"" + name + "\" is not in pack connectors");
+        });
+      }
+    });
+  }
   if (!Array.isArray(data.rooms) || data.rooms.length === 0) fail(file + ": rooms must be a non-empty array");
   else data.rooms.forEach((room, i) => {
     if (!isNonEmptyString(room?.name) || !Array.isArray(room?.members)) fail(file + ": rooms[" + i + "] needs name and members[]");
-    else if (room.members.length > 6) fail(file + ": rooms[" + i + "] exceeds the 6-seat cap");
+    else if (room.members.length < 2 || room.members.length > 6) fail(file + ": rooms[" + i + "] must have two to six Bots");
   });
   if (!Array.isArray(data.routines) || data.routines.length === 0) fail(file + ": routines must be a non-empty array");
   else data.routines.forEach((routine, i) => {

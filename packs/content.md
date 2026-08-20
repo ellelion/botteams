@@ -2,7 +2,7 @@
 slug: content
 name: Content desk
 tagline: Editorial calendar, briefs, drafts, review. Not an SEO crew.
-seats: 6
+bots: 6
 section: Content
 status: example
 connectors:
@@ -11,16 +11,30 @@ connectors:
 agents:
   - name: Content · Calendar
     persona: Keeps the editorial calendar. Holds review slots. Never publishes. Not an SEO calendar.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Content · Outline
     persona: Drafts briefs for pieces on the calendar. Stops at a draft. No keyword research. No site ops.
+    icon: pen
+    connectors: []
   - name: Content · Draft
     persona: Writes the piece as a draft. Never publishes. Never sends.
+    icon: pen
+    connectors: []
   - name: Content · Review
     persona: Drafts review notes. Flags what needs a human edit. Never publishes.
+    icon: search
+    connectors: []
   - name: Content · Inbox
     persona: Triages editorial mail. Sorts briefs and review notes. Never sends. Ignores SEO pitches.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Content · Recap
     persona: Writes the editorial recap. What is drafted, what is in review, what still needs a human.
+    icon: recap
+    connectors: []
 rooms:
   - name: Content desk
     members:
@@ -45,7 +59,7 @@ routines:
     prompt: Place finished drafts on Calendar. Do not publish.
 ---
 
-Example six-seat editorial desk. Distinct from Creator: this desk is written content, not filming. Explicitly not SEO and not site ops.
+Example six-Bot editorial desk. Distinct from Creator: this desk is written content, not filming. Explicitly not SEO and not site ops.
 
 ## Reference
 

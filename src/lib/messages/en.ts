@@ -6,39 +6,46 @@ export const en = {
   h1: "Install a Grok Bot team, not a bot.",
   eyebrow: "Company packs for Grok Bot",
   answer:
-    "Copy one installer prompt, paste it into Grok Bot, and stand up a named team: agents, a room, a sidebar section, and routines you confirm. No accounts on this site. No plugin API. No one-click OAuth.",
+    "Give each Bot a job. Copy one installer prompt, paste it into Grok Bot, and stand up a named team: Bots, a group chat, a sidebar section, and routines you confirm. No accounts on this site. No plugin API. No one-click OAuth.",
   entity: site.entity,
-  verified: "Verified on",
+  verified: "Verified",
   nav: {
     packs: "Packs",
-    docs: "Docs",
+    docs: "Spec",
     github: "GitHub",
     homeAria: "Grok Bot Teams, home",
     mainAria: "Main",
   },
   home: {
-    indexTitle: "The company packs",
+    indexTitle: "Company packs",
     howTitle: "How it works",
     howBody:
-      "Pick a pack. Copy the installer prompt. Paste it into Grok Bot. The prompt creates named agents and a room (6 seats max), tells you to make a sidebar section, and pings each agent so you can confirm routines. Connectors must already be on the account.",
+      "Pick a pack. Copy the installer prompt. Paste it into Grok Bot. The prompt creates named Bots and a group chat (two to six Bots), tells you to make a sidebar section, and pings each Bot so you can confirm routines. Connectors must already be on the account.",
     typeIn:
       "Canonical domain grokbotteams.ai. grokbotteam.ai (no s) is a type-in that should 301 when DNS exists. This repo does not buy or configure DNS.",
     sponsorsTitle: "Sponsor slots",
     sponsorsNote: "Fifteen slots. All available. No fake advertisers.",
     available: "Available",
-    scrollCue: "Scroll the packs",
-    exampleBadge: "Example pack",
+    scrollCue: "Browse packs",
+    exampleBadge: "Example",
     liveBadge: "Installable",
+    filterAll: "All",
+    viewCards: "Cards",
+    viewTable: "Table",
+    specCta: "Pack spec",
   },
   pack: {
     copy: "Copy installer prompt",
     copied: "Copied",
     copyFail: "Copy failed",
-    seats: "seats",
+    seats: "bots",
+    bots: "bots",
     section: "Sidebar section",
     connectors: "Connectors already on the account",
-    agents: "Agents",
-    rooms: "Rooms",
+    connectorsNote:
+      "Connectors are account-wide. This pack expects these already on the account. The per-Bot row is which Bot uses which ones, not a second OAuth.",
+    agents: "Bots",
+    rooms: "Group chat",
     routines: "Routines",
     skills: "Skills",
     reuse: "Reuse existing if present",
@@ -46,10 +53,11 @@ export const en = {
       "Example pack. The copy button still builds a real prompt so you can see the format. Do not treat this as a production recipe.",
     installNote:
       "Paste the prompt into Grok Bot. This is not one-click OAuth and not a plugin install.",
+    ownerBot: "Owner Bot",
   },
   docs: {
-    title: "Pack format and install notes",
-    h1: "Pack format and install notes",
+    title: "Pack spec",
+    h1: "Pack spec",
   },
   footer: {
     mit: "MIT",
@@ -58,6 +66,6 @@ export const en = {
   notFound: {
     kicker: "Not on the shelf",
     body: "This page is not in the pack index.",
-    back: "Back to the shelf",
+    back: "Back to packs",
   },
 } as const;

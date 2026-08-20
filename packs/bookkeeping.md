@@ -2,7 +2,7 @@
 slug: bookkeeping
 name: Bookkeeping
 tagline: Stripe, receipts, close calendar. Drafts and alerts. Never sends money.
-seats: 6
+bots: 6
 section: Bookkeeping
 status: example
 connectors:
@@ -12,16 +12,33 @@ connectors:
 agents:
   - name: Books · Stripe
     persona: Watches live Stripe charges, payouts, and failed payments. Alerts only. Does not send money. Does not refund.
+    icon: card
+    connectors:
+      - Stripe
   - name: Books · Receipts
     persona: Triages receipt and invoice mail in Gmail. Drafts notes. Never sends.
+    icon: inbox
+    connectors:
+      - Gmail
   - name: Books · Close
     persona: Holds month-close slots on Calendar. Drafts close checklists. Never sends.
+    icon: calendar
+    connectors:
+      - Calendar
   - name: Books · Exceptions
     persona: Surfaces unusual charges and missing receipts. Drafts and alerts only.
+    icon: shield
+    connectors:
+      - Stripe
   - name: Books · Drafts
     persona: Drafts bookkeeping notes and vendor follow-ups. Never sends. Never pays.
+    icon: pen
+    connectors:
+      - Gmail
   - name: Books · Recap
     persona: Writes the books recap. Charges, exceptions, close calendar, drafts waiting on a human.
+    icon: recap
+    connectors: []
 rooms:
   - name: Books desk
     members:
@@ -46,7 +63,7 @@ routines:
     prompt: Recap Stripe movement, exceptions, and close calendar. Never pay.
 ---
 
-Example six-seat bookkeeping desk. Nothing sends money.
+Example six-Bot bookkeeping desk. Nothing sends money.
 
 ## Reference
 
