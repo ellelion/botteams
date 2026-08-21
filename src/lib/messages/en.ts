@@ -206,11 +206,21 @@ export const en = {
   },
   sponsor: {
     railTitle: "Sponsors",
-    railCta: (filled: number, total: number) => `${filled} of ${total} taken`,
-    railEmptyCta: "All slots open",
-    openSlot: "Open",
+    /* Always says "paying". Two sister sites sit above this line, and a
+       bare "0 of 15 taken" beside two visible rows reads as a lie. */
+    railCta: (filled: number, total: number) => `${filled} of ${total} paying taken`,
+    /* Not Promoted, not Verified, not Official. It is ours and it says so. */
+    houseLabel: "Sister site",
+    houseNote: "No outside sponsors yet. Two sister sites are on the rail so it is not empty.",
+    openLine: (open: number, total: number) =>
+      open === total
+        ? `All ${total} paying slots are open.`
+        : `${open} of ${total} paying slots are open.`,
     takeSlot: "Take a slot",
     disclosure: "Marked links earn us a commission. It does not change what a team recommends.",
+    railTodayTitle: "The rail today",
+    emptyPlacements:
+      "The connect-first slot and the promoted team stay empty until there is a buyer, and a promoted team has to be a recipe that actually ships. We will not list an ad as a team.",
   },
   docs: {
     title: "Team spec",

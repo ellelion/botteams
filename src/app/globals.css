@@ -1936,6 +1936,40 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 
 
+/* ── Sponsor rail ─────────────────────────────────────────────────────
+   No new shapes. The open-slots block is a card and the CTA is the
+   primary pill, both straight off the tokens the rest of the site uses. */
+.spon-open {
+  margin-top: 18px;
+  padding: 22px 24px;
+  border: 0;
+  border-radius: var(--r-card);
+  background: var(--card);
+}
+.spon-cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: var(--page);
+  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity var(--dur) var(--ease);
+}
+.spon-cta:hover { opacity: 0.88; }
+.spon-cta:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+
+@media (max-width: 640px) {
+  .spon-open { padding: 20px 18px; }
+  .spon-cta { min-height: 44px; }
+}
+
+
 /* ── Footer ───────────────────────────────────────────────────────────
    Ledger, not a dark bar bolted onto the bottom: same paper, one hairline,
    Outfit for the labels. Columns on a wide screen, stacked on a phone,
