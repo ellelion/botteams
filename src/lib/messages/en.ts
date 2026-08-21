@@ -70,6 +70,16 @@ export const en = {
     sourceLabel: "awesome-grok-connectors",
     sourceTail: (asOf: string) => `, read as of ${asOf}. Treat it as a checkable snapshot, not as an xAI inventory.`,
     checked: "Checked on",
+    searchLabel: "Search connectors",
+    searchPlaceholder: "Search connectors, or the teams that use them",
+    viewLabel: "Layout",
+    summary: (shown: number, total: number) =>
+      shown === total ? `Showing all ${total} connectors.` : `Showing ${shown} of ${total} connectors.`,
+    clear: "Clear filters",
+    emptyTitle: (q: string) => (q ? `Nothing matches "${q}".` : "Nothing matches those filters."),
+    emptyBody:
+      "Grok Bot can also reach anything that speaks MCP, so a connector missing here may still work. Try a shorter word, or clear the filters and browse by category.",
+    teamCount: (n: number) => (n === 1 ? "1 team" : `${n} teams`),
     andMore: (n: number) => ` and ${n} more`,
     byoTitle: "Bring your own MCP",
     byoBody:
