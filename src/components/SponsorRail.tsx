@@ -16,7 +16,7 @@ import { en } from "@/lib/messages/en";
  *
  * It used to render three identical "Open / Take this slot" rows, which
  * is a shelf advertising that nobody wants it. Now it shows the two
- * sister sites, each labelled as ours, and then says in one block how
+ * Ellelion products, each labelled as ours, and then says in one block how
  * many paying slots are open, with one way to buy one.
  *
  * The count is paying only. House ads never move it.

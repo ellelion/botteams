@@ -12,6 +12,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site.url}/docs`, lastModified },
     { url: `${site.url}/api`, lastModified },
     { url: `${site.url}/sponsor`, lastModified },
+    { url: `${site.url}/about`, lastModified },
+    { url: `${site.url}/terms`, lastModified },
+    { url: `${site.url}/privacy`, lastModified },
     ...teamPages,
     ...botPages,
   ];

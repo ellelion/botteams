@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
  * `sponsors` is paying inventory. It is empty. `filledCount()` reads it
  * and nothing else, so a house ad can never make the rail look sold.
  *
- * `houseAds` are our own sister sites. They are here so a visitor is not
+ * `houseAds` are our own Ellelion products. They are here so a visitor is not
  * staring at a column of empty rows, and they are labelled as ours. They
  * are not Promoted, not Verified, they earn us nothing on a click, and
  * they never count toward a taken slot.
@@ -85,7 +85,7 @@ export function sponsorHref(slot: SponsorSlot, campaign: Campaign): string {
 }
 
 /** Outbound house link. Tagged `house`, never `sponsor`, so the analytics
-    cannot quietly claim a sister site was a sale. */
+    cannot quietly claim a house ad was a sale. */
 export function houseHref(ad: HouseAd, campaign: Campaign): string {
   return tagged(ad.href, "house", campaign);
 }

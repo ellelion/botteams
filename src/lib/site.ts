@@ -12,11 +12,15 @@ export const site = {
   typeInDomain: "grokbotteam.ai",
   entity:
     "Grok Bot Teams is a public shelf of company teams for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
-  sisters: [
+  /* The other Ellelion products. They are not "sisters", they are the
+     rest of what this company ships. */
+  ellelionSites: [
     { name: "ellelion.com", href: "https://ellelion.com" },
     { name: "skillselion.com", href: "https://skillselion.com" },
     { name: "agentpluginsdirectory.com", href: "https://agentpluginsdirectory.com" },
   ],
+  grokHome: "https://grok.com",
+  brandGuidelines: "https://x.ai/legal/brand-guidelines",
 } as const;
 
 export const APD_HOME = "https://agentpluginsdirectory.com";
