@@ -42,7 +42,7 @@ export default function DocsPage() {
           </tbody>
         </table>
 
-        <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Official limits we map to</h2>
+        <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Published limits we map to</h2>
         <ul className="mt-4 space-y-3 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           <li>
             <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.overview} rel="nofollow noopener noreferrer">Bot definition</a>: In the Docs and in the Grok Bot app, a Bot = a single persistent, named agent or one AI teammate.

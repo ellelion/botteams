@@ -38,9 +38,11 @@ function asAgents(value: unknown, teamConnectors: string[]): TeamAgent[] {
   });
 }
 
+/* An empty list is legal: a one-Bot recipe has nobody to talk to. It is
+   not Verified, because Verified is a claim about a group chat. */
 function asRooms(value: unknown): TeamRoom[] {
-  if (!Array.isArray(value) || value.length === 0) {
-    throw new Error("rooms must be a non-empty array");
+  if (!Array.isArray(value)) {
+    throw new Error("rooms must be an array");
   }
   return value.map((item, i) => {
     if (!item || typeof item !== "object") throw new Error(`rooms[${i}] is invalid`);
@@ -56,8 +58,8 @@ function asRooms(value: unknown): TeamRoom[] {
 }
 
 function asRoutines(value: unknown): TeamRoutine[] {
-  if (!Array.isArray(value) || value.length === 0) {
-    throw new Error("routines must be a non-empty array");
+  if (!Array.isArray(value)) {
+    throw new Error("routines must be an array");
   }
   return value.map((item, i) => {
     if (!item || typeof item !== "object") throw new Error(`routines[${i}] is invalid`);
@@ -162,6 +164,7 @@ export function parseTeam(raw: string, filename: string): Team {
       data.integration_urls && typeof data.integration_urls === "object"
         ? (data.integration_urls as Record<string, string>)
         : undefined,
+    fromXai: data.from_xai === true ? true : undefined,
     suggest: asSuggestions(data.suggest),
     connectorModes: asConnectorModes(data.connector_modes, merged),
   };

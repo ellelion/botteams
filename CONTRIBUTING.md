@@ -100,6 +100,23 @@ suggest:
   - text: Brief me Mondays in Founder HQ.
 ```
 
+### One-Bot recipes and sourced ones
+
+`rooms: []` is legal. A recipe that stands up one Bot has nobody to talk
+to, and inventing a group chat so the card looks Verified would be a lie
+about what the recipe does.
+
+`from_xai: true` marks a recipe as our write-up of a job xAI publishes in
+its [use-case gallery](https://x.ai/bot/use-cases). It shows a **From xAI**
+chip that links to the source. Use it only for that, and never write copy
+that implies xAI reviewed, certified, or endorsed anything here.
+
+Verified is a separate claim and a narrow one: at least one Bot, `bots`
+matching the roster, at least one group chat, every group chat holding two
+to six Bots, and Bots plus group chats under the account cap of 50. A
+recipe with no group chat is not Verified, because it makes no claim about
+one. The rule is asserted in the validate script, so breaking it fails CI.
+
 ### Categories
 
 The category list is closed so a typo cannot quietly become a new category.

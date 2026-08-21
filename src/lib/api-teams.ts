@@ -14,6 +14,7 @@ export type ApiTeam = {
   tagline: string;
   category: string;
   status: string;
+  fromXai: boolean;
   bots: number;
   addedAt: string | null;
   connectors: string[];
@@ -45,6 +46,7 @@ export function toApiTeam(team: Team): ApiTeam {
     tagline: team.tagline,
     category: team.section,
     status: team.status,
+    fromXai: team.fromXai === true,
     bots: team.bots,
     addedAt: team.addedAt ?? null,
     connectors: team.connectors,

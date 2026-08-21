@@ -31,6 +31,19 @@ it end to end.
 | `/api` | Public API contract, readable without JavaScript. |
 | `/sponsor` | Placements and rules. |
 
+## Where the teams come from
+
+Most are ours. 56 are one-Bot recipes written up from jobs xAI publishes
+in its [Grok Bot use-case gallery](https://x.ai/bot/use-cases); those carry
+`from_xai: true`, show a **From xAI** chip that links to the source, and
+are never Verified, because Verified is a claim about a group chat holding
+two to six Bots and a one-Bot recipe makes no such claim. Titles and
+categories on those are xAI's. Everything else about them is ours, and xAI
+does not review or certify anything on this shelf.
+
+The index opens on the company teams. From xAI is one click away, and
+Everything shows both.
+
 ## Customize
 
 Every team page can be edited in place: turn Bots off, rename them, set the

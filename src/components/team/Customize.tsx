@@ -21,6 +21,7 @@ import {
   defaultState,
   encodeState,
   isOn,
+  isSolo,
   resolve,
   toMarkdown,
   type CustomState,
@@ -76,6 +77,10 @@ export function Customize({ team, children }: { team: Team; children?: ReactNode
   }, [team, state]);
 
   const resolved = useMemo(() => resolve(team, state), [team, state]);
+  /* One Bot means there is no group chat to edit and no roster to grow.
+     Offering "add Bots up to six" here would invent a team the published
+     job never described. */
+  const solo = isSolo(team);
   const verdict = useMemo(() => check(team, state), [team, state]);
   const generated = useMemo(() => buildPrompt(team, state, site.url, site.github), [team, state]);
   const prompt = state.override ?? generated;
@@ -174,7 +179,7 @@ export function Customize({ team, children }: { team: Team; children?: ReactNode
           </button>
           {/* Lives beside Copy, not in the page header, so it describes the
               recipe as it stands rather than the one on the shelf. */}
-          <VerifiedChip on={verdict.verified} />
+          {solo ? null : <VerifiedChip on={verdict.verified} />}
         </div>
 
         {verdict.errors.length > 0 ? (
@@ -192,6 +197,7 @@ export function Customize({ team, children }: { team: Team; children?: ReactNode
         ) : null}
 
         <div className="mt-5 grid gap-2 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+          {solo ? <p>{en.xai.soloNote}</p> : null}
           <p>{en.team.connectorsNote}</p>
           <p>{en.team.installNote}</p>
         </div>
@@ -269,16 +275,19 @@ export function Customize({ team, children }: { team: Team; children?: ReactNode
 
           <fieldset className="cz-group">
             <legend className="cz-legend">{en.customize.bots}</legend>
+            {solo ? <p className="cz-truth">{en.xai.soloRoster}</p> : null}
             <ul className="cz-list">
               {team.agents.map((agent, i) => {
                 const on = isOn(state, agent.name);
                 return (
                   <li key={agent.name} className={`cz-bot${on ? "" : " is-off"}`}>
                     <div className="cz-bot-top">
-                      <label className="cz-check">
-                        <input type="checkbox" checked={on} onChange={() => toggleBot(agent.name)} />
-                        <span className="sr-only">{`${en.customize.botOn}: ${agent.name}`}</span>
-                      </label>
+                      {solo ? null : (
+                        <label className="cz-check">
+                          <input type="checkbox" checked={on} onChange={() => toggleBot(agent.name)} />
+                          <span className="sr-only">{`${en.customize.botOn}: ${agent.name}`}</span>
+                        </label>
+                      )}
                       <GrokBotMark size={18} animate={on} style={botMarkStyle(i)} />
                       <label className="cz-field cz-field-grow">
                         <span className="sr-only">{`${en.customize.botName}: ${agent.name}`}</span>
@@ -315,6 +324,7 @@ export function Customize({ team, children }: { team: Team; children?: ReactNode
             </ul>
           </fieldset>
 
+          {solo ? null : (
           <fieldset className="cz-group">
             <legend className="cz-legend">{en.customize.room}</legend>
             <label className="cz-field">
@@ -347,6 +357,7 @@ export function Customize({ team, children }: { team: Team; children?: ReactNode
               ))}
             </ul>
           </fieldset>
+          )}
 
           <fieldset className="cz-group">
             <legend className="cz-legend">{en.customize.also}</legend>
@@ -428,6 +439,7 @@ export function Customize({ team, children }: { team: Team; children?: ReactNode
         </ul>
       </section>
 
+      {solo ? null : (
       <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
         <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.rooms}</h2>
         <ul className="mt-4">
@@ -439,6 +451,7 @@ export function Customize({ team, children }: { team: Team; children?: ReactNode
           </li>
         </ul>
       </section>
+      )}
 
       {resolved.routines.length > 0 ? (
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>

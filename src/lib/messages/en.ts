@@ -45,6 +45,7 @@ export const en = {
     colTeam: "Team",
     colCategory: "Category",
     colBots: "Bots",
+    botCount: (n: number) => (n === 1 ? "1 Bot" : `${n} Bots`),
     colConnectors: "Connectors",
     openTeam: "Open team",
     browseLabel: "Browse",
@@ -109,6 +110,7 @@ export const en = {
     copied: "Copied",
     copyFail: "Copy failed",
     bots: "bots",
+    botCount: (n: number) => (n === 1 ? "1 Bot" : `${n} Bots`),
     section: "Sidebar section",
     connectors: "Connectors already on the account",
     connectFirst: "Connect first",
@@ -187,6 +189,19 @@ export const en = {
   docs: {
     title: "Team spec",
     h1: "Team spec",
+  },
+  xai: {
+    chip: "From xAI",
+    chipTitle: "Sourced from xAI's published Grok Bot use cases. Not affiliated. Not an xAI certification.",
+    filter: "From xAI",
+    sourceOurs: "Company teams",
+    sourceAll: "Everything",
+    sourceLabel: "Source",
+    soloNote:
+      "One Bot, so there is no group chat to edit. Verified is a claim about a group chat holding two to six Bots, and this recipe does not make one.",
+    soloRoster: "This recipe is one Bot. Adding more would be our idea, not the published job, so the roster is fixed here.",
+    note:
+      "Our write-up of a job xAI publishes in its Grok Bot use-case gallery. The title and the category are theirs. The Bot, the connectors, and the standing instructions are ours. xAI does not review or certify anything on this shelf.",
   },
   footer: {
     aria: "Site",

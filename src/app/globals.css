@@ -572,6 +572,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .chip-verified { color: var(--status-live); }
 .chip-unverified { color: var(--muted); border-style: dashed; }
+/* Sourcing, not endorsement, so it reads as a citation rather than a
+   seal: no fill, no accent, just a bordered label that links out. */
+.chip-xai { color: var(--muted-strong); }
+.chip-xai:hover { color: var(--ink); border-color: var(--accent); }
 .chip-beta {
   color: var(--beta);
   letter-spacing: 0.16em;
@@ -825,6 +829,15 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .browse-pick-btn:hover { color: var(--accent-text); }
 .browse-pick-btn.is-on { color: var(--ink); border-bottom-color: var(--ink); }
+.browse-pick-count {
+  margin-left: 3px;
+  font-variant-numeric: tabular-nums;
+  opacity: .65;
+}
+@media (max-width: 560px) {
+  /* Two rows of controls on a phone rather than one that scrolls off. */
+  .browse-pick { flex-wrap: wrap; gap: 8px 12px; }
+}
 
 /* Rail: one line, scrolled sideways, every category still reachable. */
 .cat-rail {

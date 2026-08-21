@@ -9,6 +9,7 @@ import { Select, type SelectOption } from "@/components/ui/Select";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
 import { Sparkline } from "@/components/Sparkline";
 import { VerifiedChip } from "@/components/VerifiedChip";
+import { FromXaiChip } from "@/components/FromXaiChip";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { botMarkStyle, sectionSlug } from "@/lib/bot-icon";
 import { installerPrompt } from "@/lib/installer";
@@ -112,30 +113,44 @@ export function TeamIndex({
   const sectionParam = params.get("category") ?? params.get("section") ?? "all";
   const integrationParam = params.get("integration") ?? "all";
   const sortParam = params.get("sort") === "name" ? "name" : "newest";
+  /* Three shelves, not two. Absent means our own company teams, which is
+     what a visitor should land on: 56 one-Bot jobs sourced from xAI would
+     otherwise be most of the first screen. */
+  const sourceRaw = params.get("source");
+  const sourceParam: "ours" | "xai" | "all" = sourceRaw === "xai" ? "xai" : sourceRaw === "all" ? "all" : "ours";
   const [view, setView] = useState<View>("ledger");
   const [browse, setBrowse] = useState<Browse>("rail");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState<string | null>(null);
 
+  /* Everything below filters within the chosen shelf, so a category count
+     never promises rows the current shelf will not show. */
+  const inSource = useMemo(
+    () => teams.filter((t) => (sourceParam === "all" ? true : sourceParam === "xai" ? t.fromXai === true : t.fromXai !== true)),
+    [teams, sourceParam],
+  );
+  const xaiCount = useMemo(() => teams.filter((t) => t.fromXai === true).length, [teams]);
+  const oursCount = teams.length - xaiCount;
+
   const categories = useMemo(() => {
     const map = new Map<string, number>();
-    for (const team of teams) map.set(team.section, (map.get(team.section) ?? 0) + 1);
+    for (const team of inSource) map.set(team.section, (map.get(team.section) ?? 0) + 1);
     return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  }, [teams]);
+  }, [inSource]);
 
   const connectorOptions = useMemo(() => {
     const map = new Map<string, number>();
-    for (const team of teams) {
+    for (const team of inSource) {
       for (const mark of resolveConnectors(team.connectors)) {
         map.set(mark.name, (map.get(mark.name) ?? 0) + 1);
       }
     }
     return [...map.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  }, [teams]);
+  }, [inSource]);
 
   const categoryOptions: SelectOption[] = useMemo(
     () => [
-      { value: "all", label: en.home.filterAll, count: teams.length, icon: <AllIcon /> },
+      { value: "all", label: en.home.filterAll, count: inSource.length, icon: <AllIcon /> },
       ...categories.map(([name, count]) => ({
         value: sectionSlug(name),
         label: name,
@@ -143,7 +158,7 @@ export function TeamIndex({
         icon: <SectionIcon section={name} />,
       })),
     ],
-    [categories, teams.length],
+    [categories, inSource.length],
   );
 
   const connectorSelectOptions: SelectOption[] = useMemo(
@@ -165,7 +180,7 @@ export function TeamIndex({
   ];
 
   const q = query.trim().toLowerCase();
-  const filtered = teams.filter((team) => {
+  const filtered = inSource.filter((team) => {
     if (sectionParam !== "all" && sectionSlug(team.section) !== sectionParam) return false;
     if (integrationParam !== "all") {
       const want = resolveConnector(integrationParam).slug;
@@ -190,6 +205,17 @@ export function TeamIndex({
   }
   const setSection = (next: string) => setParam("category", next);
 
+  /* "all" means everything here, not "no filter", so this cannot go
+     through setParam, which treats "all" as a clear. */
+  function setSource(next: "ours" | "xai" | "all") {
+    const usp = new URLSearchParams(params.toString());
+    usp.delete("section");
+    if (next === "ours") usp.delete("source");
+    else usp.set("source", next);
+    const qs = usp.toString();
+    router.replace(qs ? `${pathname}?${qs}#teams` : `${pathname}#teams`, { scroll: false });
+  }
+
   return (
     <section id="teams">
       <div className="stats-strip">
@@ -207,6 +233,25 @@ export function TeamIndex({
           onChange={(e) => setQuery(e.target.value)}
         />
       </label>
+
+      <div className="browse-pick">
+        <span className="browse-pick-label">{en.xai.sourceLabel}</span>
+        {([
+          ["ours", en.xai.sourceOurs, oursCount],
+          ["xai", en.xai.filter, xaiCount],
+          ["all", en.xai.sourceAll, teams.length],
+        ] as const).map(([id, label, count]) => (
+          <button
+            key={id}
+            type="button"
+            className={`browse-pick-btn${sourceParam === id ? " is-on" : ""}`}
+            aria-pressed={sourceParam === id}
+            onClick={() => setSource(id)}
+          >
+            {label} <span className="browse-pick-count">{count}</span>
+          </button>
+        ))}
+      </div>
 
       <div className="browse-pick">
         <span className="browse-pick-label">{en.home.browseLabel}</span>
@@ -336,7 +381,7 @@ export function TeamIndex({
               <span className="idx-card-tag">{team.tagline}</span>
               <span className="idx-card-foot">
                 <ConnectorRow names={team.connectors} size={15} />
-                <span className="idx-card-bots">{`${team.bots} Bots`}</span>
+                <span className="idx-card-bots">{en.home.botCount(team.bots)}</span>
               </span>
             </Link>
           ))}
@@ -386,12 +431,13 @@ function TeamExpandable({
             <Link href={`/teams/${team.slug}`} className="index-name" onClick={(e) => e.stopPropagation()}>
               {team.name}
             </Link>
-            <span className="team-card-meta">{`${team.bots} bots`}</span>
+            <span className="team-card-meta">{en.home.botCount(team.bots)}</span>
           </div>
           <p className="index-tagline">{team.tagline}</p>
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
             <ConnectorRow names={team.connectors} labeled size={16} />
             <span className="inline-flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
+              {team.fromXai ? <FromXaiChip /> : null}
               {verified ? <VerifiedChip /> : null}
             </span>
           </div>
