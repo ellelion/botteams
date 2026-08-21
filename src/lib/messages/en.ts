@@ -47,6 +47,7 @@ export const en = {
     connectorsNote:
       "Connectors are account-wide. This team expects these already on the account. The per-Bot row is which Bot uses which ones, not a second OAuth.",
     agents: "Bots",
+    botTag: "Bot",
     rooms: "Group chat",
     routines: "Routines",
     skills: "Skills",

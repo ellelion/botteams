@@ -7,8 +7,8 @@ import { ConnectorRow } from "@/components/ConnectorRow";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
 import { Sparkline } from "@/components/Sparkline";
 import { VerifiedChip } from "@/components/VerifiedChip";
-import { BotIcon } from "@/components/icons/LineIcons";
-import { botIconKey, sectionSlug } from "@/lib/bot-icon";
+import { GrokBotMark } from "@/components/icons/GrokBotMark";
+import { botMarkStyle, sectionSlug } from "@/lib/bot-icon";
 import { installerPrompt } from "@/lib/installer";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
@@ -195,12 +195,15 @@ function PackExpandable({
         <div className="index-body" onClick={(e) => e.stopPropagation()}>
           <p className="text-[0.82rem] leading-relaxed" style={{ color: ledger.inkFaint }}>{pack.tagline}</p>
           <ul className="mt-2">
-            {pack.agents.map((agent) => (
+            {pack.agents.map((agent, i) => (
               <li key={agent.name} className="bot-row">
                 <div className="flex items-start gap-2">
-                  <BotIcon name={botIconKey(agent)} />
+                  <GrokBotMark size={17} animate className="mt-0.5" style={botMarkStyle(i)} />
                   <div className="min-w-0">
-                    <p className="text-[0.92rem]" style={{ fontFamily: ledger.serif }}>{agent.name}</p>
+                    <p className="flex flex-wrap items-baseline gap-2 text-[0.92rem]" style={{ fontFamily: ledger.serif }}>
+                      {agent.name}
+                      <span className="bot-tag">{en.pack.botTag}</span>
+                    </p>
                     <p className="mt-0.5 text-[0.75rem] leading-snug" style={{ color: ledger.inkMuted }}>{agent.persona}</p>
                     {agent.connectors.length > 0 ? (
                       <div className="mt-1.5">

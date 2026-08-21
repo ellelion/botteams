@@ -5,6 +5,10 @@ the property of its respective owner and is used here for identification only.
 Grok Bot Teams is operated by Ellelion LLC and is not affiliated with xAI or
 with any connector vendor.
 
+The Grok Bot face mark in `src/components/icons/GrokBotMark.tsx` is xAI's
+silhouette, reproduced for identification on the same basis. Its blink is
+our own CSS, not xAI's animation code.
+
 Sources:
 
 - `box.svg`, `wix.svg`, `google-cloud-bigquery.svg`, `excalidraw.svg`,
