@@ -4,10 +4,13 @@ name: Content desk
 tagline: Editorial calendar, briefs, drafts, review. Not an SEO crew.
 bots: 6
 section: Content
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - Notion
+  - Webflow
+  - Canva
 agents:
   - name: Content · Calendar
     persona: Keeps the editorial calendar. Holds review slots. Never publishes. Not an SEO calendar.
@@ -17,20 +20,24 @@ agents:
   - name: Content · Outline
     persona: Drafts briefs for pieces on the calendar. Stops at a draft. No keyword research. No site ops.
     icon: pen
-    connectors: []
+    connectors:
+      - Notion
   - name: Content · Draft
     persona: Writes the piece as a draft. Never publishes. Never sends.
     icon: pen
-    connectors: []
+    connectors:
+      - Notion
   - name: Content · Review
     persona: Drafts review notes. Flags what needs a human edit. Never publishes.
     icon: search
-    connectors: []
+    connectors:
+      - Webflow
   - name: Content · Inbox
     persona: Triages editorial mail. Sorts briefs and review notes. Never sends. Ignores SEO pitches.
     icon: inbox
     connectors:
       - Gmail
+      - Canva
   - name: Content · Recap
     persona: Writes the editorial recap. What is drafted, what is in review, what still needs a human.
     icon: recap

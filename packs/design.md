@@ -4,7 +4,7 @@ name: Design studio
 tagline: Files, assets, specs, and board hygiene in one studio. Drafts only.
 bots: 5
 section: Design
-status: example
+status: team
 connectors:
   - Figma
   - Canva

@@ -4,30 +4,37 @@ name: Partnerships
 tagline: Inbound partners, pipeline, drafts, calendar. Never sends.
 bots: 6
 section: Partnerships
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - HubSpot
+  - Notion
+  - Zoom
 agents:
   - name: Partnerships · Inbound
     persona: Reads inbound partner mail. Sorts. Never sends. Ignores site-ops and ad-network SEO.
     icon: inbox
     connectors:
       - Gmail
+      - HubSpot
   - name: Partnerships · Map
     persona: Keeps a current picture of live partner threads and next steps. Drafts updates, never sends.
     icon: pipeline
-    connectors: []
+    connectors:
+      - Notion
   - name: Partnerships · Intros
     persona: Writes intro and follow-up drafts. Never sends.
     icon: pen
     connectors:
       - Gmail
+      - HubSpot
   - name: Partnerships · Calendar
     persona: Holds partner calls on Calendar. Drafts scheduling notes. Never sends.
     icon: calendar
     connectors:
       - Calendar
+      - Zoom
   - name: Partnerships · Follow-ups
     persona: Drafts follow-ups that are due. Never sends. Times them against Calendar.
     icon: inbox

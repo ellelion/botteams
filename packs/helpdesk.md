@@ -4,7 +4,7 @@ name: Ticket desk
 tagline: Tickets, chats, escalations, and bug handoff. Drafts only, never replies to a customer.
 bots: 5
 section: Helpdesk
-status: example
+status: team
 connectors:
   - Zendesk
   - Intercom

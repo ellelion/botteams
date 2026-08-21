@@ -4,20 +4,25 @@ name: Recruiting sourcer
 tagline: Outbound sourcing and sequences. Drafts only. Distinct from Hiring.
 bots: 6
 section: Recruiting
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - Ashby
+  - LinkedIn
+  - Notion
 agents:
   - name: Recruiting · Sourcer
     persona: Keeps a current list of outbound people to reach. Drafts notes. Never sends. Not a job-board operator.
     icon: search
-    connectors: []
+    connectors:
+      - LinkedIn
   - name: Recruiting · Outreach
     persona: Drafts outbound sequence mail. Never sends. Leaves the human the send action.
     icon: inbox
     connectors:
       - Gmail
+      - LinkedIn
   - name: Recruiting · Calendar
     persona: Holds intro calls on Calendar. Drafts scheduling notes. Never sends.
     icon: calendar
@@ -26,12 +31,14 @@ agents:
   - name: Recruiting · Pipeline
     persona: Tracks outbound pipeline stages. Drafts updates, never sends.
     icon: pipeline
-    connectors: []
+    connectors:
+      - Ashby
   - name: Recruiting · Inbox
     persona: Triages replies to outbound sequences. Drafts, never sends. Hands scheduling to Recruiting · Calendar.
     icon: inbox
     connectors:
       - Gmail
+      - Notion
   - name: Recruiting · Recap
     persona: Writes the recruiting recap. Who was drafted, who replied, what needs a human send.
     icon: recap

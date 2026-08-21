@@ -4,7 +4,7 @@ name: Data desk
 tagline: Warehouse, product analytics, and model health in one data floor. Reports only.
 bots: 6
 section: Data
-status: example
+status: team
 connectors:
   - Google Cloud BigQuery
   - Snowflake

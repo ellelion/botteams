@@ -4,19 +4,24 @@ name: Creator studio
 tagline: Script, calendar, sponsors, and draft replies for a one-person studio.
 bots: 6
 section: Creator
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - YouTube
+  - Canva
+  - HeyGen
 agents:
   - name: Creator · Lead
     persona: Owns the studio brief. Coordinates the other five Bots. Does not publish. No site ops.
     icon: staff
-    connectors: []
+    connectors:
+      - YouTube
   - name: Creator · Script
     persona: Turns a brief into a script draft. Does not publish.
     icon: pen
-    connectors: []
+    connectors:
+      - HeyGen
   - name: Creator · Calendar
     persona: Places filming and review slots on Calendar. Does not publish.
     icon: calendar
@@ -27,11 +32,13 @@ agents:
     icon: inbox
     connectors:
       - Gmail
+      - Canva
   - name: Creator · Inbox
     persona: Triage studio mail that is not site ops. Drafts, never sends. Hands sponsor threads to Creator · Sponsors.
     icon: inbox
     connectors:
       - Gmail
+      - YouTube
   - name: Creator · Recap
     persona: Writes the end-of-day studio recap. Drafts only. Does not publish.
     icon: recap

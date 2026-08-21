@@ -4,21 +4,26 @@ name: Legal review
 tagline: Intake, review drafts, calendar, follow-ups. Never files or sends. Not legal advice.
 bots: 6
 section: Legal
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - Docusign
+  - Box
+  - Notion
 agents:
   - name: Legal · Intake
     persona: Reads inbound legal-adjacent mail. Sorts contracts, questions, and noise. Never sends. Does not give legal advice.
     icon: inbox
     connectors:
       - Gmail
+      - Box
   - name: Legal · Review
     persona: Drafts review notes on threads Intake marked. Flags what needs a human lawyer. Never sends. Not legal advice.
     icon: search
     connectors:
       - Gmail
+      - Docusign
   - name: Legal · Calendar
     persona: Tracks filing, renewal, and review slots on Calendar. Drafts reminders. Never sends.
     icon: calendar
@@ -29,10 +34,12 @@ agents:
     icon: inbox
     connectors:
       - Gmail
+      - Notion
   - name: Legal · Archive
     persona: Keeps a current list of open matters and where each draft lives. No site ops.
     icon: clipboard
-    connectors: []
+    connectors:
+      - Box
   - name: Legal · Recap
     persona: Writes the desk recap. Open matters, Calendar holds, drafts waiting on a human. Not legal advice.
     icon: recap

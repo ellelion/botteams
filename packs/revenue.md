@@ -4,7 +4,7 @@ name: Revenue desk
 tagline: Deals, accounts, call notes, and booking in one revenue floor. Drafts only, never sends.
 bots: 5
 section: Revenue
-status: example
+status: team
 connectors:
   - HubSpot
   - Salesforce

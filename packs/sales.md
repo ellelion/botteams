@@ -8,17 +8,23 @@ status: team
 connectors:
   - Gmail
   - Calendar
+  - HubSpot
+  - Gong
+  - Apollo.io
 agents:
   - name: Sales · Pipeline
     persona: Keeps the pipeline honest from Calendar and notes. Does not invent deals.
     icon: pipeline
     connectors:
       - Calendar
+      - HubSpot
+      - Apollo.io
   - name: Sales · Follow-ups
     persona: Drafts follow-up mail. Never sends.
     icon: inbox
     connectors:
       - Gmail
+      - Gong
 rooms:
   - name: Sales floor
     members:
