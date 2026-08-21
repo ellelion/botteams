@@ -1879,3 +1879,62 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .cz-mode { flex: 1; padding: 0 6px; }
   .cz-members { gap: 2px 14px; }
 }
+
+
+/* ── Footer ───────────────────────────────────────────────────────────
+   Ledger, not a dark bar bolted onto the bottom: same paper, one hairline,
+   Outfit for the labels. Columns on a wide screen, stacked on a phone,
+   with rows tall enough to hit with a thumb. */
+.site-foot {
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+  margin-top: 56px;
+  border-top: 1px solid var(--line);
+  background: var(--page);
+}
+.foot-inner {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 34px 24px 40px;
+}
+.foot-cols {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 26px 20px;
+}
+.foot-col-title {
+  color: var(--muted);
+  font: 500 0.58rem/1 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.foot-col ul { margin-top: 10px; }
+.foot-link {
+  display: flex;
+  align-items: center;
+  /* A thumb needs 44px. On a phone these are the only links on screen. */
+  min-height: 34px;
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.foot-link:hover { color: var(--accent-text); }
+.foot-link:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.foot-legal {
+  margin-top: 28px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 720px) {
+  .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 430px) {
+  .foot-inner { padding: 28px 4px 34px; }
+  .foot-cols { grid-template-columns: 1fr; gap: 20px; }
+  .foot-link { min-height: 44px; }
+}
