@@ -44,7 +44,7 @@ export function HomePage({ packs }: { packs: Pack[] }) {
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
       <main className="relative z-10 grid flex-1 grid-cols-1 items-start gap-6 overflow-clip lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
-        <div className="pointer-events-none col-start-1 row-start-1 row-end-3 sticky top-[var(--masthead-h)] z-0 h-0 w-full min-w-0 self-start lg:row-end-2 lg:pr-16" aria-hidden>
+        <div className="pointer-events-none col-start-1 row-start-1 row-end-2 relative z-0 h-0 w-full min-w-0 self-start lg:sticky lg:top-[var(--masthead-h)] lg:pr-16" aria-hidden>
           <div className="relative h-[calc(100dvh-var(--masthead-h))] w-full">
             <WingsVideo variant="wings-video--altar" />
           </div>

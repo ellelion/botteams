@@ -81,9 +81,6 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
         </nav>
         <div className="flex flex-wrap items-center gap-3">
           <PackIcon slug={pack.slug} />
-          <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>
-            {example ? en.home.exampleBadge : en.home.liveBadge}
-          </p>
           {verified ? <VerifiedChip /> : null}
         </div>
         <h1 className="font-display mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>
