@@ -21,9 +21,10 @@
  * Brand marks under /public/connectors come from two places: hand-added
  * files, and simple-icons 16.28.0 (CC0 1.0), which is why some are a
  * single brand colour rather than the full multicolour logo. simple-icons
- * carries no Microsoft marks at all. Outlook came from botdirectory.ai
- * (MIT) instead; Outlook Calendar, OneDrive, SharePoint and Teams still
- * render as monograms rather than borrow the wrong sibling logo.
+ * carries no Microsoft marks at all, so those came from gilbarbara/logos
+ * (CC0), svgl (MIT) and botdirectory.ai (MIT). See ATTRIBUTION.md.
+ * Outlook Calendar keeps a monogram on purpose: no set carries it, and
+ * reusing the Outlook mail mark for it would be wrong, not just plain.
  */
 
 export const CATALOG_SOURCE = "https://github.com/rdmgator12/awesome-grok-connectors";
@@ -51,7 +52,7 @@ export type CatalogEntry = {
 
 export const CONNECTOR_CATALOG: CatalogEntry[] = [
   { name: "Box", slug: "box", category: "Featured", file: "box.svg" },
-  { name: "Canva", slug: "canva", category: "Featured", file: "" },
+  { name: "Canva", slug: "canva", category: "Featured", file: "canva.svg" },
   { name: "GitHub", slug: "github", category: "Featured", file: "github.svg" },
   { name: "Gmail", slug: "gmail", category: "Featured", file: "gmail.svg" },
   { name: "Google Calendar", slug: "google-calendar", category: "Featured", file: "google-calendar.svg" },
@@ -78,16 +79,16 @@ export const CONNECTOR_CATALOG: CatalogEntry[] = [
   { name: "Gamma", slug: "gamma", category: "Productivity", file: "" },
   { name: "HyperFrames by HeyGen", slug: "hyperframes", category: "Productivity", file: "" },
   { name: "Linear", slug: "linear", category: "Productivity", file: "linear.svg" },
-  { name: "Microsoft Teams", slug: "microsoft-teams", category: "Productivity", file: "" },
+  { name: "Microsoft Teams", slug: "microsoft-teams", category: "Productivity", file: "microsoft-teams.svg" },
   { name: "Outlook", slug: "outlook", category: "Productivity", file: "outlook.svg" },
   { name: "Outlook Calendar", slug: "outlook-calendar", category: "Productivity", file: "" },
 
   { name: "HubSpot", slug: "hubspot", category: "Sales", file: "hubspot.svg" },
   { name: "Meltwater", slug: "meltwater", category: "Sales", file: "" },
 
-  { name: "OneDrive", slug: "onedrive", category: "Business and enterprise", file: "" },
+  { name: "OneDrive", slug: "onedrive", category: "Business and enterprise", file: "onedrive.svg" },
   { name: "Salesforce", slug: "salesforce", category: "Business and enterprise", file: "salesforce.svg" },
-  { name: "SharePoint", slug: "sharepoint", category: "Business and enterprise", file: "" },
+  { name: "SharePoint", slug: "sharepoint", category: "Business and enterprise", file: "sharepoint.svg" },
 ];
 
 /* Pulled from the catalog upstream. Still resolves so old team files and

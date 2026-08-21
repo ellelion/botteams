@@ -13,8 +13,14 @@ Sources:
   brand's official hex. https://github.com/simple-icons/simple-icons
 - `outlook.svg` comes from the botdirectory.ai repository, released under
   the MIT License. https://github.com/elie222/botdirectory.ai
+- `microsoft-teams.svg` and `onedrive.svg` come from gilbarbara/logos,
+  released under CC0 1.0 Universal. https://github.com/gilbarbara/logos
+- `sharepoint.svg` and `canva.svg` come from svgl, released under the MIT
+  License. https://github.com/pheralb/svgl
 - The remaining files were added by hand.
 
-simple-icons carries no Microsoft marks. Outlook Calendar, OneDrive,
-SharePoint and Microsoft Teams still render as monograms, because reusing a
-sibling product's logo for them would be wrong rather than merely plain.
+Eight connectors still render as a monogram: Outlook Calendar, eToro,
+Webull, Interactive Brokers, S&P Global, Gamma, HyperFrames by HeyGen and
+Meltwater. No permissively licensed set carries them. Outlook Calendar in
+particular keeps a monogram on purpose, because reusing the Outlook mail
+mark for it would be wrong rather than merely plain.
