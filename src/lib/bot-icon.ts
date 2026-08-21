@@ -19,3 +19,31 @@ export function botIconKey(agent: PackAgent): string {
 export function sectionSlug(section: string): string {
   return section.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
+
+/*
+ * Per-Bot mark styling.
+ *
+ * x.ai tints the same face per context (their Engineering chips run
+ * --fg:#EA4045), so a roster reads as distinct Bots rather than one Bot
+ * printed six times. We do the same by position in the roster.
+ *
+ * The cycle is offset per Bot too. Six faces tilting and blinking on the
+ * same frame reads as a strobe; offsetting them reads as a room full of
+ * colleagues. The delay is negative so every Bot starts mid-cycle rather
+ * than sitting still waiting for its turn.
+ */
+const BOT_MARK_COLORS = [
+  "#0891b2", // cyan, the house accent
+  "#ea4045", // red
+  "#7856ff", // violet
+  "#1f8a65", // green
+  "#e0803a", // amber
+  "#3b6fd4", // blue
+];
+
+export function botMarkStyle(index: number): Record<string, string> {
+  return {
+    "--fg": BOT_MARK_COLORS[index % BOT_MARK_COLORS.length],
+    "--gb-delay": `-${((index * 1.9) % 12).toFixed(2)}s`,
+  };
+}

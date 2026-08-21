@@ -5,8 +5,9 @@ import { CopyInstallerButton } from "@/components/CopyInstallerButton";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { VerifiedChip } from "@/components/VerifiedChip";
-import { BotIcon, PackIcon } from "@/components/icons/LineIcons";
-import { botIconKey } from "@/lib/bot-icon";
+import { PackIcon } from "@/components/icons/LineIcons";
+import { GrokBotMark } from "@/components/icons/GrokBotMark";
+import { botMarkStyle } from "@/lib/bot-icon";
 import { installerPrompt } from "@/lib/installer";
 import { ledger } from "@/lib/ledger-theme";
 import { renderMarkdown } from "@/lib/markdown";
@@ -93,14 +94,17 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
         <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.agents}</h2>
           <ul className="mt-4">
-            {pack.agents.map((agent) => (
+            {pack.agents.map((agent, i) => (
               <li key={agent.name} className="hairline-row py-3">
                 <div className="flex gap-3">
-                  <BotIcon name={botIconKey(agent)} />
+                  <GrokBotMark size={19} animate className="mt-0.5" style={botMarkStyle(i)} />
                   <div className="min-w-0">
-                    <p style={{ fontFamily: ledger.serif }}>
-                      {agent.name}
-                      {agent.reuse ? ` · ${en.pack.reuse}` : ""}
+                    <p className="flex flex-wrap items-baseline gap-2" style={{ fontFamily: ledger.serif }}>
+                      <span>
+                        {agent.name}
+                        {agent.reuse ? ` · ${en.pack.reuse}` : ""}
+                      </span>
+                      <span className="bot-tag">{en.pack.botTag}</span>
                     </p>
                     <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
                       {agent.persona}

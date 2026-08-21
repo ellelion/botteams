@@ -806,3 +806,78 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   white-space: nowrap;
   border: 0;
 }
+
+/* Grok Bot face mark. Silhouette is xAI's, used to identify the product
+   this shelf serves. --fg and --bg are the same tint hooks x.ai uses, so
+   one copy of the artwork serves a roster of differently coloured Bots.
+
+   The motion below reproduces the three states we sampled off the live
+   mark (idle, curious, happy): a slow vertical breathe, a head tilt, eyes
+   that travel and grow while engaged, and two full blinks per cycle.
+   Theirs runs on bundled JS; this is keyframes, so the mark stays a
+   server component. --gb-delay offsets a whole cycle, which is what keeps
+   six Bots in one roster from blinking on the same frame. */
+.grok-bot-mark {
+  display: inline-block;
+  vertical-align: -0.18em;
+  flex: none;
+  overflow: visible;
+  user-select: none;
+}
+.grok-bot-mark__head { fill: var(--fg, var(--ink)); }
+.grok-bot-mark__eye { fill: var(--bg, var(--page)); }
+
+/* The head pivots on the face, not on the SVG box, so it gets its own
+   group and its own origin. scaleX never moves; only scaleY breathes. */
+.grok-bot-mark--live .grok-bot-mark__face {
+  transform-box: fill-box;
+  transform-origin: 50% 58%;
+  animation: gb-face 12s ease-in-out infinite;
+  animation-delay: var(--gb-delay, 0s);
+}
+.grok-bot-mark--live .grok-bot-mark__eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gb-eye 12s ease-in-out infinite;
+  animation-delay: var(--gb-delay, 0s);
+}
+
+@keyframes gb-face {
+  0%, 16% { transform: rotate(-1deg) scaleY(0.99); }
+  22% { transform: rotate(1.4deg) scaleY(1.007); }
+  30% { transform: rotate(8.6deg) scaleY(1.01); }
+  42% { transform: rotate(9.4deg) scaleY(1.01); }
+  54% { transform: rotate(5.2deg) scaleY(1.01); }
+  64% { transform: rotate(2.9deg) scaleY(0.994); }
+  74% { transform: rotate(2deg) scaleY(0.993); }
+  100% { transform: rotate(-1deg) scaleY(0.99); }
+}
+
+/* Blinks are two frames wide on purpose. Sampled ones bottom out near
+   scaleY 0.04 and are gone inside ~150ms; a slower shut reads as a fault. */
+@keyframes gb-eye {
+  0%, 16% { transform: translate(0, 0) scale(1, 1); }
+  20% { transform: translate(0, 0) scale(1.09, 0.2); }
+  21.5% { transform: translate(0, 0) scale(1.02, 1); }
+  30% { transform: translate(-8px, 7px) scale(1.1, 1.1); }
+  42% { transform: translate(-9.5px, 8px) scale(1.08, 1.08); }
+  50% { transform: translate(-7px, 9px) scale(1.13, 1.13); }
+  58% { transform: translate(-5px, 8px) scale(1.09, 0.85); }
+  62% { transform: translate(-3px, 5px) scale(1.03, 1.04); }
+  70% { transform: translate(0, 0) scale(1, 1); }
+  88% { transform: translate(0, 0) scale(1.09, 0.04); }
+  90% { transform: translate(0, 0) scale(1, 1); }
+  100% { transform: translate(0, 0) scale(1, 1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grok-bot-mark--live .grok-bot-mark__face,
+  .grok-bot-mark--live .grok-bot-mark__eye { animation: none; }
+}
+
+.bot-tag {
+  color: var(--muted);
+  font: 500 0.52rem/1 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}

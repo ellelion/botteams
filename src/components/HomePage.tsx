@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { PackIndex } from "@/components/home/PackIndex";
 import { RevealText } from "@/components/home/RevealText";
 import { WingsVideo } from "@/components/home/WingsVideo";
+import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { sponsorSlots } from "@/data/sponsors";
@@ -26,7 +27,8 @@ export function HomePage({ packs }: { packs: Pack[] }) {
           <div className="col-start-1 row-start-1 min-w-0 overflow-hidden lg:pr-16">
             <section className="story-beat relative flex min-h-[calc(100dvh-var(--masthead-h))] flex-col items-center justify-center overflow-hidden py-10 pb-20 text-center">
               <div className="relative z-10 w-full max-w-full overflow-hidden px-1">
-                <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>
+                <p className="flex items-center justify-center gap-2 text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>
+                  <GrokBotMark size={22} animate />
                   <RevealText text={en.eyebrow} delay={0.05} step={0.016} className="block" />
                 </p>
                 <h1 className="font-display ledger-anim mx-auto mt-8 w-full max-w-full text-balance text-[clamp(1.65rem,3.4vw,2.75rem)] font-light leading-[1.05] tracking-[-0.02em]" style={{ fontFamily: ledger.serif, animationDelay: "0.55s" }}>
