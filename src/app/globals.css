@@ -167,6 +167,17 @@ a {
   }
 }
 
+/* A fourth nav item (Connectors) pushed the actions 57px past a 375px
+   viewport. The masthead stays one row by contract, so the wordmark text
+   drops on the narrowest screens and the mark carries the brand and the
+   home link on its own. */
+@media (max-width: 430px) {
+  .site-wordmark span { display: none; }
+  .site-masthead { gap: 8px; }
+  .site-masthead-nav { gap: 10px; letter-spacing: 0.1em; }
+  .site-masthead-actions { gap: 8px; }
+}
+
 :where(a, button):focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: 3px;
@@ -949,3 +960,259 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 [data-theme="dark"] .connector-mark[src$="/zendesk.svg"] {
   filter: invert(1);
 }
+
+/* ── Connector explorer ──────────────────────────────────────────────
+   One filter model, three layouts. Console is a dense grouped list,
+   Rail puts the facets in a sticky sidebar, Wall is a logo grid for
+   recognising a brand rather than reading its name. */
+.cx { margin-top: 40px; }
+
+.cx-bar {
+  position: sticky;
+  top: var(--masthead-h);
+  z-index: 20;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 0;
+  background: var(--page);
+}
+.cx-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.cx-search-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--muted-strong);
+  pointer-events: none;
+}
+.cx-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 46px 0 40px;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: 400 0.92rem/1 var(--font-outfit), system-ui, sans-serif;
+  transition: border-color .16s ease, background .16s ease;
+}
+.cx-input::placeholder { color: var(--muted-strong); }
+.cx-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--page);
+}
+.cx-input::-webkit-search-cancel-button { filter: invert(0.6); }
+.cx-kbd {
+  position: absolute;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--muted);
+  font: 500 11px/1 var(--font-outfit), system-ui, sans-serif;
+}
+.cx-search:focus-within .cx-kbd { opacity: 0; }
+
+.cx-views { display: inline-flex; gap: 4px; flex: none; padding: 3px; border-radius: 9999px; background: var(--surface); }
+.cx-view {
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--muted);
+  font: 500 0.68rem/1 var(--font-outfit), system-ui, sans-serif;
+  cursor: pointer;
+  transition: color .16s ease, background .16s ease;
+}
+.cx-view:hover { color: var(--ink); }
+.cx-view.is-on { background: var(--ink); color: var(--page); }
+
+.cx-facets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 6px 0 18px;
+}
+.cx-facet {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font: 500 0.7rem/1 var(--font-outfit), system-ui, sans-serif;
+  cursor: pointer;
+  transition: border-color .16s ease, color .16s ease, background .16s ease;
+}
+.cx-facet:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); }
+.cx-facet.is-on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.cx-facet:disabled { opacity: .38; cursor: not-allowed; }
+.cx-count {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.66rem;
+  color: currentColor;
+  opacity: .62;
+}
+
+.cx-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+.cx-clear {
+  border: 0;
+  background: transparent;
+  color: var(--accent-text);
+  font: 500 0.76rem/1 var(--font-outfit), system-ui, sans-serif;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cx-group { margin-bottom: 26px; }
+.cx-group-title {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin-bottom: 4px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--line);
+  color: var(--accent-text);
+  font: 500 0.6rem/1 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.cx-list { margin: 0; padding: 0; list-style: none; }
+.cx-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 20px;
+  padding: 9px 8px;
+  margin: 0 -8px;
+  border-radius: 10px;
+  border-bottom: 1px solid var(--line);
+  transition: background .14s ease;
+}
+.cx-row:hover { background: var(--surface); }
+.cx-row-id { display: inline-flex; align-items: center; gap: 9px; min-width: 0; }
+.cx-row-teams { color: var(--muted); font-size: 0.72rem; }
+.cx-team { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+.cx-team:hover { color: var(--accent-text); }
+.cx-flag,
+.cx-tile-flag {
+  padding: 2px 7px;
+  border: 1px solid var(--line-strong);
+  border-radius: 9999px;
+  color: var(--muted);
+  font: 500 0.52rem/1.4 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Rail: facets move into a sticky sidebar and the list gets the rest. */
+@media (min-width: 900px) {
+  /* Two columns only: facet rail, then one results block. Letting each
+     group be its own grid row pushed them below the rail instead of
+     beside it. */
+  .cx--rail { display: grid; grid-template-columns: 208px minmax(0, 1fr); gap: 0 34px; }
+  .cx--rail .cx-bar { grid-column: 1 / -1; }
+  .cx--rail .cx-facets {
+    grid-column: 1;
+    grid-row: 2;
+    position: sticky;
+    top: calc(var(--masthead-h) + 74px);
+    align-self: start;
+    flex-direction: column;
+    align-items: stretch;
+    margin: 0;
+    max-height: calc(100dvh - var(--masthead-h) - 110px);
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .cx--rail .cx-facet { justify-content: space-between; border-radius: 8px; }
+  .cx--rail .cx-results { grid-column: 2; grid-row: 2; min-width: 0; }
+}
+
+/* Wall: recognition over reading. Tiles size to the mark, not the name. */
+.cx-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cx-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 16px 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  transition: border-color .16s ease, transform .16s ease;
+}
+.cx-tile:hover { border-color: var(--accent); transform: translateY(-2px); }
+.cx-tile-name {
+  color: var(--ink);
+  font-size: 0.8rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.cx-tile-meta { color: var(--muted); font-size: 0.66rem; }
+.cx-tile-flag { position: absolute; top: 11px; right: 11px; }
+
+.cx-empty {
+  padding: 44px 0 30px;
+  border-top: 1px solid var(--line);
+}
+.cx-empty-title {
+  font-family: var(--font-display-sans), system-ui, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.cx-empty-body { margin-top: 8px; max-width: 52ch; color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+.cx-empty-action {
+  margin-top: 16px;
+  padding: 9px 18px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--ink);
+  color: var(--page);
+  font: 500 0.7rem/1 var(--font-outfit), system-ui, sans-serif;
+  cursor: pointer;
+}
+.cx-empty-action:hover { background: var(--accent); color: var(--on-accent); }
+
+@media (max-width: 640px) {
+  .cx-bar { flex-wrap: wrap; }
+  .cx-views { width: 100%; justify-content: space-between; }
+  .cx-view { flex: 1; text-align: center; }
+  .cx-wall { grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)); }
+}
+
+/* Browser surfaces the page did not draw but still owns. */
+.cx-facets::-webkit-scrollbar { width: 6px; }
+.cx-facets::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 9999px; }
+.cx-facets::-webkit-scrollbar-track { background: transparent; }

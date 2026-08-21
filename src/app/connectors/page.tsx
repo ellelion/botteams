@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ConnectorRow } from "@/components/ConnectorRow";
+import { ConnectorExplorer, type ExplorerEntry } from "@/components/connectors/ConnectorExplorer";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { ledger } from "@/lib/ledger-theme";
@@ -13,7 +12,6 @@ import {
   isBuiltIn,
   resolveConnector,
   XAI_CONNECTOR_DOCS,
-  BUILT_IN,
 } from "@/lib/connectors";
 import { en } from "@/lib/messages/en";
 import { listPacks } from "@/lib/packs";
@@ -45,19 +43,27 @@ export default function ConnectorsPage() {
   }
 
   const groups = catalogByCategory();
+  const categories = groups.map((g) => g.category);
+  const entries: ExplorerEntry[] = CONNECTOR_CATALOG.map((e) => ({
+    name: e.name,
+    slug: e.slug,
+    category: e.category,
+    builtIn: isBuiltIn(e.slug),
+    teams: usage.get(e.slug) ?? [],
+  }));
+  const builtInCount = entries.filter((e) => e.builtIn).length;
 
   return (
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
-      <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-20 pt-12">
-        <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>{en.connectors.eyebrow}</p>
-        <h1 className="font-display mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>
+      <main className="relative z-10 mx-auto w-full max-w-4xl flex-1 pb-20 pt-12">
+        <h1 className="font-display text-[clamp(2rem,4vw,3.2rem)] leading-[1.05]" style={{ fontFamily: ledger.serif }}>
           {en.connectors.h1}
         </h1>
-        <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          {en.connectors.intro(CONNECTOR_CATALOG.length, CONNECTOR_CATALOG.filter((e) => isBuiltIn(e.slug)).length)}
+        <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+          {en.connectors.intro(CONNECTOR_CATALOG.length, builtInCount)}
         </p>
-        <p className="mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+        <p className="mt-4 max-w-2xl text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
           {en.connectors.builtInNote}{" "}
           <a className="accent-hover underline" href={XAI_CONNECTOR_DOCS} target="_blank" rel="noopener noreferrer">
             {en.connectors.builtInSource}
@@ -73,51 +79,19 @@ export default function ConnectorsPage() {
           {en.connectors.checked} <time dateTime={CATALOG_CHECKED_ON}>{CATALOG_CHECKED_ON}</time>
         </p>
 
-        {groups.map((group) => (
-          <section key={group.category} className="mt-12 border-t pt-7" style={{ borderColor: ledger.hairline }}>
-            <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-              {group.category}
-            </h2>
-            <ul className="mt-4">
-              {group.entries.map((entry) => {
-                const teams = usage.get(entry.slug) ?? [];
-                return (
-                  <li key={entry.slug} className="hairline-row flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3">
-                    <span className="flex flex-wrap items-center gap-2">
-                      <ConnectorRow names={[entry.name]} labeled size={18} />
-                      {isBuiltIn(entry.slug) ? <span className="bot-tag">{en.connectors.builtInLabel}</span> : null}
-                    </span>
-                    {teams.length > 0 ? (
-                      <span className="text-[0.72rem]" style={{ color: ledger.inkMuted }}>
-                        {teams.slice(0, 3).map((team, i) => (
-                          <span key={team.slug}>
-                            {i > 0 ? ", " : ""}
-                            <Link href={`/teams/${team.slug}`} className="accent-hover underline">
-                              {team.name}
-                            </Link>
-                          </span>
-                        ))}
-                        {teams.length > 3 ? en.connectors.andMore(teams.length - 3) : null}
-                      </span>
-                    ) : null}
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-        ))}
+        <ConnectorExplorer entries={entries} categories={categories} variant="console" />
 
-        <section className="mt-12 border-t pt-7" style={{ borderColor: ledger.hairline }}>
+        <section className="mt-14 border-t pt-7" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.byoTitle}</h2>
-          <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.connectors.byoBody}</p>
+          <p className="mt-3 max-w-2xl text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.connectors.byoBody}</p>
         </section>
 
         <section className="mt-10 border-t pt-7" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.retiredTitle}</h2>
-          <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.connectors.retiredBody}</p>
+          <p className="mt-3 max-w-2xl text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.connectors.retiredBody}</p>
         </section>
 
-        <p className="mt-12 text-[0.78rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+        <p className="mt-12 max-w-2xl text-[0.78rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
           {en.connectors.marksNote}
         </p>
       </main>
