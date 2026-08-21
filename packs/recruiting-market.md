@@ -11,6 +11,11 @@ connectors:
   - Exa
   - Notion
   - Ashby
+connector_modes:
+  LinkedIn: ask
+  Exa: draft
+  Notion: draft
+  Ashby: draft
 agents:
   - name: Market · Comp
     persona: Researches realistic pay ranges for the role and location.
@@ -48,6 +53,13 @@ routines:
     owner: Market · Supply
     schedule: Every Wednesday at 11:00
     prompt: Estimate the plausible candidate pool for each open role.
+suggest:
+  - text: Never contact a candidate without a human yes.
+    on: true
+  - text: Never share candidate details outside the loop.
+    on: true
+  - text: Source on the work, not the logo.
+  - text: Give me the pipeline number every Monday.
 ---
 
 Four Bots before a search starts. Sets expectations honestly.

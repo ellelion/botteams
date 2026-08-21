@@ -10,6 +10,10 @@ connectors:
   - Calendar
   - Notion
   - Linear
+connector_modes:
+  Calendar: draft
+  Notion: draft
+  Linear: draft
 agents:
   - name: Capacity · Booked
     persona: Adds up committed delivery time per person from Calendar for the next four weeks.
@@ -46,6 +50,13 @@ routines:
     owner: Capacity · Work
     schedule: Every weekday at 11:00
     prompt: List live Linear tasks with no owner or no due date. Never assign anything.
+suggest:
+  - text: Never send client mail. Draft only.
+    on: true
+  - text: Never change a signed scope without asking.
+    on: true
+  - text: Flag any retainer that goes over budget in the group chat.
+  - text: Use the client name, never the internal codename.
 ---
 
 Four Bots answering one question honestly: can we take this on.

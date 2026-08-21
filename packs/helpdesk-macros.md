@@ -10,6 +10,10 @@ connectors:
   - Zendesk
   - Notion
   - Intercom
+connector_modes:
+  Zendesk: ask
+  Notion: draft
+  Intercom: ask
 agents:
   - name: Macros · Usage
     persona: Reports which saved replies are used and which are never touched.
@@ -47,6 +51,13 @@ routines:
     owner: Macros · Gaps
     schedule: Every Friday at 14:00
     prompt: List questions answered by hand more than five times this week.
+suggest:
+  - text: Never send a reply without a human yes.
+    on: true
+  - text: Never close a ticket on the customer behalf.
+    on: true
+  - text: Escalate anything angry to me directly.
+  - text: Quote the ticket number in every summary.
 ---
 
 Four Bots on canned replies. Drafts them, publishes none.

@@ -11,6 +11,11 @@ connectors:
   - Ramp
   - Notion
   - Gmail
+connector_modes:
+  HubSpot: ask
+  Ramp: read
+  Notion: draft
+  Gmail: draft
 agents:
   - name: Sponsor · Terms
     persona: Records what the sponsorship actually included, in a checkable list.
@@ -49,6 +54,13 @@ routines:
     owner: Sponsor · Leads
     schedule: Every month on the 1st at 10:00
     prompt: Report pipeline from each event against total cost. Do not round in our favour.
+suggest:
+  - text: Never email attendees without a human yes.
+    on: true
+  - text: Never change a booking or a contract.
+    on: true
+  - text: Keep the run of show in one place.
+  - text: Flag anything still unconfirmed 14 days out.
 ---
 
 Four Bots asking whether the sponsorship was worth it.

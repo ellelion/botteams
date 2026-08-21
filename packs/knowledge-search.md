@@ -10,6 +10,10 @@ connectors:
   - Glean
   - Notion
   - Google Drive
+connector_modes:
+  Glean: draft
+  Notion: draft
+  Google Drive: draft
 agents:
   - name: Find · Failed
     persona: Reports searches that returned nothing useful.
@@ -47,6 +51,13 @@ routines:
     owner: Find · Duplicates
     schedule: Every Monday at 11:00
     prompt: Find documents answering the same question differently. Name all copies.
+suggest:
+  - text: Never delete a page. Archive it and say so.
+    on: true
+  - text: Draft edits, never publish over someone.
+    on: true
+  - text: Link the source for every claim.
+  - text: Flag a page nobody has touched in a year.
 ---
 
 Four Bots on whether knowledge can actually be found.

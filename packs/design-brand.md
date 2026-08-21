@@ -11,6 +11,11 @@ connectors:
   - Webflow
   - Canva
   - Notion
+connector_modes:
+  Figma: draft
+  Webflow: draft
+  Canva: draft
+  Notion: draft
 agents:
   - name: Brand · Surfaces
     persona: Lists public pages changed this week and what changed visually.
@@ -48,6 +53,13 @@ routines:
     owner: Brand · Assets
     schedule: Every Wednesday at 11:00
     prompt: Find brand marks used at the wrong size, colour, or clear space. Never edit an asset.
+suggest:
+  - text: Never overwrite a file someone else is working in.
+    on: true
+  - text: Draft feedback, never post it as final.
+    on: true
+  - text: Reference the component name, not a screenshot.
+  - text: Flag anything that breaks the type scale.
 ---
 
 Four Bots watching brand surfaces. Reports, never edits.

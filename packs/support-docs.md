@@ -11,6 +11,11 @@ connectors:
   - Notion
   - Intercom
   - Glean
+connector_modes:
+  Zendesk: ask
+  Notion: draft
+  Intercom: ask
+  Glean: draft
 agents:
   - name: Docs · Repeats
     persona: Counts questions answered by hand repeatedly.
@@ -48,6 +53,13 @@ routines:
     owner: Docs · Effect
     schedule: Every month on the 1st at 10:00
     prompt: For articles published last month, report whether the targeted tickets fell.
+suggest:
+  - text: Never send a reply without a human yes.
+    on: true
+  - text: Never promise a refund.
+    on: true
+  - text: Escalate anything about data loss immediately.
+  - text: Summarise the top three themes each week.
 ---
 
 Four Bots turning repeated answers into docs.

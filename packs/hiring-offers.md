@@ -11,6 +11,11 @@ connectors:
   - Docusign
   - Gmail
   - Calendar
+connector_modes:
+  Ashby: draft
+  Docusign: draft
+  Gmail: draft
+  Calendar: draft
 agents:
   - name: Offer · Terms
     persona: Checks the offer matches what was discussed and the band for the role.
@@ -48,6 +53,13 @@ routines:
     owner: Offer · Start
     schedule: Every Monday at 09:00
     prompt: For starts inside three weeks, list what is not yet done and who owns it.
+suggest:
+  - text: Never mail a candidate without a human yes.
+    on: true
+  - text: Never reject anyone automatically.
+    on: true
+  - text: Judge on the work, not on the school.
+  - text: Flag a role that has been open over 30 days.
 ---
 
 Four Bots at offer stage. Drafts and tracks, signs nothing.

@@ -11,6 +11,11 @@ connectors:
   - Zendesk
   - Notion
   - Glean
+connector_modes:
+  Intercom: ask
+  Zendesk: ask
+  Notion: draft
+  Glean: draft
 agents:
   - name: Customer · Gather
     persona: Collects what customers said across support and chat.
@@ -49,6 +54,13 @@ routines:
     owner: Customer · Brief
     schedule: Every Friday at 15:00
     prompt: Rewrite the brief separating observed statements from inferences.
+suggest:
+  - text: Never cite a source you did not read.
+    on: true
+  - text: Read and summarise. Never write to anything.
+    on: true
+  - text: Give me the counter-argument too.
+  - text: Say how confident you are, and why.
 ---
 
 Four Bots on customer evidence. Quotes everything it claims.

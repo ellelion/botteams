@@ -11,6 +11,11 @@ connectors:
   - Linear
   - Sentry
   - Vercel
+connector_modes:
+  GitHub: draft
+  Linear: draft
+  Sentry: draft
+  Vercel: draft
 agents:
   - name: Eng · Triage
     persona: Reads new GitHub issues and pull requests. Labels what is clearly routine, flags the rest. Never merges, never closes.
@@ -57,6 +62,13 @@ routines:
     owner: Eng · Recap
     schedule: Every weekday at 17:30
     prompt: Recap merges, deploy failures, error spikes, and decisions waiting on a human.
+suggest:
+  - text: Never merge or deploy. Draft only.
+    on: true
+  - text: Never touch production data.
+    on: true
+  - text: Link the commit or the issue in every summary.
+  - text: Say plainly when you are not sure.
 ---
 
 Example five-Bot engineering desk. Reads the tools, never writes to them.

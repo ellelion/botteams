@@ -11,6 +11,11 @@ connectors:
   - Intercom
   - Plain
   - Gmail
+connector_modes:
+  Zendesk: ask
+  Intercom: ask
+  Plain: draft
+  Gmail: draft
 agents:
   - name: SLA · Clock
     persona: Names tickets approaching their promised response time.
@@ -49,6 +54,13 @@ routines:
     owner: SLA · Recap
     schedule: Every Monday at 09:00
     prompt: Report last week's response times by plan. Show the worst day, not the average.
+suggest:
+  - text: Never send a reply without a human yes.
+    on: true
+  - text: Never close a ticket on the customer behalf.
+    on: true
+  - text: Escalate anything angry to me directly.
+  - text: Quote the ticket number in every summary.
 ---
 
 Four Bots on promised response times. Warns early, replies never.

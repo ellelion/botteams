@@ -11,6 +11,11 @@ connectors:
   - AWS Core
   - Notion
   - PagerDuty
+connector_modes:
+  Supabase: draft
+  AWS Core: draft
+  Notion: draft
+  PagerDuty: draft
 agents:
   - name: Backup · Ran
     persona: Confirms each backup ran and how large it was.
@@ -49,6 +54,13 @@ routines:
     owner: Backup · Restore
     schedule: Every Monday at 10:00
     prompt: Report how long since each system had a tested restore. Name anything over ninety days.
+suggest:
+  - text: Never apply a change. Draft the plan.
+    on: true
+  - text: Never touch production without a human yes.
+    on: true
+  - text: Name the blast radius before the fix.
+  - text: Page me only for real user impact.
 ---
 
 Four Bots on the question nobody asks until it matters.

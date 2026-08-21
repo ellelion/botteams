@@ -12,6 +12,12 @@ connectors:
   - Ashby
   - LinkedIn
   - Notion
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Ashby: draft
+  LinkedIn: ask
+  Notion: draft
 agents:
   - name: Recruiting · Sourcer
     persona: Keeps a current list of outbound people to reach. Drafts notes. Never sends. Not a job-board operator.
@@ -66,6 +72,13 @@ routines:
     owner: Recruiting · Recap
     schedule: Every weekday at 16:30
     prompt: Recap outbound drafts, replies, and Calendar holds. Never send.
+suggest:
+  - text: Never contact a candidate without a human yes.
+    on: true
+  - text: Never share candidate details outside the loop.
+    on: true
+  - text: Source on the work, not the logo.
+  - text: Give me the pipeline number every Monday.
 ---
 
 Example six-Bot outbound recruiting desk. Distinct from Hiring, which is inbound. Sequences stop at drafts.

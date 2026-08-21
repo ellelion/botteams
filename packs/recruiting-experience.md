@@ -11,6 +11,11 @@ connectors:
   - Gmail
   - Calendar
   - Notion
+connector_modes:
+  Ashby: draft
+  Gmail: draft
+  Calendar: draft
+  Notion: draft
 agents:
   - name: Experience · Time
     persona: Measures time from application to first reply, and to decision.
@@ -48,6 +53,13 @@ routines:
     owner: Experience · Recap
     schedule: Every Monday at 10:00
     prompt: Report time to first reply and to decision. Show the worst case, not just the median.
+suggest:
+  - text: Never contact a candidate without a human yes.
+    on: true
+  - text: Never share candidate details outside the loop.
+    on: true
+  - text: Source on the work, not the logo.
+  - text: Give me the pipeline number every Monday.
 ---
 
 Four Bots on how hiring feels from outside.

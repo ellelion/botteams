@@ -13,6 +13,13 @@ connectors:
   - Exa
   - Glean
   - Firecrawl
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Notion: draft
+  Exa: draft
+  Glean: draft
+  Firecrawl: draft
 agents:
   - name: Research · Brief
     persona: Owns the research question. Keeps the desk on the brief. Does not run SEO or site ops.
@@ -66,6 +73,13 @@ routines:
     owner: Research · Recap
     schedule: Every weekday at 16:45
     prompt: Recap notes, synthesis drafts, and open questions. Never publish.
+suggest:
+  - text: Never cite a source you did not read.
+    on: true
+  - text: Read and summarise. Never write to anything.
+    on: true
+  - text: Give me the counter-argument too.
+  - text: Say how confident you are, and why.
 ---
 
 Example six-Bot research desk. Not an SEO or ranking crew. Nothing publishes.

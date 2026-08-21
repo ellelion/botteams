@@ -11,6 +11,11 @@ connectors:
   - Salesforce
   - Notion
   - Google Cloud BigQuery
+connector_modes:
+  Stripe: read
+  Salesforce: ask
+  Notion: draft
+  Google Cloud BigQuery: draft
 agents:
   - name: Pricing · Realised
     persona: Reports what customers actually pay against list price.
@@ -48,6 +53,13 @@ routines:
     owner: Pricing · Realised
     schedule: Every month on the 1st at 10:00
     prompt: Report realised versus list price by plan. Never change a price.
+suggest:
+  - text: Never move money or issue a credit.
+    on: true
+  - text: Never mail a customer about billing without a yes.
+    on: true
+  - text: Reconcile before you report.
+  - text: Flag any churn risk worth over a month of revenue.
 ---
 
 Four Bots on pricing reality. Reads the ledger, changes nothing.

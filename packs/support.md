@@ -11,6 +11,11 @@ connectors:
   - Zendesk
   - Intercom
   - Linear
+connector_modes:
+  Gmail: draft
+  Zendesk: ask
+  Intercom: ask
+  Linear: draft
 agents:
   - name: Support · Triage
     persona: Labels incoming support mail by urgency. Does not reply.
@@ -50,10 +55,17 @@ routines:
     schedule: Weekdays at 15:00
     prompt: Draft follow-ups for threads waiting on us. Do not send.
 skills: []
+suggest:
+  - text: Never send a reply without a human yes.
+    on: true
+  - text: Never promise a refund.
+    on: true
+  - text: Escalate anything about data loss immediately.
+  - text: Summarise the top three themes each week.
 ---
 
 Support company is a three-Bot desk. Triage labels. Drafts writes. Follow-ups nudges. Drafts, never sends. Gmail is an account-wide connector, not a plugin this site installs.
 
 ## Reference
 
-Support · Drafts writes replies and never sends. The email-adjacent reference is Resend's official Agent Plugin (resend 1.0.0) on the [Agent Plugins Directory](https://agentpluginsdirectory.com/). These are references the pack expects. This site does not install them.
+Support · Drafts writes replies and never sends. The email-adjacent reference is Resend's official Agent Plugin (resend 1.0.0) on the [Agent Plugins Directory](https://agentpluginsdirectory.com/). These are references the team expects. This site does not install them.

@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Gmail
   - Google Drive
+connector_modes:
+  Xero: read
+  Calendar: draft
+  Gmail: draft
+  Google Drive: draft
 agents:
   - name: VAT · Deadlines
     persona: Holds every filing date for the entity and says which is next and what it needs.
@@ -48,6 +53,13 @@ routines:
     owner: VAT · Numbers
     schedule: Every month on the 3rd at 10:00
     prompt: Pull last period totals from Xero and show the working. Never file anything.
+suggest:
+  - text: Never move money. Read the ledgers and report.
+    on: true
+  - text: Never file anything with a tax authority.
+    on: true
+  - text: Round nothing. Quote the figure you found.
+  - text: Flag a duplicate payment the moment you see it.
 ---
 
 Four Bots on filings. Prepares and checks, never submits.

@@ -11,6 +11,11 @@ connectors:
   - Canva
   - Notion
   - Miro
+connector_modes:
+  Figma: draft
+  Canva: draft
+  Notion: draft
+  Miro: draft
 agents:
   - name: Design · Files
     persona: Watches Figma for new pages and comments left unanswered. Summarises what changed. Never edits a file.
@@ -57,6 +62,13 @@ routines:
     owner: Design · Recap
     schedule: Every weekday at 17:00
     prompt: Recap file changes, asset gaps, spec drafts, and anything waiting on a human decision.
+suggest:
+  - text: Never overwrite a file someone else is working in.
+    on: true
+  - text: Draft feedback, never post it as final.
+    on: true
+  - text: Reference the component name, not a screenshot.
+  - text: Flag anything that breaks the type scale.
 ---
 
 Example five-Bot design studio. No file edits, no publishing.

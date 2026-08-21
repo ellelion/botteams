@@ -11,6 +11,11 @@ connectors:
   - Google Drive
   - Stripe
   - Gmail
+connector_modes:
+  Notion: draft
+  Google Drive: draft
+  Stripe: read
+  Gmail: draft
 agents:
   - name: Handover · Assets
     persona: Checks final deliverables are in the client folder and named the way the studio names things. Reports what is missing.
@@ -54,6 +59,13 @@ routines:
     owner: Handover · Access
     schedule: Every Monday at 10:00
     prompt: List client-shared files on closed projects. Report only. Never change a permission.
+suggest:
+  - text: Never send client mail. Draft only.
+    on: true
+  - text: Never change a signed scope without asking.
+    on: true
+  - text: Flag any retainer that goes over budget in the group chat.
+  - text: Use the client name, never the internal codename.
 ---
 
 Five Bots for the week after delivery, which is where agencies leak money.

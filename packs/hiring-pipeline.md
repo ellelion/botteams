@@ -11,6 +11,11 @@ connectors:
   - Gmail
   - Calendar
   - Notion
+connector_modes:
+  Ashby: draft
+  Gmail: draft
+  Calendar: draft
+  Notion: draft
 agents:
   - name: Pipeline · Stuck
     persona: Names candidates who have not moved stage in a week.
@@ -48,6 +53,13 @@ routines:
     owner: Pipeline · Silent
     schedule: Every weekday at 09:30
     prompt: List candidates waiting on us. Never contact them.
+suggest:
+  - text: Never mail a candidate without a human yes.
+    on: true
+  - text: Never reject anyone automatically.
+    on: true
+  - text: Judge on the work, not on the school.
+  - text: Flag a role that has been open over 30 days.
 ---
 
 Four Bots keeping hiring moving. Makes silence visible.

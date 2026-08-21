@@ -11,6 +11,11 @@ connectors:
   - Notion
   - Ramp
   - Gmail
+connector_modes:
+  Docusign: draft
+  Notion: draft
+  Ramp: read
+  Gmail: draft
 agents:
   - name: Vendor · Intake
     persona: Records incoming agreements and what they are for.
@@ -48,6 +53,13 @@ routines:
     owner: Vendor · Status
     schedule: Every Monday at 09:30
     prompt: List agreements out for signature more than a week.
+suggest:
+  - text: Never sign or send anything.
+    on: true
+  - text: Say clearly that this is not legal advice.
+    on: true
+  - text: Quote the clause, do not paraphrase it.
+  - text: Flag any auto-renew inside 60 days.
 ---
 
 Four Bots reading vendor paper. Flags terms, approves nothing.

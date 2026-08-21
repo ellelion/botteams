@@ -11,6 +11,11 @@ connectors:
   - X
   - Notion
   - Gmail
+connector_modes:
+  Discord: ask
+  X: ask
+  Notion: draft
+  Gmail: draft
 agents:
   - name: Advocate · Spot
     persona: Notices people repeatedly answering others in public and lists them with what they did.
@@ -48,6 +53,13 @@ routines:
     owner: Advocate · Thanks
     schedule: Every month on the 1st at 10:00
     prompt: Draft a specific thank-you for each advocate, naming what they actually did. Never send.
+suggest:
+  - text: Never post publicly without a human yes.
+    on: true
+  - text: Never ban or mute anyone.
+    on: true
+  - text: Summarise the week of threads every Friday.
+  - text: Escalate anything that reads like a safety issue.
 ---
 
 Four Bots noticing the people who help. Drafts thanks, sends none.

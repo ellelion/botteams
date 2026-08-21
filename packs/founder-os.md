@@ -12,6 +12,12 @@ connectors:
   - Calendar
   - Ramp
   - Notion
+connector_modes:
+  Stripe: read
+  Gmail: draft
+  Calendar: draft
+  Ramp: read
+  Notion: draft
 agents:
   - name: Chief of Staff
     persona: Coordinates the founder week, pings Money and Inbox, and keeps Founder HQ honest.
@@ -47,10 +53,17 @@ routines:
     schedule: Weekdays at 08:30
     prompt: Draft replies to overnight founder mail. Do not send.
 skills: []
+suggest:
+  - text: Never send mail. Draft only.
+    on: true
+  - text: Never move funds.
+    on: true
+  - text: Brief me Mondays in Founder HQ.
+  - text: Tell me what you did not get to.
 ---
 
 Founder OS stands up a three-Bot founder room. Chief of Staff reuses an existing agent if one is already present. Money reads. Inbox drafts. Nobody sends mail and nobody moves funds.
 
 ## Reference
 
-Founder · Money expects Stripe's official Agent Plugin (stripe 0.1.2, 8 skills and MCP) listed on the [Agent Plugins Directory](https://agentpluginsdirectory.com/) and the [stripe-best-practices](https://skillselion.com/skills/stripe/ai/stripe-best-practices) skill on Skillselion. Founder · Inbox treats Resend's official Agent Plugin (resend 1.0.0) on the [Agent Plugins Directory](https://agentpluginsdirectory.com/) as the email-adjacent reference. These are references the pack expects. This site does not install them.
+Founder · Money expects Stripe's official Agent Plugin (stripe 0.1.2, 8 skills and MCP) listed on the [Agent Plugins Directory](https://agentpluginsdirectory.com/) and the [stripe-best-practices](https://skillselion.com/skills/stripe/ai/stripe-best-practices) skill on Skillselion. Founder · Inbox treats Resend's official Agent Plugin (resend 1.0.0) on the [Agent Plugins Directory](https://agentpluginsdirectory.com/) as the email-adjacent reference. These are references the team expects. This site does not install them.

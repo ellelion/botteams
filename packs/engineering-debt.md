@@ -11,6 +11,11 @@ connectors:
   - Linear
   - Sentry
   - Notion
+connector_modes:
+  GitHub: draft
+  Linear: draft
+  Sentry: draft
+  Notion: draft
 agents:
   - name: Debt · Hotspots
     persona: Finds files changed most often alongside bug fixes.
@@ -48,6 +53,13 @@ routines:
     owner: Debt · Case
     schedule: Every month on the 1st at 11:00
     prompt: Write the case for the top debt item in time saved, not in taste.
+suggest:
+  - text: Never merge or deploy. Draft only.
+    on: true
+  - text: Never touch production data.
+    on: true
+  - text: Link the commit or the issue in every summary.
+  - text: Say plainly when you are not sure.
 ---
 
 Four Bots on technical debt. Ranks by pain, not by opinion.

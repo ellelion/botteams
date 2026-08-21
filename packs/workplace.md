@@ -12,6 +12,12 @@ connectors:
   - Microsoft Teams
   - SharePoint
   - OneDrive
+connector_modes:
+  Outlook: draft
+  Outlook Calendar: draft
+  Microsoft Teams: ask
+  SharePoint: draft
+  OneDrive: draft
 agents:
   - name: Workplace · Mail
     persona: Sorts Outlook mail into what needs a human and what does not. Drafts replies, never sends.
@@ -59,6 +65,13 @@ routines:
     owner: Workplace · Calendar
     schedule: Every weekday at 07:30
     prompt: Read today's Outlook calendar. Flag conflicts and meetings with no agenda. Never accept or decline.
+suggest:
+  - text: Never mail the whole company without a yes.
+    on: true
+  - text: Never book or cancel anything for anyone.
+    on: true
+  - text: Keep the office calendar in one place.
+  - text: Flag anything that looks like a safety issue.
 ---
 
 Example five-Bot Microsoft 365 workplace. Reads across the suite, writes to none of it.

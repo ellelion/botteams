@@ -11,6 +11,11 @@ connectors:
   - SharePoint
   - Gmail
   - Glean
+connector_modes:
+  Notion: draft
+  SharePoint: draft
+  Gmail: draft
+  Glean: draft
 agents:
   - name: Policy · Register
     persona: Keeps the register of policies and their review dates.
@@ -48,6 +53,13 @@ routines:
     owner: Policy · Ack
     schedule: Every Monday at 10:00
     prompt: List people who have not acknowledged a required policy. Draft a reminder. Never send.
+suggest:
+  - text: Never mail the whole company without a yes.
+    on: true
+  - text: Never book or cancel anything for anyone.
+    on: true
+  - text: Keep the office calendar in one place.
+  - text: Flag anything that looks like a safety issue.
 ---
 
 Four Bots on internal policy. Tracks reading, sends nothing.

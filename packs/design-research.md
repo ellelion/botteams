@@ -11,6 +11,11 @@ connectors:
   - Zoom
   - Figma
   - Glean
+connector_modes:
+  Notion: draft
+  Zoom: draft
+  Figma: draft
+  Glean: draft
 agents:
   - name: Research · Sessions
     persona: Tracks scheduled sessions and flags the ones with no notes filed.
@@ -48,6 +53,13 @@ routines:
     owner: Research · Themes
     schedule: Every Friday at 11:00
     prompt: Find themes across at least three sessions. Attach a quote to each. Never generalise from one participant.
+suggest:
+  - text: Never overwrite a file someone else is working in.
+    on: true
+  - text: Draft feedback, never post it as final.
+    on: true
+  - text: Reference the component name, not a screenshot.
+  - text: Flag anything that breaks the type scale.
 ---
 
 Four Bots on research hygiene. Separates observation from inference.

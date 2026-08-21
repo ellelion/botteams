@@ -11,6 +11,11 @@ connectors:
   - Notion
   - Zendesk
   - Gmail
+connector_modes:
+  Linear: draft
+  Notion: draft
+  Zendesk: ask
+  Gmail: draft
 agents:
   - name: Launch · Ready
     persona: Checks the feature is actually done, not merely merged.
@@ -48,6 +53,13 @@ routines:
     owner: Launch · Docs
     schedule: Every weekday at 09:30
     prompt: Compare documentation to shipped behaviour. Name every mismatch.
+suggest:
+  - text: Never change a roadmap date without asking.
+    on: true
+  - text: Draft specs, never ship them as decided.
+    on: true
+  - text: Tie every request to the person who asked.
+  - text: Say what we are choosing not to build.
 ---
 
 Four Bots before a feature reaches customers.

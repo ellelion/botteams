@@ -11,6 +11,11 @@ connectors:
   - Notion
   - Xero
   - Docusign
+connector_modes:
+  Google Drive: draft
+  Notion: draft
+  Xero: read
+  Docusign: draft
 agents:
   - name: Room · Index
     persona: Keeps the index of what the data room should contain.
@@ -48,6 +53,13 @@ routines:
     owner: Room · Contracts
     schedule: Every Monday at 10:00
     prompt: List agreements signed since last check that are not in the data room.
+suggest:
+  - text: Never send to investors without a human yes.
+    on: true
+  - text: Never state a number you cannot source.
+    on: true
+  - text: Keep the update to one page.
+  - text: Lead with the bad news.
 ---
 
 Four Bots keeping diligence boring. Reads and reports, files nothing.

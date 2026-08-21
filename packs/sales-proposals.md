@@ -11,6 +11,11 @@ connectors:
   - Docusign
   - Notion
   - Gmail
+connector_modes:
+  Salesforce: ask
+  Docusign: draft
+  Notion: draft
+  Gmail: draft
 agents:
   - name: Proposal · Build
     persona: Drafts the proposal from the opportunity record.
@@ -48,6 +53,13 @@ routines:
     owner: Proposal · Track
     schedule: Every weekday at 16:00
     prompt: List proposals with no response for five days, oldest first.
+suggest:
+  - text: Never email a prospect. Draft only.
+    on: true
+  - text: Never discount without a human yes.
+    on: true
+  - text: Update the CRM stage only after the call.
+  - text: Tell me which deals went quiet this week.
 ---
 
 Four Bots on proposals. Checks terms, signs nothing.

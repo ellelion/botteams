@@ -11,6 +11,11 @@ connectors:
   - Microsoft Teams
   - Notion
   - Gmail
+connector_modes:
+  Calendar: draft
+  Microsoft Teams: ask
+  Notion: draft
+  Gmail: draft
 agents:
   - name: Meetings · Cost
     persona: Reports hours spent in recurring meetings per team.
@@ -48,6 +53,13 @@ routines:
     owner: Meetings · Agenda
     schedule: Every Friday at 14:00
     prompt: List recurring meetings held this week with no agenda and no notes.
+suggest:
+  - text: Never mail the whole company without a yes.
+    on: true
+  - text: Never book or cancel anything for anyone.
+    on: true
+  - text: Keep the office calendar in one place.
+  - text: Flag anything that looks like a safety issue.
 ---
 
 Four Bots on the calendar. Reports cost, cancels nothing.

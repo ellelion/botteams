@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Gmail
   - 1Password
+connector_modes:
+  Notion: draft
+  Calendar: draft
+  Gmail: draft
+  1Password: draft
 agents:
   - name: Joiner · Checklist
     persona: Holds the setup checklist per role and reports what is outstanding.
@@ -48,6 +53,13 @@ routines:
     owner: Joiner · Access
     schedule: Every weekday at 09:00
     prompt: List access the role needs that has not been granted. Never grant access yourself.
+suggest:
+  - text: Never mail a new starter without a human yes.
+    on: true
+  - text: Never grant access to anything.
+    on: true
+  - text: Check day one is ready by the Friday before.
+  - text: Ask the buddy how week one went, not the manager.
 ---
 
 Four Bots on employee onboarding. Tracks setup, grants nothing.

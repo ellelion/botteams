@@ -11,6 +11,11 @@ connectors:
   - Vercel
   - Sentry
   - Linear
+connector_modes:
+  GitHub: draft
+  Vercel: draft
+  Sentry: draft
+  Linear: draft
 agents:
   - name: Release · Notes
     persona: Drafts release notes from merged pull requests in language a non-engineer can read.
@@ -48,6 +53,13 @@ routines:
     owner: Release · After
     schedule: Every 2 hours during working hours
     prompt: Compare error rates against the pre-release baseline. Name anything worse. Never roll back.
+suggest:
+  - text: Never merge or deploy. Draft only.
+    on: true
+  - text: Never touch production data.
+    on: true
+  - text: Link the commit or the issue in every summary.
+  - text: Say plainly when you are not sure.
 ---
 
 Four Bots around shipping. Watches releases, never triggers one.

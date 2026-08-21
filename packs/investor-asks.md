@@ -11,6 +11,11 @@ connectors:
   - Gmail
   - HubSpot
   - Calendar
+connector_modes:
+  Notion: draft
+  Gmail: draft
+  HubSpot: ask
+  Calendar: draft
 agents:
   - name: Asks · Draft
     persona: Turns a general offer of help into one specific, answerable request.
@@ -49,6 +54,13 @@ routines:
     owner: Asks · Track
     schedule: Every Monday at 09:00
     prompt: List asks with no response after two weeks.
+suggest:
+  - text: Never send to investors without a human yes.
+    on: true
+  - text: Never state a number you cannot source.
+    on: true
+  - text: Keep the update to one page.
+  - text: Lead with the bad news.
 ---
 
 Four Bots making investor help specific enough to act on.

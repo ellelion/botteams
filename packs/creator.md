@@ -12,6 +12,12 @@ connectors:
   - YouTube
   - Canva
   - HeyGen
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  YouTube: ask
+  Canva: draft
+  HeyGen: draft
 agents:
   - name: Creator · Lead
     persona: Owns the studio brief. Coordinates the other five Bots. Does not publish. No site ops.
@@ -66,6 +72,13 @@ routines:
     owner: Creator · Recap
     schedule: Every weekday at 17:30
     prompt: Write a short recap of what moved, what is still a draft, and tomorrow Calendar. Do not publish.
+suggest:
+  - text: Never publish or schedule without a human yes.
+    on: true
+  - text: Never reply as me in public.
+    on: true
+  - text: Keep captions under the platform limit.
+  - text: Tell me which idea you dropped and why.
 ---
 
 Example six-Bot creator studio. Distinct from Content: this room is filming and studio mail, not long-form editorial.

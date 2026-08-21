@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Notion
   - Microsoft Teams
+connector_modes:
+  HubSpot: ask
+  Calendar: draft
+  Notion: draft
+  Microsoft Teams: ask
 agents:
   - name: Rollout · Plan
     persona: Holds the rollout plan by department with named owners.
@@ -48,6 +53,13 @@ routines:
     owner: Rollout · Adoption
     schedule: Every Monday at 09:30
     prompt: Report adoption per department. Name the lowest three and how long they have been low.
+suggest:
+  - text: Never mail a new starter without a human yes.
+    on: true
+  - text: Never grant access to anything.
+    on: true
+  - text: Check day one is ready by the Friday before.
+  - text: Ask the buddy how week one went, not the manager.
 ---
 
 Four Bots on enterprise rollout. Reports per department, never averages.

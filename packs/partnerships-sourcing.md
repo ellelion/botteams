@@ -11,6 +11,11 @@ connectors:
   - HubSpot
   - Notion
   - LinkedIn
+connector_modes:
+  Exa: draft
+  HubSpot: ask
+  Notion: draft
+  LinkedIn: ask
 agents:
   - name: Sourcing · Find
     persona: Researches companies whose product genuinely complements ours.
@@ -48,6 +53,13 @@ routines:
     owner: Sourcing · Pipeline
     schedule: Every Monday at 09:00
     prompt: List partner conversations with no movement in three weeks.
+suggest:
+  - text: Never mail a partner without a human yes.
+    on: true
+  - text: Never agree to terms.
+    on: true
+  - text: Track every promise we made, with a date.
+  - text: Flag a partner who went quiet for a month.
 ---
 
 Four Bots sourcing partners. Qualifies on fit, not on logo.

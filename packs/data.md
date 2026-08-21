@@ -12,6 +12,12 @@ connectors:
   - Mixpanel
   - PostHog
   - dbt Labs
+connector_modes:
+  Google Cloud BigQuery: draft
+  Snowflake: draft
+  Mixpanel: draft
+  PostHog: draft
+  dbt Labs: draft
 agents:
   - name: Data · Warehouse
     persona: Runs read-only BigQuery checks on the numbers the company quotes. Never writes or drops a table.
@@ -64,6 +70,13 @@ routines:
     owner: Data · Recap
     schedule: Every Friday at 16:00
     prompt: Recap funnel movement, model failures, cost spikes, and any number that is currently unsafe to quote.
+suggest:
+  - text: Read only. Never write back to a warehouse table.
+    on: true
+  - text: Never present a number without the query behind it.
+    on: true
+  - text: Say out loud when a dashboard is stale.
+  - text: Flag a metric that moved more than 20 percent.
 ---
 
 Example six-Bot data desk. Read-only against every warehouse.

@@ -11,6 +11,11 @@ connectors:
   - PagerDuty
   - GitHub
   - Glean
+connector_modes:
+  Notion: draft
+  PagerDuty: draft
+  GitHub: draft
+  Glean: draft
 agents:
   - name: Runbook · Coverage
     persona: Names alerts with no runbook attached.
@@ -48,6 +53,13 @@ routines:
     owner: Runbook · Drift
     schedule: Every month on the 1st at 10:00
     prompt: Compare runbook steps to current system behaviour. Name steps that no longer apply.
+suggest:
+  - text: Never delete a page. Archive it and say so.
+    on: true
+  - text: Draft edits, never publish over someone.
+    on: true
+  - text: Link the source for every claim.
+  - text: Flag a page nobody has touched in a year.
 ---
 
 Four Bots on runbooks, checked before they are needed.

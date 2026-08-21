@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Gmail
   - Exa
+connector_modes:
+  Notion: draft
+  Calendar: draft
+  Gmail: draft
+  Exa: draft
 agents:
   - name: IP · Register
     persona: Keeps the register of marks, filings, and their status.
@@ -48,6 +53,13 @@ routines:
     owner: IP · Watch
     schedule: Every Wednesday at 10:00
     prompt: Search for new uses of the brand. Report findings. Never contact anyone.
+suggest:
+  - text: Never sign or send anything.
+    on: true
+  - text: Say clearly that this is not legal advice.
+    on: true
+  - text: Quote the clause, do not paraphrase it.
+  - text: Flag any auto-renew inside 60 days.
 ---
 
 Four Bots on IP admin. Escalates to counsel, advises nobody.

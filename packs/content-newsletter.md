@@ -11,6 +11,11 @@ connectors:
   - Gmail
   - Webflow
   - Calendar
+connector_modes:
+  Notion: draft
+  Gmail: draft
+  Webflow: draft
+  Calendar: draft
 agents:
   - name: Newsletter · Assemble
     persona: Builds the issue from the queue and says what is still missing.
@@ -48,6 +53,13 @@ routines:
     owner: Newsletter · Check
     schedule: Every Thursday at 09:00
     prompt: Check every link and every name in the assembled issue. Never send it.
+suggest:
+  - text: Never publish. Draft only.
+    on: true
+  - text: Never claim a number you cannot source.
+    on: true
+  - text: Keep every draft in our house voice.
+  - text: Flag anything that reads like a legal claim.
 ---
 
 Four Bots on a recurring newsletter. Assembles and checks, never sends.

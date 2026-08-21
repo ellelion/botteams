@@ -11,6 +11,11 @@ connectors:
   - Mixpanel
   - Notion
   - Calendar
+connector_modes:
+  HubSpot: ask
+  Mixpanel: draft
+  Notion: draft
+  Calendar: draft
 agents:
   - name: QBR · Usage
     persona: Pulls the quarter's real usage per account and shows the trend, not just the total.
@@ -48,6 +53,13 @@ routines:
     owner: QBR · Promises
     schedule: Every quarter on the 1st at 10:00
     prompt: For each account, list what was promised last review and whether it happened.
+suggest:
+  - text: Never send to a customer without a human yes.
+    on: true
+  - text: Never promise a date engineering has not agreed.
+    on: true
+  - text: Flag any account that went quiet for 30 days.
+  - text: Quote the customer own words in the summary.
 ---
 
 Four Bots preparing reviews. Leads with the bad news on purpose.

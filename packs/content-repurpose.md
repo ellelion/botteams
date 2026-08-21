@@ -11,6 +11,11 @@ connectors:
   - X
   - LinkedIn
   - Canva
+connector_modes:
+  Notion: draft
+  X: ask
+  LinkedIn: ask
+  Canva: draft
 agents:
   - name: Repurpose · Source
     persona: Reads a published long piece and pulls out the three ideas that stand alone.
@@ -49,6 +54,13 @@ routines:
     owner: Repurpose · Social
     schedule: Every Tuesday at 10:00
     prompt: Draft the short versions for each channel in that channel's register. Never post.
+suggest:
+  - text: Never publish. Draft only.
+    on: true
+  - text: Never claim a number you cannot source.
+    on: true
+  - text: Keep every draft in our house voice.
+  - text: Flag anything that reads like a legal claim.
 ---
 
 Four Bots getting more out of what is already written. Drafts only.

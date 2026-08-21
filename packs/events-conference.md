@@ -11,6 +11,11 @@ connectors:
   - HubSpot
   - Notion
   - Gmail
+connector_modes:
+  Calendar: draft
+  HubSpot: ask
+  Notion: draft
+  Gmail: draft
 agents:
   - name: Conf · Schedule
     persona: Holds the team schedule and flags clashes and unstaffed slots.
@@ -48,6 +53,13 @@ routines:
     owner: Conf · Notes
     schedule: Every day at 19:00
     prompt: List meetings held today with no note filed, and who owns each.
+suggest:
+  - text: Never email attendees without a human yes.
+    on: true
+  - text: Never change a booking or a contract.
+    on: true
+  - text: Keep the run of show in one place.
+  - text: Flag anything still unconfirmed 14 days out.
 ---
 
 Four Bots at a conference. Chases notes, sends nothing.

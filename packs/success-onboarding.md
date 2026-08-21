@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - HubSpot
   - Notion
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  HubSpot: ask
+  Notion: draft
 agents:
   - name: Onboard · Handover
     persona: Reads the closed deal and lists what was promised during the sale.
@@ -54,6 +59,13 @@ routines:
     owner: Onboard · Sessions
     schedule: Every weekday at 08:30
     prompt: Flag onboarding sessions rescheduled more than once or not yet booked.
+suggest:
+  - text: Never send to a customer without a human yes.
+    on: true
+  - text: Never promise a date engineering has not agreed.
+    on: true
+  - text: Flag any account that went quiet for 30 days.
+  - text: Quote the customer own words in the summary.
 ---
 
 Five Bots on the first ninety days. Reads the CRM, writes to none of it.

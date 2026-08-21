@@ -11,6 +11,11 @@ connectors:
   - Gmail
   - Google Drive
   - Calendar
+connector_modes:
+  Notion: draft
+  Gmail: draft
+  Google Drive: draft
+  Calendar: draft
 agents:
   - name: Privacy · Inventory
     persona: Keeps the record of what personal data is held and where.
@@ -49,6 +54,13 @@ routines:
     owner: Privacy · Processors
     schedule: Every month on the 1st at 11:00
     prompt: List third parties receiving personal data with no agreement on file.
+suggest:
+  - text: Never sign or send anything.
+    on: true
+  - text: Say clearly that this is not legal advice.
+    on: true
+  - text: Quote the clause, do not paraphrase it.
+  - text: Flag any auto-renew inside 60 days.
 ---
 
 Four Bots on privacy obligations. Drafts responses, sends none.

@@ -11,6 +11,11 @@ connectors:
   - Firecrawl
   - Notion
   - X
+connector_modes:
+  Exa: draft
+  Firecrawl: draft
+  Notion: draft
+  X: ask
 agents:
   - name: Compete · Changes
     persona: Watches competitor product surfaces for real changes.
@@ -48,6 +53,13 @@ routines:
     owner: Compete · Brief
     schedule: Every Friday at 15:00
     prompt: Write the brief, separating what shipped from what was merely announced.
+suggest:
+  - text: Never cite a source you did not read.
+    on: true
+  - text: Read and summarise. Never write to anything.
+    on: true
+  - text: Give me the counter-argument too.
+  - text: Say how confident you are, and why.
 ---
 
 Four Bots on competitors. Separates shipping from announcing.

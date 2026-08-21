@@ -11,6 +11,11 @@ connectors:
   - Ramp
   - Xero
   - Notion
+connector_modes:
+  Stripe: read
+  Ramp: read
+  Xero: read
+  Notion: draft
 agents:
   - name: Runway · In
     persona: Reports revenue actually collected, not invoiced.
@@ -49,6 +54,13 @@ routines:
     owner: Runway · Out
     schedule: Every month on the 2nd at 10:00
     prompt: Name spend categories that grew more than ten percent without a recorded decision.
+suggest:
+  - text: Never send mail. Draft only.
+    on: true
+  - text: Never move funds.
+    on: true
+  - text: Brief me Mondays in Founder HQ.
+  - text: Tell me what you did not get to.
 ---
 
 Four Bots on the number that matters. Reads the ledgers, moves nothing.

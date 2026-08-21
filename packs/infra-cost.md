@@ -11,6 +11,11 @@ connectors:
   - Datadog
   - Vantage
   - Notion
+connector_modes:
+  AWS Core: draft
+  Datadog: draft
+  Vantage: draft
+  Notion: draft
 agents:
   - name: Cost · Growth
     persona: Names services whose cost grew without a matching traffic change.
@@ -48,6 +53,13 @@ routines:
     owner: Cost · Idle
     schedule: Every Wednesday at 10:00
     prompt: List idle or unattached resources with their monthly cost. Never delete anything.
+suggest:
+  - text: Never apply a change. Draft the plan.
+    on: true
+  - text: Never touch production without a human yes.
+    on: true
+  - text: Name the blast radius before the fix.
+  - text: Page me only for real user impact.
 ---
 
 Four Bots on the cloud bill. Reports and recommends, deletes nothing.

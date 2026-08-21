@@ -11,6 +11,11 @@ connectors:
   - Stripe
   - Gmail
   - Calendar
+connector_modes:
+  HubSpot: ask
+  Stripe: read
+  Gmail: draft
+  Calendar: draft
 agents:
   - name: Renewal · Dates
     persona: Lists renewals in the next ninety days and how much each is worth.
@@ -49,6 +54,13 @@ routines:
     owner: Renewal · Risk
     schedule: Every Wednesday at 10:00
     prompt: Name at-risk renewals and the specific evidence. Never contact the customer.
+suggest:
+  - text: Never send to a customer without a human yes.
+    on: true
+  - text: Never promise a date engineering has not agreed.
+    on: true
+  - text: Flag any account that went quiet for 30 days.
+  - text: Quote the customer own words in the summary.
 ---
 
 Four Bots ahead of renewal dates. Builds the case, signs nothing.

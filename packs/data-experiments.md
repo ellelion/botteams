@@ -11,6 +11,11 @@ connectors:
   - PostHog
   - Notion
   - Amplitude
+connector_modes:
+  Mixpanel: draft
+  PostHog: draft
+  Notion: draft
+  Amplitude: draft
 agents:
   - name: Experiment · Register
     persona: Records the hypothesis and the success metric before the test starts.
@@ -49,6 +54,13 @@ routines:
     owner: Experiment · Read
     schedule: Every Friday at 14:00
     prompt: For tests that ended, state what the result supports and what it does not. Never call a test early.
+suggest:
+  - text: Read only. Never write back to a warehouse table.
+    on: true
+  - text: Never present a number without the query behind it.
+    on: true
+  - text: Say out loud when a dashboard is stale.
+  - text: Flag a metric that moved more than 20 percent.
 ---
 
 Four Bots keeping experiments honest. Read-only, and refuses to call tests early.

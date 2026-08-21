@@ -11,6 +11,11 @@ connectors:
   - Linear
   - HubSpot
   - Notion
+connector_modes:
+  GitHub: draft
+  Linear: draft
+  HubSpot: ask
+  Notion: draft
 agents:
   - name: Integration · Health
     persona: Watches partner integrations for errors and breakage after launch.
@@ -48,6 +53,13 @@ routines:
     owner: Integration · Roadmap
     schedule: Every Monday at 10:00
     prompt: List partner commitments past their stated date.
+suggest:
+  - text: Never mail a partner without a human yes.
+    on: true
+  - text: Never agree to terms.
+    on: true
+  - text: Track every promise we made, with a date.
+  - text: Flag a partner who went quiet for a month.
 ---
 
 Four Bots on integrations after launch, which is when they rot.

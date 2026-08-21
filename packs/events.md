@@ -12,6 +12,12 @@ connectors:
   - Luma
   - Zoom
   - Airtable
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Luma: draft
+  Zoom: draft
+  Airtable: draft
 agents:
   - name: Events · Run of show
     persona: Turns Calendar events into a run of show. Does not publish. No site ops.
@@ -68,6 +74,13 @@ routines:
     owner: Events · Recap
     schedule: Every weekday at 17:00
     prompt: Recap run of show, drafts, and Calendar holds. Never publish.
+suggest:
+  - text: Never email attendees without a human yes.
+    on: true
+  - text: Never change a booking or a contract.
+    on: true
+  - text: Keep the run of show in one place.
+  - text: Flag anything still unconfirmed 14 days out.
 ---
 
 Example six-Bot events desk. Not an SEO or guest-post crew.

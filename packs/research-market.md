@@ -11,6 +11,11 @@ connectors:
   - Firecrawl
   - Notion
   - Google Cloud BigQuery
+connector_modes:
+  Exa: draft
+  Firecrawl: draft
+  Notion: draft
+  Google Cloud BigQuery: draft
 agents:
   - name: Market · Sources
     persona: Finds primary sources rather than articles citing other articles.
@@ -48,6 +53,13 @@ routines:
     owner: Market · Brief
     schedule: Every Friday at 14:00
     prompt: Attach a confidence level and a date to every figure in the brief.
+suggest:
+  - text: Never cite a source you did not read.
+    on: true
+  - text: Read and summarise. Never write to anything.
+    on: true
+  - text: Give me the counter-argument too.
+  - text: Say how confident you are, and why.
 ---
 
 Four Bots on market questions. Cites primary sources or says it cannot.

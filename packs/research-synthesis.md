@@ -11,6 +11,11 @@ connectors:
   - Glean
   - Google Drive
   - Gmail
+connector_modes:
+  Notion: draft
+  Glean: draft
+  Google Drive: draft
+  Gmail: draft
 agents:
   - name: Synthesis · Collect
     persona: Gathers the research already done on a question, so it is not repeated.
@@ -48,6 +53,13 @@ routines:
     owner: Synthesis · Conflict
     schedule: Every Thursday at 14:00
     prompt: Name where research findings disagree. Never average them into one answer.
+suggest:
+  - text: Never cite a source you did not read.
+    on: true
+  - text: Read and summarise. Never write to anything.
+    on: true
+  - text: Give me the counter-argument too.
+  - text: Say how confident you are, and why.
 ---
 
 Four Bots synthesising research. Names unknowns explicitly.

@@ -10,6 +10,10 @@ connectors:
   - Discord
   - Notion
   - Intercom
+connector_modes:
+  Discord: ask
+  Notion: draft
+  Intercom: ask
 agents:
   - name: Forum · Route
     persona: Reads new threads and says which team owns each. Never answers on their behalf.
@@ -47,6 +51,13 @@ routines:
     owner: Forum · Harvest
     schedule: Every Thursday at 15:00
     prompt: Turn this week's resolved threads into draft doc entries. Mark anything you are unsure about.
+suggest:
+  - text: Never post publicly without a human yes.
+    on: true
+  - text: Never ban or mute anyone.
+    on: true
+  - text: Summarise the week of threads every Friday.
+  - text: Escalate anything that reads like a safety issue.
 ---
 
 Four Bots turning a forum into documentation.

@@ -11,6 +11,11 @@ connectors:
   - Gmail
   - Stripe
   - Google Drive
+connector_modes:
+  Notion: draft
+  Gmail: draft
+  Stripe: read
+  Google Drive: draft
 agents:
   - name: Letter · Draft
     persona: Drafts the update leading with what went wrong. Never sends.
@@ -48,6 +53,13 @@ routines:
     owner: Letter · Numbers
     schedule: Every month on the 4th at 10:00
     prompt: Verify every figure in the draft against source. Flag anything unverifiable.
+suggest:
+  - text: Never send to investors without a human yes.
+    on: true
+  - text: Never state a number you cannot source.
+    on: true
+  - text: Keep the update to one page.
+  - text: Lead with the bad news.
 ---
 
 Four Bots on the monthly letter. Bad news first, by design.

@@ -11,6 +11,11 @@ connectors:
   - Notion
   - Calendar
   - Gmail
+connector_modes:
+  Linear: draft
+  Notion: draft
+  Calendar: draft
+  Gmail: draft
 agents:
   - name: Roadmap · Slip
     persona: Names work that moved its date, and how many times.
@@ -49,6 +54,13 @@ routines:
     owner: Roadmap · Unowned
     schedule: Every Monday at 09:30
     prompt: List roadmap items with no owner or no definition of done.
+suggest:
+  - text: Never change a roadmap date without asking.
+    on: true
+  - text: Draft specs, never ship them as decided.
+    on: true
+  - text: Tie every request to the person who asked.
+  - text: Say what we are choosing not to build.
 ---
 
 Four Bots making roadmap slippage visible early.

@@ -12,6 +12,12 @@ connectors:
   - Notion
   - Intercom
   - Airtable
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Notion: draft
+  Intercom: ask
+  Airtable: draft
 agents:
   - name: Onboarding · Kickoff
     persona: Owns new-customer kickoff notes. Drafts, never sends. Does not operate the product or the site.
@@ -65,6 +71,13 @@ routines:
     owner: Onboarding · Recap
     schedule: Every weekday at 17:00
     prompt: Recap kickoffs, checklists, blockers, and drafts waiting on a send.
+suggest:
+  - text: Never mail a new starter without a human yes.
+    on: true
+  - text: Never grant access to anything.
+    on: true
+  - text: Check day one is ready by the Friday before.
+  - text: Ask the buddy how week one went, not the manager.
 ---
 
 Example six-Bot customer onboarding desk. Nothing sends and nothing operates the product.

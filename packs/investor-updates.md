@@ -12,6 +12,12 @@ connectors:
   - Stripe
   - Notion
   - Google Drive
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Stripe: read
+  Notion: draft
+  Google Drive: draft
 agents:
   - name: Investor · Numbers
     persona: Pulls founder-layer Stripe movement that belongs in an investor update. Alerts and drafts only. Does not send money. No site ops.
@@ -66,6 +72,13 @@ routines:
     owner: Investor · Recap
     schedule: First Monday at 17:00
     prompt: Recap numbers, narrative, drafts, and Calendar holds. Never send.
+suggest:
+  - text: Never send to investors without a human yes.
+    on: true
+  - text: Never state a number you cannot source.
+    on: true
+  - text: Keep the update to one page.
+  - text: Lead with the bad news.
 ---
 
 Example six-Bot investor-update desk. The human sends.

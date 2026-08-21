@@ -11,6 +11,11 @@ connectors:
   - Linear
   - Glean
   - Slack
+connector_modes:
+  Notion: draft
+  Linear: draft
+  Glean: draft
+  Slack: ask
 agents:
   - name: Decision · Spot
     persona: Notices decisions made in passing that were never written down.
@@ -48,6 +53,13 @@ routines:
     owner: Decision · Record
     schedule: Every Friday at 15:00
     prompt: Draft decision records for this week, each naming the rejected option.
+suggest:
+  - text: Never delete a page. Archive it and say so.
+    on: true
+  - text: Draft edits, never publish over someone.
+    on: true
+  - text: Link the source for every claim.
+  - text: Flag a page nobody has touched in a year.
 ---
 
 Four Bots on institutional memory. Records decisions, makes none.

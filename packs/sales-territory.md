@@ -11,6 +11,11 @@ connectors:
   - HubSpot
   - Notion
   - Google Cloud BigQuery
+connector_modes:
+  Salesforce: ask
+  HubSpot: ask
+  Notion: draft
+  Google Cloud BigQuery: draft
 agents:
   - name: Territory · Coverage
     persona: Finds accounts with no owner or no contact this quarter.
@@ -48,6 +53,13 @@ routines:
     owner: Territory · Balance
     schedule: Every quarter on the 1st at 10:00
     prompt: Report territory balance by opportunity value, not by account count.
+suggest:
+  - text: Never email a prospect. Draft only.
+    on: true
+  - text: Never discount without a human yes.
+    on: true
+  - text: Update the CRM stage only after the call.
+  - text: Tell me which deals went quiet this week.
 ---
 
 Four Bots on coverage. Names gaps, reassigns nothing.

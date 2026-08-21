@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Notion
   - Docusign
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Notion: draft
+  Docusign: draft
 agents:
   - name: Pitch · Inbound
     persona: Sorts inbound project enquiries from the rest of the inbox and pulls out budget, timeline, and scope when the sender stated them. Never replies.
@@ -54,6 +59,13 @@ routines:
     owner: Pitch · Signature
     schedule: Every weekday at 16:00
     prompt: List proposals out for signature longer than five days, oldest first. Never contact the client.
+suggest:
+  - text: Never send client mail. Draft only.
+    on: true
+  - text: Never change a signed scope without asking.
+    on: true
+  - text: Flag any retainer that goes over budget in the group chat.
+  - text: Use the client name, never the internal codename.
 ---
 
 Five Bots from first enquiry to sent proposal. Drafts everything, sends nothing.

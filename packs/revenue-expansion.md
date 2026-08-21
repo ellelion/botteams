@@ -11,6 +11,11 @@ connectors:
   - Mixpanel
   - Stripe
   - Gmail
+connector_modes:
+  HubSpot: ask
+  Mixpanel: draft
+  Stripe: read
+  Gmail: draft
 agents:
   - name: Expansion · Usage
     persona: Finds accounts consistently at or over their plan limits.
@@ -48,6 +53,13 @@ routines:
     owner: Expansion · Timing
     schedule: Every Monday at 09:30
     prompt: For expansion candidates, flag anyone with an open complaint. Never contact a customer.
+suggest:
+  - text: Never move money or issue a credit.
+    on: true
+  - text: Never mail a customer about billing without a yes.
+    on: true
+  - text: Reconcile before you report.
+  - text: Flag any churn risk worth over a month of revenue.
 ---
 
 Four Bots on expansion. Checks value first, contacts nobody.

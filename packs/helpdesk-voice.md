@@ -10,6 +10,10 @@ connectors:
   - Zendesk
   - Intercom
   - Notion
+connector_modes:
+  Zendesk: ask
+  Intercom: ask
+  Notion: draft
 agents:
   - name: Voice · Sample
     persona: Samples sent replies and checks them against the voice guide.
@@ -46,6 +50,13 @@ routines:
     owner: Voice · Robotic
     schedule: Every weekday at 16:30
     prompt: Flag replies that used a template where the question needed a person.
+suggest:
+  - text: Never send a reply without a human yes.
+    on: true
+  - text: Never close a ticket on the customer behalf.
+    on: true
+  - text: Escalate anything angry to me directly.
+  - text: Quote the ticket number in every summary.
 ---
 
 Four Bots on how support sounds. Coaches in private, sends nothing.

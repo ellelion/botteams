@@ -12,6 +12,12 @@ connectors:
   - HubSpot
   - Gong
   - Apollo.io
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  HubSpot: ask
+  Gong: draft
+  Apollo.io: draft
 agents:
   - name: Sales · Pipeline
     persona: Keeps the pipeline honest from Calendar and notes. Does not invent deals.
@@ -41,10 +47,17 @@ routines:
     schedule: Weekdays at 16:00
     prompt: Draft follow-up mail for stale threads. Do not send.
 skills: []
+suggest:
+  - text: Never email a prospect. Draft only.
+    on: true
+  - text: Never discount without a human yes.
+    on: true
+  - text: Update the CRM stage only after the call.
+  - text: Tell me which deals went quiet this week.
 ---
 
-Sales company is a two-Bot room. Pipeline reads the calendar. Follow-ups draft mail. Drafts only, never send. There is no Gmail plugin listing cited here because this pack uses the account-wide Gmail connector, not a plugin install.
+Sales company is a two-Bot room. Pipeline reads the calendar. Follow-ups draft mail. Drafts only, never send. There is no Gmail plugin listing cited here because this team uses the account-wide Gmail connector, not a plugin install.
 
 ## Reference
 
-Sales · Follow-ups drafts mail and never sends. The email-adjacent reference is Resend's official Agent Plugin (resend 1.0.0) on the [Agent Plugins Directory](https://agentpluginsdirectory.com/). These are references the pack expects. This site does not install them.
+Sales · Follow-ups drafts mail and never sends. The email-adjacent reference is Resend's official Agent Plugin (resend 1.0.0) on the [Agent Plugins Directory](https://agentpluginsdirectory.com/). These are references the team expects. This site does not install them.
