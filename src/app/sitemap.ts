@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const teamPages = listPacks().map((pack) => ({ url: `${site.url}/teams/${pack.slug}`, lastModified }));
   return [
     { url: site.url, lastModified },
+    { url: `${site.url}/connectors`, lastModified },
     { url: `${site.url}/docs`, lastModified },
     ...teamPages,
   ];

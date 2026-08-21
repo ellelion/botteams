@@ -17,6 +17,13 @@
  * resolving, but nothing should present it as available.
  *
  * Re-check CATALOG_CHECKED_ON before repeating "every connector" anywhere.
+ *
+ * Brand marks under /public/connectors come from two places: hand-added
+ * files, and simple-icons 16.28.0 (CC0 1.0), which is why some are a
+ * single brand colour rather than the full multicolour logo. simple-icons
+ * carries no Microsoft marks at all. Outlook came from botdirectory.ai
+ * (MIT) instead; Outlook Calendar, OneDrive, SharePoint and Teams still
+ * render as monograms rather than borrow the wrong sibling logo.
  */
 
 export const CATALOG_SOURCE = "https://github.com/rdmgator12/awesome-grok-connectors";
@@ -43,7 +50,7 @@ export type CatalogEntry = {
 };
 
 export const CONNECTOR_CATALOG: CatalogEntry[] = [
-  { name: "Box", slug: "box", category: "Featured", file: "" },
+  { name: "Box", slug: "box", category: "Featured", file: "box.svg" },
   { name: "Canva", slug: "canva", category: "Featured", file: "" },
   { name: "GitHub", slug: "github", category: "Featured", file: "github.svg" },
   { name: "Gmail", slug: "gmail", category: "Featured", file: "gmail.svg" },
@@ -52,30 +59,30 @@ export const CONNECTOR_CATALOG: CatalogEntry[] = [
   { name: "Notion", slug: "notion", category: "Featured", file: "notion.svg" },
   { name: "Stripe", slug: "stripe", category: "Featured", file: "stripe.svg" },
   { name: "Vercel", slug: "vercel", category: "Featured", file: "vercel.svg" },
-  { name: "Wix", slug: "wix", category: "Featured", file: "" },
+  { name: "Wix", slug: "wix", category: "Featured", file: "wix.svg" },
 
   { name: "X Ads", slug: "x-ads", category: "Advertising", file: "x.svg" },
 
-  { name: "Google Cloud BigQuery", slug: "google-cloud-bigquery", category: "Analytics", file: "" },
+  { name: "Google Cloud BigQuery", slug: "google-cloud-bigquery", category: "Analytics", file: "google-cloud-bigquery.svg" },
 
-  { name: "Excalidraw", slug: "excalidraw", category: "Developer", file: "" },
-  { name: "Mixpanel", slug: "mixpanel", category: "Developer", file: "" },
+  { name: "Excalidraw", slug: "excalidraw", category: "Developer", file: "excalidraw.svg" },
+  { name: "Mixpanel", slug: "mixpanel", category: "Developer", file: "mixpanel.svg" },
 
   { name: "eToro", slug: "etoro", category: "Finance", file: "" },
   { name: "Interactive Brokers", slug: "interactive-brokers", category: "Finance", file: "" },
   { name: "S&P Global", slug: "s-and-p-global", category: "Finance", file: "" },
   { name: "Webull", slug: "webull", category: "Finance", file: "" },
 
-  { name: "Calendly", slug: "calendly", category: "Productivity", file: "" },
-  { name: "Figma", slug: "figma", category: "Productivity", file: "" },
+  { name: "Calendly", slug: "calendly", category: "Productivity", file: "calendly.svg" },
+  { name: "Figma", slug: "figma", category: "Productivity", file: "figma.svg" },
   { name: "Gamma", slug: "gamma", category: "Productivity", file: "" },
   { name: "HyperFrames by HeyGen", slug: "hyperframes", category: "Productivity", file: "" },
   { name: "Linear", slug: "linear", category: "Productivity", file: "linear.svg" },
   { name: "Microsoft Teams", slug: "microsoft-teams", category: "Productivity", file: "" },
-  { name: "Outlook", slug: "outlook", category: "Productivity", file: "" },
+  { name: "Outlook", slug: "outlook", category: "Productivity", file: "outlook.svg" },
   { name: "Outlook Calendar", slug: "outlook-calendar", category: "Productivity", file: "" },
 
-  { name: "HubSpot", slug: "hubspot", category: "Sales", file: "" },
+  { name: "HubSpot", slug: "hubspot", category: "Sales", file: "hubspot.svg" },
   { name: "Meltwater", slug: "meltwater", category: "Sales", file: "" },
 
   { name: "OneDrive", slug: "onedrive", category: "Business and enterprise", file: "" },
