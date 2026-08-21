@@ -4,7 +4,8 @@ name: Payroll run
 tagline: "Walks the monthly payroll: headcount changes checked, hours confirmed, and every variance explained before anyone approves a payment."
 bots: 5
 section: Bookkeeping
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Gmail

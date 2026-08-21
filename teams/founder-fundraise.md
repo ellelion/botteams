@@ -4,7 +4,8 @@ name: Fundraise desk
 tagline: "Runs a raise like a pipeline: who was met, what they asked, what was promised, and what is outstanding."
 bots: 4
 section: Founder OS
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Gmail

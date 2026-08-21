@@ -4,7 +4,8 @@ name: VAT and filings
 tagline: Keeps filing deadlines and the numbers behind them in one place, so a return is never assembled the night before it is due.
 bots: 4
 section: Bookkeeping
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Xero

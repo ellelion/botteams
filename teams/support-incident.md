@@ -4,7 +4,8 @@ name: Support during incidents
 tagline: "Handles the support side of an outage: one accurate message, updated, instead of forty different answers."
 bots: 4
 section: Support
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Zendesk

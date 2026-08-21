@@ -4,7 +4,8 @@ name: Support docs
 tagline: Turns the questions support answers repeatedly into documentation that stops them.
 bots: 4
 section: Support
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Zendesk

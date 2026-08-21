@@ -4,7 +4,8 @@ name: Contract register
 tagline: Keeps one list of what the company signed, what it committed to, and when each obligation lands.
 bots: 4
 section: Legal
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Docusign

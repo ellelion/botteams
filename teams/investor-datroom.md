@@ -4,7 +4,8 @@ name: Data room
 tagline: Keeps the data room current between raises, so diligence does not become a fire drill.
 bots: 4
 section: Investor updates
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Google Drive

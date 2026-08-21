@@ -4,7 +4,8 @@ name: Revenue forecast
 tagline: Builds a forecast from committed evidence and shows how wrong the last one was.
 bots: 4
 section: Revenue
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - HubSpot

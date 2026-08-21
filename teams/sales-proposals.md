@@ -4,7 +4,8 @@ name: Proposal desk
 tagline: Keeps proposals accurate and consistent, and stops silence being mistaken for consideration.
 bots: 4
 section: Sales
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Salesforce

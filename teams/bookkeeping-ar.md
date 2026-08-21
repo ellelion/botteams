@@ -4,7 +4,8 @@ name: Accounts receivable
 tagline: "Chases what the company is owed: who is late, by how long, and what the follow-up should say, ready for a human to send."
 bots: 4
 section: Bookkeeping
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Stripe

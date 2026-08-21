@@ -4,7 +4,8 @@ name: Client agency
 tagline: "Runs a client floor end to end: inbound sorted, accounts tracked, delivery promises watched, retainers billed, and a daily recap of what needs a human."
 bots: 6
 section: Agency
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

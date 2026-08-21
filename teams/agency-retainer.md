@@ -4,7 +4,8 @@ name: Retainer watch
 tagline: Tracks every retainer against the hours actually delivered, and names the accounts quietly running over before the invoice does.
 bots: 4
 section: Agency
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Stripe

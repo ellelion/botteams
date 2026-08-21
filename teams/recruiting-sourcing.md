@@ -4,7 +4,8 @@ name: Talent sourcing
 tagline: Builds a candidate list from evidence of work rather than from job titles, and keeps outreach from repeating itself.
 bots: 4
 section: Recruiting
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - LinkedIn

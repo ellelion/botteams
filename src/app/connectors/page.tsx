@@ -15,7 +15,7 @@ import {
   XAI_CONNECTOR_DOCS,
 } from "@/lib/connectors";
 import { en } from "@/lib/messages/en";
-import { listTeams } from "@/lib/teams";
+import { listAll } from "@/lib/teams";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export default function ConnectorsPage() {
-  const teams = listTeams();
+  const teams = listAll();
 
   // Which teams expect a given connector. Resolve every name a team writes
   // through the same alias-aware resolver the rows use, then compare slugs.

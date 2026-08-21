@@ -1,5 +1,5 @@
 import { installerPrompt } from "@/lib/installer";
-import { listTeams } from "@/lib/teams";
+import { listBots, listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
 import { resolveConnector } from "@/lib/connectors";
 import type { Team } from "@/lib/types";
@@ -13,6 +13,7 @@ export type ApiTeam = {
   name: string;
   tagline: string;
   category: string;
+  kind: string;
   status: string;
   fromXai: boolean;
   bots: number;
@@ -45,6 +46,7 @@ export function toApiTeam(team: Team): ApiTeam {
     name: team.name,
     tagline: team.tagline,
     category: team.section,
+    kind: team.kind,
     status: team.status,
     fromXai: team.fromXai === true,
     bots: team.bots,
@@ -63,8 +65,14 @@ export function toApiTeam(team: Team): ApiTeam {
   };
 }
 
+/* Two collections, never mixed. /api/teams returning a one-Bot recipe
+   would be the same lie the site just stopped telling. */
 export function allApiTeams(): ApiTeam[] {
   return listTeams().map(toApiTeam);
+}
+
+export function allApiBots(): ApiTeam[] {
+  return listBots().map(toApiTeam);
 }
 
 export type Filters = { q: string | null; category: string | null; integration: string | null; sort: string };

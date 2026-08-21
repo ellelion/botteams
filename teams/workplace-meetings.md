@@ -4,7 +4,8 @@ name: Meeting hygiene
 tagline: Makes the real cost of the calendar visible, and kills the meetings nobody would defend.
 bots: 4
 section: Workplace
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Calendar

@@ -4,7 +4,8 @@ name: Account onboarding
 tagline: Runs the first ninety days of a new account so the handover from sales does not quietly become nobody's job.
 bots: 5
 section: Customer success
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Gmail

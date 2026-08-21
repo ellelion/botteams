@@ -4,7 +4,8 @@ name: Customer success
 tagline: "Watches account health, renewals, and quarterly reviews, and names the accounts that need a human conversation this week."
 bots: 6
 section: Customer success
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

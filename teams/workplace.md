@@ -4,7 +4,8 @@ name: Microsoft workplace
 tagline: "Runs Microsoft 365 for a team: mail triaged, calendar conflicts flagged, channels read for decisions, and file sharing reviewed."
 bots: 5
 section: Workplace
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - Outlook

@@ -4,7 +4,8 @@ name: Runway watch
 tagline: Keeps one honest answer to how long the money lasts, updated from what actually happened.
 bots: 4
 section: Founder OS
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Stripe

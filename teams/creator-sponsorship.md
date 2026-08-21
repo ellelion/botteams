@@ -4,7 +4,8 @@ name: Sponsorship desk
 tagline: "Handles brand deals end to end: inbound qualified, fit judged against the audience, deliverables tracked, and nothing over-promised."
 bots: 5
 section: Creator
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Gmail

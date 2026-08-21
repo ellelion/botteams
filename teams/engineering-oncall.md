@@ -4,7 +4,8 @@ name: On-call handover
 tagline: Makes the shift handover a written record instead of a conversation someone half remembers.
 bots: 4
 section: Engineering
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - PagerDuty

@@ -4,7 +4,8 @@ name: Experiment desk
 tagline: "Keeps experiments honest: what was predicted, when to stop looking, and whether the result actually says what people claim."
 bots: 4
 section: Data
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Mixpanel

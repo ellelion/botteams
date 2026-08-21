@@ -4,7 +4,8 @@ name: Creator studio
 tagline: "Runs a solo creator studio: the week briefed, scripts drafted, sponsor mail sorted, and the calendar honest about what can ship."
 bots: 6
 section: Creator
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

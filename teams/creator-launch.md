@@ -4,7 +4,8 @@ name: Product launch
 tagline: "Runs a creator product launch: the sequence drafted, the page checked, and the first week reported without flattery."
 bots: 4
 section: Creator
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Gmail

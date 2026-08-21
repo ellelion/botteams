@@ -36,19 +36,27 @@ export function teamListJsonLd(teams: Team[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Grok Bot company teams",
+    name: "Grok Bot teams and bots",
     description: site.entity,
     numberOfItems: teams.length,
-    itemListElement: teams.map((team, i) => ({ "@type": "ListItem", position: i + 1, name: team.name, url: `${site.url}/teams/${team.slug}`, description: team.tagline })),
+    itemListElement: teams.map((team, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: team.name,
+      url: `${site.url}/${team.kind === "bot" ? "bots" : "teams"}/${team.slug}`,
+      description: team.tagline,
+    })),
   };
 }
 
-export function teamJsonLd(team: Team) {
+/* One shape, two paths. The kind decides which shelf the item lives on,
+   so the canonical URL follows it rather than being passed in. */
+function itemJsonLd(team: Team) {
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: team.name,
-    url: `${site.url}/teams/${team.slug}`,
+    url: `${site.url}/${team.kind === "bot" ? "bots" : "teams"}/${team.slug}`,
     description: team.tagline,
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
@@ -57,3 +65,6 @@ export function teamJsonLd(team: Team) {
     publisher: { "@id": `${site.url}/#organization` },
   };
 }
+
+export const teamJsonLd = itemJsonLd;
+export const botJsonLd = itemJsonLd;

@@ -4,7 +4,8 @@ name: Expansion desk
 tagline: Finds accounts that have outgrown their plan, and separates that from accounts simply being squeezed.
 bots: 4
 section: Revenue
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - HubSpot

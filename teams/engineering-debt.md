@@ -4,7 +4,8 @@ name: Technical debt
 tagline: Keeps a debt list ranked by how often it actually hurts, rather than by who complained most recently.
 bots: 4
 section: Engineering
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - GitHub

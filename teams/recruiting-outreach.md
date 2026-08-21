@@ -4,7 +4,8 @@ name: Outreach desk
 tagline: Writes outreach that names the person's actual work, and stops the sequence the moment someone replies.
 bots: 4
 section: Recruiting
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Gmail

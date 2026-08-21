@@ -4,7 +4,8 @@ name: Discord desk
 tagline: "Keeps a busy Discord answerable: unanswered questions surfaced, repeat questions turned into docs, and moderation load made visible."
 bots: 4
 section: Community
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Discord

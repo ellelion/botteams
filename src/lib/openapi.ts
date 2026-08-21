@@ -24,9 +24,10 @@ const TEAM_PROPERTIES: Record<keyof ApiTeam, Schema> = {
   name: str("Display name of the team."),
   tagline: str("One line saying what the team does."),
   category: str("Section the team files under, and the value the category filter matches."),
-  status: { type: "string", enum: ["team", "example"], description: "team is a recipe to install. example is a format demonstration." },
+  kind: { type: "string", enum: ["bot", "team"], description: "bot is one Bot doing one job with no group chat. team is two to six Bots in one group chat. The two never appear in the same collection." },
+  status: { type: "string", enum: ["installable", "example"], description: "installable is a recipe to use. example is a format demonstration." },
   fromXai: { type: "boolean", description: "True when the recipe is our write-up of a job published in xAI's own Grok Bot use-case gallery. Sourcing, not endorsement: xAI does not review or certify anything on this shelf." },
-  bots: { type: "integer", minimum: 1, description: "Number of Bots. Always equal to agents.length." },
+  bots: { type: "integer", minimum: 1, description: "Number of Bots. Always equal to agents.length, and always 1 on a bot." },
   addedAt: { type: ["string", "null"], format: "date-time", description: "Date stated in the team file. Never inferred. Null when the file does not state one, and those sort last." },
   connectors: { type: "array", items: { type: "string" }, description: "Connectors the account must already have. Connectors are account-wide in Grok Bot." },
   agents: {
@@ -44,7 +45,7 @@ const TEAM_PROPERTIES: Record<keyof ApiTeam, Schema> = {
   },
   rooms: {
     type: "array",
-    description: "Group chats. A group chat holds two to six Bots. A one-Bot recipe has none.",
+    description: "Group chats. A group chat holds two to six Bots. A bot has none, so this is empty on every item from /api/bots.",
     items: {
       type: "object",
       required: ["name", "members"],
@@ -109,6 +110,101 @@ const LINKS: Schema = {
   },
 };
 
+/* The two collections are the same operation over different shelves, so
+   the path object is generated rather than typed out twice. */
+function collectionPath(kind: "teams" | "bots") {
+  const one = kind === "teams" ? "team" : "bot";
+  const Envelope = kind === "teams" ? "Team" : "Bot";
+  return {
+    get: {
+      operationId: kind === "teams" ? "listTeams" : "listBots",
+      summary: kind === "teams" ? "List teams" : "List bots",
+      description:
+        (kind === "teams"
+          ? "Teams only: two to six Bots in one group chat. A one-Bot recipe is a bot and is never returned here. "
+          : "Bots only: one Bot doing one job, with no group chat. A team is never returned here. ") +
+        `Filtered and paginated. Passing cursor switches to append-safe sync mode, which walks oldest first so a ${one} added after your last sync always lands after your cursor.`,
+      parameters: PARAMS.map((p) => ({
+        name: p.name,
+        in: "query",
+        required: false,
+        description: p.description,
+        schema: p.schema,
+      })),
+      responses: {
+        "200": {
+          description: `A page of ${kind}. The envelope carries pagination, or sync when cursor was passed.`,
+          content: {
+            "application/json": {
+              schema: {
+                oneOf: [
+                  { $ref: `#/components/schemas/${Envelope}Page` },
+                  { $ref: `#/components/schemas/${Envelope}Sync` },
+                ],
+              },
+            },
+          },
+        },
+        "400": {
+          description: `The cursor did not match any ${one}, so the sync position cannot be trusted. Start again from cursor=start.`,
+          content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } },
+        },
+      },
+    },
+  };
+}
+
+/* Page and sync envelopes, per collection. The item key is the plural
+   noun, so a client can tell at a glance which shelf it asked for. */
+function envelopes(kind: "teams" | "bots") {
+  const Name = kind === "teams" ? "Team" : "Bot";
+  return {
+    [`${Name}Page`]: {
+      type: "object",
+      description: `Page envelope for /api/${kind}. Returned when cursor was not passed.`,
+      required: ["version", kind, "pagination", "filters", "links"],
+      properties: {
+        version: { type: "integer", description: "Envelope version. Bumped only for a breaking change." },
+        [kind]: { type: "array", items: { $ref: `#/components/schemas/${Name}` } },
+        pagination: {
+          type: "object",
+          required: ["page", "limit", "total", "totalPages", "hasNext", "hasPrevious"],
+          properties: {
+            page: { type: "integer" },
+            limit: { type: "integer" },
+            total: { type: "integer", description: "Items matching the filters, across all pages." },
+            totalPages: { type: "integer" },
+            hasNext: { type: "boolean" },
+            hasPrevious: { type: "boolean" },
+          },
+        },
+        filters: { $ref: "#/components/schemas/Filters" },
+        links: { $ref: "#/components/schemas/Links" },
+      },
+    },
+    [`${Name}Sync`]: {
+      type: "object",
+      description: `Sync envelope for /api/${kind}. Returned when cursor was passed.`,
+      required: ["version", kind, "sync", "filters", "links"],
+      properties: {
+        version: { type: "integer" },
+        [kind]: { type: "array", items: { $ref: `#/components/schemas/${Name}` } },
+        sync: {
+          type: "object",
+          required: ["returned", "hasMore", "nextCursor"],
+          properties: {
+            returned: { type: "integer", description: "Items in this response." },
+            hasMore: { type: "boolean" },
+            nextCursor: { type: ["string", "null"], description: "Pass as cursor on the next call. Null at the end." },
+          },
+        },
+        filters: { $ref: "#/components/schemas/Filters" },
+        links: { $ref: "#/components/schemas/Links" },
+      },
+    },
+  };
+}
+
 export function buildOpenApiDocument(): Record<string, unknown> {
   return {
     openapi: "3.1.0",
@@ -133,42 +229,27 @@ export function buildOpenApiDocument(): Record<string, unknown> {
        is the truth here. Omitting it entirely reads as an oversight. */
     security: [],
     paths: {
-      "/api/teams": {
-        get: {
-          operationId: "listTeams",
-          summary: "List teams",
-          description: "Filtered and paginated. Passing cursor switches to append-safe sync mode, which walks oldest first so a team added after your last sync always lands after your cursor.",
-          parameters: PARAMS.map((p) => ({
-            name: p.name,
-            in: "query",
-            required: false,
-            description: p.description,
-            schema: p.schema,
-          })),
-          responses: {
-            "200": {
-              description: "A page of teams. The envelope carries pagination, or sync when cursor was passed.",
-              content: {
-                "application/json": {
-                  schema: { oneOf: [{ $ref: "#/components/schemas/TeamPage" }, { $ref: "#/components/schemas/TeamSync" }] },
-                },
-              },
-            },
-            "400": {
-              description: "The cursor did not match any team, so the sync position cannot be trusted. Start again from cursor=start.",
-              content: { "application/json": { schema: { $ref: "#/components/schemas/Error" } } },
-            },
-          },
-        },
-      },
+      "/api/teams": collectionPath("teams"),
+      "/api/bots": collectionPath("bots"),
     },
     components: {
       schemas: {
         Team: {
           type: "object",
-          description: "One team on the shelf.",
+          description: "A team: two to six Bots in one group chat.",
           required: Object.keys(TEAM_PROPERTIES),
-          properties: TEAM_PROPERTIES,
+          properties: { ...TEAM_PROPERTIES, kind: { const: "team", description: "Always team on this collection." } },
+        },
+        Bot: {
+          type: "object",
+          description: "A bot: one Bot doing one job, with no group chat. Never Verified, because Verified is a claim about a group chat.",
+          required: Object.keys(TEAM_PROPERTIES),
+          properties: {
+            ...TEAM_PROPERTIES,
+            kind: { const: "bot", description: "Always bot on this collection." },
+            bots: { const: 1, description: "A bot is one Bot." },
+            rooms: { type: "array", maxItems: 0, description: "Always empty. A bot has no group chat." },
+          },
         },
         Filters: {
           type: "object",
@@ -177,49 +258,8 @@ export function buildOpenApiDocument(): Record<string, unknown> {
           properties: FILTER_PROPERTIES,
         },
         Links: LINKS,
-        TeamPage: {
-          type: "object",
-          description: "Page envelope. Returned when cursor was not passed.",
-          required: ["version", "teams", "pagination", "filters", "links"],
-          properties: {
-            version: { type: "integer", description: "Envelope version. Bumped only for a breaking change." },
-            teams: { type: "array", items: { $ref: "#/components/schemas/Team" } },
-            pagination: {
-              type: "object",
-              required: ["page", "limit", "total", "totalPages", "hasNext", "hasPrevious"],
-              properties: {
-                page: { type: "integer" },
-                limit: { type: "integer" },
-                total: { type: "integer", description: "Teams matching the filters, across all pages." },
-                totalPages: { type: "integer" },
-                hasNext: { type: "boolean" },
-                hasPrevious: { type: "boolean" },
-              },
-            },
-            filters: { $ref: "#/components/schemas/Filters" },
-            links: { $ref: "#/components/schemas/Links" },
-          },
-        },
-        TeamSync: {
-          type: "object",
-          description: "Sync envelope. Returned when cursor was passed.",
-          required: ["version", "teams", "sync", "filters", "links"],
-          properties: {
-            version: { type: "integer" },
-            teams: { type: "array", items: { $ref: "#/components/schemas/Team" } },
-            sync: {
-              type: "object",
-              required: ["returned", "hasMore", "nextCursor"],
-              properties: {
-                returned: { type: "integer", description: "Teams in this response." },
-                hasMore: { type: "boolean" },
-                nextCursor: { type: ["string", "null"], description: "Pass as cursor on the next call. Null at the end." },
-              },
-            },
-            filters: { $ref: "#/components/schemas/Filters" },
-            links: { $ref: "#/components/schemas/Links" },
-          },
-        },
+        ...envelopes("teams"),
+        ...envelopes("bots"),
         Error: {
           type: "object",
           required: ["version", "error", "cursor"],

@@ -4,7 +4,8 @@ name: Shorts desk
 tagline: "Runs the short-form pipeline: which long videos have a clip worth cutting, and what each cut needs to work on its own."
 bots: 4
 section: Creator
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - YouTube

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { ledger } from "@/lib/ledger-theme";
-import { APD_HOME, STRIPE_BEST_PRACTICES, XAI_DOCS, site } from "@/lib/site";
+import { APD_HOME, STRIPE_BEST_PRACTICES, XAI_DOCS, XAI_USE_CASE_GALLERY, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Team spec",
@@ -62,21 +62,54 @@ export default function DocsPage() {
           <li>
             A{" "}
             <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.routines} rel="nofollow noopener noreferrer">routine</a>
-            {" "}tells one Bot when to run a workflow.
+            {" "}tells one Bot when to run a workflow. One Bot can own <strong>up to 50 routines</strong>, and Grok Bot keeps the
+            20 most recent runs of each. There is no documented cap on a team as a whole, so this shelf does not invent one.
           </li>
         </ul>
 
+        <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Two shapes</h2>
+        <p className="mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+          A <strong>bot</strong> is one Bot doing one job. A <strong>team</strong> is two to six Bots in one group chat. They
+          are different files in different folders, and the shelf never adds them up into a single count, because a recipe
+          with no group chat is not a team.
+        </p>
+        <table className="spec-table mt-5">
+          <tbody>
+            <tr><th /><th>bots/</th><th>teams/</th></tr>
+            <tr><th><code>kind</code></th><td><code>bot</code></td><td><code>team</code></td></tr>
+            <tr><th><code>bots</code></th><td>Always 1</td><td>2 to 6, matching <code>agents</code></td></tr>
+            <tr><th><code>agents</code></th><td>Exactly one</td><td>One per Bot</td></tr>
+            <tr><th><code>rooms</code></th><td>Forbidden. Empty or absent</td><td>Required. Each holds 2 to 6 Bots</td></tr>
+            <tr><th><code>routines</code></th><td>0 to 50 per owning Bot</td><td>0 to 50 per owning Bot</td></tr>
+            <tr><th>Verified</th><td>Never</td><td>When the roster fits the limits</td></tr>
+            <tr><th>URL</th><td><code>/bots/&lt;slug&gt;</code></td><td><code>/teams/&lt;slug&gt;</code></td></tr>
+          </tbody>
+        </table>
+
+        <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>From xAI</h2>
+        <p className="mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+          A <strong>From xAI</strong> chip means the job is our write-up of one xAI publishes in its{" "}
+          <a className="accent-hover underline underline-offset-2" href={XAI_USE_CASE_GALLERY} rel="nofollow noopener noreferrer">Grok Bot use-case gallery</a>.
+          It is sourcing and nothing more. It is not Official, it is not Verified, and xAI does not review, certify, or
+          endorse anything on this shelf. The title and the category are theirs. The Bot, the connectors, the modes and the
+          standing instructions are ours.
+        </p>
+
         <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Verified</h2>
         <p className="mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          A team is Verified when its roster fits those published limits: each group chat has at most six Bots (and at least two), the team is honest about account scale (Bots plus group chats stay well under 50), and it never claims fake one-click OAuth. Connectors are listed as already on the account.
+          Verified exists for teams only. A team is Verified when it has at least one group chat, every group chat holds two
+          to six Bots, the Bot count matches the roster, and Bots plus group chats stay under the account cap of 50.
         </p>
         <p className="mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          Example teams are format demos. They still get Verified-against-limits if they fit, plus an Example label. Installable teams show Installable and Verified.
+          A bot is never Verified. That is not a downgrade: Verified is a claim about a group chat, and a recipe with one
+          Bot does not make one. An empty roster used to slip past this check, which is how 56 one-Bot recipes were once
+          counted as teams.
         </p>
 
         <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Install notes</h2>
         <div className="mt-4 space-y-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          <p>A team is one markdown file in this repo under teams/, with YAML frontmatter. GitHub is the CMS. There are no accounts and no plugin API on this site.</p>
+          <p>A team is one markdown file under teams/, and a bot is one under bots/, both with YAML frontmatter. GitHub is the CMS. There are no accounts and no plugin API on this site.</p>
+          <p>A bot installer creates one Bot and its routines. It never asks for a group chat or a sidebar section, because neither means anything for a single Bot.</p>
           <p>Sidebar sections are a human action. In Grok Bot, use Move to, then New section, and name the section exactly as the team lists it.</p>
           <p>Skills cannot be attached at Bot create time. A team may point at references such as the <a className="accent-hover underline underline-offset-2" href={STRIPE_BEST_PRACTICES} rel="nofollow noopener">stripe-best-practices skill on Skillselion</a> or a plugin in the <a className="accent-hover underline underline-offset-2" href={APD_HOME} rel="nofollow noopener">Agent Plugins Directory</a>. Those are named destinations the team expects, not installs this site performs.</p>
           <p>Uninstall is sidebar delete. Remove the Bots and group chats in Grok Bot. There is no remote uninstall from grokbotteams.ai.</p>

@@ -4,7 +4,8 @@ name: Newsletter desk
 tagline: "Keeps a newsletter shipping on schedule: the issue assembled, links checked, and the retro written against what people actually opened."
 bots: 4
 section: Content
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

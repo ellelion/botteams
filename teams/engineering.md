@@ -4,7 +4,8 @@ name: Engineering desk
 tagline: "Watches issue triage, backlog drift, production errors, and deploy failures, then says what needs a human decision."
 bots: 5
 section: Engineering
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - GitHub

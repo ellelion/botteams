@@ -8,7 +8,13 @@ const matter = require("gray-matter");
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const teamsDir = path.join(root, "teams");
-const REQUIRED = ["slug", "name", "tagline", "section", "status", "connectors", "agents", "rooms", "routines"];
+const botsDir = path.join(root, "bots");
+
+/* xAI documents a per-Bot cap of 50 routines, keeping the 20 most recent
+   runs of each. Zero routines is fine. There is no documented team-level
+   cap, so this script does not invent one. */
+const MAX_ROUTINES_PER_BOT = 50;
+const REQUIRED = ["slug", "name", "tagline", "section", "status", "kind", "connectors", "agents", "routines"];
 
 /* Closed category list. A team file may only use a section that already
    exists, so the index chips and the API `category` filter stay a known
@@ -38,11 +44,15 @@ function isNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
-const files = fs.readdirSync(teamsDir).filter((file) => file.endsWith(".md")).sort();
-if (files.length === 0) fail("no teams/*.md files");
+function listDir(dir, kind) {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir).filter((f) => f.endsWith(".md")).sort().map((f) => ({ file: f, dir, kind }));
+}
+const entries = [...listDir(teamsDir, "team"), ...listDir(botsDir, "bot")];
+if (entries.length === 0) fail("no team or bot markdown files");
 
-for (const file of files) {
-  const raw = fs.readFileSync(path.join(teamsDir, file), "utf8");
+for (const { file, dir, kind: folderKind } of entries) {
+  const raw = fs.readFileSync(path.join(dir, file), "utf8");
   let parsed;
   try { parsed = matter(raw); } catch (error) {
     fail(file + ": " + (error instanceof Error ? error.message : String(error)));
@@ -57,14 +67,21 @@ for (const file of files) {
   if (!/^[a-z0-9-]+$/.test(slug)) fail(file + ": slug must be lowercase alphanumeric and dashes");
   if (seenSlugs.has(slug)) fail(file + ": duplicate slug " + slug);
   seenSlugs.add(slug);
+  if (data.status !== "installable" && data.status !== "example") {
+    fail(file + ": status must be installable or example");
+  }
+  /* The folder is the claim. A file whose kind disagrees with where it
+     lives would be shelved under the wrong noun. */
+  if (data.kind !== folderKind) {
+    fail(file + ': kind must be "' + folderKind + '" for a file in ' + path.basename(dir) + "/");
+  }
   if (typeof data.section === "string" && !CATEGORIES.has(data.section)) {
     fail(file + ': unknown category "' + data.section + '". Add it to CATEGORIES in this script first.');
   }
   const bots = typeof data.bots === "number" ? data.bots : data.seats;
   if (typeof bots !== "number") fail(file + ": bots must be a number");
   if (data.seats !== undefined && data.bots === undefined) fail(file + ": rename seats to bots");
-  const status = data.status === "team" ? "team" : data.status;
-  if (status !== "team" && status !== "example") fail(file + ": status must be team or example");
+
   if (!Array.isArray(data.connectors)) fail(file + ": connectors must be an array");
   const teamConnectors = new Set((data.connectors || []).map((name) => String(name)));
   if (!Array.isArray(data.agents) || data.agents.length === 0) fail(file + ": agents must be a non-empty array");
@@ -80,15 +97,39 @@ for (const file of files) {
       }
     });
   }
-  /* Empty is legal: a one-Bot recipe has nobody to talk to. It just is
-     not Verified, which the rule assertions at the bottom pin down. */
-  if (!Array.isArray(data.rooms)) fail(file + ": rooms must be an array");
-  else data.rooms.forEach((room, i) => {
-    if (!isNonEmptyString(room?.name) || !Array.isArray(room?.members)) fail(file + ": rooms[" + i + "] needs name and members[]");
-    else if (room.members.length < 2 || room.members.length > 6) fail(file + ": rooms[" + i + "] must have two to six Bots");
-  });
+  const rooms = data.rooms === undefined ? [] : data.rooms;
+  if (!Array.isArray(rooms)) fail(file + ": rooms must be an array when present");
+  else {
+    rooms.forEach((room, i) => {
+      if (!isNonEmptyString(room?.name) || !Array.isArray(room?.members)) fail(file + ": rooms[" + i + "] needs name and members[]");
+      else if (room.members.length < 2 || room.members.length > 6) fail(file + ": rooms[" + i + "] must have two to six Bots");
+    });
+    /* The two shapes, enforced. A bot with a group chat or a team without
+       one is the bug this whole split exists to stop. */
+    if (folderKind === "bot") {
+      if (rooms.length > 0) fail(file + ": a bot has no group chat, so rooms must be empty or absent");
+      if (bots !== 1) fail(file + ": a bot is one Bot, so bots must be 1");
+      if (Array.isArray(data.agents) && data.agents.length !== 1) fail(file + ": a bot has exactly one agent");
+    } else if (rooms.length === 0) {
+      fail(file + ": a team needs a group chat of two to six Bots");
+    }
+  }
   if (!Array.isArray(data.routines)) fail(file + ": routines must be an array");
-  else data.routines.forEach((routine, i) => {
+  else {
+    /* xAI's cap is per owning Bot, so count per owner rather than per
+       file. Nothing documents a cap on the file as a whole. */
+    const perOwner = new Map();
+    for (const routine of data.routines) {
+      const owner = String(routine?.owner ?? "");
+      perOwner.set(owner, (perOwner.get(owner) ?? 0) + 1);
+    }
+    for (const [owner, n] of perOwner) {
+      if (n > MAX_ROUTINES_PER_BOT) {
+        fail(file + ': "' + owner + '" owns ' + n + " routines. A Bot can own at most " + MAX_ROUTINES_PER_BOT + ".");
+      }
+    }
+  }
+  if (Array.isArray(data.routines)) data.routines.forEach((routine, i) => {
     if (!isNonEmptyString(routine?.name) || !isNonEmptyString(routine?.owner) || !isNonEmptyString(routine?.schedule) || !isNonEmptyString(routine?.prompt)) {
       fail(file + ": routines[" + i + "] needs name, owner, schedule, prompt");
     }
@@ -158,6 +199,7 @@ for (const file of files) {
    is NOT Verified: it makes no claim about a group chat at all. */
 const MIN_ROOM = 2, MAX_ROOM = 6, ACCOUNT_CAP = 50;
 function verifiedByRule(t) {
+  if (t.kind !== "team") return false;
   if (!Array.isArray(t.agents) || t.agents.length === 0) return false;
   if (t.bots !== t.agents.length) return false;
   const rooms = Array.isArray(t.rooms) ? t.rooms : [];
@@ -166,13 +208,14 @@ function verifiedByRule(t) {
   return rooms.every((r) => Array.isArray(r.members) && r.members.length >= MIN_ROOM && r.members.length <= MAX_ROOM);
 }
 for (const [name, team, expected] of [
-  ["a solo Bot with no group chat", { agents: [{}], bots: 1, rooms: [] }, false],
-  ["a group chat of one", { agents: [{}, {}], bots: 2, rooms: [{ members: ["a"] }] }, false],
-  ["a group chat of seven", { agents: [{}], bots: 1, rooms: [{ members: "abcdefg".split("") }] }, false],
-  ["a mismatched bots count", { agents: [{}, {}], bots: 3, rooms: [{ members: ["a", "b"] }] }, false],
-  ["no Bots at all", { agents: [], bots: 0, rooms: [{ members: ["a", "b"] }] }, false],
-  ["a two-Bot room", { agents: [{}, {}], bots: 2, rooms: [{ members: ["a", "b"] }] }, true],
-  ["a six-Bot room", { agents: Array(6).fill({}), bots: 6, rooms: [{ members: "abcdef".split("") }] }, true],
+  ["a bot, whatever else is true", { kind: "bot", agents: [{}], bots: 1, rooms: [] }, false],
+  ["a team with no group chat", { kind: "team", agents: [{}], bots: 1, rooms: [] }, false],
+  ["a group chat of one", { kind: "team", agents: [{}, {}], bots: 2, rooms: [{ members: ["a"] }] }, false],
+  ["a group chat of seven", { kind: "team", agents: [{}], bots: 1, rooms: [{ members: "abcdefg".split("") }] }, false],
+  ["a mismatched bots count", { kind: "team", agents: [{}, {}], bots: 3, rooms: [{ members: ["a", "b"] }] }, false],
+  ["no Bots at all", { kind: "team", agents: [], bots: 0, rooms: [{ members: ["a", "b"] }] }, false],
+  ["a two-Bot room", { kind: "team", agents: [{}, {}], bots: 2, rooms: [{ members: ["a", "b"] }] }, true],
+  ["a six-Bot room", { kind: "team", agents: Array(6).fill({}), bots: 6, rooms: [{ members: "abcdef".split("") }] }, true],
 ]) {
   if (verifiedByRule(team) !== expected) {
     fail(`isVerified rule: ${name} should be ${expected ? "Verified" : "not Verified"}`);
@@ -180,4 +223,6 @@ for (const [name, team, expected] of [
 }
 
 if (process.exitCode) process.exit(process.exitCode);
-console.log("validate-teams: " + files.length + " teams ok");
+const teamCount = entries.filter((e) => e.kind === "team").length;
+const botCount = entries.filter((e) => e.kind === "bot").length;
+console.log(`validate-teams: ${teamCount} teams and ${botCount} bots ok`);

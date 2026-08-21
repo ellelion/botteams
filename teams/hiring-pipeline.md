@@ -4,7 +4,8 @@ name: Candidate pipeline
 tagline: Keeps candidates moving and makes silence visible, because slow rejection costs more than fast rejection.
 bots: 4
 section: Hiring
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Ashby

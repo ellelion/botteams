@@ -4,7 +4,8 @@ name: IT requests
 tagline: Runs the internal IT queue so requests do not sit unanswered and access is granted deliberately.
 bots: 4
 section: Workplace
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Microsoft Teams

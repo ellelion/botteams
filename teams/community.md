@@ -4,7 +4,8 @@ name: Community desk
 tagline: "Keeps a community answerable: inbound sorted, new members welcomed, moderation surfaced, and a weekly recap of what people actually asked."
 bots: 6
 section: Community
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

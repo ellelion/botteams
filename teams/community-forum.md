@@ -4,7 +4,8 @@ name: Forum triage
 tagline: Sorts a public forum so questions reach the right people and answered threads become documentation instead of disappearing.
 bots: 4
 section: Community
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Discord

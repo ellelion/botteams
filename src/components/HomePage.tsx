@@ -63,6 +63,12 @@ export function HomePage({ teams }: { teams: Team[] }) {
                 <p className="ledger-anim mx-auto mt-6 max-w-md text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft, animationDelay: "0.75s" }}>
                   {en.answer}
                 </p>
+                {/* The on-ramp, quieter than the pitch above it. The
+                    paragraph still describes a team, and is not made to do
+                    both jobs at once. */}
+                <p className="ledger-anim mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkFaint, animationDelay: "0.85s" }}>
+                  <Link href="/?kind=bot#teams" className="accent-hover underline">{en.onRamp}</Link>
+                </p>
                 <p className="ledger-anim mx-auto mt-4 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label, animationDelay: "0.95s" }}>
                   {en.verified} <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
                 </p>

@@ -4,7 +4,8 @@ name: Data quality
 tagline: "Checks the numbers before anyone quotes them: freshness, row counts, and the joins that silently drop records."
 bots: 4
 section: Data
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Google Cloud BigQuery

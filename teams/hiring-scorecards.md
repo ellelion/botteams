@@ -4,7 +4,8 @@ name: Interview scorecards
 tagline: Keeps hiring decisions evidence-based by chasing the scorecard while the interview is still fresh.
 bots: 4
 section: Hiring
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Ashby

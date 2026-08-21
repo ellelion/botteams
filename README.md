@@ -26,6 +26,7 @@ it end to end.
 |---|---|
 | `/` | Team index. Search, category, connector filter, sort. |
 | `/teams/<slug>` | A team: Bots, group chat, routines, installer prompt, and Customize. |
+| `/bots/<slug>` | A bot: one Bot, routines, installer prompt, and Customize. No group chat, no Verified. |
 | `/docs` | The team spec. Our recipe format, mapped onto official Grok Bot nouns. |
 | `/connectors` | Every connector Grok Bot reaches, and which teams use each. |
 | `/api` | Public API contract, readable without JavaScript. |
@@ -33,16 +34,23 @@ it end to end.
 
 ## Where the teams come from
 
-Most are ours. 56 are one-Bot recipes written up from jobs xAI publishes
-in its [Grok Bot use-case gallery](https://x.ai/bot/use-cases); those carry
-`from_xai: true`, show a **From xAI** chip that links to the source, and
-are never Verified, because Verified is a claim about a group chat holding
-two to six Bots and a one-Bot recipe makes no such claim. Titles and
-categories on those are xAI's. Everything else about them is ours, and xAI
-does not review or certify anything on this shelf.
+There are two shapes and the site never adds them up.
 
-The index opens on the company teams. From xAI is one click away, and
-Everything shows both.
+A **team** is two to six Bots in one group chat. It lives in `teams/`, at
+`/teams/<slug>`, and it can be Verified.
+
+A **bot** is one Bot doing one job, with no group chat. It lives in
+`bots/`, at `/bots/<slug>`, and it is never Verified, because Verified is
+a claim about a group chat and a bot makes none.
+
+56 of the bots are written up from jobs xAI publishes in its
+[Grok Bot use-case gallery](https://x.ai/bot/use-cases). Those carry
+`from_xai: true` and show a **From xAI** chip linking to the source. That
+is sourcing, not endorsement: the title and the category are xAI's,
+everything else is ours, and xAI does not review or certify anything here.
+
+The index opens on teams. Bots is one click, All shows both and labels
+every row.
 
 ## Customize
 
@@ -69,6 +77,7 @@ No key, no auth, CORS open.
 
 ```bash
 curl "https://grokbotteams.ai/api/teams?integration=Stripe&limit=5"
+curl "https://grokbotteams.ai/api/bots?category=Sales"
 curl "https://grokbotteams.ai/api/teams?limit=100"
 curl "https://grokbotteams.ai/api/teams?cursor=start&limit=100"
 ```

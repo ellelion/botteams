@@ -4,7 +4,8 @@ name: Outbound desk
 tagline: Runs outbound where the research is real and the sequence stops the moment someone answers.
 bots: 4
 section: Sales
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Apollo.io

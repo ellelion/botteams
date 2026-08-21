@@ -4,7 +4,8 @@ name: Roadmap hygiene
 tagline: Keeps the roadmap something people can trust, by making slippage visible the week it happens.
 bots: 4
 section: Product
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Linear

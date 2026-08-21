@@ -4,7 +4,8 @@ name: Release desk
 tagline: Answers what actually shipped, what it changed, and whether anything got worse afterwards.
 bots: 4
 section: Engineering
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - GitHub

@@ -4,7 +4,8 @@ name: Update letter
 tagline: Drafts the monthly letter with the bad news first, and tracks what was promised in the last one.
 bots: 4
 section: Investor updates
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

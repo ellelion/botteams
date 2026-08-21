@@ -4,7 +4,8 @@ name: Offer desk
 tagline: Handles the offer stage where speed matters most, and keeps the terms consistent with what was discussed.
 bots: 4
 section: Hiring
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Ashby

@@ -4,7 +4,8 @@ name: Partnerships
 tagline: "Runs a partnerships desk: inbound qualified, the partner map kept current, intros drafted, and commitments tracked on both sides."
 bots: 6
 section: Partnerships
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

@@ -4,7 +4,8 @@ name: Research synthesis
 tagline: Turns finished research into something people can actually use, and says when the answer is not known.
 bots: 4
 section: Research
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

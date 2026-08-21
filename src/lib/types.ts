@@ -18,7 +18,20 @@ export type TeamRoutine = {
   prompt: string;
 };
 
-export type TeamStatus = "team" | "example";
+/*
+ * Two shapes, and they are not the same product.
+ *
+ *   bot   one named agent doing one job. No group chat, so nothing to
+ *         verify: Verified is a claim about a group chat.
+ *   team  two to six Bots in one group chat.
+ *
+ * `status: team` used to mean "this is real, not a demo", which put the
+ * word team on 56 files that have no group chat. Kind says what it is,
+ * status says whether it is a recipe or a format demo, and neither has to
+ * do the other's job.
+ */
+export type TeamKind = "bot" | "team";
+export type TeamStatus = "installable" | "example";
 
 /*
  * How far a connector is allowed to go.
@@ -41,6 +54,7 @@ export type TeamSuggestion = {
 
 export type Team = {
   slug: string;
+  kind: TeamKind;
   name: string;
   tagline: string;
   bots: number;
@@ -76,6 +90,10 @@ export function isExample(team: Team): boolean {
   return team.status === "example";
 }
 
+export function isBot(team: Team): boolean {
+  return team.kind === "bot";
+}
+
 /*
  * Verified is one claim and only one: this recipe fits the limits Grok Bot
  * publishes. At least one Bot, at least one group chat holding two to six
@@ -85,13 +103,22 @@ export function isExample(team: Team): boolean {
  * `rooms.some(...)` used to carry the group-chat check, which is vacuously
  * true for an empty list. A one-Bot recipe with no group chat therefore
  * passed, and the shelf stamped Verified on something that makes no claim
- * about group chats at all. It now needs a real one.
+ * about group chats at all. It now needs a real one, and it needs to be a
+ * team in the first place.
+ *
+ * xAI also documents a per-Bot cap of 50 routines. That is enforced in the
+ * validate script, not here: it is a property of one Bot, not of the
+ * roster this function is looking at.
  */
+export const MAX_ROUTINES_PER_BOT = 50;
 export const MIN_ROOM = 2;
 export const MAX_ROOM = 6;
 export const ACCOUNT_CAP = 50;
 
 export function isVerified(team: Team): boolean {
+  /* Only a team can be Verified. A Bot is one agent with no group chat,
+     so the claim has nothing to be true about. */
+  if (team.kind !== "team") return false;
   if (team.agents.length === 0) return false;
   if (team.bots !== team.agents.length) return false;
   if (team.agents.length + team.rooms.length > ACCOUNT_CAP) return false;

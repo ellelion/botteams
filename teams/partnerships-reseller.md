@@ -4,7 +4,8 @@ name: Reseller channel
 tagline: Keeps channel partners selling accurately, and makes deal registration something people actually do.
 bots: 4
 section: Partnerships
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - HubSpot

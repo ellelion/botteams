@@ -4,7 +4,8 @@ name: Design handoff
 tagline: "Makes sure what engineering receives is buildable: states covered, edge cases named, and copy that actually exists."
 bots: 4
 section: Design
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Figma

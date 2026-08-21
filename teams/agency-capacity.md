@@ -4,7 +4,8 @@ name: Studio capacity
 tagline: Answers whether the studio can take the next project, using booked time rather than an optimistic guess.
 bots: 4
 section: Agency
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Calendar

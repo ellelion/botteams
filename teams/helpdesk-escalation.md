@@ -4,7 +4,8 @@ name: Escalation path
 tagline: Makes sure hard tickets reach the right person quickly, with the context already assembled.
 bots: 4
 section: Helpdesk
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Zendesk

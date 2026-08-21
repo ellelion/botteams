@@ -4,7 +4,8 @@ name: Runbooks
 tagline: Keeps operational runbooks correct, since a wrong runbook is read at the worst possible moment.
 bots: 4
 section: Knowledge
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

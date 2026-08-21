@@ -4,7 +4,8 @@ name: Customer research
 tagline: Keeps a running picture of what customers say, built from evidence with the quote attached.
 bots: 4
 section: Research
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Intercom

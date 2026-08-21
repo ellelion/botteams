@@ -4,7 +4,8 @@ name: Demo desk
 tagline: Prepares demos against the prospect's actual problem, and records what was promised in the room.
 bots: 4
 section: Sales
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - HubSpot

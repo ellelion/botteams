@@ -4,7 +4,8 @@ name: Integration partners
 tagline: "Tracks technical partnerships through the part that actually breaks: the integration staying alive after launch."
 bots: 4
 section: Partnerships
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - GitHub

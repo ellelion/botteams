@@ -4,7 +4,8 @@ name: Vendor review
 tagline: Reviews what the company is about to sign, and flags the terms that matter before signature rather than after.
 bots: 4
 section: Legal
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Docusign

@@ -41,12 +41,14 @@ export function SiteFooter() {
 
   const product: Item[] = [
     { label: en.footer.teams, href: "/#teams" },
+    { label: en.footer.bots, href: "/?kind=bot#teams" },
     { label: en.footer.connectors, href: "/connectors" },
     { label: en.footer.sponsor, href: "/sponsor" },
   ];
   const docs: Item[] = [
     { label: en.footer.spec, href: "/docs" },
     { label: en.footer.api, href: "/api" },
+    { label: en.footer.apiBots, href: "/api/bots" },
     { label: en.footer.openapi, href: "/openapi.json" },
   ];
   const company: Item[] = [

@@ -7,10 +7,12 @@ export const en = {
   eyebrow: "Company teams for Grok Bot",
   answer:
     "Give each Bot a job. Copy one installer prompt, paste it into Grok Bot, and stand up a named team: Bots, a group chat, a sidebar section, and routines you confirm. No accounts on this site. No plugin API. No one-click OAuth.",
+  onRamp: "Or start with one Bot.",
   entity: site.entity,
   verified: "Verified",
   nav: {
     teams: "Teams",
+    bots: "Bots",
     docs: "Spec",
     connectorsNav: "Connectors",
     api: "API",
@@ -21,6 +23,24 @@ export const en = {
   },
   home: {
     indexTitle: "Company teams",
+    indexTitleBots: "Bots",
+    indexTitleAll: "Teams and bots",
+    /* Two facts, never one total. 56 of these have no group chat, so
+       adding them up and calling the sum "teams" is the lie. */
+    counts: (teams: number, bots: number) =>
+      `${teams} ${teams === 1 ? "team" : "teams"} · ${bots} ${bots === 1 ? "bot" : "bots"}`,
+    kindTeams: "Teams",
+    kindBots: "Bots",
+    kindAll: "All",
+    kindLabel: "Shelf",
+    labelTeam: "Team",
+    labelBot: "Bot",
+    /* "3 Bots · 1 group chat" for a team, "1 Bot" for a bot. Never a
+       plural of one, and never "team of 1". */
+    shape: (bots: number, rooms: number) =>
+      rooms > 0
+        ? `${bots} ${bots === 1 ? "Bot" : "Bots"} · ${rooms === 1 ? "1 group chat" : `${rooms} group chats`}`
+        : `${bots} ${bots === 1 ? "Bot" : "Bots"}`,
     howTitle: "How it works",
     howBody:
       "Pick a team. Copy the installer prompt. Paste it into Grok Bot. The prompt creates named Bots and a group chat (two to six Bots), tells you to make a sidebar section, and pings each Bot so you can confirm routines. Connectors must already be on the account.",
@@ -190,6 +210,15 @@ export const en = {
     title: "Team spec",
     h1: "Team spec",
   },
+  bot: {
+    allBots: "All bots",
+    one: "1 Bot",
+    noRoom: "No group chat",
+    relatedTitle: "Bots that share these connectors",
+    lede:
+      "One Bot doing one job. No group chat, so nothing here claims Verified: that is a claim about a group chat holding two to six Bots.",
+    routineCap: "One Bot can own up to 50 routines. Grok Bot keeps the 20 most recent runs of each.",
+  },
   xai: {
     chip: "From xAI",
     chipTitle: "Sourced from xAI's published Grok Bot use cases. Not affiliated. Not an xAI certification.",
@@ -198,8 +227,8 @@ export const en = {
     sourceAll: "Everything",
     sourceLabel: "Source",
     soloNote:
-      "One Bot, so there is no group chat to edit. Verified is a claim about a group chat holding two to six Bots, and this recipe does not make one.",
-    soloRoster: "This recipe is one Bot. Adding more would be our idea, not the published job, so the roster is fixed here.",
+      "One Bot, so there is no group chat to edit. Verified is a claim about a group chat holding two to six Bots, and a bot does not make one.",
+    soloRoster: "A bot is one Bot. Growing it into a team would be our idea, not the published job, so the roster is fixed here.",
     note:
       "Our write-up of a job xAI publishes in its Grok Bot use-case gallery. The title and the category are theirs. The Bot, the connectors, and the standing instructions are ours. xAI does not review or certify anything on this shelf.",
   },
@@ -209,10 +238,12 @@ export const en = {
     docs: "Docs",
     company: "Company",
     teams: "Teams",
+    bots: "Bots",
     connectors: "Connectors",
     sponsor: "Sponsor",
     spec: "Spec",
     api: "API",
+    apiBots: "Bots API",
     openapi: "OpenAPI",
     github: "GitHub",
     email: "Email us",
@@ -223,7 +254,8 @@ export const en = {
   },
   notFound: {
     kicker: "Not on the shelf",
-    body: "This page is not in the team index.",
+    body: "This page is not on the shelf. Teams live under /teams, bots under /bots.",
     back: "Back to teams",
+    backBots: "Browse bots",
   },
 } as const;

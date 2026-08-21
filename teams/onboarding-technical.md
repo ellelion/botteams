@@ -4,7 +4,8 @@ name: Technical onboarding
 tagline: Gets a customer's integration actually working, and names where they got stuck rather than assuming they will say.
 bots: 4
 section: Onboarding
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Intercom

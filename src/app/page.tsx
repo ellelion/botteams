@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { HomePage } from "@/components/HomePage";
-import { listTeams } from "@/lib/teams";
+import { listAll } from "@/lib/teams";
 import { teamListJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 
@@ -15,7 +15,7 @@ function JsonLd({ data }: { data: object }) {
 }
 
 export default function Home() {
-  const teams = listTeams();
+  const teams = listAll();
   return (
     <>
       <JsonLd data={teamListJsonLd(teams)} />

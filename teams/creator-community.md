@@ -4,7 +4,8 @@ name: Audience desk
 tagline: Reads what the audience actually says across platforms and turns it into the next thing worth making.
 bots: 4
 section: Creator
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - YouTube

@@ -4,7 +4,8 @@ name: Investor metrics
 tagline: Assembles the same metrics the same way every month, so the trend means something across a year of updates.
 bots: 4
 section: Investor updates
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Stripe

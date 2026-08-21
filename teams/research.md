@@ -4,7 +4,8 @@ name: Research desk
 tagline: "Runs a research desk: the brief written, sources found and dated, notes kept, and a synthesis that separates fact from inference."
 bots: 6
 section: Research
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

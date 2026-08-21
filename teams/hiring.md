@@ -4,7 +4,8 @@ name: Hiring desk
 tagline: "Runs a hiring desk: applications sorted, pipeline kept moving, interviews scheduled, and offers drafted without candidates going silent."
 bots: 6
 section: Hiring
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

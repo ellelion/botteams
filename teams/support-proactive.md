@@ -4,7 +4,8 @@ name: Proactive support
 tagline: Contacts nobody, but finds the customers about to have a problem so a human can reach them first.
 bots: 4
 section: Support
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Mixpanel

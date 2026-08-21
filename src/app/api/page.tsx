@@ -4,7 +4,7 @@ import { SiteMasthead } from "@/components/SiteMasthead";
 import { ledger } from "@/lib/ledger-theme";
 import { DEFAULT_LIMIT, MAX_LIMIT } from "@/lib/api-teams";
 import { PARAMS } from "@/lib/openapi";
-import { listTeams } from "@/lib/teams";
+import { listBots, listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -20,7 +20,8 @@ export const metadata: Metadata = {
  * response shape without running a line of JavaScript.
  */
 export default function ApiDocsPage() {
-  const total = listTeams().length;
+  const teamCount = listTeams().length;
+  const botCount = listBots().length;
   const base = site.url;
 
 
@@ -33,19 +34,22 @@ export default function ApiDocsPage() {
         </h1>
         <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           Every team on this shelf is readable as JSON. No key, no account, no rate limit worth mentioning. CORS is open,
-          so a browser or an agent can call it directly. {total} teams today.
+          so a browser or an agent can call it directly. {teamCount} teams and {botCount} bots today.
         </p>
         <p className="mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-          A team is a recipe, not a bot: named Bots, one group chat, standing routines, and the connectors the account
-          needs first. The installer prompt ships in the payload, so a client never has to scrape this site to get it.
+          Two shapes, two collections. A <strong>team</strong> is a recipe with a group chat: two to six named Bots, standing
+          routines, and the connectors the account needs first. A <strong>bot</strong> is a recipe with one Bot and no group
+          chat. They never appear in the same list, because adding them up and calling the total teams is not true. The
+          installer prompt ships in both payloads, so a client never has to scrape this site to get it.
         </p>
 
         <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Endpoints</h2>
           <dl className="mt-4">
             {[
-              ["GET /api/teams", "Filtered and paginated. The endpoint you want in almost every case."],
-              ["GET /openapi.json", "The same contract as OpenAPI 3.1, built from the types the route returns."],
+              ["GET /api/teams", "Teams only: two to six Bots in one group chat. Items arrive under a teams key."],
+              ["GET /api/bots", "Bots only: one Bot, no group chat. Same filters and cursor contract. Items arrive under a bots key."],
+              ["GET /openapi.json", "The same contract as OpenAPI 3.1, built from the types the routes return."],
             ].map(([route, note]) => (
               <div key={route} className="hairline-row py-3">
                 <dt className="text-[0.82rem]" style={{ fontFamily: ledger.mono, color: ledger.ink }}>{route}</dt>
@@ -54,8 +58,9 @@ export default function ApiDocsPage() {
             ))}
           </dl>
           <p className="mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
-            There is no per-team endpoint. <code style={{ fontFamily: ledger.mono }}>/api/teams/&lt;slug&gt;</code> returns 404 by
-            design. Filter the collection instead.
+            There is no per-item endpoint. <code style={{ fontFamily: ledger.mono }}>/api/teams/&lt;slug&gt;</code> and{" "}
+            <code style={{ fontFamily: ledger.mono }}>/api/bots/&lt;slug&gt;</code> both return 404 by design. Filter the
+            collection instead.
           </p>
         </section>
 
@@ -97,6 +102,9 @@ export default function ApiDocsPage() {
             <code>{[
               `# five teams that expect Stripe`,
               `curl "${base}/api/teams?integration=Stripe&limit=5"`,
+              ``,
+              `# one-Bot recipes for sales`,
+              `curl "${base}/api/bots?category=Sales"`,
               ``,
               `# search, alphabetical`,
               `curl "${base}/api/teams?q=inbox&sort=name"`,
@@ -141,12 +149,13 @@ export default function ApiDocsPage() {
               `  "name": "Founder OS",`,
               `  "tagline": "Money, inbox, and a chief of staff in one founder room.",`,
               `  "category": "Founder OS",`,
-              `  "status": "team",`,
+              `  "kind": "team",`,
+              `  "status": "installable",`,
               `  "bots": 3,`,
               `  "addedAt": "2026-08-21T03:57:51.000Z",`,
               `  "connectors": ["Stripe", "Gmail", "Calendar", "Ramp", "Notion"],`,
               `  "agents":   [{ "name": "...", "persona": "...", "connectors": [...] }],`,
-              `  "rooms":    [{ "name": "Founder HQ", "members": [...] }],`,
+              `  "rooms":    [{ "name": "Founder HQ", "members": [...] }],   // always [] on a bot`,
               `  "routines": [{ "name": "...", "owner": "...", "schedule": "...", "prompt": "..." }],`,
               `  "installer": "# Grok Bot Teams installer ...",`,
               `  "contributor": null,`,

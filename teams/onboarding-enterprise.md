@@ -4,7 +4,8 @@ name: Enterprise rollout
 tagline: Runs a large rollout where the buyer and the users are different people with different problems.
 bots: 4
 section: Onboarding
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - HubSpot

@@ -4,7 +4,8 @@ name: Privacy desk
 tagline: Tracks what personal data the company holds, where it goes, and which requests are running out of time.
 bots: 4
 section: Legal
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion
