@@ -1960,6 +1960,18 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .rc-main { max-width: 42rem; }
 .rc-main--rail { max-width: 74rem; }
 .rc-main--outline { max-width: 62rem; }
+/* The shells use the full width they are given and manage their own
+   height, so the reading measure does not apply. */
+.rc-main--studio,
+.rc-main--deck,
+.rc-main--bento,
+.rc-main--inspector,
+.rc-main--stage { max-width: 84rem; display: flex; flex-direction: column; }
+.rc-main--studio .rc-pick,
+.rc-main--deck .rc-pick,
+.rc-main--bento .rc-pick,
+.rc-main--inspector .rc-pick,
+.rc-main--stage .rc-pick { flex: none; margin-bottom: 12px; padding-bottom: 10px; }
 
 .rc-pick {
   display: flex;
@@ -2173,4 +2185,201 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .rc-tab { padding: 0 11px; font-size: 0.82rem; }
   /* Room for the bar so it never sits on top of the last section. */
   .rc-rail .rc-rail-main { padding-bottom: 76px; }
+}
+
+
+/* ── Shell layouts ────────────────────────────────────────────────────
+   Five arrangements that hold one screen. The frame is exactly the
+   viewport minus the masthead; the page never scrolls on a desktop and
+   the panes do. Nothing here shrinks the type or hides Copy to make
+   that true: content that does not fit scrolls inside its pane. */
+.rcs {
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - var(--masthead-h));
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Persistent chrome. Copy lives here, so it is reachable whatever a pane
+   is doing, and it never leaves the screen to need a second bar. */
+.rcs-bar {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 22px;
+  padding: 0 0 14px;
+  border-bottom: 1px solid var(--line-strong);
+}
+.rcs-bar-id { min-width: 0; flex: 1 1 18rem; }
+.rcs-name {
+  font-family: "General Sans", system-ui, sans-serif;
+  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.rcs-tag {
+  margin-top: 5px;
+  color: var(--muted-strong);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  /* Two lines of tagline, then it stops. The bar is chrome, not copy. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rcs-bar-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.rcs-shape {
+  color: var(--muted);
+  font: 500 0.58rem/1 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.rcs-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.rcs-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding-top: 16px;
+}
+.rcs-pane {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 12px;
+}
+.rcs-pane-alt {
+  padding-left: 22px;
+  border-left: 1px solid var(--line);
+}
+/* A pane supplies the rule between sections, so the first section in one
+   should not draw a second directly under the pane edge. */
+.rcs-pane > section:first-child,
+.rcs-pane > *:first-child > section:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+.rcs-quiet { color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
+
+.rcs-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 23rem); gap: 0 26px; }
+.rcs-three { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) minmax(0, 22rem); gap: 0 22px; }
+.rcs-three > .rcs-list { border-right: 1px solid var(--line); padding-right: 18px; }
+
+.rcs-listrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 0.88rem;
+  text-align: left;
+  cursor: pointer;
+}
+.rcs-listrow:hover { background: var(--surface); color: var(--ink); }
+.rcs-listrow.is-on { background: var(--ink); color: var(--page); }
+.rcs-listrow:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.rcs-jobname { margin-top: 8px; font-size: 1.3rem; font-weight: 300; letter-spacing: -0.01em; }
+.rcs-jobtext { margin-top: 10px; color: var(--ink-soft); font-size: 0.92rem; line-height: 1.6; }
+
+/* Bento. The grid is the viewport, so a card can only ever clip. */
+.rcs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 12px;
+}
+.rcs-card {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.rcs-card-wide { grid-column: span 2; }
+.rcs-card-tall { grid-row: span 2; }
+
+/* Deck. One face, and sheets over it rather than page below it. */
+.rcs-deck-body { display: grid; align-items: start; }
+.rcs-deck-face { max-width: 44rem; }
+.rcs-chiplist { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.rcs-botchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-size: 0.86rem;
+}
+.rcs-deck-room { margin-top: 14px; color: var(--muted-strong); font-size: 0.84rem; line-height: 1.5; }
+.rcs-deck-open { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
+.rcs-sheet {
+  position: absolute;
+  inset: var(--masthead-h) 0 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px 20px;
+  background: var(--page);
+  border-top: 1px solid var(--line-strong);
+  animation: rcs-sheet-in .16s ease-out;
+}
+@keyframes rcs-sheet-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .rcs-sheet { animation: none; } }
+.rcs-sheet-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.rcs-sheet-body { flex: 1 1 auto; padding-top: 14px; }
+
+.rcs-tabs { flex: none; margin-top: 14px; }
+.rcs--stage .rcs-body { padding-top: 14px; }
+
+@media (max-width: 900px) {
+  /* Below this the panes stop being columns and become one scroller.
+     The frame still holds the viewport, so the window does not grow and
+     Copy stays in the bar where a thumb can reach it. */
+  .rcs-body { display: block; overflow-y: auto; overscroll-behavior: contain; }
+  .rcs-two,
+  .rcs-three,
+  .rcs-grid { display: block; }
+  .rcs-pane { overflow: visible; padding-right: 0; }
+  .rcs-pane-alt,
+  .rcs-three > .rcs-list {
+    margin-top: 24px;
+    padding: 20px 0 0;
+    border-left: 0;
+    border-right: 0;
+    border-top: 1px solid var(--line);
+  }
+  .rcs-card { margin-top: 12px; }
+  .rcs-card-wide, .rcs-card-tall { grid-column: auto; grid-row: auto; }
+  .rcs-sheet { inset: var(--masthead-h) 0 0; padding: 14px 16px 18px; }
+  .rcs-bar { position: sticky; top: 0; z-index: 20; background: var(--page); }
+}
+@media (max-width: 430px) {
+  .rcs-bar { gap: 8px 14px; padding-bottom: 12px; }
+  .rcs-bar-actions .theme-control { min-height: 44px; }
 }

@@ -1,15 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Children, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
 import { VerifiedChip } from "@/components/VerifiedChip";
+import { FromXaiChip } from "@/components/FromXaiChip";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { botMarkStyle } from "@/lib/bot-icon";
 import { resolveConnector } from "@/lib/connectors";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
-import type { RecipeLayout } from "@/lib/recipe-layout";
+import { isShell, type RecipeLayout } from "@/lib/recipe-layout";
 import { site } from "@/lib/site";
 import type { ConnectorMode, Team } from "@/lib/types";
 import {
@@ -61,6 +62,9 @@ export function Customize({
   children?: ReactNode;
 }) {
   const [tab, setTab] = useState<WorkbenchTab>("roster");
+  /* Shell state: a sheet for deck, a picked Bot for inspector. */
+  const [sheet, setSheet] = useState<WorkbenchTab | null>(null);
+  const [picked, setPicked] = useState(0);
   const topActionsRef = useRef<HTMLDivElement>(null);
   const [showBar, setShowBar] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -545,6 +549,275 @@ export function Customize({
     </div>
   );
 
+  /* ── Shell layouts ──────────────────────────────────────────────────
+     One viewport, no document scroll. The bar is persistent chrome and
+     is where Copy lives, so it is reachable whatever a pane is doing. */
+  const rosterLabel = solo ? en.recipe.secJob : en.recipe.secRoster;
+
+  const shellBar = (
+    <header className="rcs-bar">
+      <div className="rcs-bar-id">
+        <h1 className="rcs-name">{team.name}</h1>
+        <p className="rcs-tag">{team.tagline}</p>
+      </div>
+      <div className="rcs-bar-chips">
+        {team.fromXai ? <FromXaiChip /> : null}
+        {solo ? null : <VerifiedChip on={verdict.verified} />}
+        <span className="rcs-shape">{en.home.shape(team.bots, team.rooms.length)}</span>
+      </div>
+      <div className="rcs-bar-actions" ref={topActionsRef}>
+        <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
+        <button
+          type="button"
+          className="theme-control theme-control-label"
+          aria-expanded={editing}
+          onClick={() => setEditing((v) => !v)}
+        >
+          {editing ? en.customize.close : en.customize.open}
+        </button>
+      </div>
+    </header>
+  );
+
+  const installPane = (
+    <>
+      {connectorsPart}
+      {panelPart}
+      {promptPart}
+    </>
+  );
+
+  /* The page hands us several sibling sections. Rendering that array in
+     more than one slot makes React ask for keys, so key it once here. */
+  const notes = Children.toArray(children);
+  const notesPane = notes.length > 0 ? notes : <p className="rc-empty">{en.recipe.noNotes}</p>;
+  const routinesPane = resolved.routines.length > 0 ? routinesPart : <p className="rc-empty">{en.recipe.noRoutines}</p>;
+
+  if (isShell(layout)) {
+    /* 1. Studio. Two panes filling what is left of the viewport: the
+       recipe on the left, everything install on the right. */
+    if (layout === "studio") {
+      return (
+        <div className="rcs rcs--studio">
+          {shellBar}
+          {verdictPart}
+          {overwritePart}
+          <div className="rcs-body rcs-two">
+            <section className="rcs-pane" aria-label={rosterLabel}>
+              {rosterPart}
+              {solo ? null : roomPart}
+              {routinesPart}
+              {notes}
+              {related}
+            </section>
+            <section className="rcs-pane rcs-pane-alt" aria-label={en.recipe.secInstall}>
+              {installPane}
+            </section>
+          </div>
+        </div>
+      );
+    }
+
+    /* 2. Deck. One screen and nothing below it. The rest arrives as a
+       sheet over the top, and closing it puts you back on the same
+       screen rather than somewhere down a page. */
+    if (layout === "deck") {
+      const sheets: { id: WorkbenchTab; label: string; node: ReactNode }[] = [
+        { id: "routines", label: en.recipe.secRoutines, node: routinesPane },
+        { id: "customize", label: en.customize.title, node: installPane },
+        { id: "notes", label: en.recipe.secNotes, node: notesPane },
+      ];
+      const openSheet = sheets.find((x) => x.id === sheet) ?? null;
+      return (
+        <div className="rcs rcs--deck">
+          {shellBar}
+          {verdictPart}
+          {overwritePart}
+          <div className="rcs-body rcs-deck-body">
+            <div className="rcs-deck-face">
+              <p className="rc-h2">{rosterLabel}</p>
+              <ul className="rcs-chiplist">
+                {resolved.agents.map(({ source, name }, i) => (
+                  <li key={source.name} className="rcs-botchip">
+                    <GrokBotMark size={16} animate style={botMarkStyle(i)} />
+                    <span>{name || source.name}</span>
+                  </li>
+                ))}
+              </ul>
+              {solo ? null : (
+                <p className="rcs-deck-room">
+                  {en.recipe.secRoom}: {resolved.roomName} · {resolved.members.join(", ")}
+                </p>
+              )}
+              <div className="mt-4">
+                <ConnectorRow names={team.connectors} labeled size={16} />
+              </div>
+              <div className="rcs-deck-open">
+                {sheets.map((x) => (
+                  <button
+                    key={x.id}
+                    type="button"
+                    className="cz-btn cz-btn-quiet"
+                    onClick={() => {
+                      setSheet(x.id);
+                      if (x.id === "customize") setEditing(true);
+                    }}
+                  >
+                    {x.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {openSheet ? (
+            <div className="rcs-sheet" role="dialog" aria-modal="false" aria-label={openSheet.label}>
+              <div className="rcs-sheet-head">
+                <p className="rc-h2">{openSheet.label}</p>
+                <button type="button" className="cz-btn cz-btn-quiet" onClick={() => setSheet(null)}>
+                  {en.recipe.close}
+                </button>
+              </div>
+              <div className="rcs-pane rcs-sheet-body">{openSheet.node}</div>
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+
+    /* 3. Bento. A grid of cards that each clip. No card can make the page
+       taller than the window, because the grid is exactly the window. */
+    if (layout === "bento") {
+      return (
+        <div className="rcs rcs--bento">
+          {shellBar}
+          {verdictPart}
+          {overwritePart}
+          <div className="rcs-body rcs-grid">
+            <section className="rcs-card rcs-pane rcs-card-wide" aria-label={rosterLabel}>
+              {rosterPart}
+              {solo ? null : roomPart}
+            </section>
+            <section className="rcs-card rcs-pane" aria-label={en.recipe.secRoutines}>{routinesPane}</section>
+            <section className="rcs-card rcs-pane rcs-card-tall" aria-label={en.recipe.secInstall}>{installPane}</section>
+            <section className="rcs-card rcs-pane" aria-label={en.recipe.secNotes}>{notesPane}</section>
+            <section className="rcs-card rcs-pane" aria-label={en.recipe.secRelated}>
+              {related ?? <p className="rc-empty">{en.recipe.noNotes}</p>}
+            </section>
+          </div>
+        </div>
+      );
+    }
+
+    /* 4. Inspector. Three panes: pick a Bot, read the Bot, see what it
+       reaches. A one-Bot recipe uses the same frame with one row in the
+       list, rather than a different screen. */
+    if (layout === "inspector") {
+      const current = resolved.agents[Math.min(picked, resolved.agents.length - 1)];
+      return (
+        <div className="rcs rcs--inspector">
+          {shellBar}
+          {verdictPart}
+          {overwritePart}
+          <div className="rcs-body rcs-three">
+            <nav className="rcs-pane rcs-list" aria-label={en.recipe.pickBot}>
+              <p className="rc-h2">{rosterLabel}</p>
+              <ul>
+                {resolved.agents.map(({ source, name }, i) => (
+                  <li key={source.name}>
+                    <button
+                      type="button"
+                      className={`rcs-listrow${i === Math.min(picked, resolved.agents.length - 1) ? " is-on" : ""}`}
+                      aria-current={i === picked}
+                      onClick={() => setPicked(i)}
+                    >
+                      <GrokBotMark size={16} animate style={botMarkStyle(i)} />
+                      <span>{name || source.name}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              {solo ? null : (
+                <>
+                  <p className="rc-h2 mt-6">{en.recipe.secRoom}</p>
+                  <p className="rcs-quiet">{resolved.roomName}</p>
+                  <p className="rcs-quiet">{resolved.members.join(", ")}</p>
+                </>
+              )}
+            </nav>
+
+            <section className="rcs-pane" aria-label={en.recipe.secJob}>
+              {current ? (
+                <>
+                  <p className="rc-h2">{en.recipe.secJob}</p>
+                  <h2 className="rcs-jobname" style={{ fontFamily: ledger.serif }}>{current.name || current.source.name}</h2>
+                  <p className="rcs-jobtext">{current.source.persona}</p>
+                  {current.note ? <p className="rcs-jobtext">{current.note}</p> : null}
+                  {current.source.connectors.length > 0 ? (
+                    <div className="mt-4"><ConnectorRow names={current.source.connectors} labeled size={16} /></div>
+                  ) : null}
+                  {notes}
+                </>
+              ) : null}
+            </section>
+
+            <section className="rcs-pane rcs-pane-alt" aria-label={en.recipe.secInstall}>
+              {connectorsPart}
+              {routinesPane}
+              {panelPart}
+              {promptPart}
+            </section>
+          </div>
+        </div>
+      );
+    }
+
+    /* 5. Stage. Identity and the action stay pinned; one stage below
+       them. Switching tabs swaps what is on the stage and never adds a
+       pixel of page height. */
+    const stages: { id: WorkbenchTab; label: string; node: ReactNode }[] = [
+      { id: "roster", label: rosterLabel, node: (<>{rosterPart}{solo ? null : roomPart}{related}</>) },
+      { id: "routines", label: en.recipe.secRoutines, node: routinesPane },
+      { id: "customize", label: en.customize.title, node: installPane },
+      { id: "notes", label: en.recipe.secNotes, node: notesPane },
+    ];
+    const onStage = stages.find((x) => x.id === tab) ?? stages[0];
+    return (
+      <div className="rcs rcs--stage">
+        {shellBar}
+        {verdictPart}
+        {overwritePart}
+        <div className="rc-tabs rcs-tabs" role="tablist" aria-label={en.recipe.tabsAria}>
+          {stages.map((x) => (
+            <button
+              key={x.id}
+              type="button"
+              role="tab"
+              id={`rcs-tab-${x.id}`}
+              aria-selected={x.id === onStage.id}
+              aria-controls={`rcs-stage-${x.id}`}
+              className={`rc-tab${x.id === onStage.id ? " is-on" : ""}`}
+              onClick={() => {
+                setTab(x.id);
+                if (x.id === "customize") setEditing(true);
+              }}
+            >
+              {x.label}
+            </button>
+          ))}
+        </div>
+        <div
+          className="rcs-body rcs-pane"
+          role="tabpanel"
+          id={`rcs-stage-${onStage.id}`}
+          aria-labelledby={`rcs-tab-${onStage.id}`}
+        >
+          {onStage.node}
+        </div>
+      </div>
+    );
+  }
+
   const sections: { id: string; label: string }[] = [
     { id: "overview", label: en.recipe.secOverview },
     { id: "roster", label: solo ? en.recipe.secJob : en.recipe.secRoster },
@@ -574,7 +847,7 @@ export function Customize({
           <div id="roster">{rosterPart}</div>
           {solo ? null : <div id="room">{roomPart}</div>}
           {resolved.routines.length > 0 ? <div id="routines">{routinesPart}</div> : null}
-          {children}
+          {notes}
           <div id="installer">{promptPart}</div>
           {related ? <div id="related">{related}</div> : null}
           {extras}
@@ -699,7 +972,7 @@ export function Customize({
         <div id="roster">{rosterPart}</div>
         {solo ? null : <div id="room">{roomPart}</div>}
         {resolved.routines.length > 0 ? <div id="routines">{routinesPart}</div> : null}
-        {children}
+        {notes}
         <div id="installer">{promptPart}</div>
         {related ? <div id="related">{related}</div> : null}
         {extras}
