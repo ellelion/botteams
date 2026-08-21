@@ -4,7 +4,8 @@ name: Security posture
 tagline: "Watches the boring security surface that gets ignored until it does not: keys, permissions, and exposed endpoints."
 bots: 4
 section: Infrastructure
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Cloudflare

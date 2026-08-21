@@ -4,7 +4,8 @@ name: Feedback routing
 tagline: Turns scattered feedback into counted, sourced themes rather than whoever shouted most recently.
 bots: 4
 section: Product
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Intercom

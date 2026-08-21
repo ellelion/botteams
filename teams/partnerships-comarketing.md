@@ -4,7 +4,8 @@ name: Co-marketing
 tagline: Runs joint campaigns where both sides have to deliver, and makes the missing half obvious early.
 bots: 4
 section: Partnerships
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

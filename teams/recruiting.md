@@ -4,7 +4,8 @@ name: Recruiting sourcer
 tagline: "Runs sourcing and outreach: candidates found on evidence, messages drafted per person, and the pipeline kept from going quiet."
 bots: 6
 section: Recruiting
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

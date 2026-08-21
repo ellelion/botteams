@@ -4,7 +4,8 @@ name: Sales company
 tagline: "Runs a two-Bot sales floor: the pipeline read every morning and follow-ups drafted for everything that went quiet."
 bots: 2
 section: Sales
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

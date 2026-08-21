@@ -4,7 +4,8 @@ name: Field events
 tagline: Runs small in-person events where the budget and the guest list are the two things that quietly go wrong.
 bots: 4
 section: Events
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Luma

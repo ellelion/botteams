@@ -4,7 +4,8 @@ name: Market research
 tagline: Answers sizing and segment questions with the source and the date attached, so numbers can be checked.
 bots: 4
 section: Research
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Exa

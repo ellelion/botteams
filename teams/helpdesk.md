@@ -4,7 +4,8 @@ name: Ticket desk
 tagline: "Runs a ticket desk across Zendesk and Intercom: triaged by urgency, aging conversations surfaced, and repeat tickets turned into bugs."
 bots: 5
 section: Helpdesk
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - Zendesk

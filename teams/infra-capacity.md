@@ -4,7 +4,8 @@ name: Capacity planning
 tagline: Answers whether the system survives the next spike, before the spike rather than during it.
 bots: 4
 section: Infrastructure
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Datadog

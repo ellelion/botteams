@@ -4,7 +4,8 @@ name: Competitive watch
 tagline: Tracks what competitors actually shipped and said, separated from what they announced.
 bots: 4
 section: Research
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Exa

@@ -4,7 +4,8 @@ name: Partner sourcing
 tagline: Finds and qualifies potential partners against what the product actually needs, not against logo appeal.
 bots: 4
 section: Partnerships
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Exa

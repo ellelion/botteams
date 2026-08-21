@@ -4,7 +4,8 @@ name: Support quality
 tagline: Reviews resolved tickets for whether the answer was actually right, not merely fast.
 bots: 4
 section: Support
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Zendesk

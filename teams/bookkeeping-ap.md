@@ -4,7 +4,8 @@ name: Accounts payable
 tagline: "Watches what the company owes: bills in, duplicates caught, and nothing paid twice or paid late by accident."
 bots: 4
 section: Bookkeeping
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Gmail

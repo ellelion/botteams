@@ -4,7 +4,8 @@ name: Software spend
 tagline: Finds the subscriptions nobody uses and the ones nobody remembers approving.
 bots: 4
 section: Workplace
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Ramp

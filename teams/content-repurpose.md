@@ -4,7 +4,8 @@ name: Repurpose desk
 tagline: Turns one long piece into the shorter pieces it should have become, in the register each channel actually uses.
 bots: 4
 section: Content
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

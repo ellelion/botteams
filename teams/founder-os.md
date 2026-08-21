@@ -4,7 +4,8 @@ name: Founder OS
 tagline: "Three Bots for a founder with no team yet: the money read weekly, the inbox triaged, and a chief of staff holding the week together."
 bots: 3
 section: Founder OS
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Stripe

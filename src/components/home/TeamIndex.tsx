@@ -84,6 +84,12 @@ function TeamArrow() {
   );
 }
 
+/* A Bot lives under /bots, a team under /teams. Nothing renders a link
+   from the noun in the surrounding copy; it comes from the item. */
+function hrefFor(team: Team): string {
+  return `/${team.kind === "bot" ? "bots" : "teams"}/${team.slug}`;
+}
+
 function matchesQuery(team: Team, q: string): boolean {
   if (!q) return true;
   const hay = [
@@ -116,8 +122,10 @@ export function TeamIndex({
   /* Three shelves, not two. Absent means our own company teams, which is
      what a visitor should land on: 56 one-Bot jobs sourced from xAI would
      otherwise be most of the first screen. */
-  const sourceRaw = params.get("source");
-  const sourceParam: "ours" | "xai" | "all" = sourceRaw === "xai" ? "xai" : sourceRaw === "all" ? "all" : "ours";
+  /* The shelf, not the source. From xAI is a badge on a card, not a
+     filter: some Bots may be ours one day, and they will still be Bots. */
+  const kindRaw = params.get("kind");
+  const kindParam: "team" | "bot" | "all" = kindRaw === "bot" ? "bot" : kindRaw === "all" ? "all" : "team";
   const [view, setView] = useState<View>("ledger");
   const [browse, setBrowse] = useState<Browse>("rail");
   const [query, setQuery] = useState("");
@@ -126,11 +134,11 @@ export function TeamIndex({
   /* Everything below filters within the chosen shelf, so a category count
      never promises rows the current shelf will not show. */
   const inSource = useMemo(
-    () => teams.filter((t) => (sourceParam === "all" ? true : sourceParam === "xai" ? t.fromXai === true : t.fromXai !== true)),
-    [teams, sourceParam],
+    () => teams.filter((t) => (kindParam === "all" ? true : t.kind === kindParam)),
+    [teams, kindParam],
   );
-  const xaiCount = useMemo(() => teams.filter((t) => t.fromXai === true).length, [teams]);
-  const oursCount = teams.length - xaiCount;
+  const botCount = useMemo(() => teams.filter((t) => t.kind === "bot").length, [teams]);
+  const teamCount = teams.length - botCount;
 
   const categories = useMemo(() => {
     const map = new Map<string, number>();
@@ -206,12 +214,14 @@ export function TeamIndex({
   const setSection = (next: string) => setParam("category", next);
 
   /* "all" means everything here, not "no filter", so this cannot go
-     through setParam, which treats "all" as a clear. */
-  function setSource(next: "ours" | "xai" | "all") {
+     through setParam, which treats "all" as a clear. Switching shelf also
+     drops the category, which belongs to the shelf you just left. */
+  function setKind(next: "team" | "bot" | "all") {
     const usp = new URLSearchParams(params.toString());
     usp.delete("section");
-    if (next === "ours") usp.delete("source");
-    else usp.set("source", next);
+    usp.delete("category");
+    if (next === "team") usp.delete("kind");
+    else usp.set("kind", next);
     const qs = usp.toString();
     router.replace(qs ? `${pathname}?${qs}#teams` : `${pathname}#teams`, { scroll: false });
   }
@@ -219,7 +229,7 @@ export function TeamIndex({
   return (
     <section id="teams">
       <div className="stats-strip">
-        <p className="stats-line">{`${teams.length} teams · verified ${verifiedOn}`}</p>
+        <p className="stats-line">{`${en.home.counts(teamCount, botCount)} · verified ${verifiedOn}`}</p>
         <Sparkline series={added} className="stat-spark" />
       </div>
 
@@ -235,18 +245,18 @@ export function TeamIndex({
       </label>
 
       <div className="browse-pick">
-        <span className="browse-pick-label">{en.xai.sourceLabel}</span>
+        <span className="browse-pick-label">{en.home.kindLabel}</span>
         {([
-          ["ours", en.xai.sourceOurs, oursCount],
-          ["xai", en.xai.filter, xaiCount],
-          ["all", en.xai.sourceAll, teams.length],
+          ["team", en.home.kindTeams, teamCount],
+          ["bot", en.home.kindBots, botCount],
+          ["all", en.home.kindAll, teams.length],
         ] as const).map(([id, label, count]) => (
           <button
             key={id}
             type="button"
-            className={`browse-pick-btn${sourceParam === id ? " is-on" : ""}`}
-            aria-pressed={sourceParam === id}
-            onClick={() => setSource(id)}
+            className={`browse-pick-btn${kindParam === id ? " is-on" : ""}`}
+            aria-pressed={kindParam === id}
+            onClick={() => setKind(id)}
           >
             {label} <span className="browse-pick-count">{count}</span>
           </button>
@@ -308,7 +318,9 @@ export function TeamIndex({
       ) : null}
 
       <div className="index-header">
-        <h2 className="section-title">{en.home.indexTitle}</h2>
+        <h2 className="section-title">
+          {kindParam === "bot" ? en.home.indexTitleBots : kindParam === "all" ? en.home.indexTitleAll : en.home.indexTitle}
+        </h2>
         <div className="filter-bar">
           {browse === "menu" ? (
             <Select
@@ -360,12 +372,15 @@ export function TeamIndex({
             <span role="columnheader"><span className="sr-only">{en.home.openTeam}</span></span>
           </div>
           {sorted.map((team) => (
-            <Link key={team.slug} href={`/teams/${team.slug}`} className="idx-colrow" role="row">
+            <Link key={team.slug} href={hrefFor(team)} className="idx-colrow" role="row">
               <span className="idx-colcell" role="cell">
                 <span className="idx-colname">{team.name}</span>
                 <span className="idx-coltag">{team.tagline}</span>
               </span>
-              <span className="idx-colcat" role="cell">{team.section}</span>
+              <span className="idx-colcat" role="cell">
+                {kindParam === "all" ? `${team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
+                {team.section}
+              </span>
               <span className="idx-num" role="cell">{team.bots}</span>
               <span className="idx-colconn" role="cell"><ConnectorRow names={team.connectors} size={15} /></span>
               <span className="row-arrow" role="cell"><TeamArrow /></span>
@@ -375,13 +390,16 @@ export function TeamIndex({
       ) : view === "cards" ? (
         <div className="idx-cards">
           {sorted.map((team) => (
-            <Link key={team.slug} href={`/teams/${team.slug}`} className="idx-card">
-              <span className="idx-card-cat">{team.section}</span>
+            <Link key={team.slug} href={hrefFor(team)} className="idx-card">
+              <span className="idx-card-cat">
+                {kindParam === "all" ? `${team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
+                {team.section}
+              </span>
               <span className="idx-card-name">{team.name}</span>
               <span className="idx-card-tag">{team.tagline}</span>
               <span className="idx-card-foot">
                 <ConnectorRow names={team.connectors} size={15} />
-                <span className="idx-card-bots">{en.home.botCount(team.bots)}</span>
+                <span className="idx-card-bots">{en.home.shape(team.bots, team.rooms.length)}</span>
               </span>
             </Link>
           ))}
@@ -428,10 +446,10 @@ function TeamExpandable({
         </button>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-            <Link href={`/teams/${team.slug}`} className="index-name" onClick={(e) => e.stopPropagation()}>
+            <Link href={hrefFor(team)} className="index-name" onClick={(e) => e.stopPropagation()}>
               {team.name}
             </Link>
-            <span className="team-card-meta">{en.home.botCount(team.bots)}</span>
+            <span className="team-card-meta">{en.home.shape(team.bots, team.rooms.length)}</span>
           </div>
           <p className="index-tagline">{team.tagline}</p>
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
@@ -443,7 +461,7 @@ function TeamExpandable({
           </div>
         </div>
         <Link
-          href={`/teams/${team.slug}`}
+          href={hrefFor(team)}
           className="row-arrow row-arrow-link"
           aria-label={`${en.home.openTeam}: ${team.name}`}
           onClick={(e) => e.stopPropagation()}

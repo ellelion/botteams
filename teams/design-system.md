@@ -4,7 +4,8 @@ name: Design system
 tagline: Keeps the component library and the product from drifting apart, and names the drift when it starts.
 bots: 4
 section: Design
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Figma

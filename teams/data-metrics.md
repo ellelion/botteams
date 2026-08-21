@@ -4,7 +4,8 @@ name: Metric definitions
 tagline: Keeps one definition per metric, so two teams stop quoting different numbers for the same word.
 bots: 4
 section: Data
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

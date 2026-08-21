@@ -100,22 +100,42 @@ suggest:
   - text: Brief me Mondays in Founder HQ.
 ```
 
-### One-Bot recipes and sourced ones
+### Two shapes
 
-`rooms: []` is legal. A recipe that stands up one Bot has nobody to talk
-to, and inventing a group chat so the card looks Verified would be a lie
-about what the recipe does.
+A **team** is two to six Bots in one group chat and lives in `teams/`. A
+**bot** is one Bot doing one job and lives in `bots/`. They are separate
+folders, separate URLs, and separate API collections, and the site never
+adds them into one count.
+
+| | `bots/` | `teams/` |
+|---|---|---|
+| `kind` | `bot` | `team` |
+| `bots` | always 1 | 2 to 6, matching `agents` |
+| `agents` | exactly one | one per Bot |
+| `rooms` | forbidden, empty or absent | required, each 2 to 6 Bots |
+| `routines` | 0 to 50 per owning Bot | 0 to 50 per owning Bot |
+| Verified | never | when the roster fits |
+| URL | `/bots/<slug>` | `/teams/<slug>` |
+
+`status` is `installable` or `example` and says nothing about shape. It
+used to say `team`, which put the word on 56 files that have no group
+chat. Kind says what it is; status says whether it is real or a demo.
+
+The 50-routine cap is xAI's, and it is per owning Bot. There is no
+documented cap on a team as a whole, so do not invent one.
 
 `from_xai: true` marks a recipe as our write-up of a job xAI publishes in
 its [use-case gallery](https://x.ai/bot/use-cases). It shows a **From xAI**
-chip that links to the source. Use it only for that, and never write copy
-that implies xAI reviewed, certified, or endorsed anything here.
+chip that links to the source. It is a badge on a card, not a shelf: a bot
+is a bot whether or not we sourced it. Never write copy that implies xAI
+reviewed, certified, or endorsed anything here.
 
-Verified is a separate claim and a narrow one: at least one Bot, `bots`
-matching the roster, at least one group chat, every group chat holding two
-to six Bots, and Bots plus group chats under the account cap of 50. A
-recipe with no group chat is not Verified, because it makes no claim about
-one. The rule is asserted in the validate script, so breaking it fails CI.
+Verified is a separate claim, a narrow one, and it exists for teams only:
+kind is `team`, at least one Bot, `bots` matching the roster, at least one
+group chat, every group chat holding two to six Bots, and Bots plus group
+chats under the account cap of 50. A bot is never Verified, because
+Verified is a claim about a group chat and a bot makes none. The rule is
+asserted in the validate script, so breaking it fails CI.
 
 ### Categories
 

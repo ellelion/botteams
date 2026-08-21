@@ -4,7 +4,8 @@ name: Renewal desk
 tagline: Tracks every renewal far enough ahead to do something about it, with the case for renewing written from evidence.
 bots: 4
 section: Customer success
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - HubSpot

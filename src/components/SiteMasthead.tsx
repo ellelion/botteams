@@ -15,6 +15,7 @@ export function SiteMasthead() {
       <div className="site-masthead-actions">
         <nav className="site-masthead-nav" aria-label={en.nav.mainAria}>
           <Link href="/#teams" className="accent-hover">{en.nav.teams}</Link>
+          <Link href="/?kind=bot#teams" className="accent-hover">{en.nav.bots}</Link>
           <Link href="/connectors" className="accent-hover">{en.nav.connectorsNav}</Link>
           <Link href="/docs" className="accent-hover">{en.nav.docs}</Link>
           <Link href="/api" className="accent-hover">{en.nav.api}</Link>

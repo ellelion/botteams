@@ -4,7 +4,8 @@ name: Cloud cost
 tagline: Turns a cloud bill into named decisions, so spend growth has an owner rather than a shrug.
 bots: 4
 section: Infrastructure
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - AWS Core

@@ -93,7 +93,7 @@ export type CustomState = {
    editor has something to show would put a step in the paste that the
    recipe never asked for. */
 export function isSolo(team: Team): boolean {
-  return team.rooms.length === 0;
+  return team.kind === "bot";
 }
 
 export function defaultState(team: Team): CustomState {
@@ -342,14 +342,16 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     "",
     `Catalog: ${siteUrl}`,
     `Source: ${siteGithub}`,
-    `Team: ${team.name} (${team.slug})`,
+    isSolo(team) ? `Bot: ${team.name} (${team.slug})` : `Team: ${team.name} (${team.slug})`,
     `Bots: ${r.agents.length}`,
-    `Sidebar section name: ${team.section}`,
+    ...(isSolo(team) ? [`Category: ${team.section}`] : [`Sidebar section name: ${team.section}`]),
     "",
     ...changeNote,
     /* The heading has to agree with section 0. "Create these Bots" over a
        list the human already created is how you end up with two of each. */
-    state.installed ? "## 1. The Bots on this team" : "## 1. Create these Bots",
+    state.installed
+      ? (isSolo(team) ? "## 1. The Bot" : "## 1. The Bots on this team")
+      : (isSolo(team) ? "## 1. Create this Bot" : "## 1. Create these Bots"),
     "",
     state.installed
       ? "Check each one against what is already in the sidebar. Create only the ones that are missing, and rename the ones listed above."
@@ -360,7 +362,12 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     agents,
     "",
     ...(isSolo(team)
-      ? ["## 2. No group chat", "", "This recipe is one Bot. Do not create a group chat for it.", ""]
+      ? [
+          "## 2. No group chat, no sidebar section",
+          "",
+          "This is one Bot. Do not create a group chat for it, and do not create a sidebar section: a section is for several chats that belong together.",
+          "",
+        ]
       : [
           "## 2. Create this group chat",
           "",
@@ -369,46 +376,66 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
           `### ${r.roomName}`,
           `Members (${r.members.length}, two to six Bots): ${r.members.join(", ")}`,
           "",
+          "## 3. Sidebar section (human does this)",
+          "",
+          "The installer cannot create sidebar sections.",
+          "Human: in the Grok Bot sidebar, use Move to, then New section.",
+          `Name that section exactly: ${team.section}`,
+          "Move the group chat and Bots into that section.",
+          "",
         ]),
-    "## 3. Sidebar section (human does this)",
-    "",
-    "The installer cannot create sidebar sections.",
-    "Human: in the Grok Bot sidebar, use Move to, then New section.",
-    `Name that section exactly: ${team.section}`,
-    "Move the group chat and Bots into that section.",
-    "",
-    "## 4. Routines (confirm card required)",
+    isSolo(team) ? "## 3. Routines (confirm card required)" : "## 4. Routines (confirm card required)",
     "",
     routines
-      ? "Ping each owner Bot with the routine they own so they can save it.\nA routine is owned by one Bot. A confirm card will appear. The human must confirm each one.\nDo not assume a routine is saved until the human confirms.\n\n" + routines
-      : "No routines in this version of the team.",
+      ? [
+          isSolo(team)
+            ? "Ping the Bot with each routine so it can save them."
+            : "Ping each owner Bot with the routine they own so they can save it.",
+          /* xAI's documented cap, stated where the human is about to
+             create them. There is no documented team-level cap, so the
+             prompt does not invent one. */
+          "A routine is owned by one Bot, and one Bot can own up to 50 of them. A confirm card will appear. The human must confirm each one.",
+          "Do not assume a routine is saved until the human confirms.",
+          "",
+          routines,
+        ].join("\n")
+      : "No routines in this recipe.",
     "",
-    "## 5. Connectors and how far they go",
+    isSolo(team) ? "## 4. Connectors and how far they go" : "## 5. Connectors and how far they go",
     "",
     "Connectors are account-wide. They must already be connected.",
     "If any are missing, tell the human to connect them in Grok Bot settings first.",
     "Do not walk an OAuth flow from this prompt.",
-    "Every Bot on this account can reach every connected tool. The per-Bot lists above are which Bot is expected to use which, not a second OAuth and not a boundary.",
+    "Every Bot on this account can reach every connected tool. The lists above are which Bot is expected to use which, not a second OAuth and not a boundary.",
     "",
     ...connectorSection(team, state),
     "",
-    "## 6. Skills",
+    isSolo(team) ? "## 5. Skills" : "## 6. Skills",
     "",
     "Skills cannot be attached at Bot create time.",
     "If the human wants skills later, they add them after the Bots exist.",
     "",
     skills,
     "",
-    ...(also.length > 0 ? ["## 7. Also", "", "Standing instructions for every Bot on this team:", "", ...also, ""] : []),
+    ...(also.length > 0
+      ? [
+          isSolo(team) ? "## 6. Also" : "## 7. Also",
+          "",
+          isSolo(team) ? "Standing instructions for this Bot:" : "Standing instructions for every Bot on this team:",
+          "",
+          ...also,
+          "",
+        ]
+      : []),
     "## Done when",
     "",
-    "- Named Bots exist",
+    isSolo(team) ? "- The named Bot exists" : "- Named Bots exist",
     ...(isSolo(team) ? [] : [`- Named group chat exists ("${r.roomName}", two to six Bots)`]),
-    `- Human has created section "${team.section}"`,
+    ...(isSolo(team) ? [] : [`- Human has created section "${team.section}"`]),
     "- Each routine has a confirmed save (or the human declined)",
     "- Connectors listed above are already connected",
     "",
-    "Uninstall: delete the Bots and group chats in the Grok Bot sidebar.",
+    isSolo(team) ? "Uninstall: delete the Bot in the Grok Bot sidebar." : "Uninstall: delete the Bots and group chats in the Grok Bot sidebar.",
     "There is no remote uninstall from this catalog.",
   ].join("\n");
 }

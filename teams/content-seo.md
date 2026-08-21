@@ -4,7 +4,8 @@ name: SEO desk
 tagline: Watches which pages actually earn traffic, finds the ones decaying quietly, and drafts the update rather than another new post.
 bots: 4
 section: Content
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

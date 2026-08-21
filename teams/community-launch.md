@@ -4,7 +4,8 @@ name: Community launch
 tagline: "Runs a launch inside the community: the announcement drafted, questions anticipated, and the first day's reaction reported honestly."
 bots: 4
 section: Community
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Discord

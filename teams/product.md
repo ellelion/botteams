@@ -4,7 +4,8 @@ name: Product company
 tagline: "Runs a product room: requests triaged into themes, the roadmap kept honest, specs drafted, and slippage made visible."
 bots: 6
 section: Product
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

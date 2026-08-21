@@ -4,7 +4,8 @@ name: New business desk
 tagline: Runs the pitch pipeline from first inbound enquiry to sent proposal, so nothing sits unanswered while a prospect waits.
 bots: 5
 section: Agency
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Gmail

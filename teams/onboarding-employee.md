@@ -4,7 +4,8 @@ name: New joiner setup
 tagline: Runs the first two weeks of a new employee so nothing depends on one person remembering the checklist.
 bots: 4
 section: Onboarding
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

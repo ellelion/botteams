@@ -4,7 +4,8 @@ name: Decision log
 tagline: Records what was decided and why, so the same argument is not had twice a year later.
 bots: 4
 section: Knowledge
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

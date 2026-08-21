@@ -4,7 +4,8 @@ name: Policy desk
 tagline: Keeps internal policies findable and current, and tracks who has actually read them.
 bots: 4
 section: Workplace
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

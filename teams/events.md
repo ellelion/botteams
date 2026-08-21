@@ -4,7 +4,8 @@ name: Events desk
 tagline: "Runs an event desk: guest list tracked, run of show held, inbox sorted, and follow-ups drafted while the event is still fresh."
 bots: 6
 section: Events
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

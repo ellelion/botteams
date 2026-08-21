@@ -4,7 +4,8 @@ name: Webinar desk
 tagline: "Runs a webinar end to end: registrations watched, reminders drafted, and the follow-up ready before the call ends."
 bots: 5
 section: Events
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Luma

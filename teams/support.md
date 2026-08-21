@@ -4,7 +4,8 @@ name: Support company
 tagline: "Runs a support desk: tickets triaged by urgency, replies drafted in the support voice, and follow-ups chased. Never sends."
 bots: 3
 section: Support
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

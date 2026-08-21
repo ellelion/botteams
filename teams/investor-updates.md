@@ -4,7 +4,8 @@ name: Investor updates
 tagline: "Assembles the monthly investor update: numbers pulled from source, the letter drafted, questions tracked, and nothing invented."
 bots: 6
 section: Investor updates
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail

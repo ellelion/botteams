@@ -4,7 +4,8 @@ name: Board desk
 tagline: Prepares board meetings from the real numbers, and tracks what was decided afterwards.
 bots: 4
 section: Founder OS
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

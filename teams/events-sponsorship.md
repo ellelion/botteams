@@ -4,7 +4,8 @@ name: Event sponsorship
 tagline: Tracks what was bought at an event and whether any of it was delivered.
 bots: 4
 section: Events
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - HubSpot

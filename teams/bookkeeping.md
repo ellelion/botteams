@@ -4,7 +4,8 @@ name: Bookkeeping
 tagline: "Watches Stripe charges and failed payments, triages receipt mail, holds the month-close calendar, and surfaces the exceptions worth a look."
 bots: 6
 section: Bookkeeping
-status: team
+status: installable
+kind: team
 added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Stripe

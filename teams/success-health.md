@@ -4,7 +4,8 @@ name: Account health
 tagline: Turns scattered usage and support signals into a plain answer about which accounts are actually in trouble.
 bots: 4
 section: Customer success
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - HubSpot

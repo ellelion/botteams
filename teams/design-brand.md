@@ -4,7 +4,8 @@ name: Brand review
 tagline: Keeps public surfaces on-brand without a human having to check every page by hand.
 bots: 4
 section: Design
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Figma

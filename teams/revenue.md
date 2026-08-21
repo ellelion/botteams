@@ -4,7 +4,8 @@ name: Revenue desk
 tagline: "Runs a revenue floor: stalled deals surfaced, CRM records kept honest, call commitments pulled out, and no-shows followed up."
 bots: 5
 section: Revenue
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - HubSpot

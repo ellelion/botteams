@@ -1,11 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import type { ConnectorMode, Team, TeamAgent, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
-export type { ConnectorMode, Team, TeamAgent, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
+import type { ConnectorMode, Team, TeamAgent, TeamKind, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
+export type { ConnectorMode, Team, TeamAgent, TeamKind, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
 export { isExample, isVerified } from "@/lib/types";
 
 const TEAMS_DIR = path.join(process.cwd(), "teams");
+const BOTS_DIR = path.join(process.cwd(), "bots");
 
 function asStringArray(value: unknown, field: string): string[] {
   if (!Array.isArray(value) || value.some((item) => typeof item !== "string")) {
@@ -125,10 +126,24 @@ export function parseTeam(raw: string, filename: string): Team {
   if (typeof bots !== "number") throw new Error(`${filename}: missing bots`);
   if (typeof data.section !== "string") throw new Error(`${filename}: missing section`);
   const rawStatus = data.status;
-  if (rawStatus !== "team" && rawStatus !== "example") {
-    throw new Error(`${filename}: status must be team or example`);
+  if (rawStatus !== "installable" && rawStatus !== "example") {
+    throw new Error(`${filename}: status must be installable or example`);
   }
   const status: TeamStatus = rawStatus;
+  const rawKind = data.kind;
+  if (rawKind !== "bot" && rawKind !== "team") {
+    throw new Error(`${filename}: kind must be bot or team`);
+  }
+  const kind: TeamKind = rawKind;
+  const rooms = asRooms(data.rooms);
+  /* The shape rules that make the two nouns mean something. A file that
+     breaks one of these is a bad file, not a UI state to design around. */
+  if (kind === "bot") {
+    if (rooms.length > 0) throw new Error(`${filename}: a bot has no group chat, so rooms must be empty`);
+    if (bots !== 1) throw new Error(`${filename}: a bot is one Bot, so bots must be 1`);
+  } else if (rooms.length === 0) {
+    throw new Error(`${filename}: a team needs a group chat of two to six Bots`);
+  }
   const connectors = asStringArray(data.connectors, "connectors");
   const agents = asAgents(data.agents, connectors);
   const union = new Set<string>();
@@ -137,6 +152,7 @@ export function parseTeam(raw: string, filename: string): Team {
   for (const name of union) if (!merged.includes(name)) merged.push(name);
   return {
     slug: data.slug,
+    kind,
     name: data.name,
     tagline: data.tagline,
     bots,
@@ -144,7 +160,7 @@ export function parseTeam(raw: string, filename: string): Team {
     status,
     connectors: merged,
     agents,
-    rooms: asRooms(data.rooms),
+    rooms,
     routines: asRoutines(data.routines),
     skills: data.skills === undefined ? [] : asStringArray(data.skills, "skills"),
     body: content.trim(),
@@ -170,15 +186,34 @@ export function parseTeam(raw: string, filename: string): Team {
   };
 }
 
-export function listTeams(): Team[] {
-  const files = fs
-    .readdirSync(TEAMS_DIR)
+function readDir(dir: string): Team[] {
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
     .filter((file) => file.endsWith(".md"))
-    .sort();
-  return files.map((file) => parseTeam(fs.readFileSync(path.join(TEAMS_DIR, file), "utf8"), file));
+    .sort()
+    .map((file) => parseTeam(fs.readFileSync(path.join(dir, file), "utf8"), file));
+}
+
+/* Two folders, two shapes, and the loaders keep them apart. Nothing on the
+   site should have to filter a mixed list to find out which noun it has. */
+export function listTeams(): Team[] {
+  return readDir(TEAMS_DIR);
+}
+
+export function listBots(): Team[] {
+  return readDir(BOTS_DIR);
+}
+
+export function listAll(): Team[] {
+  return [...listTeams(), ...listBots()];
 }
 
 export function getTeam(slug: string): Team | null {
   return listTeams().find((team) => team.slug === slug) ?? null;
+}
+
+export function getBot(slug: string): Team | null {
+  return listBots().find((bot) => bot.slug === slug) ?? null;
 }
 

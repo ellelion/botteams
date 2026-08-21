@@ -4,7 +4,8 @@ name: Project handover
 tagline: "Closes finished projects properly: final assets filed, client access reviewed, last invoice checked, and a retro written while people still remember."
 bots: 5
 section: Agency
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Notion

@@ -4,7 +4,8 @@ name: Reply library
 tagline: Keeps canned replies accurate, because a wrong saved reply is worse than no saved reply.
 bots: 4
 section: Helpdesk
-status: team
+status: installable
+kind: team
 added_at: "2026-08-21T09:00:00.000Z"
 connectors:
   - Zendesk
