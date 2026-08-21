@@ -15,7 +15,7 @@ import { TeamIcon } from "@/components/icons/LineIcons";
 import { FromXaiChip } from "@/components/FromXaiChip";
 import { Customize } from "@/components/team/Customize";
 import { LayoutPicker } from "@/components/team/LayoutPicker";
-import { normalizeLayout } from "@/lib/recipe-layout";
+import { isShell, normalizeLayout } from "@/lib/recipe-layout";
 import { ledger } from "@/lib/ledger-theme";
 import { renderMarkdown } from "@/lib/markdown";
 import { en } from "@/lib/messages/en";
@@ -63,6 +63,10 @@ export default async function BotPage({
 }) {
   const { slug } = await params;
   const layout = normalizeLayout(asOne((await searchParams).layout));
+  /* A shell owns the viewport: the window must not scroll, so the page
+     stops growing and the footer goes. A footer is the end of a document
+     and a shell does not have one. */
+  const shell = isShell(layout);
   const team = getBot(slug);
   if (!team) notFound();
   // Several teams name themselves after their sidebar section ("Bookkeeping",
@@ -107,11 +111,16 @@ export default async function BotPage({
   ) : null;
 
   return (
-    <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
+    <div
+      className={`relative flex flex-col px-6 sm:px-10 lg:px-16 ${shell ? "h-dvh overflow-hidden" : "min-h-dvh"}`}
+      style={{ background: ledger.paper, color: ledger.ink }}
+    >
       <JsonLd data={botJsonLd(team)} />
       <SiteMasthead />
-      <main className={`rc-main rc-main--${layout} relative z-10 mx-auto w-full flex-1 pb-20 pt-12`}>
-        <nav className="mb-6 flex flex-wrap items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }} aria-label="Breadcrumb">
+      <main
+        className={`rc-main rc-main--${layout} relative z-10 mx-auto w-full flex-1 ${shell ? "min-h-0 overflow-hidden pt-4" : "pb-20 pt-12"}`}
+      >
+        <nav className={`${shell ? "mb-2" : "mb-6"} flex flex-wrap items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em]`} style={{ color: ledger.label }} aria-label="Breadcrumb">
           <Link href="/?kind=bot#teams" className="accent-hover">{en.bot.allBots}</Link>
           <span aria-hidden>/</span>
           <Link href={`/?kind=bot&category=${sectionSlug(team.section)}#teams`} className="accent-hover">{team.section}</Link>
@@ -176,25 +185,24 @@ export default async function BotPage({
               </p>
             </section>
           ) : null}
+          <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+            <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.runYourself}</h2>
+            <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.team.runYourselfBody}</p>
+            <p className="mt-4 text-[0.8rem]">
+              <a
+                className="accent-hover underline"
+                href={`${site.github}/blob/main/bots/${team.slug}.md`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {en.team.viewSource}
+              </a>
+            </p>
+          </section>
         </Customize>
 
-        <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.runYourself}</h2>
-          <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.team.runYourselfBody}</p>
-          <p className="mt-4 text-[0.8rem]">
-            <a
-              className="accent-hover underline"
-              href={`${site.github}/blob/main/bots/${team.slug}.md`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {en.team.viewSource}
-            </a>
-          </p>
-        </section>
-
       </main>
-      <SiteFooter />
+      {shell ? null : <SiteFooter />}
     </div>
   );
 }
