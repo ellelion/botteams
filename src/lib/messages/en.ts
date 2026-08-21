@@ -61,11 +61,14 @@ export const en = {
   connectors: {
     eyebrow: "Grok Bot connectors",
     h1: "Connectors",
-    intro: (count: number) =>
-      `Every connector Grok Bot supports, ${count} of them, grouped the way the catalog groups them. Connectors are account-wide. A team on this shelf expects yours to be connected already, and the installer prompt never starts an OAuth flow.`,
-    sourceNote: "xAI publishes no machine-readable connector list, so this page tracks a dated snapshot rather than a live feed. Source:",
+    intro: (count: number, builtIn: number) =>
+      `Connectors are account-wide. A team on this shelf expects yours to be connected already, and the installer prompt never starts an OAuth flow. xAI documents ${builtIn} of these as built in. The other ${count - builtIn} come from the in-app picker, which xAI does not publish.`,
+    builtInLabel: "Built in",
+    builtInNote: "Named by xAI on",
+    builtInSource: "docs.x.ai/grok/connectors",
+    sourceNote: "For the rest, xAI says only that there is a catalog of pre-configured OAuth connectors and sends you to the picker in the app. No list, no count. So this page tracks a dated community snapshot rather than a published inventory. Source:",
     sourceLabel: "awesome-grok-connectors",
-    sourceTail: (asOf: string) => `, which describes the catalog as of ${asOf}.`,
+    sourceTail: (asOf: string) => `, read as of ${asOf}. Treat it as a checkable snapshot, not as an xAI inventory.`,
     checked: "Checked on",
     andMore: (n: number) => ` and ${n} more`,
     byoTitle: "Bring your own MCP",

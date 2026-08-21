@@ -5,7 +5,16 @@
  * snapshot and not a live feed. Treat it the way the rest of this shelf
  * treats a claim: sourced, dated, and re-checkable.
  *
- * Primary source: https://github.com/rdmgator12/awesome-grok-connectors
+ * Two tiers, because xAI documents two.
+ *
+ * docs.x.ai/grok/connectors names seven built-in connectors and nothing
+ * else. For the rest it says only that there is "a catalog of
+ * pre-configured OAuth connectors" and sends you to the in-app picker at
+ * grok.com/connectors. No count, no list. So BUILT_IN below is the part
+ * xAI publishes, and everything else is a community snapshot of that
+ * picker. Never present the second tier as though xAI published it.
+ *
+ * Snapshot source: https://github.com/rdmgator12/awesome-grok-connectors
  *   community directory, read 2026-08-21, stating 31 connectors as of
  *   2026-08-12.
  * Cross-check: https://x.ai/news/grok-connectors (xAI, 2026-05-06), which
@@ -28,6 +37,7 @@
  */
 
 export const CATALOG_SOURCE = "https://github.com/rdmgator12/awesome-grok-connectors";
+export const XAI_CONNECTOR_DOCS = "https://docs.x.ai/grok/connectors";
 export const CATALOG_CHECKED_ON = "2026-08-21";
 export const CATALOG_AS_OF = "2026-08-12";
 
@@ -90,6 +100,25 @@ export const CONNECTOR_CATALOG: CatalogEntry[] = [
   { name: "Salesforce", slug: "salesforce", category: "Business and enterprise", file: "salesforce.svg" },
   { name: "SharePoint", slug: "sharepoint", category: "Business and enterprise", file: "sharepoint.svg" },
 ];
+
+/* The connectors xAI itself names as built in, on docs.x.ai/grok/connectors.
+   Everything outside this set comes from the in-app picker, which xAI does
+   not publish. */
+export const BUILT_IN = new Set<string>([
+  "gmail",
+  "google-calendar",
+  "google-drive",
+  "onedrive",
+  "outlook",
+  "outlook-calendar",
+  "microsoft-teams",
+  "sharepoint",
+  "salesforce",
+]);
+
+export function isBuiltIn(slug: string): boolean {
+  return BUILT_IN.has(slug);
+}
 
 /* Pulled from the catalog upstream. Still resolves so old team files and
    forks keep rendering, but it is not an available connector. */

@@ -10,7 +10,10 @@ import {
   CATALOG_SOURCE,
   CONNECTOR_CATALOG,
   catalogByCategory,
+  isBuiltIn,
   resolveConnector,
+  XAI_CONNECTOR_DOCS,
+  BUILT_IN,
 } from "@/lib/connectors";
 import { en } from "@/lib/messages/en";
 import { listPacks } from "@/lib/packs";
@@ -52,9 +55,14 @@ export default function ConnectorsPage() {
           {en.connectors.h1}
         </h1>
         <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          {en.connectors.intro(CONNECTOR_CATALOG.length)}
+          {en.connectors.intro(CONNECTOR_CATALOG.length, CONNECTOR_CATALOG.filter((e) => isBuiltIn(e.slug)).length)}
         </p>
         <p className="mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+          {en.connectors.builtInNote}{" "}
+          <a className="accent-hover underline" href={XAI_CONNECTOR_DOCS} target="_blank" rel="noopener noreferrer">
+            {en.connectors.builtInSource}
+          </a>
+          {". "}
           {en.connectors.sourceNote}{" "}
           <a className="accent-hover underline" href={CATALOG_SOURCE} target="_blank" rel="noopener noreferrer">
             {en.connectors.sourceLabel}
@@ -75,7 +83,10 @@ export default function ConnectorsPage() {
                 const teams = usage.get(entry.slug) ?? [];
                 return (
                   <li key={entry.slug} className="hairline-row flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3">
-                    <ConnectorRow names={[entry.name]} labeled size={18} />
+                    <span className="flex flex-wrap items-center gap-2">
+                      <ConnectorRow names={[entry.name]} labeled size={18} />
+                      {isBuiltIn(entry.slug) ? <span className="bot-tag">{en.connectors.builtInLabel}</span> : null}
+                    </span>
                     {teams.length > 0 ? (
                       <span className="text-[0.72rem]" style={{ color: ledger.inkMuted }}>
                         {teams.slice(0, 3).map((team, i) => (
