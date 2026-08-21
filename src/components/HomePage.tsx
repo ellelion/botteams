@@ -6,6 +6,7 @@ import { WingsVideo } from "@/components/home/WingsVideo";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
+import { SponsorRail } from "@/components/SponsorRail";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import type { Team } from "@/lib/types";
@@ -110,6 +111,7 @@ export function HomePage({ teams }: { teams: Team[] }) {
           <Suspense fallback={<p className="eyebrow">Loading teams</p>}>
             <TeamIndex teams={teams} added={added} verifiedOn={site.verifiedOn} />
           </Suspense>
+          <SponsorRail campaign="rail" />
         </div>
       </main>
       <SiteFooter />

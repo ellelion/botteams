@@ -2,7 +2,16 @@ import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { ledger } from "@/lib/ledger-theme";
-import { SPONSOR_SLOTS_TOTAL, filledCount, railSlots, sponsorHref } from "@/data/sponsors";
+import {
+  SPONSOR_SLOTS_TOTAL,
+  filledCount,
+  houseAds,
+  houseHref,
+  openCount,
+  paidSlots,
+  sponsorHref,
+} from "@/data/sponsors";
+import { en } from "@/lib/messages/en";
 import { listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
 
@@ -16,7 +25,8 @@ export const metadata: Metadata = {
 export default function SponsorPage() {
   const teams = listTeams().length;
   const filled = filledCount();
-  const slots = railSlots(SPONSOR_SLOTS_TOTAL);
+  const paid = paidSlots();
+  const open = openCount();
   const mail = `mailto:${site.email}?subject=${encodeURIComponent("Sponsoring Grok Bot Teams")}`;
 
   return (
@@ -32,8 +42,8 @@ export default function SponsorPage() {
         </p>
         <p className="mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
           {filled === 0
-            ? `Every slot is open. ${teams} teams on the shelf and no sponsors yet, which is worth saying plainly rather than padding the rail with logos we do not have.`
-            : `${filled} of ${SPONSOR_SLOTS_TOTAL} slots taken across ${teams} teams.`}
+            ? `${teams} teams on the shelf and no outside sponsors yet, which is worth saying plainly rather than padding the rail with logos we do not have. The rail below is the whole truth of it.`
+            : `${filled} of ${SPONSOR_SLOTS_TOTAL} paying slots taken across ${teams} teams.`}
         </p>
 
         <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
@@ -54,35 +64,61 @@ export default function SponsorPage() {
             Pricing is per enquiry while the shelf is young. We would rather quote against real traffic than publish a
             number we cannot yet justify.
           </p>
+          <p className="mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+            {en.sponsor.emptyPlacements}
+          </p>
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>The rail today</h2>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.sponsor.railTodayTitle}
+          </h2>
           <ul className="mt-4">
-            {slots.map((slot) => (
+            {paid.map((slot) => (
               <li key={slot.id} className="hairline-row flex flex-wrap items-baseline justify-between gap-3 py-3">
-                {slot.href ? (
-                  <>
-                    <a
-                      className="accent-hover underline"
-                      href={sponsorHref(slot, "sponsor-page")}
-                      target="_blank"
-                      rel="noopener sponsored"
-                      style={{ fontFamily: ledger.serif }}
-                    >
-                      {slot.name}
-                    </a>
-                    <span className="text-[0.78rem]" style={{ color: ledger.inkMuted }}>{slot.line}</span>
-                  </>
-                ) : (
-                  <>
-                    <span style={{ fontFamily: ledger.serif, color: ledger.inkFaint }}>Open</span>
-                    <a className="accent-hover underline text-[0.78rem]" href={mail}>Take this slot</a>
-                  </>
-                )}
+                <a
+                  className="accent-hover underline"
+                  href={sponsorHref(slot, "sponsor-page")}
+                  target="_blank"
+                  rel="noopener sponsored"
+                  style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
+                >
+                  {slot.name}
+                </a>
+                <span className="text-[0.78rem]" style={{ color: ledger.inkMuted }}>{slot.line}</span>
+              </li>
+            ))}
+            {/* Ours, and labelled ours. They are on the rail so a visitor
+                is not reading an empty column, and they take no slot. */}
+            {houseAds.map((ad) => (
+              <li key={ad.id} className="hairline-row py-3">
+                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                  <a
+                    className="accent-hover"
+                    href={houseHref(ad, "sponsor-page")}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                    style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
+                  >
+                    {ad.name}
+                  </a>
+                  <span className="chip">{en.sponsor.houseLabel}</span>
+                </div>
+                <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{ad.line}</p>
               </li>
             ))}
           </ul>
+          {/* One block. Fifteen identical Open rows is not inventory, it
+              is a page telling you nobody bought anything. */}
+          <div className="spon-open">
+            <p className="text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+              {en.sponsor.houseNote}
+            </p>
+            <p className="mt-1 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+              {en.sponsor.openLine(open, SPONSOR_SLOTS_TOTAL)}
+            </p>
+            <a className="spon-cta mt-4" href={mail}>{en.sponsor.takeSlot}</a>
+          </div>
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
