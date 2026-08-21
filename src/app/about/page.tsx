@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <PageShell
-      eyebrow="Company"
       title="About"
       lead={`${site.company} operates ${site.name}, a public shelf of teams and Bots for Grok Bot. Not affiliated with xAI.`}
     >

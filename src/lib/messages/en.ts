@@ -165,7 +165,6 @@ export const en = {
     basedOn: "Based on this post by",
   },
   connectors: {
-    eyebrow: "Grok Bot connectors",
     h1: "Connectors",
     lede: (count: number) =>
       `${count} of them, and they are account-wide. A team here expects yours to be connected already, and the installer prompt never starts an OAuth flow.`,
@@ -219,6 +218,18 @@ export const en = {
     takeSlot: "Take a slot",
     disclosure: "Marked links earn us a commission. It does not change what a team recommends.",
     railTodayTitle: "The rail today",
+    /* Published prices. Enquire stays for the two placements we cannot
+       sell off the shelf yet. */
+    buyTitle: "Buy a slot",
+    buyLead:
+      "Prepaid advertising on the rail. Pick a term, pay on Stripe, and give us the company name, the destination, and one line while you are there.",
+    buyFine:
+      "Stripe takes the card on their page. A paid row is labelled as a paid placement. It is not Verified, it is not a team, and it is not an endorsement.",
+    buyError: "Could not start checkout. Try again, or mail us.",
+    opening: "Opening Stripe",
+    soldOut: "Every paying slot is taken. Mail us and we will tell you when one frees up.",
+    paid:
+      "Payment received. We write your row by hand and mail you before it goes up. You are not on the rail yet.",
     emptyPlacements:
       "The connect-first slot and the promoted team stay empty until there is a buyer, and a promoted team has to be a recipe that actually ships. We will not list an ad as a team.",
   },

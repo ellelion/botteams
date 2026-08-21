@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <PageShell
-      eyebrow="Legal"
       title="Terms"
       lead={`Short, and in the same voice as the rest of the site. ${site.company} operates ${site.name}. Using the site means these terms apply to you.`}
     >

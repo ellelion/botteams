@@ -121,10 +121,12 @@
 .wrap-data,
 .wrap-prose {
   width: 100%;
-  margin-inline: auto;
 }
-.wrap-data { max-width: var(--w-data); }
-.wrap-prose { max-width: var(--w-prose); }
+.wrap-data { max-width: var(--w-data); margin-inline: auto; }
+/* Flush left, not centred. Prose keeps its measure, but its H1 hangs off
+   the same left margin as a data page and as the wordmark above it, so
+   moving between the two does not slide the heading sideways. */
+.wrap-prose { max-width: var(--w-prose); margin-inline: 0; }
 /* Paragraph inside a data page. Never the page, only the sentence. */
 .measure { max-width: var(--w-measure); }
 
@@ -1997,9 +1999,42 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .spon-cta:hover { opacity: 0.88; }
 .spon-cta:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 
+/* Three published prices. Same pill, three terms; none of them is
+   dressed up as a recommendation. */
+.spon-buy { margin-top: 18px; }
+.spon-prices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.spon-cta:disabled { opacity: 0.55; cursor: default; }
+.spon-fine {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+.spon-error {
+  margin-top: 10px;
+  color: var(--accent-text);
+  font-size: 0.8rem;
+}
+.spon-paid {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: var(--r-inner);
+  background: var(--surface-elevated);
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
 @media (max-width: 640px) {
   .spon-open { padding: 20px 18px; }
   .spon-cta { min-height: 44px; }
+  /* One tap target per line rather than three cramped ones. */
+  .spon-prices { flex-direction: column; align-items: stretch; }
+  .spon-cta { justify-content: center; }
 }
 
 
