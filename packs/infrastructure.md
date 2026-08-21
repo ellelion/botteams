@@ -1,10 +1,11 @@
 ---
 slug: infrastructure
 name: Infrastructure watch
-tagline: Metrics, on-call, edge, and database health. Alerts and reports only, never touches production.
+tagline: "Watches metrics, on-call pages, edge errors, and database health, and reports what degraded without touching production."
 bots: 5
 section: Infrastructure
 status: team
+added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - Datadog
   - PagerDuty

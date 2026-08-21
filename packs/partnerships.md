@@ -1,10 +1,11 @@
 ---
 slug: partnerships
 name: Partnerships
-tagline: Inbound partners, pipeline, drafts, calendar. Never sends.
+tagline: "Runs a partnerships desk: inbound qualified, the partner map kept current, intros drafted, and commitments tracked on both sides."
 bots: 6
 section: Partnerships
 status: team
+added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail
   - Calendar

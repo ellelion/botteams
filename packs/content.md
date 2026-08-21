@@ -1,10 +1,11 @@
 ---
 slug: content
 name: Content desk
-tagline: Editorial calendar, briefs, drafts, review. Not an SEO crew.
+tagline: "Runs an editorial calendar from outline to review: what is due, what is drafted, what is stuck, and what shipped."
 bots: 6
 section: Content
 status: team
+added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail
   - Calendar

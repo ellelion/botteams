@@ -1256,3 +1256,26 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .cx-facet.is-on .cx-facet-icon { opacity: 1; }
 .cx-group-icon { width: 13px; height: 13px; }
+
+/* Index filter selects. Native control, themed so it does not arrive as a
+   browser default in the middle of a themed row. */
+.index-select {
+  height: 26px;
+  padding: 0 22px 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--muted);
+  font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: right 11px center, right 7px center;
+  background-size: 4px 4px, 4px 4px;
+  background-repeat: no-repeat;
+  max-width: 150px;
+}
+.index-select:hover { color: var(--ink); border-color: var(--accent); }
+.index-select:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }

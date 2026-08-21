@@ -1,10 +1,11 @@
 ---
 slug: investor-updates
 name: Investor updates
-tagline: Numbers, narrative, Q&A drafts. Never sends the update.
+tagline: "Assembles the monthly investor update: numbers pulled from source, the letter drafted, questions tracked, and nothing invented."
 bots: 6
 section: Investor updates
 status: team
+added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail
   - Calendar

@@ -1,10 +1,11 @@
 ---
 slug: data
 name: Data desk
-tagline: Warehouse, product analytics, and model health in one data floor. Reports only.
+tagline: "Runs a data floor: warehouse checks, product analytics read, model failures caught, and a weekly note on which numbers are unsafe to quote."
 bots: 6
 section: Data
 status: team
+added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - Google Cloud BigQuery
   - Snowflake

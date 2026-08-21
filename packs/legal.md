@@ -1,10 +1,11 @@
 ---
 slug: legal
 name: Legal review
-tagline: Intake, review drafts, calendar, follow-ups. Never files or sends. Not legal advice.
+tagline: "Runs legal intake and review: matters logged, contracts read for the terms that matter, deadlines held, and everything escalated to a human."
 bots: 6
 section: Legal
 status: team
+added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail
   - Calendar

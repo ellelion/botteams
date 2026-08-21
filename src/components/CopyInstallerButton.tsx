@@ -3,15 +3,9 @@
 import { useState } from "react";
 import { en } from "@/lib/messages/en";
 
-export function CopyInstallerButton({
-  text,
-  slug,
-  onCopied,
-}: {
-  text: string;
-  slug?: string;
-  onCopied?: (count: number, total: number) => void;
-}) {
+/* Clipboard only. The shelf does not count copies: a number nobody can
+   verify is worse than no number. */
+export function CopyInstallerButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -21,17 +15,6 @@ export function CopyInstallerButton({
       setFailed(false);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
-      if (slug) {
-        const res = await fetch("/api/copy", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ slug }),
-        });
-        if (res.ok) {
-          const data = (await res.json()) as { count?: number; total?: number };
-          onCopied?.(data.count ?? 0, data.total ?? 0);
-        }
-      }
     } catch {
       setFailed(true);
     }

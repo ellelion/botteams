@@ -33,6 +33,16 @@ export type Pack = {
   routines: PackRoutine[];
   skills: string[];
   body: string;
+  /* Attribution, all optional. A team written in-house carries none of
+     these; one contributed through a pull request or scouted from a post
+     carries whichever the contributor supplied. */
+  addedAt?: string;
+  contributor?: string;
+  contributorUrl?: string;
+  scoutedBy?: string;
+  addedVia?: string;
+  url?: string;
+  integrationUrls?: Record<string, string>;
 };
 
 export function isExample(pack: Pack): boolean {

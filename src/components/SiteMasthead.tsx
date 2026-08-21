@@ -17,6 +17,8 @@ export function SiteMasthead() {
           <Link href="/#teams" className="accent-hover">{en.nav.packs}</Link>
           <Link href="/connectors" className="accent-hover">{en.nav.connectorsNav}</Link>
           <Link href="/docs" className="accent-hover">{en.nav.docs}</Link>
+          <Link href="/api" className="accent-hover">{en.nav.api}</Link>
+          <Link href="/sponsor" className="accent-hover">{en.nav.sponsor}</Link>
           <a href={site.github} target="_blank" rel="noopener noreferrer" className="accent-hover inline-flex items-center" aria-label={en.nav.github} title={en.nav.github}>
             <GitHubIcon className="h-[13px] w-[13px]" />
           </a>

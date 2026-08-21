@@ -1,10 +1,11 @@
 ---
 slug: workplace
 name: Microsoft workplace
-tagline: Mail, calendar, chat, sites, and files across Microsoft 365. Drafts only, never sends.
+tagline: "Runs Microsoft 365 for a team: mail triaged, calendar conflicts flagged, channels read for decisions, and file sharing reviewed."
 bots: 5
 section: Workplace
 status: team
+added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - Outlook
   - Outlook Calendar

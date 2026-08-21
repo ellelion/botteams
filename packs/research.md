@@ -1,10 +1,11 @@
 ---
 slug: research
 name: Research desk
-tagline: Briefs, sources, notes, synthesis. Drafts only. Not a ranking or SEO crew.
+tagline: "Runs a research desk: the brief written, sources found and dated, notes kept, and a synthesis that separates fact from inference."
 bots: 6
 section: Research
 status: team
+added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail
   - Calendar

@@ -1,16 +1,42 @@
 import { Suspense } from "react";
+import Link from "next/link";
 import { PackIndex } from "@/components/home/PackIndex";
 import { RevealText } from "@/components/home/RevealText";
 import { WingsVideo } from "@/components/home/WingsVideo";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
-import { sponsorSlots } from "@/data/sponsors";
+import { SponsorRail } from "@/components/SponsorRail";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import type { Pack } from "@/lib/types";
 import { site } from "@/lib/site";
 import { packsAddedSeries } from "@/lib/stats";
+
+
+/* Abridged Founder OS front matter. Real fields, real values, trimmed to
+   the shape a contributor has to get right. */
+const CONTRIBUTE_SAMPLE = `---
+slug: founder-os
+name: Founder OS
+tagline: Money, inbox, and a chief of staff in one founder room.
+bots: 3
+section: Founder OS
+status: team
+connectors: [Stripe, Gmail, Calendar, Ramp, Notion]
+agents:
+  - name: Chief of Staff
+    persona: Coordinates the founder week. Keeps Founder HQ honest.
+    connectors: [Calendar, Notion]
+rooms:
+  - name: Founder HQ
+    members: [Chief of Staff, Founder · Money, Founder · Inbox]
+routines:
+  - name: Monday money brief
+    owner: Founder · Money
+    schedule: Every Monday at 08:00
+    prompt: Read Stripe. Draft the weekly money brief. Never move funds.
+---`;
 
 export function HomePage({ packs }: { packs: Pack[] }) {
   const added = packsAddedSeries(30);
@@ -49,17 +75,23 @@ export function HomePage({ packs }: { packs: Pack[] }) {
               <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.home.howTitle}</h2>
               <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.howBody}</p>
               <p className="mt-4 text-[0.78rem] leading-relaxed" style={{ color: ledger.inkFaint }}>{en.home.typeIn}</p>
-              <h2 className="mt-12 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.home.sponsorsTitle}</h2>
-              <p className="mt-3 text-[0.78rem]" style={{ color: ledger.inkFaint }}>{en.home.sponsorsNote}</p>
-              <p className="mt-4 border-y py-3 text-[0.55rem] uppercase tracking-[0.16em]" style={{ borderColor: ledger.hairline, color: ledger.label, fontFamily: ledger.mono }}>
-                {sponsorSlots.map((slot, i) => (
-                  <span key={slot.id}>
-                    {i > 0 ? " · " : null}
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                ))}
-                {" · "}
-                {en.home.available}
+
+              <h2 id="contribute" className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+                {en.home.contributeTitle}
+              </h2>
+              <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.contributeBody}</p>
+              <pre className="installer-prompt mt-5 overflow-x-auto p-4 text-left text-[0.68rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
+                <code>{CONTRIBUTE_SAMPLE}</code>
+              </pre>
+              <p className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.72rem]">
+                <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">
+                  {en.home.contributePr}
+                </a>
+                <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">
+                  {en.home.contributeGuide}
+                </a>
+                <Link className="accent-hover underline" href="/docs">{en.home.contributeSpec}</Link>
+                <Link className="accent-hover underline" href="/api">{en.nav.api}</Link>
               </p>
             </section>
           </div>
