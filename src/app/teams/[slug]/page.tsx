@@ -6,6 +6,8 @@ import { SiteMasthead } from "@/components/SiteMasthead";
 import { TeamIcon } from "@/components/icons/LineIcons";
 import { FromXaiChip } from "@/components/FromXaiChip";
 import { Customize } from "@/components/team/Customize";
+import { LayoutPicker } from "@/components/team/LayoutPicker";
+import { normalizeLayout } from "@/lib/recipe-layout";
 import { ledger } from "@/lib/ledger-theme";
 import { renderMarkdown } from "@/lib/markdown";
 import { en } from "@/lib/messages/en";
@@ -35,12 +37,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+/* A repeated query param arrives as an array. Take the first and move on. */
+function asOne(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
+
 function JsonLd({ data }: { data: object }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }
 
-export default async function TeamPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function TeamPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { slug } = await params;
+  const layout = normalizeLayout(asOne((await searchParams).layout));
   const team = getTeam(slug);
   if (!team) notFound();
   // Several teams name themselves after their sidebar section ("Bookkeeping",
@@ -62,36 +76,68 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
       .sort((a, b) => b.shared - a.shared || a.team.name.localeCompare(b.team.name))
       .map((x) => x.team),
   ].slice(0, 3);
+
+  const relatedNode = related.length > 0 ? (
+    <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+      <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+        {en.team.relatedTitle()}
+      </h2>
+      <ul className="mt-4">
+        {related.map((other) => (
+          <li key={other.slug} className="hairline-row py-3">
+            <Link href={`/teams/${other.slug}`} className="accent-hover" style={{ fontFamily: ledger.serif }}>
+              {other.name}
+            </Link>
+            <p className="mt-1 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{other.tagline}</p>
+            <div className="mt-2">
+              <ConnectorRow names={other.connectors} labeled size={15} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ) : null;
+
   return (
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <JsonLd data={teamJsonLd(team)} />
       <SiteMasthead />
-      <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-20 pt-12">
+      <main className={`rc-main rc-main--${layout} relative z-10 mx-auto w-full flex-1 pb-20 pt-12`}>
         <nav className="mb-6 flex flex-wrap items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }} aria-label="Breadcrumb">
           <Link href="/#teams" className="accent-hover">{en.team.allTeams}</Link>
           <span aria-hidden>/</span>
           <Link href={`/?category=${sectionSlug(team.section)}#teams`} className="accent-hover">{team.section}</Link>
         </nav>
-        <div className="flex flex-wrap items-center gap-3">
-          <TeamIcon slug={team.slug} />
-          {team.fromXai ? <FromXaiChip /> : null}
-        </div>
-        <h1 className="font-display mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>
-          {team.name}
-        </h1>
-        <p className="mt-4 text-[1.05rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          {team.tagline}
-        </p>
-        <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
-          {sectionEchoesName ? en.team.botCount(team.bots) : `${team.section} · ${en.team.botCount(team.bots)}`}
-        </p>
-        {team.fromXai ? (
-          <p className="mt-3 max-w-2xl text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-            {en.xai.note}
-          </p>
-        ) : null}
+        <LayoutPicker current={layout} />
 
-        <Customize team={team}>
+        <Customize
+          team={team}
+          layout={layout}
+          identity={
+            <>
+          <div className="flex flex-wrap items-center gap-3">
+            <TeamIcon slug={team.slug} />
+            {team.fromXai ? <FromXaiChip /> : null}
+          </div>
+          <h1 className="font-display mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>
+            {team.name}
+          </h1>
+          <p className="mt-4 text-[1.05rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+            {team.tagline}
+          </p>
+          <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
+            {sectionEchoesName ? en.team.botCount(team.bots) : `${team.section} · ${en.team.botCount(team.bots)}`}
+          </p>
+          {team.fromXai ? (
+            <p className="mt-3 max-w-2xl text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+              {en.xai.note}
+            </p>
+          ) : null}
+            </>
+          }
+          related={relatedNode}
+          extras={<SponsorRail campaign="team-page" />}
+        >
           <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
             <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.section}</h2>
             <p className="mt-3">{team.section}</p>
@@ -144,28 +190,6 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
           </p>
         </section>
 
-        {related.length > 0 ? (
-          <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-            <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-              {en.team.relatedTitle()}
-            </h2>
-            <ul className="mt-4">
-              {related.map((other) => (
-                <li key={other.slug} className="hairline-row py-3">
-                  <Link href={`/teams/${other.slug}`} className="accent-hover" style={{ fontFamily: ledger.serif }}>
-                    {other.name}
-                  </Link>
-                  <p className="mt-1 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{other.tagline}</p>
-                  <div className="mt-2">
-                    <ConnectorRow names={other.connectors} labeled size={15} />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
-        <SponsorRail campaign="team-page" />
       </main>
       <SiteFooter />
     </div>
