@@ -11,11 +11,7 @@ import { notFound } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
-import { TeamIcon } from "@/components/icons/LineIcons";
-import { FromXaiChip } from "@/components/FromXaiChip";
 import { Customize } from "@/components/team/Customize";
-import { LayoutPicker } from "@/components/team/LayoutPicker";
-import { isShell, normalizeLayout } from "@/lib/recipe-layout";
 import { ledger } from "@/lib/ledger-theme";
 import { renderMarkdown } from "@/lib/markdown";
 import { en } from "@/lib/messages/en";
@@ -45,34 +41,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-/* A repeated query param arrives as an array. Take the first and move on. */
-function asOne(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
-}
-
 function JsonLd({ data }: { data: object }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }
 
-export default async function BotPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
+export default async function BotPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const layout = normalizeLayout(asOne((await searchParams).layout));
-  /* A shell owns the viewport: the window must not scroll, so the page
-     stops growing and the footer goes. A footer is the end of a document
-     and a shell does not have one. */
-  const shell = isShell(layout);
   const team = getBot(slug);
   if (!team) notFound();
-  // Several teams name themselves after their sidebar section ("Bookkeeping",
-  // "Partnerships"). Printing both gives the page a stuttered
-  // "Partnerships / PARTNERSHIPS · 6 BOTS". Show the section only when it adds a word.
-  const sectionEchoesName = team.section.trim().toLowerCase() === team.name.trim().toLowerCase();
   /* Three neighbours. Category first, but every category currently holds
      exactly one team, so that alone never renders. Fall back to the teams
      sharing the most connectors, which is the more useful question anyway:
@@ -111,47 +87,17 @@ export default async function BotPage({
   ) : null;
 
   return (
-    <div
-      className={`relative flex flex-col px-6 sm:px-10 lg:px-16 ${shell ? "h-dvh overflow-hidden" : "min-h-dvh"}`}
-      style={{ background: ledger.paper, color: ledger.ink }}
-    >
+    <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <JsonLd data={botJsonLd(team)} />
       <SiteMasthead />
-      <main
-        className={`rc-main rc-main--${layout} relative z-10 mx-auto w-full flex-1 ${shell ? "min-h-0 overflow-hidden pt-4" : "pb-20 pt-12"}`}
-      >
-        <nav className={`${shell ? "mb-2" : "mb-6"} flex flex-wrap items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em]`} style={{ color: ledger.label }} aria-label="Breadcrumb">
+      <main className="rp-main relative z-10 mx-auto w-full max-w-3xl flex-1 pb-20 pt-10">
+        <nav className="mb-5 flex flex-wrap items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }} aria-label="Breadcrumb">
           <Link href="/?kind=bot#teams" className="accent-hover">{en.bot.allBots}</Link>
           <span aria-hidden>/</span>
           <Link href={`/?kind=bot&category=${sectionSlug(team.section)}#teams`} className="accent-hover">{team.section}</Link>
         </nav>
-        <LayoutPicker current={layout} />
-
         <Customize
           team={team}
-          layout={layout}
-          identity={
-            <>
-          <div className="flex flex-wrap items-center gap-3">
-            <TeamIcon slug={team.slug} />
-            {team.fromXai ? <FromXaiChip /> : null}
-          </div>
-          <h1 className="font-display mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>
-            {team.name}
-          </h1>
-          <p className="mt-4 text-[1.05rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-            {team.tagline}
-          </p>
-          <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
-            {sectionEchoesName ? en.team.botCount(team.bots) : `${team.section} · ${en.team.botCount(team.bots)}`}
-          </p>
-          {team.fromXai ? (
-            <p className="mt-3 max-w-2xl text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-              {en.xai.note}
-            </p>
-          ) : null}
-            </>
-          }
           related={relatedNode}
           extras={<SponsorRail campaign="team-page" />}
         >
@@ -202,7 +148,7 @@ export default async function BotPage({
         </Customize>
 
       </main>
-      {shell ? null : <SiteFooter />}
+      <SiteFooter />
     </div>
   );
 }

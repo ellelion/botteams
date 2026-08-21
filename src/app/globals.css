@@ -1953,433 +1953,234 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 
 
-/* ── Recipe page layouts ──────────────────────────────────────────────
-   Three arrangements of one recipe, chosen from the URL. The parts are
-   identical; only where they sit differs. Ledger throughout: cream paper,
-   hairlines, no new colour. */
-.rc-main { max-width: 42rem; }
-.rc-main--rail { max-width: 74rem; }
-.rc-main--outline { max-width: 62rem; }
-/* The shells use the full width they are given and manage their own
-   height, so the reading measure does not apply. */
-.rc-main--studio,
-.rc-main--deck,
-.rc-main--bento,
-.rc-main--inspector,
-.rc-main--stage { max-width: 84rem; display: flex; flex-direction: column; }
-.rc-main--studio .rc-pick,
-.rc-main--deck .rc-pick,
-.rc-main--bento .rc-pick,
-.rc-main--inspector .rc-pick,
-.rc-main--stage .rc-pick { flex: none; margin-bottom: 12px; padding-bottom: 10px; }
 
-.rc-pick {
+
+/* ── Recipe page ──────────────────────────────────────────────────────
+   One page for a team and for a bot. A document, not an app shell: the
+   window scrolls and the footer is the end of it.
+
+   The header is the only thing pinned, because copying the prompt is the
+   whole transaction and it should never need scrolling back to. Roster
+   is visible without a click. Everything skippable is a vertical
+   accordion with its title always on screen, which horizontal tabs
+   cannot promise: a quarter of people never open one and decide the
+   content is missing. */
+.rp-main { max-width: 46rem; }
+
+.rp-head {
+  position: sticky;
+  top: var(--masthead-h);
+  z-index: 25;
+  padding: 12px 0 12px;
+  background: var(--page);
+  border-bottom: 1px solid var(--line-strong);
+}
+.rp-head-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 20px;
+}
+.rp-head-id { min-width: 0; flex: 1 1 16rem; }
+.rp-name {
+  font-family: "General Sans", system-ui, sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.15rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+.rp-job {
+  margin-top: 5px;
+  color: var(--muted-strong);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  /* One line of job in the pinned bar. The full tagline is the page. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rp-head-act {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 14px;
-  margin-bottom: 22px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--line);
+  gap: 9px;
+  flex: none;
 }
-.rc-pick-label {
-  color: var(--muted);
-  font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-.rc-pick-btn {
-  min-height: 32px;
-  padding: 0 2px;
-  border: 0;
-  border-bottom: 1px solid transparent;
+/* Secondary next to Copy, so the primary action reads as the primary. */
+.rp-secondary {
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
   background: transparent;
-  color: var(--muted);
+  color: var(--muted-strong);
   font: 500 0.6rem/1 var(--font-outfit), system-ui, sans-serif;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
 }
-.rc-pick-btn:hover { color: var(--accent-text); }
-.rc-pick-btn.is-on { color: var(--ink); border-bottom-color: var(--ink); }
-.rc-pick-btn:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+.rp-secondary:hover { color: var(--ink); border-color: var(--accent); }
+.rp-secondary:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.rp-head-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.rp-shape {
+  color: var(--muted);
+  font: 500 0.56rem/1 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
 
+.rp-roster { margin-top: 26px; }
+.rp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.rp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.88rem;
+}
+.rp-chip-name { white-space: nowrap; }
+.rp-chip-note {
+  color: var(--muted);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.rp-room { margin-top: 14px; color: var(--ink-soft); font-size: 0.86rem; line-height: 1.5; }
+.rp-room-label {
+  display: block;
+  color: var(--muted);
+  font: 500 0.55rem/1.6 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.rp-connectors { margin-top: 16px; }
+.rp-note { margin-top: 12px; color: var(--muted); font-size: 0.8rem; line-height: 1.6; }
 .rc-h2 {
   color: var(--accent-text);
   font: 500 0.6rem/1 var(--font-outfit), system-ui, sans-serif;
   letter-spacing: 0.26em;
   text-transform: uppercase;
 }
-.rc-inline-actions { margin-top: 26px; }
-/* Connectors follow the action row rather than crowding it. */
-.rc-outline .rc-connectors,
-.rc-workbench .rc-connectors { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); }
-.rc-empty {
-  margin-top: 18px;
-  color: var(--muted);
-  font-size: 0.88rem;
-  line-height: 1.6;
-}
+.rc-empty { margin-top: 14px; color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
 
-/* A. Rail. The action column is the only sticky thing on the page, and it
-   only exists once there are two columns to have. */
-.rc-rail { display: block; }
-.rc-rail-connectors { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); }
-.rc-rail-side { display: none; }
-
-@media (min-width: 1024px) {
-  .rc-rail {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 20rem;
-    gap: 0 48px;
-    align-items: start;
-  }
-  .rc-rail-main { min-width: 0; }
-  /* Connectors move into the rail, so the reading column stops repeating
-     them. Same for the inline action row. */
-  .rc-rail-main > .rc-inline-actions,
-  .rc-rail-main > .rc-rail-connectors { display: none; }
-  .rc-rail-side { display: block; }
-  .rc-rail-stick {
-    position: sticky;
-    top: calc(var(--masthead-h) + 18px);
-    padding: 18px 0 0;
-    border-top: 1px solid var(--line-strong);
-  }
-  .rc-rail-stick .rc-connectors { margin-top: 22px; }
-}
-.rc-side-hint {
-  margin-top: 18px;
-  color: var(--muted);
-  font-size: 0.76rem;
-  line-height: 1.55;
-}
-
-/* The mobile bar, and only on Rail. Hidden until the in-page Copy has
-   scrolled away, so a phone is never greeted by pinned chrome. */
-.rc-bottom {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 40;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-  background: var(--page);
-  border-top: 1px solid var(--line-strong);
-  transform: translateY(110%);
-  transition: transform .18s ease;
-  visibility: hidden;
-}
-.rc-bottom.is-up { transform: none; visibility: visible; }
-@media (min-width: 1024px), (prefers-reduced-motion: reduce) {
-  .rc-bottom { transition: none; }
-}
-@media (min-width: 1024px) {
-  /* Desktop bottom-pin reads as pushy, and the rail already holds Copy. */
-  .rc-bottom { display: none; }
-}
-/* The bar carries Customize too, so it can never be the thing covering it. */
-.rc-rail .rc-bottom .theme-control { flex: 1 1 auto; min-height: 44px; }
-
-/* B. Workbench. One panel at a time, tabs as sibling panels rather than
-   navigation. */
-.rc-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 30px;
-  border-bottom: 1px solid var(--line);
-}
-.rc-tab {
-  min-height: 44px;
-  padding: 0 14px;
-  border: 0;
-  border-bottom: 2px solid transparent;
-  background: transparent;
-  color: var(--muted-strong);
-  font-family: inherit;
-  font-size: 0.86rem;
-  cursor: pointer;
-  margin-bottom: -1px;
-}
-.rc-tab:hover { color: var(--ink); }
-.rc-tab.is-on { color: var(--ink); border-bottom-color: var(--accent-text); }
-.rc-tab:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -2px; }
-.rc-panel { padding-top: 6px; }
-/* A panel supplies its own first rule, so the part inside should not add
-   a second one straight under the tab strip. */
-.rc-panel > section:first-child,
-.rc-panel > div:first-child > section:first-child { border-top: 0; margin-top: 18px; padding-top: 0; }
-.rc-after { margin-top: 12px; }
-
-/* C. Outline. The page owns the scroll. The only fixed thing is a short
-   list of where you are. */
-.rc-outline { display: block; }
-.rc-outline-main { min-width: 0; }
-.rc-toc { display: none; }
-.rc-toc-m {
-  margin-bottom: 20px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--line);
-}
-.rc-toc-m summary {
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  color: var(--muted-strong);
-  font: 500 0.6rem/1 var(--font-outfit), system-ui, sans-serif;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-.rc-toc-m ul { padding-bottom: 6px; }
-.rc-toc-m a,
-.rc-toc a {
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-  color: var(--ink-soft);
-  font-size: 0.88rem;
-}
-.rc-toc-m a:hover,
-.rc-toc a:hover { color: var(--accent-text); }
-
-@media (min-width: 1024px) {
-  .rc-outline {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 13rem;
-    gap: 0 44px;
-    align-items: start;
-  }
-  .rc-outline-main { max-width: 40rem; }
-  /* Below this width the list becomes the disclosure above the H1
-     instead, rather than a third sticky strip. */
-  .rc-toc { display: block; }
-  .rc-toc-m { display: none; }
-  .rc-toc-stick {
-    position: sticky;
-    top: calc(var(--masthead-h) + 18px);
-    padding-top: 18px;
-    border-top: 1px solid var(--line-strong);
-  }
-  .rc-toc-title {
-    color: var(--muted);
-    font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .rc-toc-copy { margin-top: 14px; }
-  .rc-toc-copy .theme-control { font-size: 0.55rem; padding: 7px 12px; }
-}
-
-/* Anchors have to clear the sticky masthead when jumped to. */
-.rc [id] { scroll-margin-top: calc(var(--masthead-h) + 16px); }
-
-@media (max-width: 430px) {
-  .rc-main { padding-left: 0; padding-right: 0; }
-  .rc-tab { padding: 0 11px; font-size: 0.82rem; }
-  /* Room for the bar so it never sits on top of the last section. */
-  .rc-rail .rc-rail-main { padding-bottom: 76px; }
-}
-
-
-/* ── Shell layouts ────────────────────────────────────────────────────
-   Five arrangements that hold one screen. The frame is exactly the
-   viewport minus the masthead; the page never scrolls on a desktop and
-   the panes do. Nothing here shrinks the type or hides Copy to make
-   that true: content that does not fit scrolls inside its pane. */
-.rcs {
-  display: flex;
-  flex-direction: column;
-  height: calc(100dvh - var(--masthead-h));
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* Persistent chrome. Copy lives here, so it is reachable whatever a pane
-   is doing, and it never leaves the screen to need a second bar. */
-.rcs-bar {
-  flex: none;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 10px 22px;
-  padding: 0 0 14px;
-  border-bottom: 1px solid var(--line-strong);
-}
-.rcs-bar-id { min-width: 0; flex: 1 1 18rem; }
-.rcs-name {
-  font-family: "General Sans", system-ui, sans-serif;
-  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-.rcs-tag {
-  margin-top: 5px;
-  color: var(--muted-strong);
-  font-size: 0.85rem;
-  line-height: 1.45;
-  /* Two lines of tagline, then it stops. The bar is chrome, not copy. */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.rcs-bar-chips {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-.rcs-shape {
-  color: var(--muted);
-  font: 500 0.58rem/1 var(--font-outfit), system-ui, sans-serif;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.rcs-bar-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.rcs-body {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: hidden;
-  padding-top: 16px;
-}
-.rcs-pane {
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding-right: 12px;
-}
-.rcs-pane-alt {
-  padding-left: 22px;
-  border-left: 1px solid var(--line);
-}
-/* A pane supplies the rule between sections, so the first section in one
-   should not draw a second directly under the pane edge. */
-.rcs-pane > section:first-child,
-.rcs-pane > *:first-child > section:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
-.rcs-quiet { color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
-
-.rcs-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 23rem); gap: 0 26px; }
-.rcs-three { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) minmax(0, 22rem); gap: 0 22px; }
-.rcs-three > .rcs-list { border-right: 1px solid var(--line); padding-right: 18px; }
-
-.rcs-listrow {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  width: 100%;
-  min-height: 44px;
-  padding: 0 9px;
-  border: 0;
-  border-radius: 9px;
-  background: transparent;
-  color: var(--ink-soft);
-  font-family: inherit;
-  font-size: 0.88rem;
-  text-align: left;
-  cursor: pointer;
-}
-.rcs-listrow:hover { background: var(--surface); color: var(--ink); }
-.rcs-listrow.is-on { background: var(--ink); color: var(--page); }
-.rcs-listrow:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-.rcs-jobname { margin-top: 8px; font-size: 1.3rem; font-weight: 300; letter-spacing: -0.01em; }
-.rcs-jobtext { margin-top: 10px; color: var(--ink-soft); font-size: 0.92rem; line-height: 1.6; }
-
-/* Bento. The grid is the viewport, so a card can only ever clip. */
-.rcs-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: minmax(0, 1fr);
-  gap: 12px;
-}
-.rcs-card {
-  padding: 15px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--surface);
-}
-.rcs-card-wide { grid-column: span 2; }
-.rcs-card-tall { grid-row: span 2; }
-
-/* Deck. One face, and sheets over it rather than page below it. */
-.rcs-deck-body { display: grid; align-items: start; }
-.rcs-deck-face { max-width: 44rem; }
-.rcs-chiplist { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-.rcs-botchip {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  font-size: 0.86rem;
-}
-.rcs-deck-room { margin-top: 14px; color: var(--muted-strong); font-size: 0.84rem; line-height: 1.5; }
-.rcs-deck-open { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 22px; }
-.rcs-sheet {
-  position: absolute;
-  inset: var(--masthead-h) 0 0;
-  z-index: 30;
-  display: flex;
-  flex-direction: column;
-  padding: 16px 24px 20px;
-  background: var(--page);
-  border-top: 1px solid var(--line-strong);
-  animation: rcs-sheet-in .16s ease-out;
-}
-@keyframes rcs-sheet-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .rcs-sheet { animation: none; } }
-.rcs-sheet-head {
-  flex: none;
+/* The accordion. Titles always visible, Job open, the rest closed. */
+.rp-acc { margin-top: 34px; border-top: 1px solid var(--line-strong); }
+.rp-sec { border-bottom: 1px solid var(--line); }
+.rp-sum {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  padding-bottom: 12px;
+  gap: 12px;
+  /* Sticky titles, thin enough not to stack into a wall with the
+     header above them. */
+  position: sticky;
+  top: calc(var(--masthead-h) + 3.4rem);
+  z-index: 15;
+  min-height: 52px;
+  padding: 0 2px;
+  background: var(--page);
+  color: var(--ink);
+  font-family: "General Sans", system-ui, sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  list-style: none;
+}
+.rp-sum::-webkit-details-marker { display: none; }
+.rp-sum::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  margin-left: auto;
+  border-right: 1.5px solid var(--muted);
+  border-bottom: 1.5px solid var(--muted);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform .16s ease;
+}
+.rp-sec[open] > .rp-sum::after { transform: rotate(-135deg) translate(-3px, -3px); }
+@media (prefers-reduced-motion: reduce) { .rp-sum::after { transition: none; } }
+.rp-sum:hover { color: var(--accent-text); }
+.rp-sum:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.rp-count {
+  margin-left: auto;
+  color: var(--muted);
+  font: 500 0.7rem/1 var(--font-outfit), system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.rp-secbody { padding: 0 2px 22px; }
+/* A section already has the accordion rule above it. */
+.rp-secbody > section:first-child,
+.rp-secbody > *:first-child > section:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+
+/* Customize: a mode over this page, not a different page. */
+/* Above the masthead (z-index 30) and the select popup (60). Customize
+   is a mode: while it is open it owns the screen. */
+.rp-sheet-wrap { position: fixed; inset: 0; z-index: 80; display: flex; justify-content: flex-end; }
+.rp-scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: color-mix(in oklab, var(--ink) 26%, transparent);
+  cursor: pointer;
+}
+.rp-sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(40rem, 100%);
+  height: 100%;
+  background: var(--page);
+  border-left: 1px solid var(--line-strong);
+  box-shadow: -24px 0 60px -30px rgba(0, 0, 0, .4);
+  animation: rp-sheet-in .18s ease-out;
+}
+@keyframes rp-sheet-in { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .rp-sheet { animation: none; } }
+.rp-sheet-head {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
+  padding: 16px 20px;
   border-bottom: 1px solid var(--line);
 }
-.rcs-sheet-body { flex: 1 1 auto; padding-top: 14px; }
-
-.rcs-tabs { flex: none; margin-top: 14px; }
-.rcs--stage .rcs-body { padding-top: 14px; }
-
-@media (max-width: 900px) {
-  /* Below this the panes stop being columns and become one scroller.
-     The frame still holds the viewport, so the window does not grow and
-     Copy stays in the bar where a thumb can reach it. */
-  .rcs-body { display: block; overflow-y: auto; overscroll-behavior: contain; }
-  .rcs-two,
-  .rcs-three,
-  .rcs-grid { display: block; }
-  .rcs-pane { overflow: visible; padding-right: 0; }
-  .rcs-pane-alt,
-  .rcs-three > .rcs-list {
-    margin-top: 24px;
-    padding: 20px 0 0;
-    border-left: 0;
-    border-right: 0;
-    border-top: 1px solid var(--line);
-  }
-  .rcs-card { margin-top: 12px; }
-  .rcs-card-wide, .rcs-card-tall { grid-column: auto; grid-row: auto; }
-  .rcs-sheet { inset: var(--masthead-h) 0 0; padding: 14px 16px 18px; }
-  .rcs-bar { position: sticky; top: 0; z-index: 20; background: var(--page); }
+.rp-sheet-act { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+.rp-sheet-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 20px 28px;
 }
-@media (max-width: 430px) {
-  .rcs-bar { gap: 8px 14px; padding-bottom: 12px; }
-  .rcs-bar-actions .theme-control { min-height: 44px; }
+
+@media (max-width: 640px) {
+  .rp-head { padding-top: 10px; }
+  .rp-name { font-size: 1.4rem; }
+  .rp-head-act { width: 100%; }
+  .rp-head-act .theme-control,
+  .rp-head-act .rp-secondary { flex: 1 1 auto; min-height: 44px; }
+  /* The header is taller once the action wraps, so the section titles
+     stop being sticky rather than stacking two bars deep. */
+  .rp-sum { position: static; min-height: 56px; }
+  .rp-sheet { width: 100%; border-left: 0; }
+  .rp-sheet-head { padding: 14px 16px; }
+  .rp-sheet-body { padding: 4px 16px 28px; }
+  .rp-sheet-act .theme-control,
+  .rp-sheet-act .rp-secondary { min-height: 44px; }
+  /* The chips take inline actions later, so they get a thumb-sized box
+     now rather than after someone tries to tap one. */
+  .rp-chip { min-height: 44px; }
 }
