@@ -1,13 +1,13 @@
 export type Theme = "light" | "dark";
 
-/* Bumped from grokbotteams-theme. The old key was written by a bootstrap
-   that defaulted to dark, so a browser holding "dark" recorded the old
-   default rather than a choice anyone made. A new key drops that leftover:
-   a first visit and a stale visit both land on light, and the toggle
-   writes a value that really is a preference. */
-export const THEME_STORAGE_KEY = "grokbotteams-theme-v2";
+/* Bumped again with the palette. v2 recorded choices against a cream
+   light default that no longer exists, so a stored "light" from then
+   meant "not that dark", not "this white". A first visit and a stale
+   visit both land on the new dark default. */
+export const THEME_STORAGE_KEY = "grokbotteams-theme-v3";
 export const ACCENT_STORAGE_KEY = "grokbotteams-accent";
-export const DEFAULT_THEME: Theme = "light";
+/* Dark is the site now. Light is the same system inverted, opt-in. */
+export const DEFAULT_THEME: Theme = "dark";
 export const DEFAULT_ACCENT = "#ff6308";
 
 export const ACCENT_PALETTE = [
@@ -18,8 +18,8 @@ export const ACCENT_PALETTE = [
   "#c4a574", "#15150f", "#3d3a36", "#5b554c", "#797064", "#948b7d",
 ] as const;
 
-const PAGE: Record<Theme, string> = { light: "#fcfcfb", dark: "#0a0a0a" };
-const INK: Record<Theme, string> = { light: "#111111", dark: "#ffffff" };
+const PAGE: Record<Theme, string> = { light: "#ffffff", dark: "#0a0a0a" };
+const INK: Record<Theme, string> = { light: "#0a0a0a", dark: "#ffffff" };
 const HEX6 = /^#[0-9a-fA-F]{6}$/;
 
 export function normalizeTheme(value: string | null | undefined): Theme | null {
@@ -59,7 +59,7 @@ function mix(from: string, to: string, amount: number): string {
 
 export function onAccentFor(accent: string): string {
   if (contrastRatio("#0a0a0a", accent) >= 4.5) return "#0a0a0a";
-  if (contrastRatio("#f5f5f3", accent) >= 4.5) return "#f5f5f3";
+  if (contrastRatio("#ffffff", accent) >= 4.5) return "#ffffff";
   return contrastRatio("#000000", accent) >= contrastRatio("#ffffff", accent) ? "#000000" : "#ffffff";
 }
 
@@ -77,5 +77,5 @@ export function themeColorFor(theme: Theme): string {
 
 export function createThemeBootstrapScript(): string {
   const palette = JSON.stringify([...ACCENT_PALETTE]);
-  return `(function(){var p=${palette},d="${DEFAULT_ACCENT}",t="${DEFAULT_THEME}",a=d;try{var st=localStorage.getItem("${THEME_STORAGE_KEY}");if(st==="light"||st==="dark")t=st;var sa=(localStorage.getItem("${ACCENT_STORAGE_KEY}")||"").toLowerCase();if(p.indexOf(sa)>=0)a=sa;else if(sa)localStorage.removeItem("${ACCENT_STORAGE_KEY}")}catch(e){}var page=t==="dark"?"#0a0a0a":"#fcfcfb",ink=t==="dark"?"#ffffff":"#111111";function rgb(h){return[1,3,5].map(function(i){return parseInt(h.slice(i,i+2),16)})}function lum(h){var c=rgb(h).map(function(v){v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)});return.2126*c[0]+.7152*c[1]+.0722*c[2]}function cr(x,y){var X=lum(x),Y=lum(y);return(Math.max(X,Y)+.05)/(Math.min(X,Y)+.05)}function mix(x,y,n){var X=rgb(x),Y=rgb(y);return"#"+X.map(function(v,i){return Math.round(v+(Y[i]-v)*n).toString(16).padStart(2,"0")}).join("")}var at=ink;for(var i=0;i<=20;i++){var q=mix(a,ink,i/20);if(cr(q,page)>=4.5){at=q;break}}var on=cr("#0a0a0a",a)>=4.5?"#0a0a0a":cr("#f5f5f3",a)>=4.5?"#f5f5f3":cr("#000000",a)>=cr("#ffffff",a)?"#000000":"#ffffff";var root=document.documentElement;root.dataset.theme=t;root.style.setProperty("--accent",a);root.style.setProperty("--accent-text",at);root.style.setProperty("--on-accent",on);var meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",page)})();`;
+  return `(function(){var p=${palette},d="${DEFAULT_ACCENT}",t="${DEFAULT_THEME}",a=d;try{var st=localStorage.getItem("${THEME_STORAGE_KEY}");if(st==="light"||st==="dark")t=st;var sa=(localStorage.getItem("${ACCENT_STORAGE_KEY}")||"").toLowerCase();if(p.indexOf(sa)>=0)a=sa;else if(sa)localStorage.removeItem("${ACCENT_STORAGE_KEY}")}catch(e){}var page=t==="dark"?"#0a0a0a":"#ffffff",ink=t==="dark"?"#ffffff":"#0a0a0a";function rgb(h){return[1,3,5].map(function(i){return parseInt(h.slice(i,i+2),16)})}function lum(h){var c=rgb(h).map(function(v){v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)});return.2126*c[0]+.7152*c[1]+.0722*c[2]}function cr(x,y){var X=lum(x),Y=lum(y);return(Math.max(X,Y)+.05)/(Math.min(X,Y)+.05)}function mix(x,y,n){var X=rgb(x),Y=rgb(y);return"#"+X.map(function(v,i){return Math.round(v+(Y[i]-v)*n).toString(16).padStart(2,"0")}).join("")}var at=ink;for(var i=0;i<=20;i++){var q=mix(a,ink,i/20);if(cr(q,page)>=4.5){at=q;break}}var on=cr("#0a0a0a",a)>=4.5?"#0a0a0a":cr("#ffffff",a)>=4.5?"#ffffff":cr("#000000",a)>=cr("#ffffff",a)?"#000000":"#ffffff";var root=document.documentElement;root.dataset.theme=t;root.style.setProperty("--accent",a);root.style.setProperty("--accent-text",at);root.style.setProperty("--on-accent",on);var meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",page)})();`;
 }

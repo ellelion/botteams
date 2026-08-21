@@ -9,8 +9,10 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image() {
-  const fraunces = await readFile(
-    join(process.cwd(), "src/assets/fraunces-latin-400.ttf"),
+  /* Geist Sans, the same face the site sets, read from the package so
+     the card and the page cannot drift apart. */
+  const geist = await readFile(
+    join(process.cwd(), "node_modules/geist/dist/fonts/geist-sans/Geist-Regular.ttf"),
   );
 
   return new ImageResponse(
@@ -25,7 +27,7 @@ export default async function Image() {
           background: ledger.paper,
           color: ledger.ink,
           padding: "56px 72px",
-          fontFamily: "Fraunces",
+          fontFamily: "Geist Sans",
         }}
       >
         <div
@@ -90,7 +92,7 @@ export default async function Image() {
     ),
     {
       ...size,
-      fonts: [{ name: "Fraunces", data: fraunces, style: "normal", weight: 400 }],
+      fonts: [{ name: "Geist Sans", data: geist, style: "normal", weight: 400 }],
     },
   );
 }

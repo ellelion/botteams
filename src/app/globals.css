@@ -1,50 +1,44 @@
 @import "tailwindcss";
 
 /* Display face. x.ai runs Universal Sans, a paid licence we do not hold.
-   General Sans is the closest free grotesque: same geometric bowls and
+   Geist is the closest legal neighbour: same grotesque skeleton and
    tight apertures, where Inter Tight was neutral to the point of generic.
    Self-hosted from Fontshare under the ITF Free Font Licence, which
    covers commercial use. */
-@font-face {
-  font-family: "General Sans";
-  src: url("/fonts/general-sans-400.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "General Sans";
-  src: url("/fonts/general-sans-500.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "General Sans";
-  src: url("/fonts/general-sans-600.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* ── Ledger design system tokens ── */
+/*
+ * x.ai contrast, our wings.
+ *
+ * Near-black canvas, white type, outline pills, and depth from a lighter
+ * surface rather than a shadow. Orange is one rare moment of emphasis,
+ * never a second brand colour.
+ *
+ * Dark is the default. Light is the same system inverted onto white
+ * paper, not the old cream.
+ */
 :root {
-  color-scheme: light;
-  --page: #fcfcfb;
-  --surface: #f3f3f1;
-  --ink: #111111;
-  --ink-soft: #4b4b4b;
-  --muted: #686868;
-  --muted-strong: #565656;
-  --line: #d8d8d5;
-  --line-strong: #b9b9b4;
-  --leader: #c7c7c2;
-  --accent: #0891b2;
-  --accent-text: #097e9a;
-  --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);
-  --on-accent: #f5f5f3;
-  --status-live: #2e7d43;
-  --beta: #e8590c;
+  color-scheme: dark;
+  --page: #0a0a0a;
+  --surface: #111111;
+  --surface-elevated: #1a1a1a;
+  --ink: #ffffff;
+  --ink-soft: #d6d9de;
+  --muted: #7d8187;
+  --muted-strong: #9aa0a8;
+  --line: #1f2228;
+  --line-strong: #33383f;
+  --leader: #2a2e35;
+  --accent: #ff6308;
+  --accent-text: #ff8a4d;
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --on-accent: #0a0a0a;
+  --status-live: #4ade80;
+  --beta: #ff8a4d;
+  /* Pills: primary is a white lozenge with black type, secondary is a
+     hairline outline in the ink colour. */
+  --pill-fill: #ffffff;
+  --pill-fill-ink: #0a0a0a;
+  --pill-line: rgba(255, 255, 255, 0.32);
   --parchment: var(--page);
   --parchment-deep: var(--surface);
   --ink-muted: var(--ink-soft);
@@ -54,87 +48,40 @@
   --green: var(--status-live);
 }
 
-/* Dark is the default. Values measured off x.ai/bot: background #0a0a0a,
-   card #1a1a1a, muted text #7d8187, border hsl(221 12% 14%). */
-[data-theme="dark"] {
-  color-scheme: dark;
-  --page: #0a0a0a;
-  --surface: #1a1a1a;
-  --ink: #ffffff;
-  --ink-soft: #d6d9de;
-  --muted: #7d8187;
-  --muted-strong: #9aa0a8;
-  --line: #1f2229;
-  --line-strong: #33383f;
-  --leader: #2a2e35;
-  --accent-text: #ff8a4d;
-  --status-live: #4ade80;
+[data-theme="light"] {
+  color-scheme: light;
+  --page: #ffffff;
+  --surface: #f4f4f5;
+  --surface-elevated: #ebebed;
+  --ink: #0a0a0a;
+  --ink-soft: #3f3f46;
+  --muted: #71717a;
+  --muted-strong: #52525b;
+  --line: #e4e4e7;
+  --line-strong: #c7c7cc;
+  --leader: #d4d4d8;
+  --accent: #ff6308;
+  --accent-text: #c2410c;
+  --on-accent: #ffffff;
+  --status-live: #15803d;
+  --beta: #c2410c;
+  --pill-fill: #0a0a0a;
+  --pill-fill-ink: #ffffff;
+  --pill-line: rgba(10, 10, 10, 0.28);
 }
 
-@theme inline {
-  --color-parchment: var(--page);
-  --color-ink: var(--ink);
-  --color-ink-muted: var(--ink-soft);
-  --color-ink-faint: var(--muted);
-  --color-oxblood: var(--accent);
-  --color-line: var(--line);
-  --font-sans: var(--font-outfit);
-  --font-display: "General Sans", system-ui, sans-serif;
+:root {
+  --masthead-h: 62px;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  background: var(--page);
-  color: var(--ink);
-}
-
+/* The canvas is painted on body, not only on the page wrapper, so
+   overscroll and the browser chrome match the site instead of flashing
+   the user agent's white. */
+html { background: var(--page); }
 body {
   background: var(--page);
   color: var(--ink);
-  font-family: var(--font-outfit), system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100%;
-  overflow-x: hidden;
-}
-
-[id$="-heading"] {
-  scroll-margin-top: calc(var(--masthead-h) + 16px);
-}
-
-::selection {
-  background: var(--accent-soft);
-  color: var(--ink);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.accent-text {
-  color: var(--accent-text);
-}
-
-.accent-hover:hover,
-.accent-hover:focus-visible {
-  color: var(--accent-text);
-}
-
-.accent-surface-hover:hover,
-.accent-surface-hover:focus-visible {
-  background: var(--accent-soft);
-}
-
-/* The masthead rides along at every width. Anything else that pins
-   (section labels, the homepage index) offsets by --masthead-h so it
-   lands underneath instead of colliding. Keep the two in sync if the
-   padding changes. */
-:root {
-  --masthead-h: 62px;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 .site-masthead {
@@ -199,7 +146,22 @@ a {
    drops on the narrowest screens and the mark carries the brand and the
    home link on its own. */
 @media (max-width: 430px) {
-  .site-wordmark span { display: none; }
+  /* Only the text. This used to be `.site-wordmark span`, which also hit
+     the wings, since the mark is a span too. */
+  .site-wordmark-text { display: none; }
+  /* Geist Mono sets wider than the old label face, so the nav and the two
+     chrome pills ran past the gutter. The nav gives ground first: it
+     scrolls inside its own box rather than pushing the page. */
+  .site-masthead { gap: 12px; }
+  .site-masthead-nav {
+    gap: 12px;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .site-masthead-nav::-webkit-scrollbar { display: none; }
+  .site-masthead-actions { min-width: 0; }
+  .theme-controls { gap: 5px; }
   .site-masthead { gap: 8px; }
   .site-masthead-nav { gap: 10px; letter-spacing: 0.1em; }
   .site-masthead-actions { gap: 8px; }
@@ -211,7 +173,7 @@ a {
 }
 
 .font-display {
-  font-family: "General Sans", system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-weight: 500;
   letter-spacing: -0.02em;
 }
@@ -221,19 +183,19 @@ a {
 .theme-control {
   display: inline-flex; align-items: center; justify-content: center;
   width: 34px; height: 34px; padding: 0;
-  border: 1px solid var(--line-strong); background: transparent;
-  color: var(--ink); cursor: pointer; font: 500 14px/1 var(--font-outfit);
+  border: 1px solid var(--pill-line); background: transparent;
+  color: var(--ink); cursor: pointer; font: 500 14px/1 var(--font-geist-mono);
   border-radius: 9999px;
   transition: border-color .14s ease, background .14s ease;
 }
-.theme-control:hover { border-color: var(--accent); background: var(--surface); }
+.theme-control:hover { border-color: var(--ink); background: var(--surface-elevated); }
 .theme-accent-dot { width: 13px; height: 13px; border-radius: 9999px; background: var(--accent); }
 .theme-accent-popover {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 80;
   display: grid; grid-template-columns: repeat(6, 22px); gap: 6px;
   padding: 10px; background: var(--surface); border: 1px solid var(--line);
   border-radius: 14px;
-  box-shadow: 0 14px 36px -22px color-mix(in srgb, var(--ink) 45%, transparent);
+  background: var(--surface-elevated);
 }
 .theme-accent-swatch {
   width: 22px; height: 22px; padding: 0; border: 1px solid var(--line-strong);
@@ -251,17 +213,18 @@ a {
   padding: 0 16px;
   border-radius: 9999px;
   border-color: transparent;
-  background: var(--ink);
-  color: var(--page);
-  font: 500 0.6rem/1 var(--font-outfit);
+  background: var(--pill-fill);
+  color: var(--pill-fill-ink);
+  font: 500 0.6rem/1 var(--font-geist-mono);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 .theme-control.theme-control-label:hover,
 .theme-control-label:hover {
-  background: var(--accent);
-  color: var(--on-accent);
+  /* No colour change on hover. Orange is a rare moment of emphasis,
+     not the state of every button under a cursor. */
+  filter: brightness(0.88);
   border-color: transparent;
 }
 
@@ -531,7 +494,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   margin-top: 0.35rem;
 }
 .team-prose code {
-  font-family: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, "Cascadia Code", monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.85em;
 }
 
@@ -597,7 +560,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-bottom: 1px solid transparent;
   background: transparent;
   color: var(--muted);
-  font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.55rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   cursor: pointer;
@@ -628,7 +591,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-bottom: 1px solid var(--line);
 }
 .team-card h3 {
-  font-family: "General Sans", system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1.05rem;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -697,7 +660,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   flex: none;
   border: 1px solid var(--line-strong);
   color: var(--ink);
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: calc(var(--connector-size, 16px) * 0.56);
   font-weight: 600;
   line-height: 1;
@@ -720,7 +683,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 
 .section-title {
-  font-family: "General Sans", system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1.15rem;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -754,7 +717,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-transform: uppercase;
 }
 .spec-table code {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.85em;
   letter-spacing: 0;
   text-transform: none;
@@ -792,7 +755,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-bottom: 1px solid var(--line);
   background: transparent;
   color: var(--ink);
-  font: 400 0.9rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 400 0.9rem/1 var(--font-geist-mono), ui-monospace, monospace;
 }
 .search-input::placeholder { color: var(--muted); }
 .search-input:focus {
@@ -812,7 +775,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .browse-pick-label {
   color: var(--muted);
-  font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.55rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -822,7 +785,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-bottom: 1px solid transparent;
   background: transparent;
   color: var(--muted);
-  font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.55rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   cursor: pointer;
@@ -951,7 +914,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   cursor: pointer;
 }
 .index-name {
-  font-family: "General Sans", system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1.02rem;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -1095,7 +1058,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 .bot-tag {
   color: var(--muted);
-  font: 500 0.52rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.52rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
@@ -1210,7 +1173,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border: 1px solid var(--line-strong);
   border-radius: 5px;
   color: var(--muted);
-  font: 500 0.66rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.66rem/1 var(--font-geist-mono), ui-monospace, monospace;
   pointer-events: none;
 }
 
@@ -1273,7 +1236,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cf-shelf { margin-top: 18px; }
 .cf-shelf-title {
   color: var(--accent-text);
-  font: 500 0.6rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.26em;
   text-transform: uppercase;
 }
@@ -1312,7 +1275,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border: 1px solid var(--line-strong);
   border-radius: 999px;
   color: var(--muted);
-  font: 500 0.55rem/1.4 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.55rem/1.4 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -1356,7 +1319,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-radius: 999px;
   background: var(--ink);
   color: var(--page);
-  font: 500 0.62rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1383,6 +1346,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .cf-input { font-size: 1rem; }
   .cf-scroll { height: min(58vh, 460px); padding: 0 9px; }
   .cf-flag { display: none; }
+  /* Every control on this page a thumb has to hit. */
+  .cf-chip,
+  .cf-browse { min-height: 44px; }
 }
 
 /* ── Select ───────────────────────────────────────────────────────────
@@ -1399,7 +1365,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-radius: 999px;
   background: var(--page);
   color: var(--muted-strong);
-  font: 500 0.62rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1441,7 +1407,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border: 1px solid var(--line-strong);
   border-radius: 12px;
   background: var(--page);
-  box-shadow: 0 18px 40px -22px rgba(0, 0, 0, .45), 0 2px 8px -4px rgba(0, 0, 0, .18);
+  background: var(--surface-elevated);
   animation: sel-in .12s ease-out;
 }
 .sel-list.is-end { left: auto; right: 0; }
@@ -1497,7 +1463,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   padding: 0 8px 8px;
   border-bottom: 1px solid var(--line-strong);
   color: var(--muted);
-  font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.55rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -1518,7 +1484,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   min-width: 0;
 }
 .idx-colname {
-  font-family: "General Sans", system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 0.92rem;
   letter-spacing: -0.01em;
   overflow: hidden;
@@ -1569,12 +1535,12 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .idx-card:hover { border-color: var(--accent); transform: translateY(-2px); }
 .idx-card-cat {
   color: var(--accent-text);
-  font: 500 0.52rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.52rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 .idx-card-name {
-  font-family: "General Sans", system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -1651,7 +1617,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cz-legend {
   padding: 0;
   color: var(--accent-text);
-  font: 500 0.6rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.26em;
   text-transform: uppercase;
 }
@@ -1676,7 +1642,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-radius: 999px;
   background: var(--ink);
   color: var(--page);
-  font: 500 0.62rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1731,7 +1697,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border: 0;
   background: transparent;
   color: var(--muted);
-  font: 500 0.58rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1790,7 +1756,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: block;
   margin-bottom: 5px;
   color: var(--muted);
-  font: 500 0.58rem/1.4 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.58rem/1.4 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -1859,7 +1825,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .cz-alert-title {
   color: var(--accent-text);
-  font: 500 0.58rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   margin-bottom: 7px;
@@ -1877,7 +1843,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 .cz-advanced summary {
   color: var(--muted-strong);
-  font: 500 0.6rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1918,7 +1884,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .foot-col-title {
   color: var(--muted);
-  font: 500 0.58rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
@@ -1984,7 +1950,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .rp-head-id { min-width: 0; flex: 1 1 16rem; }
 .rp-name {
-  font-family: "General Sans", system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: clamp(1.5rem, 3vw, 2.15rem);
   font-weight: 300;
   letter-spacing: -0.02em;
@@ -2011,16 +1977,16 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .rp-secondary {
   min-height: 40px;
   padding: 0 15px;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--pill-line);
   border-radius: 999px;
   background: transparent;
   color: var(--muted-strong);
-  font: 500 0.6rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
 }
-.rp-secondary:hover { color: var(--ink); border-color: var(--accent); }
+.rp-secondary:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
 .rp-secondary:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .rp-head-chips {
   display: flex;
@@ -2031,7 +1997,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .rp-shape {
   color: var(--muted);
-  font: 500 0.56rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.56rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -2060,7 +2026,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .rp-room-label {
   display: block;
   color: var(--muted);
-  font: 500 0.55rem/1.6 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.55rem/1.6 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -2068,7 +2034,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .rp-note { margin-top: 12px; color: var(--muted); font-size: 0.8rem; line-height: 1.6; }
 .rc-h2 {
   color: var(--accent-text);
-  font: 500 0.6rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.26em;
   text-transform: uppercase;
 }
@@ -2091,7 +2057,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   padding: 0 2px;
   background: var(--page);
   color: var(--ink);
-  font-family: "General Sans", system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1rem;
   cursor: pointer;
   list-style: none;
@@ -2114,7 +2080,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .rp-count {
   margin-left: auto;
   color: var(--muted);
-  font: 500 0.7rem/1 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.7rem/1 var(--font-geist-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
 }
 .rp-secbody { padding: 0 2px 22px; }
@@ -2142,7 +2108,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   height: 100%;
   background: var(--page);
   border-left: 1px solid var(--line-strong);
-  box-shadow: -24px 0 60px -30px rgba(0, 0, 0, .4);
+  background: var(--surface-elevated);
   animation: rp-sheet-in .18s ease-out;
 }
 @keyframes rp-sheet-in { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -2183,4 +2149,53 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   /* The chips take inline actions later, so they get a thumb-sized box
      now rather than after someone tries to tap one. */
   .rp-chip { min-height: 44px; }
+}
+
+
+/* ── Share bar ────────────────────────────────────────────────────────
+   Thin, under the pinned header, on recipe pages only. The disclaimer
+   rides along: this site borrows xAI's contrast, so it has to say what
+   it is not, wherever a link travels. */
+.share-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 13px;
+  border: 1px solid var(--pill-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.share-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
+.share-btn:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.share-note,
+.rp-disclaimer {
+  color: var(--muted);
+  font: 500 0.58rem/1.5 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.1em;
+}
+.rp-disclaimer { color: var(--muted-strong); }
+
+@media (max-width: 640px) {
+  .share-btn { min-height: 44px; }
+  .share-note { flex-basis: 100%; }
+}
+
+.home-disclaimer {
+  color: var(--muted-strong);
+  font: 500 0.6rem/1.5 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }

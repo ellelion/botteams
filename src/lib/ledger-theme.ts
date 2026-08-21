@@ -15,11 +15,13 @@ export const ledger = {
   green: "var(--status-live)",
   hairline: "var(--line)",
   leader: "var(--leader)",
-  /* Display face. Named "serif" for history; it is the geometric
-     display sans now, matching x.ai's display/text split. */
-  serif: "\"General Sans\", system-ui, sans-serif",
-  /* Monospace — the "software" voice. System stack, no web-font dependency. */
-  mono: 'ui-monospace, "SF Mono", "SFMono-Regular", Menlo, "Cascadia Code", monospace',
+  /* Display face. Named "serif" for history; it is Geist Sans now.
+     x.ai sets its display in Universal Sans, which is a paid licence we
+     do not hold, so this is the closest thing we may legally ship. */
+  serif: "var(--font-geist-sans), system-ui, sans-serif",
+  /* Geist Mono carries the labels, eyebrows and nav accents, the way
+     x.ai uses a mono for everything that is not display. */
+  mono: "var(--font-geist-mono), ui-monospace, monospace",
 } as const;
 
 export const ledgerOg = {
