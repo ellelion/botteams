@@ -72,8 +72,12 @@ const CATEGORY: Record<string, ReactNode> = {
   productivity: (<><rect x="4" y="4.5" width="16" height="15" rx="2"/><path d="M8.5 10.5l2 2 4-4.5"/><path d="M8.5 15.5h7"/></>),
   sales: (<><path d="M4 17.5l5.5-5.5 3 3 7-7.5"/><path d="M14.5 7.5h5v5"/></>),
   "business and enterprise": (<><path d="M4 20h16"/><path d="M6 20V6a1.5 1.5 0 0 1 1.5-1.5h6A1.5 1.5 0 0 1 15 6v14"/><path d="M15 20v-8h2.5A1.5 1.5 0 0 1 19 13.5V20"/><path d="M9 8h3M9 11.5h3M9 15h3"/></>),
-  "cursor marketplace": (<><path d="M4 9.5 5.5 5h13L20 9.5"/><path d="M4 9.5h16v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><path d="M9.5 20v-5h5v5"/></>),
-  "community tools": (<><circle cx="9" cy="8.5" r="2.8"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9.5" r="2.1"/><path d="M20.5 18.5a4 4 0 0 0-3.6-4"/></>),
+  cloud: (<><path d="M7 18.5h10.5a3.5 3.5 0 0 0 .5-6.96 5.5 5.5 0 0 0-10.6-1.62A4 4 0 0 0 7 18.5z"/></>),
+  data: (<><ellipse cx="12" cy="6.5" rx="7" ry="2.8"/><path d="M5 6.5v11c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-11"/><path d="M5 12c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8"/></>),
+  engineering: (<><circle cx="12" cy="12" r="3"/><path d="M12 4.5v2M12 17.5v2M4.5 12h2M17.5 12h2M6.7 6.7l1.4 1.4M15.9 15.9l1.4 1.4M17.3 6.7l-1.4 1.4M8.1 15.9l-1.4 1.4"/></>),
+  marketing: (<><path d="M4 10v4a1.5 1.5 0 0 0 1.5 1.5H8l6 4V6l-6 4H5.5A1.5 1.5 0 0 0 4 11.5z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></>),
+  security: (<><path d="M12 3.5 5 6.5v5.2c0 4 2.8 6.9 7 8.3 4.2-1.4 7-4.3 7-8.3V6.5z"/><path d="M12 10.5v3"/><path d="M12 15.8h.01"/></>),
+  support: (<><path d="M20 12a8 8 0 1 0-3.2 6.4L20 19.5z"/><path d="M9.8 9.8a2.3 2.3 0 1 1 3 2.2v1.2"/><path d="M12.8 16h.01"/></>),
 };
 
 export function CategoryIcon({ name, className = "line-icon" }: { name: string } & IconProps) {

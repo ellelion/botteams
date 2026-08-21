@@ -139,26 +139,34 @@ export const en = {
   connectors: {
     eyebrow: "Grok Bot connectors",
     h1: "Connectors",
-    intro: (count: number, builtIn: number) =>
-      `${count} connectors. Connectors are account-wide. A team on this shelf expects yours to be connected already, and the installer prompt never starts an OAuth flow. xAI documents ${builtIn} of these as built in. The rest come from the in-app picker, the Cursor Marketplace, and tools the community reaches over MCP.`,
+    lede: (count: number) =>
+      `${count} of them, and they are account-wide. A team here expects yours to be connected already, and the installer prompt never starts an OAuth flow.`,
+    sourceTitle: "Where this list comes from",
     builtInLabel: "Built in",
-    builtInNote: "Named by xAI on",
+    builtInNote: (builtIn: number) => `xAI documents ${builtIn} of these as built in, named on`,
     builtInSource: "docs.x.ai/grok/connectors",
     sourceNote: "For the rest, xAI says only that there is a catalog of pre-configured OAuth connectors and sends you to the picker in the app. No list, no count. Anything Grok Bot can reach over MCP works as a connector, so this page also tracks the Cursor Marketplace and community tool lists. Sources:",
     sourceLabel: "awesome-grok-connectors",
     sourceTail: (asOf: string) => `, read as of ${asOf}. Treat it as a checkable snapshot, not as an xAI inventory.`,
     checked: "Checked on",
     searchLabel: "Search connectors",
-    searchPlaceholder: "Search connectors, or the teams that use them",
-    viewLabel: "Layout",
+    searchPlaceholder: "Search connectors",
+    featuredTitle: "Featured",
+    builtInTitle: "Built in",
+    builtInShelfNote: "The ones xAI documents by name. Every other connector comes from the picker in the app.",
+    shelfSummary: (total: number) =>
+      `Start typing to search all ${total}, or pick a category. This shelf is the short list.`,
+    browseAll: (total: number) => `Browse all ${total}`,
+    browseAllNote: "Every connector, in one windowed list. Search reaches all of them without this.",
+    backToShelf: "Back to the shelf",
+    allLabel: "All connectors",
+    noTeams: "No team yet",
     summary: (shown: number, total: number) =>
       shown === total ? `Showing all ${total} connectors.` : `Showing ${shown} of ${total} connectors.`,
-    clear: "Clear filters",
     emptyTitle: (q: string) => (q ? `Nothing matches "${q}".` : "Nothing matches those filters."),
     emptyBody:
-      "Grok Bot can also reach anything that speaks MCP, so a connector missing here may still work. Try a shorter word, or clear the filters and browse by category.",
+      "Grok Bot can also reach anything that speaks MCP, so a connector missing here may still work. Try a shorter word, or a category.",
     teamCount: (n: number) => (n === 1 ? "1 team" : `${n} teams`),
-    andMore: (n: number) => ` and ${n} more`,
     byoTitle: "Bring your own MCP",
     byoBody:
       "Grok Bot also speaks the Model Context Protocol, so a team file may name a connector that is not on this list. Those resolve to a monogram instead of a brand mark. That is expected, not a gap.",
