@@ -18,7 +18,7 @@ export type PackRoutine = {
   prompt: string;
 };
 
-export type PackStatus = "pack" | "example";
+export type PackStatus = "team" | "example";
 
 export type Pack = {
   slug: string;

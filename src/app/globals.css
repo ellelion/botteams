@@ -433,7 +433,19 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .wings-video--altar video,
 .wings-video--altar img.wings-poster {
   width: min(62vh, 88%);
-  opacity: 0.18;
+  opacity: 0.32;
+}
+
+/* Phones stack the hero, so the altar sits directly behind the answer
+   paragraph instead of beside it in its own column. At 0.32 the feather
+   detail competes with the body type; ghost it further so the wings stay
+   present but the copy stays the thing you read. */
+@media (max-width: 1023px) {
+  .wings-video--altar video,
+  .wings-video--altar img.wings-poster {
+    width: min(52vh, 74%);
+    opacity: 0.16;
+  }
 }
 
 /* Pack / docs markdown body: inherit the Ledger type, not a blob of raw HTML. */

@@ -38,7 +38,8 @@ for (const file of files) {
   const bots = typeof data.bots === "number" ? data.bots : data.seats;
   if (typeof bots !== "number") fail(file + ": bots must be a number");
   if (data.seats !== undefined && data.bots === undefined) fail(file + ": rename seats to bots");
-  if (data.status !== "pack" && data.status !== "example") fail(file + ": status must be pack or example");
+  const status = data.status === "pack" ? "team" : data.status;
+  if (status !== "team" && status !== "example") fail(file + ": status must be team or example");
   if (!Array.isArray(data.connectors)) fail(file + ": connectors must be an array");
   const packConnectors = new Set((data.connectors || []).map((name) => String(name)));
   if (!Array.isArray(data.agents) || data.agents.length === 0) fail(file + ": agents must be a non-empty array");

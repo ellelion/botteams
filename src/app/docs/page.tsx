@@ -33,7 +33,7 @@ export default function DocsPage() {
             <tr><th><code>tagline</code></th><td>One line for the job of the team.</td></tr>
             <tr><th><code>bots</code></th><td>Count of Bots in the team. Must match the bots list length.</td></tr>
             <tr><th><code>section</code></th><td>Sidebar section name the human creates in Grok Bot.</td></tr>
-            <tr><th><code>status</code></th><td><code>pack</code> (installable team) or <code>example</code> (format demo).</td></tr>
+            <tr><th><code>status</code></th><td><code>team</code> (installable team) or <code>example</code> (format demo).</td></tr>
             <tr><th><code>connectors</code></th><td>Account-wide connectors this team expects already connected. Union of per-Bot lists.</td></tr>
             <tr><th>Bots list <code>agents</code></th><td>Each Bot: <code>name</code> + <code>persona</code> (the job). Optional <code>icon</code>, <code>connectors</code> (subset of the team list), <code>reuse</code>.</td></tr>
             <tr><th>Group chats <code>rooms</code></th><td>Each group chat: <code>name</code> + <code>members</code> (Bot names). Visible label is Group chat.</td></tr>

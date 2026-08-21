@@ -38,10 +38,11 @@ export const en = {
     copy: "Copy installer prompt",
     copied: "Copied",
     copyFail: "Copy failed",
-    seats: "bots",
     bots: "bots",
     section: "Sidebar section",
     connectors: "Connectors already on the account",
+    connectFirst: "Connect first",
+    promptTitle: "Installer prompt",
     connectorsNote:
       "Connectors are account-wide. This team expects these already on the account. The per-Bot row is which Bot uses which ones, not a second OAuth.",
     agents: "Bots",

@@ -17,8 +17,8 @@ export function HomePage({ packs }: { packs: Pack[] }) {
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
       <main className="relative z-10 grid flex-1 grid-cols-1 items-start gap-6 overflow-clip lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14">
-        <div className="pointer-events-none col-start-1 row-start-1 overflow-hidden sticky top-[var(--masthead-h)] z-0 h-0 w-full min-w-0 self-start lg:pr-16" aria-hidden>
-          <div className="relative h-[calc(100dvh-var(--masthead-h))] w-full overflow-hidden">
+        <div className="pointer-events-none col-start-1 row-start-1 row-end-3 sticky top-[var(--masthead-h)] z-0 h-0 w-full min-w-0 self-start lg:row-end-2 lg:pr-16" aria-hidden>
+          <div className="relative h-[calc(100dvh-var(--masthead-h))] w-full">
             <WingsVideo variant="wings-video--altar" />
           </div>
         </div>
@@ -29,7 +29,7 @@ export function HomePage({ packs }: { packs: Pack[] }) {
                 <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>
                   <RevealText text={en.eyebrow} delay={0.05} step={0.016} className="block" />
                 </p>
-                <h1 className="font-display ledger-anim mx-auto mt-8 w-full max-w-full text-[clamp(1.65rem,3.4vw,2.75rem)] font-light leading-[1.05] tracking-[-0.02em]" style={{ fontFamily: ledger.serif, animationDelay: "0.55s" }}>
+                <h1 className="font-display ledger-anim mx-auto mt-8 w-full max-w-full text-balance text-[clamp(1.65rem,3.4vw,2.75rem)] font-light leading-[1.05] tracking-[-0.02em]" style={{ fontFamily: ledger.serif, animationDelay: "0.55s" }}>
                   {en.h1}
                 </h1>
                 <p className="ledger-anim mx-auto mt-6 max-w-md text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft, animationDelay: "0.75s" }}>
