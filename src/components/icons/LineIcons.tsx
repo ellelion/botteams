@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { sectionSlug } from "@/lib/bot-icon";
 
 type IconProps = { className?: string };
 
@@ -29,6 +30,14 @@ const PACK: Record<string, ReactNode> = {
   research: (<><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/><path d="M11 8v6M8 11h6"/></>),
   sales: (<><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2"/></>),
   support: (<><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="5" height="7" rx="1.5"/><rect x="16" y="13" width="5" height="7" rx="1.5"/><path d="M8 17h8"/></>),
+  data: (<><ellipse cx="12" cy="6.5" rx="7" ry="2.8"/><path d="M5 6.5v11c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8v-11"/><path d="M5 12c0 1.5 3.1 2.8 7 2.8s7-1.3 7-2.8"/></>),
+  design: (<><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/><path d="M12 4v5M12 15v5M4 12h5M15 12h5"/></>),
+  engineering: (<><path d="M9 8.5 4.5 12 9 15.5"/><path d="M15 8.5 19.5 12 15 15.5"/><path d="M13.5 5.5l-3 13"/></>),
+  helpdesk: (<><path d="M20 12a8 8 0 1 0-3.2 6.4L20 19.5z"/><path d="M9.8 9.8a2.3 2.3 0 1 1 3 2.2v1.2"/><path d="M12.8 16h.01"/></>),
+  infrastructure: (<><rect x="3.5" y="4" width="17" height="6" rx="1.6"/><rect x="3.5" y="14" width="17" height="6" rx="1.6"/><path d="M7 7h.01M7 17h.01"/><path d="M11 7h6M11 17h6"/></>),
+  knowledge: (<><path d="M4 5.5A2 2 0 0 1 6 3.5h5v16H6a2 2 0 0 0-2 2z"/><path d="M20 5.5a2 2 0 0 0-2-2h-5v16h5a2 2 0 0 1 2 2z"/></>),
+  revenue: (<><path d="M4 19h16"/><path d="M5 15.5l4.5-4.5 3 3 6.5-7"/><path d="M14 7h5v5"/><circle cx="9.5" cy="11" r=".9" fill="currentColor"/></>),
+  workplace: (<><path d="M3.5 20h17"/><path d="M5.5 20V9l6.5-4.5L18.5 9v11"/><rect x="9" y="12.5" width="6" height="7.5" rx="1"/><path d="M9 9h6"/></>),
 };
 
 const BOT: Record<string, ReactNode> = {
@@ -73,6 +82,13 @@ export function CategoryIcon({ name, className = "line-icon" }: { name: string }
 
 export function PackIcon({ slug, className = "line-icon" }: { slug: string } & IconProps) {
   return <I className={className}>{PACK[slug] ?? PACK.product}</I>;
+}
+
+/* A section label ("Customer success") rather than a slug, because that is
+   what the index and the team files carry. Every one of the 26 sections has
+   its own glyph; the fallback is here for a section added before its icon. */
+export function SectionIcon({ section, className = "line-icon" }: { section: string } & IconProps) {
+  return <I className={className}>{PACK[sectionSlug(section)] ?? PACK.product}</I>;
 }
 
 export function BotIcon({ name, className = "line-icon" }: { name?: string } & IconProps) {
