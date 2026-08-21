@@ -12,6 +12,7 @@ export const en = {
   nav: {
     packs: "Teams",
     docs: "Spec",
+    connectorsNav: "Connectors",
     github: "GitHub",
     homeAria: "Grok Bot Teams, home",
     mainAria: "Main",
@@ -55,6 +56,25 @@ export const en = {
     installNote:
       "Paste the prompt into Grok Bot. This is not one-click OAuth and not a plugin install.",
     ownerBot: "Owner Bot",
+  },
+  connectors: {
+    eyebrow: "Grok Bot connectors",
+    h1: "Connectors",
+    intro: (count: number) =>
+      `Every connector Grok Bot supports, ${count} of them, grouped the way the catalog groups them. Connectors are account-wide. A team on this shelf expects yours to be connected already, and the installer prompt never starts an OAuth flow.`,
+    sourceNote: "xAI publishes no machine-readable connector list, so this page tracks a dated snapshot rather than a live feed. Source:",
+    sourceLabel: "awesome-grok-connectors",
+    sourceTail: (asOf: string) => `, which describes the catalog as of ${asOf}.`,
+    checked: "Checked on",
+    andMore: (n: number) => ` and ${n} more`,
+    byoTitle: "Bring your own MCP",
+    byoBody:
+      "Grok Bot also speaks the Model Context Protocol, so a team file may name a connector that is not on this list. Those resolve to a monogram instead of a brand mark. That is expected, not a gap.",
+    retiredTitle: "Retired",
+    retiredBody:
+      "Slack shipped early and was pulled from the catalog before this snapshot. Older team files still resolve it so nothing breaks, but no team here should expect it.",
+    marksNote:
+      "Brand marks identify each connector and belong to their owners. Grok Bot Teams is operated by Ellelion LLC and is not affiliated with xAI or with any connector vendor. Twelve connectors have no mark yet and show a monogram.",
   },
   docs: {
     title: "Team spec",
