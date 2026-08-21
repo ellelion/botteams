@@ -27,13 +27,16 @@
  *
  * Re-check CATALOG_CHECKED_ON before repeating "every connector" anywhere.
  *
- * Brand marks under /public/connectors come from two places: hand-added
- * files, and simple-icons 16.28.0 (CC0 1.0), which is why some are a
- * single brand colour rather than the full multicolour logo. simple-icons
- * carries no Microsoft marks at all, so those came from gilbarbara/logos
- * (CC0), svgl (MIT) and botdirectory.ai (MIT). See ATTRIBUTION.md.
- * Outlook Calendar keeps a monogram on purpose: no set carries it, and
- * reusing the Outlook mail mark for it would be wrong, not just plain.
+ * Brand marks under /public/connectors are the vendor's own artwork:
+ * simple-icons (CC0 1.0), gilbarbara/logos (CC0), svgl (MIT), Google's
+ * gstatic product logos, Wikimedia, and the marketplace's own icons.
+ * Google marks are the full-colour product logos rather than the
+ * monochrome simple-icons versions, because that is what the products
+ * actually use. See ATTRIBUTION.md for the source of each.
+ *
+ * Nothing here is drawn by us. A connector with no official mark omits
+ * `file` and renders a letter chip instead, which is honest in a way an
+ * invented logo is not.
  */
 
 export const CATALOG_SOURCE = "https://github.com/rdmgator12/awesome-grok-connectors";
@@ -57,9 +60,10 @@ export type CatalogEntry = {
   name: string;
   slug: string;
   category: ConnectorCategory;
-  /* Filename under /public/connectors. Empty means we have no brand mark
-     yet and the row falls back to a monogram chip. */
-  file: string;
+  /* Filename under /public/connectors. Omitted when the vendor has no
+     official mark to use, and the row falls back to a letter chip. We do
+     not draw one ourselves to fill the gap. */
+  file?: string;
 };
 
 export const CONNECTOR_CATALOG: CatalogEntry[] = [
@@ -106,7 +110,7 @@ export const CONNECTOR_CATALOG: CatalogEntry[] = [
   { name: "Airwallex AgentOS", slug: "airwallex-agentos", category: "Cursor Marketplace", file: "airwallex-agentos.png" },
   { name: "Airwallex Developer", slug: "airwallex-developer", category: "Cursor Marketplace", file: "airwallex-developer.png" },
   { name: "Aleph", slug: "aleph", category: "Cursor Marketplace", file: "aleph.png" },
-  { name: "Amazon Location Service", slug: "amazon-location-service", category: "Cursor Marketplace", file: "amazon-location-service.png" },
+  { name: "Amazon Location Service", slug: "amazon-location-service", category: "Cursor Marketplace", file: "amazon-location-service.svg" },
   { name: "AMD", slug: "amd", category: "Cursor Marketplace", file: "amd.svg" },
   { name: "Amplemarket", slug: "amplemarket", category: "Cursor Marketplace", file: "amplemarket.png" },
   { name: "Amplitude", slug: "amplitude", category: "Cursor Marketplace", file: "amplitude.png" },
@@ -124,14 +128,14 @@ export const CONNECTOR_CATALOG: CatalogEntry[] = [
   { name: "Atlassian Teamwork Graph", slug: "atlassian-teamwork-graph", category: "Cursor Marketplace", file: "atlassian-teamwork-graph.svg" },
   { name: "AtScale", slug: "atscale", category: "Cursor Marketplace", file: "atscale.png" },
   { name: "Auth0", slug: "auth0", category: "Cursor Marketplace", file: "auth0.svg" },
-  { name: "AWS Agents", slug: "aws-agents", category: "Cursor Marketplace", file: "aws-agents.png" },
-  { name: "AWS Amplify", slug: "aws-amplify", category: "Cursor Marketplace", file: "aws-amplify.png" },
-  { name: "AWS Core", slug: "aws-core", category: "Cursor Marketplace", file: "aws-core.png" },
-  { name: "AWS Data Analytics", slug: "aws-data-analytics", category: "Cursor Marketplace", file: "aws-data-analytics.png" },
-  { name: "AWS Databases", slug: "aws-databases", category: "Cursor Marketplace", file: "aws-databases.png" },
-  { name: "AWS Deployments", slug: "aws-deployments", category: "Cursor Marketplace", file: "aws-deployments.png" },
-  { name: "AWS SageMaker", slug: "aws-sagemaker", category: "Cursor Marketplace", file: "aws-sagemaker.png" },
-  { name: "AWS Serverless", slug: "aws-serverless", category: "Cursor Marketplace", file: "aws-serverless.png" },
+  { name: "AWS Agents", slug: "aws-agents", category: "Cursor Marketplace", file: "aws-agents.svg" },
+  { name: "AWS Amplify", slug: "aws-amplify", category: "Cursor Marketplace", file: "aws-amplify.svg" },
+  { name: "AWS Core", slug: "aws-core", category: "Cursor Marketplace", file: "aws-core.svg" },
+  { name: "AWS Data Analytics", slug: "aws-data-analytics", category: "Cursor Marketplace", file: "aws-data-analytics.svg" },
+  { name: "AWS Databases", slug: "aws-databases", category: "Cursor Marketplace", file: "aws-databases.svg" },
+  { name: "AWS Deployments", slug: "aws-deployments", category: "Cursor Marketplace", file: "aws-deployments.svg" },
+  { name: "AWS SageMaker", slug: "aws-sagemaker", category: "Cursor Marketplace", file: "aws-sagemaker.svg" },
+  { name: "AWS Serverless", slug: "aws-serverless", category: "Cursor Marketplace", file: "aws-serverless.svg" },
   { name: "Azure", slug: "azure", category: "Cursor Marketplace", file: "azure.png" },
   { name: "Azure Cosmos DB", slug: "azure-cosmos-db", category: "Cursor Marketplace", file: "azure-cosmos-db.png" },
   { name: "Braintrust", slug: "braintrust", category: "Cursor Marketplace", file: "braintrust.svg" },
@@ -312,7 +316,7 @@ export const CONNECTOR_CATALOG: CatalogEntry[] = [
   { name: "ZoomInfo", slug: "zoominfo", category: "Cursor Marketplace", file: "zoominfo.png" },
   { name: "Zscaler", slug: "zscaler", category: "Cursor Marketplace", file: "zscaler.png" },
   { name: "AITuber", slug: "aituber", category: "Community tools", file: "aituber.png" },
-  { name: "Amazon", slug: "amazon", category: "Community tools", file: "amazon.png" },
+  { name: "Amazon", slug: "amazon", category: "Community tools", file: "amazon.svg" },
   { name: "Anki", slug: "anki", category: "Community tools", file: "anki.svg" },
   { name: "Apple Search Ads", slug: "apple-search-ads", category: "Community tools", file: "apple-search-ads.svg" },
   { name: "Aviation Weather Center", slug: "aviation-weather-center", category: "Community tools", file: "aviation-weather-center.png" },
@@ -347,7 +351,7 @@ export const CONNECTOR_CATALOG: CatalogEntry[] = [
   { name: "Hyperliquid", slug: "hyperliquid", category: "Community tools", file: "hyperliquid.png" },
   { name: "iCloud", slug: "icloud", category: "Community tools", file: "icloud.svg" },
   { name: "Infisical", slug: "infisical", category: "Community tools", file: "infisical.png" },
-  { name: "Kindle", slug: "kindle", category: "Community tools", file: "kindle.png" },
+  { name: "Kindle", slug: "kindle", category: "Community tools", file: "kindle.svg" },
   { name: "Kobbe", slug: "kobbe", category: "Community tools", file: "kobbe.png" },
   { name: "LinkedIn", slug: "linkedin", category: "Community tools", file: "linkedin.svg" },
   { name: "Luma", slug: "luma", category: "Community tools", file: "luma.png" },
@@ -359,11 +363,11 @@ export const CONNECTOR_CATALOG: CatalogEntry[] = [
   { name: "Reddit", slug: "reddit", category: "Community tools", file: "reddit.svg" },
   { name: "Sales Navigator", slug: "sales-navigator", category: "Community tools", file: "sales-navigator.svg" },
   { name: "ScreenshotOne", slug: "screenshotone", category: "Community tools", file: "screenshotone.png" },
-  { name: "Search Console", slug: "search-console", category: "Community tools", file: "search-console.png" },
-  { name: "Stacktree", slug: "stacktree", category: "Community tools", file: "stacktree.svg" },
+  { name: "Search Console", slug: "search-console", category: "Community tools", file: "search-console.svg" },
+  { name: "Stacktree", slug: "stacktree", category: "Community tools" },
   { name: "TikTok", slug: "tiktok", category: "Community tools", file: "tiktok.svg" },
   { name: "Trends.vc", slug: "trends-vc", category: "Community tools", file: "trends-vc.png" },
-  { name: "Web Search", slug: "web-search", category: "Community tools", file: "web-search.png" },
+  { name: "Web Search", slug: "web-search", category: "Community tools", file: "web-search.svg" },
   { name: "Whole Foods", slug: "whole-foods", category: "Community tools", file: "whole-foods.png" },
   { name: "Whole Foods delivery", slug: "whole-foods-delivery", category: "Community tools", file: "whole-foods-delivery.png" },
   { name: "Xero", slug: "xero", category: "Community tools", file: "xero.svg" },
