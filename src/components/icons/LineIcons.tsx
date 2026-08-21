@@ -49,6 +49,28 @@ const BOT: Record<string, ReactNode> = {
   target: (<><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></>),
 };
 
+
+/* Facet icons for the connector catalog. Same 24 viewBox, same 1.5 stroke
+   and round joins as PACK and BOT, so the page keeps one icon language
+   instead of two. Keyed by the category label itself. */
+const CATEGORY: Record<string, ReactNode> = {
+  "built in": (<><path d="M12 3.5 5 6.5v5.2c0 4 2.8 6.9 7 8.3 4.2-1.4 7-4.3 7-8.3V6.5z"/><path d="M9 12l2.2 2.2L15.5 10"/></>),
+  featured: (<><path d="M12 4.5l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.6-4.8 2.6.9-5.4L4.2 10.2l5.4-.8z"/></>),
+  advertising: (<><path d="M4 10v4a1.5 1.5 0 0 0 1.5 1.5H8l6 4V6l-6 4H5.5A1.5 1.5 0 0 0 4 11.5z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></>),
+  analytics: (<><path d="M4 20h16"/><rect x="5.5" y="12" width="3.5" height="5" rx="1"/><rect x="10.5" y="8" width="3.5" height="9" rx="1"/><rect x="15.5" y="4.5" width="3.5" height="12.5" rx="1"/></>),
+  developer: (<><path d="M9 8.5 4.5 12 9 15.5"/><path d="M15 8.5 19.5 12 15 15.5"/><path d="M13.5 5.5l-3 13"/></>),
+  finance: (<><rect x="3" y="6.5" width="18" height="11" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6.5 12h.01M17.5 12h.01"/></>),
+  productivity: (<><rect x="4" y="4.5" width="16" height="15" rx="2"/><path d="M8.5 10.5l2 2 4-4.5"/><path d="M8.5 15.5h7"/></>),
+  sales: (<><path d="M4 17.5l5.5-5.5 3 3 7-7.5"/><path d="M14.5 7.5h5v5"/></>),
+  "business and enterprise": (<><path d="M4 20h16"/><path d="M6 20V6a1.5 1.5 0 0 1 1.5-1.5h6A1.5 1.5 0 0 1 15 6v14"/><path d="M15 20v-8h2.5A1.5 1.5 0 0 1 19 13.5V20"/><path d="M9 8h3M9 11.5h3M9 15h3"/></>),
+  "cursor marketplace": (<><path d="M4 9.5 5.5 5h13L20 9.5"/><path d="M4 9.5h16v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><path d="M9.5 20v-5h5v5"/></>),
+  "community tools": (<><circle cx="9" cy="8.5" r="2.8"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9.5" r="2.1"/><path d="M20.5 18.5a4 4 0 0 0-3.6-4"/></>),
+};
+
+export function CategoryIcon({ name, className = "line-icon" }: { name: string } & IconProps) {
+  return <I className={className}>{CATEGORY[name.trim().toLowerCase()] ?? CATEGORY.featured}</I>;
+}
+
 export function PackIcon({ slug, className = "line-icon" }: { slug: string } & IconProps) {
   return <I className={className}>{PACK[slug] ?? PACK.product}</I>;
 }

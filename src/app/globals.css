@@ -1216,3 +1216,16 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cx-facets::-webkit-scrollbar { width: 6px; }
 .cx-facets::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 9999px; }
 .cx-facets::-webkit-scrollbar-track { background: transparent; }
+
+/* Facet and group icons inherit the pill's colour, so an active orange
+   facet carries an orange-on-ink glyph rather than a stray ink one. */
+.cx-facet-icon,
+.cx-group-icon {
+  width: 14px;
+  height: 14px;
+  color: currentColor;
+  flex: none;
+  opacity: .82;
+}
+.cx-facet.is-on .cx-facet-icon { opacity: 1; }
+.cx-group-icon { width: 13px; height: 13px; }

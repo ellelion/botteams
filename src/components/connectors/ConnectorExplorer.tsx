@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ConnectorRow } from "@/components/ConnectorRow";
+import { CategoryIcon } from "@/components/icons/LineIcons";
 import { en } from "@/lib/messages/en";
 
 export type ExplorerEntry = {
@@ -151,6 +152,7 @@ export function ConnectorExplorer({
           aria-pressed={builtInOnly}
           onClick={() => setBuiltInOnly((v) => !v)}
         >
+          <CategoryIcon name="Built in" className="cx-facet-icon" />
           {en.connectors.builtInLabel}
           <span className="cx-count">{entries.filter((e) => e.builtIn).length}</span>
         </button>
@@ -166,6 +168,7 @@ export function ConnectorExplorer({
               disabled={n === 0 && !on}
               onClick={() => toggle(cat)}
             >
+              <CategoryIcon name={cat} className="cx-facet-icon" />
               {cat}
               <span className="cx-count">{n}</span>
             </button>
@@ -206,6 +209,7 @@ export function ConnectorExplorer({
         grouped.map(([cat, list]) => (
           <section key={cat} className="cx-group">
             <h2 className="cx-group-title">
+              <CategoryIcon name={cat} className="cx-group-icon" />
               {cat}
               <span className="cx-count">{list.length}</span>
             </h2>
