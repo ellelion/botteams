@@ -182,8 +182,8 @@ function PackExpandable({
             </Link>
             <span className="pack-card-meta">{`${pack.bots} bots`}</span>
           </div>
-          <div className="mt-1 flex flex-wrap items-center gap-2.5">
-            <ConnectorRow names={pack.connectors} size={14} />
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+            <ConnectorRow names={pack.connectors} labeled size={16} />
             <span className="inline-flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
               {verified ? <VerifiedChip /> : null}
               <span className="chip">{example ? en.home.exampleBadge : en.home.liveBadge}</span>
@@ -203,8 +203,8 @@ function PackExpandable({
                     <p className="text-[0.92rem]" style={{ fontFamily: ledger.serif }}>{agent.name}</p>
                     <p className="mt-0.5 text-[0.75rem] leading-snug" style={{ color: ledger.inkMuted }}>{agent.persona}</p>
                     {agent.connectors.length > 0 ? (
-                      <div className="mt-1">
-                        <ConnectorRow names={agent.connectors} size={14} />
+                      <div className="mt-1.5">
+                        <ConnectorRow names={agent.connectors} labeled size={15} />
                       </div>
                     ) : null}
                   </div>
