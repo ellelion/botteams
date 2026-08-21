@@ -43,7 +43,10 @@ export function GET(request: Request) {
   if (cursorMode) {
     const start = cursorParam === "start" || cursorParam === "" ? 0 : matched.findIndex((t) => t.slug === cursorParam) + 1;
     if (cursorParam !== "start" && cursorParam !== "" && start === 0) {
-      return jsonResponse({ version: API_VERSION, error: "Unknown cursor", cursor: cursorParam }, 0);
+      /* A cursor we cannot place means the client's sync position is not
+         trustworthy, which is their problem to handle, not a 200 with an
+         error hidden in the body. */
+      return jsonResponse({ version: API_VERSION, error: "Unknown cursor", cursor: cursorParam }, 0, 400);
     }
     const slice = matched.slice(start, start + limit);
     const hasMore = start + slice.length < matched.length;
