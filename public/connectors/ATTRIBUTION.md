@@ -21,10 +21,13 @@ Sources:
   released under CC0 1.0 Universal. https://github.com/gilbarbara/logos
 - `sharepoint.svg` and `canva.svg` come from svgl, released under the MIT
   License. https://github.com/pheralb/svgl
+- Cursor Marketplace plugin logos come from cursor-cdn.com, the same assets
+  the marketplace serves.
+- Remaining marks are vendor site icons via Google's favicon service, or
+  come from the botdirectory.ai repository (MIT).
 - The remaining files were added by hand.
 
-Eight connectors still render as a monogram: Outlook Calendar, eToro,
-Webull, Interactive Brokers, S&P Global, Gamma, HyperFrames by HeyGen and
-Meltwater. No permissively licensed set carries them. Outlook Calendar in
-particular keeps a monogram on purpose, because reusing the Outlook mail
-mark for it would be wrong rather than merely plain.
+Every connector in the catalog now carries a mark. Where no permissively
+licensed icon set had one, the mark is the vendor's own site icon, fetched
+from a favicon service at 128px. Those are lower fidelity than a real brand
+SVG and should be replaced with vendor press art as it becomes available.
