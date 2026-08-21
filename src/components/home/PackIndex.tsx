@@ -15,7 +15,21 @@ import { en } from "@/lib/messages/en";
 import { isExample, isVerified, type Pack } from "@/lib/types";
 import { resolveConnector, resolveConnectors } from "@/lib/connectors";
 
-type View = "table" | "cards";
+/*
+ * Three index layouts, one filter model.
+ *   ledger   grouped hairline rows. Densest, closest to the house style.
+ *   columns  a real table: team, category, bots, connectors. F-pattern,
+ *            titles left, metadata secondary, best for comparing.
+ *   cards    two-up with the tagline visible. Browsing rather than looking
+ *            something up.
+ */
+type View = "ledger" | "columns" | "cards";
+
+const VIEWS: { id: View; label: string }[] = [
+  { id: "ledger", label: "Ledger" },
+  { id: "columns", label: "Columns" },
+  { id: "cards", label: "Cards" },
+];
 
 function matchesQuery(pack: Pack, q: string): boolean {
   if (!q) return true;
@@ -46,7 +60,7 @@ export function PackIndex({
   const sectionParam = params.get("category") ?? params.get("section") ?? "all";
   const integrationParam = params.get("integration") ?? "all";
   const sortParam = params.get("sort") === "name" ? "name" : "newest";
-  const [view, setView] = useState<View>("table");
+  const [view, setView] = useState<View>("ledger");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState<string | null>(null);
 
@@ -144,30 +158,58 @@ export function PackIndex({
             <option value="newest">{en.home.sortNewest}</option>
             <option value="name">{en.home.sortName}</option>
           </select>
-          <button type="button" className={`filter-chip${view === "table" ? " is-on" : ""}`} onClick={() => setView("table")}>{en.home.viewTable}</button>
-          <button type="button" className={`filter-chip${view === "cards" ? " is-on" : ""}`} onClick={() => setView("cards")}>{en.home.viewCards}</button>
+          {VIEWS.map((v) => (
+            <button
+              key={v.id}
+              type="button"
+              className={`filter-chip${view === v.id ? " is-on" : ""}`}
+              aria-pressed={view === v.id}
+              onClick={() => setView(v.id)}
+            >
+              {v.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {view === "table" ? (
+      {view === "columns" ? (
+        <div className="idx-cols" role="table" aria-label={en.home.indexTitle}>
+          <div className="idx-colhead" role="row">
+            <span role="columnheader">{en.home.colTeam}</span>
+            <span role="columnheader">{en.home.colCategory}</span>
+            <span role="columnheader" className="idx-num">{en.home.colBots}</span>
+            <span role="columnheader">{en.home.colConnectors}</span>
+          </div>
+          {sorted.map((pack) => (
+            <Link key={pack.slug} href={`/teams/${pack.slug}`} className="idx-colrow" role="row">
+              <span className="idx-colname" role="cell">{pack.name}</span>
+              <span className="idx-colcat" role="cell">{pack.section}</span>
+              <span className="idx-num" role="cell">{pack.bots}</span>
+              <span role="cell"><ConnectorRow names={pack.connectors} size={15} /></span>
+            </Link>
+          ))}
+        </div>
+      ) : view === "cards" ? (
+        <div className="idx-cards">
+          {sorted.map((pack) => (
+            <Link key={pack.slug} href={`/teams/${pack.slug}`} className="idx-card">
+              <span className="idx-card-cat">{pack.section}</span>
+              <span className="idx-card-name">{pack.name}</span>
+              <span className="idx-card-tag">{pack.tagline}</span>
+              <span className="idx-card-foot">
+                <ConnectorRow names={pack.connectors} size={15} />
+                <span className="idx-card-bots">{`${pack.bots} Bots`}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
+      ) : (
         <div className="pack-table">
           {sorted.map((pack) => (
             <PackExpandable
               key={pack.slug}
               pack={pack}
               variant="row"
-              open={open === pack.slug}
-              onToggle={() => setOpen(open === pack.slug ? null : pack.slug)}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="pack-grid">
-          {sorted.map((pack) => (
-            <PackExpandable
-              key={pack.slug}
-              pack={pack}
-              variant="card"
               open={open === pack.slug}
               onToggle={() => setOpen(open === pack.slug ? null : pack.slug)}
             />
@@ -213,7 +255,6 @@ function PackExpandable({
             <ConnectorRow names={pack.connectors} labeled size={16} />
             <span className="inline-flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
               {verified ? <VerifiedChip /> : null}
-              <span className="chip">{example ? en.home.exampleBadge : en.home.liveBadge}</span>
             </span>
           </div>
         </div>

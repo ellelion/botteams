@@ -1279,3 +1279,117 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .index-select:hover { color: var(--ink); border-color: var(--accent); }
 .index-select:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+
+/* ── Team index layouts ───────────────────────────────────────────────
+   Columns is a real table: titles left and metadata secondary, per the
+   F-pattern, so a reader compares down one column instead of re-reading
+   each row. Cards trade density for the tagline, which is the only place
+   the index says what a team actually does. */
+.idx-cols { display: grid; }
+.idx-colhead,
+.idx-colrow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.9fr) 46px minmax(0, 1.6fr);
+  gap: 14px;
+  align-items: center;
+}
+.idx-colhead {
+  padding: 0 8px 8px;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--muted);
+  font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.idx-colrow {
+  padding: 10px 8px;
+  margin: 0 -8px;
+  border-bottom: 1px solid var(--line);
+  border-radius: 8px;
+  color: inherit;
+  min-height: 44px;
+  transition: background .14s ease;
+}
+.idx-colrow:hover { background: var(--surface); }
+.idx-colname {
+  font-family: "General Sans", system-ui, sans-serif;
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.idx-colrow:hover .idx-colname { color: var(--accent-text); }
+.idx-colcat {
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.idx-num {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.idx-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: 10px;
+}
+.idx-card {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 15px 15px 13px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: inherit;
+  transition: border-color .16s ease, transform .16s ease;
+}
+.idx-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.idx-card-cat {
+  color: var(--accent-text);
+  font: 500 0.52rem/1 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.idx-card-name {
+  font-family: "General Sans", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.idx-card-tag {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.idx-card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 4px;
+}
+.idx-card-bots { color: var(--muted); font-size: 0.66rem; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 720px) {
+  /* Category and count drop out before the connectors do: at this width
+     the reader is looking for a name, not comparing metadata. */
+  .idx-colhead { display: none; }
+  .idx-colrow { grid-template-columns: minmax(0, 1fr) auto; row-gap: 6px; }
+  .idx-colrow .idx-colcat { display: none; }
+  .idx-cards { grid-template-columns: 1fr; }
+}
