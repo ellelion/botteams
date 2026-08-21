@@ -788,31 +788,136 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-bottom-color: var(--ink);
 }
 
-.cat-wrap {
+/* ── Browsing 26 categories ───────────────────────────────────────────
+   Three presentations, one filter. Set inline as uppercase labels they
+   wrapped to three lines and read as a masthead rather than a control, so
+   each of these gives the list a shape instead of a paragraph. */
+.browse-pick {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0 0.15rem;
-  margin: 0 0 14px;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 12px;
 }
-.cat-chip {
-  display: inline;
-  padding: 0;
+.browse-pick-label {
+  color: var(--muted);
+  font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.browse-pick-btn {
+  padding: 0.2rem 0;
   border: 0;
+  border-bottom: 1px solid transparent;
   background: transparent;
   color: var(--muted);
-  font: 500 0.55rem/1.6 var(--font-outfit), system-ui, sans-serif;
+  font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   cursor: pointer;
 }
-.cat-chip + .cat-chip::before {
-  content: "·";
-  margin: 0 0.45rem 0 0.3rem;
-  color: var(--line-strong);
+.browse-pick-btn:hover { color: var(--accent-text); }
+.browse-pick-btn.is-on { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* Rail: one line, scrolled sideways, every category still reachable. */
+.cat-rail {
+  margin: 0 0 16px;
+  /* Bleed the scroll edges into the page gutter so a clipped pill reads
+     as "more this way" rather than as a broken row. */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 22px), transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 22px), transparent);
 }
-.cat-chip:hover { color: var(--accent-text); }
-.cat-chip.is-on { color: var(--ink); }
+.cat-rail::-webkit-scrollbar { display: none; }
+.cat-rail-track {
+  display: flex;
+  gap: 7px;
+  width: max-content;
+  padding: 2px 22px 2px 14px;
+}
+.cat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--page);
+  color: var(--muted-strong);
+  font-size: 0.76rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color .14s ease, border-color .14s ease, background .14s ease;
+}
+.cat-pill:hover { color: var(--ink); border-color: var(--accent); }
+.cat-pill:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.cat-pill.is-on {
+  color: var(--page);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.cat-pill-icon { display: inline-flex; width: 15px; height: 15px; flex: none; opacity: .85; }
+.cat-pill-icon .line-icon { width: 15px; height: 15px; color: currentColor; }
+.cat-pill-count {
+  color: var(--muted);
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+}
+.cat-pill.is-on .cat-pill-count { color: var(--page); opacity: .7; }
+
+/* Tiles: the category is the thing being chosen, not a filter on a list. */
+.cat-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(146px, 1fr));
+  gap: 8px;
+  margin: 0 0 18px;
+}
+.cat-tile {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .14s ease, color .14s ease;
+}
+.cat-tile:hover { border-color: var(--accent); color: var(--ink); }
+.cat-tile:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.cat-tile.is-on { border-color: var(--ink); color: var(--ink); }
+.cat-tile-icon { display: inline-flex; width: 17px; height: 17px; flex: none; color: var(--accent-text); }
+.cat-tile-icon .line-icon { width: 17px; height: 17px; }
+.cat-tile-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cat-tile-count {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The title and its controls. They share a baseline while they fit and
+   stack when they do not, because three selects plus three view chips is
+   more than a narrow column can hold on one line. */
+.index-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 12px;
+}
+.filter-views { display: inline-flex; align-items: center; gap: 14px; }
 
 .index-row {
   padding: 0.35rem 0;
@@ -831,6 +936,44 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   letter-spacing: -0.02em;
 }
 .index-name:hover { font-style: italic; }
+.index-tagline {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  /* One line. The row is an index entry, not a summary; the full tagline
+     is on the team page the arrow points at. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The arrow out of a row. Dim until the row is hovered, so 130 of them do
+   not read as 130 pieces of chrome. */
+.row-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  color: var(--line-strong);
+  transition: color .14s ease;
+}
+.row-arrow-link {
+  width: 28px;
+  height: 28px;
+  margin-top: 1px;
+  border-radius: 8px;
+}
+.row-arrow-glyph { transition: transform .14s ease; }
+.index-row:hover .row-arrow,
+.idx-colrow:hover .row-arrow { color: var(--accent-text); }
+.index-row:hover .row-arrow-glyph,
+.idx-colrow:hover .row-arrow-glyph { transform: translateX(2px); }
+.row-arrow-link:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+  color: var(--accent-text);
+}
 .chevron {
   display: inline-flex;
   align-items: center;
@@ -1257,28 +1400,100 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cx-facet.is-on .cx-facet-icon { opacity: 1; }
 .cx-group-icon { width: 13px; height: 13px; }
 
-/* Index filter selects. Native control, themed so it does not arrive as a
-   browser default in the middle of a themed row. */
-.index-select {
-  height: 26px;
-  padding: 0 22px 0 8px;
+/* ── Select ───────────────────────────────────────────────────────────
+   The popup a native <select> cannot give us: our paper, our hairlines,
+   our type, and a connector mark beside each option. */
+.sel { position: relative; }
+.sel-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 15rem;
+  padding: 5px 9px 5px 11px;
   border: 1px solid var(--line);
-  border-radius: 9999px;
-  background: transparent;
-  color: var(--muted);
-  font: 500 0.55rem/1 var(--font-outfit), system-ui, sans-serif;
+  border-radius: 999px;
+  background: var(--page);
+  color: var(--muted-strong);
+  font: 500 0.62rem/1 var(--font-outfit), system-ui, sans-serif;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  appearance: none;
-  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
-  background-position: right 11px center, right 7px center;
-  background-size: 4px 4px, 4px 4px;
-  background-repeat: no-repeat;
-  max-width: 150px;
+  transition: color .14s ease, border-color .14s ease;
 }
-.index-select:hover { color: var(--ink); border-color: var(--accent); }
-.index-select:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.sel-button:hover { color: var(--ink); border-color: var(--accent); }
+.sel-button.is-open { color: var(--ink); border-color: var(--accent); }
+.sel-button:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.sel-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sel-caret { flex: none; margin-left: auto; opacity: .65; transition: transform .16s ease; }
+.sel-button.is-open .sel-caret { transform: rotate(180deg); }
+.sel-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+.sel-icon img,
+.sel-icon svg { width: 16px; height: 16px; }
+
+.sel-list {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 100%;
+  width: max-content;
+  max-width: min(20rem, 80vw);
+  max-height: 19rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 5px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--page);
+  box-shadow: 0 18px 40px -22px rgba(0, 0, 0, .45), 0 2px 8px -4px rgba(0, 0, 0, .18);
+  animation: sel-in .12s ease-out;
+}
+.sel-list.is-end { left: auto; right: 0; }
+@keyframes sel-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sel-list { animation: none; }
+  .sel-caret { transition: none; }
+}
+.sel-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  border-radius: 8px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+.sel-option[data-active="true"] { background: var(--surface); color: var(--ink); }
+.sel-option.is-selected { color: var(--ink); }
+.sel-tick { display: inline-flex; width: 12px; flex: none; color: var(--accent-text); }
+.sel-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sel-count {
+  flex: none;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+}
 
 /* ── Team index layouts ───────────────────────────────────────────────
    Columns is a real table: titles left and metadata secondary, per the
@@ -1289,8 +1504,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .idx-colhead,
 .idx-colrow {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.9fr) 46px minmax(0, 1.6fr);
-  gap: 14px;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 0.7fr) 34px minmax(0, 1.05fr) 20px;
+  gap: 12px;
   align-items: center;
 }
 .idx-colhead {
@@ -1311,10 +1526,24 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   transition: background .14s ease;
 }
 .idx-colrow:hover { background: var(--surface); }
+.idx-colcell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
 .idx-colname {
   font-family: "General Sans", system-ui, sans-serif;
   font-size: 0.92rem;
   letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.idx-coltag {
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1389,7 +1618,12 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   /* Category and count drop out before the connectors do: at this width
      the reader is looking for a name, not comparing metadata. */
   .idx-colhead { display: none; }
-  .idx-colrow { grid-template-columns: minmax(0, 1fr) auto; row-gap: 6px; }
+  .idx-colrow { grid-template-columns: minmax(0, 1fr) auto 22px; row-gap: 6px; }
   .idx-colrow .idx-colcat { display: none; }
+  /* Name, count, arrow on the first line; connectors span the second. */
+  .idx-colrow .idx-colcell { grid-area: 1 / 1; }
+  .idx-colrow .idx-num { grid-area: 1 / 2; }
+  .idx-colrow .row-arrow { grid-area: 1 / 3; }
+  .idx-colrow .idx-colconn { grid-area: 2 / 1 / 3 / 4; }
   .idx-cards { grid-template-columns: 1fr; }
 }
