@@ -593,10 +593,16 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-top: 1px solid var(--line);
 }
 
+/* Connector marks: a logo bound to its own name, repeated across a row.
+   The two gaps carry the grouping and must stay different. 6px binds a
+   logo to its label; 15px separates one connector from the next. When
+   both were 6px the labelled row read as one long run of words instead
+   of three pairs. */
 .connector-row {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 5px 15px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -605,12 +611,14 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  line-height: 0;
 }
+/* Logos ship at mixed aspect ratios, so every mark gets the same square
+   box and is contained inside it. That keeps the left edges aligned when
+   the names sit next to them. */
 .connector-mark {
   display: block;
-  width: 16px;
-  height: 16px;
+  width: var(--connector-size, 16px);
+  height: var(--connector-size, 16px);
   object-fit: contain;
   flex: none;
 }
@@ -618,18 +626,22 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: var(--connector-size, 16px);
+  height: var(--connector-size, 16px);
+  flex: none;
   border: 1px solid var(--line-strong);
   color: var(--ink);
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-size: 9px;
+  font-size: calc(var(--connector-size, 16px) * 0.56);
   font-weight: 600;
   line-height: 1;
   text-transform: uppercase;
 }
 .connector-name {
   font-size: 0.78rem;
-  line-height: 1.2;
+  line-height: 1.25;
   color: var(--ink-soft);
+  white-space: nowrap;
 }
 
 .eyebrow {
