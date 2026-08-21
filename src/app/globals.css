@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+/* Display face. x.ai runs Universal Sans, a paid licence we do not hold.
+   General Sans is the closest free grotesque: same geometric bowls and
+   tight apertures, where Inter Tight was neutral to the point of generic.
+   Self-hosted from Fontshare under the ITF Free Font Licence, which
+   covers commercial use. */
+@font-face {
+  font-family: "General Sans";
+  src: url("/fonts/general-sans-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "General Sans";
+  src: url("/fonts/general-sans-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "General Sans";
+  src: url("/fonts/general-sans-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── Ledger design system tokens ── */
 :root {
   color-scheme: light;
@@ -52,7 +79,7 @@
   --color-oxblood: var(--accent);
   --color-line: var(--line);
   --font-sans: var(--font-outfit);
-  --font-display: var(--font-display-sans);
+  --font-display: "General Sans", system-ui, sans-serif;
 }
 
 * {
@@ -184,7 +211,7 @@ a {
 }
 
 .font-display {
-  font-family: var(--font-display-sans), system-ui, sans-serif;
+  font-family: "General Sans", system-ui, sans-serif;
   font-weight: 500;
   letter-spacing: -0.02em;
 }
@@ -589,7 +616,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-bottom: 1px solid var(--line);
 }
 .pack-card h3 {
-  font-family: var(--font-display-sans), system-ui, sans-serif;
+  font-family: "General Sans", system-ui, sans-serif;
   font-size: 1.05rem;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -681,7 +708,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 
 .section-title {
-  font-family: var(--font-display-sans), system-ui, sans-serif;
+  font-family: "General Sans", system-ui, sans-serif;
   font-size: 1.15rem;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -798,7 +825,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   cursor: pointer;
 }
 .index-name {
-  font-family: var(--font-display-sans), system-ui, sans-serif;
+  font-family: "General Sans", system-ui, sans-serif;
   font-size: 1.02rem;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -1186,7 +1213,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-top: 1px solid var(--line);
 }
 .cx-empty-title {
-  font-family: var(--font-display-sans), system-ui, sans-serif;
+  font-family: "General Sans", system-ui, sans-serif;
   font-size: 1.25rem;
   font-weight: 500;
   letter-spacing: -0.02em;

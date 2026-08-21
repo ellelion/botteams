@@ -17,7 +17,7 @@ export const ledger = {
   leader: "var(--leader)",
   /* Display face. Named "serif" for history; it is the geometric
      display sans now, matching x.ai's display/text split. */
-  serif: "var(--font-display-sans), system-ui, sans-serif",
+  serif: "\"General Sans\", system-ui, sans-serif",
   /* Monospace — the "software" voice. System stack, no web-font dependency. */
   mono: 'ui-monospace, "SF Mono", "SFMono-Regular", Menlo, "Cascadia Code", monospace',
 } as const;
