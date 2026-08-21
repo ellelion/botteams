@@ -57,7 +57,7 @@ export function HomePage({ teams }: { teams: Team[] }) {
                   <GrokBotMark size={22} animate />
                   <RevealText text={en.eyebrow} delay={0.05} step={0.016} className="block" />
                 </p>
-                <h1 className="font-display ledger-anim mx-auto mt-8 w-full max-w-full text-balance text-[clamp(1.65rem,3.4vw,2.75rem)] font-light leading-[1.05] tracking-[-0.02em]" style={{ fontFamily: ledger.serif, animationDelay: "0.55s" }}>
+                <h1 className="font-display ledger-anim mx-auto mt-8 w-full max-w-full text-balance text-[clamp(1.65rem,3.4vw,2.75rem)] font-light leading-[1.05] tracking-[-0.03em]" style={{ fontFamily: ledger.serif, animationDelay: "0.55s" }}>
                   {en.h1}
                 </h1>
                 <p className="ledger-anim mx-auto mt-6 max-w-md text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft, animationDelay: "0.75s" }}>
@@ -68,6 +68,11 @@ export function HomePage({ teams }: { teams: Team[] }) {
                     both jobs at once. */}
                 <p className="ledger-anim mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkFaint, animationDelay: "0.85s" }}>
                   <Link href="/?kind=bot#teams" className="accent-hover underline">{en.onRamp}</Link>
+                </p>
+                {/* We are wearing xAI's contrast. The disclaimer belongs
+                    where the headline is, not only in the footer. */}
+                <p className="ledger-anim home-disclaimer mx-auto mt-5" style={{ animationDelay: "0.9s" }}>
+                  {en.notAffiliated}
                 </p>
                 <p className="ledger-anim mx-auto mt-4 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label, animationDelay: "0.95s" }}>
                   {en.verified} <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>

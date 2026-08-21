@@ -6,7 +6,7 @@ import { APD_HOME, STRIPE_BEST_PRACTICES, XAI_DOCS, XAI_USE_CASE_GALLERY, site }
 
 export const metadata: Metadata = {
   title: "Team spec",
-  description: "Ellelion recipe format for Grok Bot company teams. Maps onto official Grok Bot nouns: Bot, group chat, routine, profile. Not an xAI file format.",
+  description: "Ellelion recipe format for Grok Bot company teams. Maps onto the Grok Bot nouns xAI documents: Bot, group chat, routine, profile. Not an xAI file format.",
   alternates: { canonical: `${site.url}/docs` },
 };
 
@@ -20,7 +20,7 @@ export default function DocsPage() {
           Team spec
         </h1>
         <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          This is Ellelion&apos;s recipe format for a company team. It is not an xAI file format. xAI did not author these teams. The YAML below is ours. The nouns it maps onto are official.
+          This is Ellelion&apos;s recipe format for a company team. It is not an xAI file format. xAI did not author these teams. The YAML below is ours. The nouns it maps onto are xAI&apos;s, documented by them.
         </p>
         <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
           Verified on <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
@@ -90,7 +90,7 @@ export default function DocsPage() {
         <p className="mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           A <strong>From xAI</strong> chip means the job is our write-up of one xAI publishes in its{" "}
           <a className="accent-hover underline underline-offset-2" href={XAI_USE_CASE_GALLERY} rel="nofollow noopener noreferrer">Grok Bot use-case gallery</a>.
-          It is sourcing and nothing more. It is not Official, it is not Verified, and xAI does not review, certify, or
+          It is sourcing and nothing more. It is not a certification, it is not Verified, and xAI does not review, endorse, or
           endorse anything on this shelf. The title and the category are theirs. The Bot, the connectors, the modes and the
           standing instructions are ours.
         </p>
@@ -108,7 +108,7 @@ export default function DocsPage() {
 
         <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Install notes</h2>
         <div className="mt-4 space-y-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          <p>A team is one markdown file under teams/, and a bot is one under bots/, both with YAML frontmatter. GitHub is the CMS. There are no accounts and no plugin API on this site.</p>
+          <p>A team is one markdown file under teams/, and a bot is one under bots/, both with YAML frontmatter. GitHub is the CMS. There are no accounts and no connector API on this site.</p>
           <p>A bot installer creates one Bot and its routines. It never asks for a group chat or a sidebar section, because neither means anything for a single Bot.</p>
           <p>Sidebar sections are a human action. In Grok Bot, use Move to, then New section, and name the section exactly as the team lists it.</p>
           <p>Skills cannot be attached at Bot create time. A team may point at references such as the <a className="accent-hover underline underline-offset-2" href={STRIPE_BEST_PRACTICES} rel="nofollow noopener">stripe-best-practices skill on Skillselion</a> or a plugin in the <a className="accent-hover underline underline-offset-2" href={APD_HOME} rel="nofollow noopener">Agent Plugins Directory</a>. Those are named destinations the team expects, not installs this site performs.</p>

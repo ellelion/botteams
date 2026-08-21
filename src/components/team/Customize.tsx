@@ -1,10 +1,12 @@
 "use client";
 
 import { Children, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
 import { VerifiedChip } from "@/components/VerifiedChip";
 import { FromXaiChip } from "@/components/FromXaiChip";
+import { ShareBar } from "@/components/team/ShareBar";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { botMarkStyle } from "@/lib/bot-icon";
 import { resolveConnector } from "@/lib/connectors";
@@ -54,6 +56,8 @@ export function Customize({
   children?: ReactNode;
 }) {
   const [sheet, setSheet] = useState<"customize" | null>(null);
+  /* Portals need a document, so nothing renders one until after hydration. */
+  const [mounted, setMounted] = useState(false);
   const [editing, setEditing] = useState(false);
   const [state, setState] = useState<CustomState>(() => defaultState(team));
   const [shared, setShared] = useState(false);
@@ -67,13 +71,16 @@ export function Customize({
      because arriving at someone's customized team and seeing the stock
      recipe would be a lie. */
   useEffect(() => {
+    /* Once, on mount. The server has no document and no hash, so reading
+       either any earlier would render one recipe and hydrate another. */
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
     const raw = window.location.hash.replace(/^#/, "");
     if (raw.startsWith(HASH_KEY)) {
       const payload = raw.slice(HASH_KEY.length);
       if (payload) {
         /* Once, on mount. The server cannot see the hash, so reading it
            any earlier would render one recipe and hydrate another. */
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setState(decodeState(team, payload));
         setEditing(true);
       }
@@ -550,8 +557,11 @@ export function Customize({
           {team.fromXai ? <FromXaiChip /> : null}
           {solo ? null : <VerifiedChip on={verdict.verified} />}
           <span className="rp-shape">{en.home.shape(team.bots, team.rooms.length)}</span>
+          <span className="rp-disclaimer">{en.notAffiliated}</span>
         </div>
       </header>
+
+      <ShareBar name={team.name} />
 
       {verdictPart}
       {overwritePart}
@@ -623,7 +633,8 @@ export function Customize({
 
       {/* Customize: a mode over the page, not a different page. Closing it
           leaves the URL exactly as it was. */}
-      {sheet !== null ? (
+      {sheet !== null && mounted
+        ? createPortal(
         <div className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-label={en.customize.title}>
           <button type="button" className="rp-scrim" aria-label={en.recipe.close} onClick={() => setSheet(null)} />
           <div className="rp-sheet">
@@ -641,8 +652,10 @@ export function Customize({
               {promptPart}
             </div>
           </div>
-        </div>
-      ) : null}
+        </div>,
+        document.body,
+      )
+        : null}
     </div>
   );
 }
