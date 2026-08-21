@@ -3,6 +3,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { ledger } from "@/lib/ledger-theme";
 import { DEFAULT_LIMIT, MAX_LIMIT } from "@/lib/api-teams";
+import { PARAMS } from "@/lib/openapi";
 import { listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
 
@@ -22,15 +23,6 @@ export default function ApiDocsPage() {
   const total = listTeams().length;
   const base = site.url;
 
-  const params: [string, string][] = [
-    ["q", "Free text. Matches name, tagline, category, slug, connector, Bot name, contributor, and the installer prompt."],
-    ["category", "Exact category, case-insensitive. One of the sections listed on the shelf."],
-    ["integration", "Exact connector, case-insensitive and alias-aware. “Calendar” and “Google Calendar” match the same teams."],
-    ["page", "Page number, 1-based. Default 1."],
-    ["limit", `Teams per page. Default ${DEFAULT_LIMIT}, maximum ${MAX_LIMIT}.`],
-    ["sort", "newest (default) or name. Ignored in cursor mode, which is always oldest first."],
-    ["cursor", "Pass start to begin an append-safe sync, then follow sync.nextCursor."],
-  ];
 
   return (
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
@@ -53,6 +45,7 @@ export default function ApiDocsPage() {
           <dl className="mt-4">
             {[
               ["GET /api/teams", "Filtered and paginated. The endpoint you want in almost every case."],
+              ["GET /openapi.json", "The same contract as OpenAPI 3.1, built from the types the route returns."],
             ].map(([route, note]) => (
               <div key={route} className="hairline-row py-3">
                 <dt className="text-[0.82rem]" style={{ fontFamily: ledger.mono, color: ledger.ink }}>{route}</dt>
@@ -67,13 +60,31 @@ export default function ApiDocsPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Machine contract</h2>
+          <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+            OpenAPI 3.1, generated from the same types this endpoint returns rather than written alongside them, so it
+            cannot drift from the response. Defaults on this page and in the document come from one list.
+          </p>
+          <p className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.8rem]">
+            <a className="accent-hover underline" href="/openapi.json">Download OpenAPI 3.1 (JSON)</a>
+            <a className="accent-hover underline" href="/openapi.yaml">YAML</a>
+          </p>
+          <p className="mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+            Default limit {DEFAULT_LIMIT}, maximum {MAX_LIMIT}. Values outside the range clamp rather than error.
+          </p>
+        </section>
+
+        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Parameters</h2>
           <table className="spec-table mt-4">
             <tbody>
-              {params.map(([name, note]) => (
-                <tr key={name}>
-                  <th><code>{name}</code></th>
-                  <td>{note}</td>
+              {/* Read from the same list the OpenAPI document is built
+                  from, so this table cannot describe a parameter the spec
+                  does not, or miss one it does. */}
+              {PARAMS.map((p) => (
+                <tr key={p.name}>
+                  <th><code>{p.name}</code></th>
+                  <td>{p.description}</td>
                 </tr>
               ))}
             </tbody>

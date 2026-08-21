@@ -29,4 +29,10 @@ export const XAI_DOCS = {
   bots: "https://docs.x.ai/grok-bot/bots",
   chat: "https://docs.x.ai/grok-bot/chat-and-collaboration",
   routines: "https://docs.x.ai/grok-bot/skills-routines-and-automations",
+  useCases: "https://docs.x.ai/grok-bot/use-cases",
 } as const;
+
+/* xAI's public gallery of Grok Bot use cases. Cited on every recipe we
+   shelf from it. Sourcing, never endorsement: nothing on this site is
+   certified by xAI. */
+export const XAI_USE_CASE_GALLERY = "https://x.ai/bot/use-cases";

@@ -119,8 +119,9 @@ export const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type",
 } as const;
 
-export function jsonResponse(body: unknown, cacheSeconds = 60): Response {
+export function jsonResponse(body: unknown, cacheSeconds = 60, status = 200): Response {
   return new Response(JSON.stringify(body, null, 2), {
+    status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds}, stale-while-revalidate=300`,
