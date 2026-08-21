@@ -1,7 +1,13 @@
 export type Theme = "light" | "dark";
 
-export const THEME_STORAGE_KEY = "grokbotteams-theme";
+/* Bumped from grokbotteams-theme. The old key was written by a bootstrap
+   that defaulted to dark, so a browser holding "dark" recorded the old
+   default rather than a choice anyone made. A new key drops that leftover:
+   a first visit and a stale visit both land on light, and the toggle
+   writes a value that really is a preference. */
+export const THEME_STORAGE_KEY = "grokbotteams-theme-v2";
 export const ACCENT_STORAGE_KEY = "grokbotteams-accent";
+export const DEFAULT_THEME: Theme = "light";
 export const DEFAULT_ACCENT = "#ff6308";
 
 export const ACCENT_PALETTE = [
@@ -71,5 +77,5 @@ export function themeColorFor(theme: Theme): string {
 
 export function createThemeBootstrapScript(): string {
   const palette = JSON.stringify([...ACCENT_PALETTE]);
-  return `(function(){var p=${palette},d="${DEFAULT_ACCENT}",t="dark",a=d;try{var st=localStorage.getItem("${THEME_STORAGE_KEY}");if(st==="light"||st==="dark")t=st;var sa=(localStorage.getItem("${ACCENT_STORAGE_KEY}")||"").toLowerCase();if(p.indexOf(sa)>=0)a=sa;else if(sa)localStorage.removeItem("${ACCENT_STORAGE_KEY}")}catch(e){}var page=t==="dark"?"#0a0a0a":"#fcfcfb",ink=t==="dark"?"#ffffff":"#111111";function rgb(h){return[1,3,5].map(function(i){return parseInt(h.slice(i,i+2),16)})}function lum(h){var c=rgb(h).map(function(v){v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)});return.2126*c[0]+.7152*c[1]+.0722*c[2]}function cr(x,y){var X=lum(x),Y=lum(y);return(Math.max(X,Y)+.05)/(Math.min(X,Y)+.05)}function mix(x,y,n){var X=rgb(x),Y=rgb(y);return"#"+X.map(function(v,i){return Math.round(v+(Y[i]-v)*n).toString(16).padStart(2,"0")}).join("")}var at=ink;for(var i=0;i<=20;i++){var q=mix(a,ink,i/20);if(cr(q,page)>=4.5){at=q;break}}var on=cr("#0a0a0a",a)>=4.5?"#0a0a0a":cr("#f5f5f3",a)>=4.5?"#f5f5f3":cr("#000000",a)>=cr("#ffffff",a)?"#000000":"#ffffff";var root=document.documentElement;root.dataset.theme=t;root.style.setProperty("--accent",a);root.style.setProperty("--accent-text",at);root.style.setProperty("--on-accent",on);var meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",page)})();`;
+  return `(function(){var p=${palette},d="${DEFAULT_ACCENT}",t="${DEFAULT_THEME}",a=d;try{var st=localStorage.getItem("${THEME_STORAGE_KEY}");if(st==="light"||st==="dark")t=st;var sa=(localStorage.getItem("${ACCENT_STORAGE_KEY}")||"").toLowerCase();if(p.indexOf(sa)>=0)a=sa;else if(sa)localStorage.removeItem("${ACCENT_STORAGE_KEY}")}catch(e){}var page=t==="dark"?"#0a0a0a":"#fcfcfb",ink=t==="dark"?"#ffffff":"#111111";function rgb(h){return[1,3,5].map(function(i){return parseInt(h.slice(i,i+2),16)})}function lum(h){var c=rgb(h).map(function(v){v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)});return.2126*c[0]+.7152*c[1]+.0722*c[2]}function cr(x,y){var X=lum(x),Y=lum(y);return(Math.max(X,Y)+.05)/(Math.min(X,Y)+.05)}function mix(x,y,n){var X=rgb(x),Y=rgb(y);return"#"+X.map(function(v,i){return Math.round(v+(Y[i]-v)*n).toString(16).padStart(2,"0")}).join("")}var at=ink;for(var i=0;i<=20;i++){var q=mix(a,ink,i/20);if(cr(q,page)>=4.5){at=q;break}}var on=cr("#0a0a0a",a)>=4.5?"#0a0a0a":cr("#f5f5f3",a)>=4.5?"#f5f5f3":cr("#000000",a)>=cr("#ffffff",a)?"#000000":"#ffffff";var root=document.documentElement;root.dataset.theme=t;root.style.setProperty("--accent",a);root.style.setProperty("--accent-text",at);root.style.setProperty("--on-accent",on);var meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",page)})();`;
 }
