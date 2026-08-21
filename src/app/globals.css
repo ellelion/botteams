@@ -22,7 +22,7 @@
   --surface: #111111;
   --surface-elevated: #1a1a1a;
   --ink: #ffffff;
-  --ink-soft: #d6d9de;
+  --ink-soft: #a8abb2;
   --muted: #7d8187;
   --muted-strong: #9aa0a8;
   --line: #1f2228;
@@ -46,6 +46,29 @@
   --oxblood: var(--accent);
   --oxblood-soft: var(--accent-soft);
   --green: var(--status-live);
+
+  /* ── Air, pills, quiet motion ──────────────────────────────────────
+     One duration and one curve for the whole site. 200ms on a plain
+     ease-out: fast enough to feel immediate, slow enough to be seen,
+     and with no overshoot anywhere. Springs and bounces belong to a
+     different brand. */
+  --dur: 200ms;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Two radii and nothing between them. Every control is a pill; every
+     panel is the soft rectangle. A 12px "slightly rounded box" is the
+     shape this design does not use. */
+  --r-pill: 9999px;
+  --r-card: 28px;
+  --r-inner: 16px;
+  /* A card is a lighter plane, not a bordered box: one step off the
+     page, which separates it without a hairline. */
+  --card: #151515;
+  /* Shadow is reserved for things that genuinely float above the page,
+     which is the Customize sheet and the two menus. Never a card,
+     never a pill, never a row. */
+  --shadow-float: 0 24px 64px -12px rgba(0, 0, 0, 0.72), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  /* Section rhythm. A desktop can afford to breathe; a phone cannot. */
+  --sec-y: 7rem;
 }
 
 [data-theme="light"] {
@@ -68,6 +91,9 @@
   --pill-fill: #0a0a0a;
   --pill-fill-ink: #ffffff;
   --pill-line: rgba(10, 10, 10, 0.28);
+  /* Paper white, pale grey card. Not cream, and not a second beige. */
+  --card: #f4f4f6;
+  --shadow-float: 0 24px 64px -12px rgba(10, 10, 10, 0.16), 0 0 0 1px rgba(10, 10, 10, 0.06);
 }
 
 :root {
@@ -97,15 +123,18 @@ body {
   padding-bottom: 14px;
   background: var(--page);
   color: var(--muted);
-  font-size: 0.6rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  font-size: 0.9375rem;
+  letter-spacing: -0.005em;
 }
+
+.site-masthead a:hover { color: var(--ink); }
 
 .site-wordmark {
   flex: none;
   white-space: nowrap;
+  color: var(--ink);
 }
+.site-wordmark-text { font-weight: 500; letter-spacing: -0.012em; }
 
 .site-masthead-actions {
   display: flex;
@@ -124,12 +153,12 @@ body {
 @media (max-width: 640px) {
   :root {
     --masthead-h: 56px;
+    --sec-y: 2rem;
   }
 
   .site-masthead {
     gap: 10px;
-    font-size: 0.55rem;
-    letter-spacing: 0.16em;
+    font-size: 0.875rem;
   }
 
   .site-masthead-actions {
@@ -157,13 +186,18 @@ body {
     gap: 12px;
     min-width: 0;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
     scrollbar-width: none;
+    /* Without this the nav simply stops after Spec and reads as the
+       whole menu. The fade says there is more to the right. */
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 26px), transparent);
+            mask-image: linear-gradient(90deg, #000 calc(100% - 26px), transparent);
   }
   .site-masthead-nav::-webkit-scrollbar { display: none; }
   .site-masthead-actions { min-width: 0; }
   .theme-controls { gap: 5px; }
   .site-masthead { gap: 8px; }
-  .site-masthead-nav { gap: 10px; letter-spacing: 0.1em; }
+  .site-masthead-nav { gap: 14px; }
   .site-masthead-actions { gap: 8px; }
 }
 
@@ -175,7 +209,7 @@ body {
 .font-display {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .theme-controls { display: inline-flex; gap: 6px; flex: none; }
@@ -185,23 +219,26 @@ body {
   width: 34px; height: 34px; padding: 0;
   border: 1px solid var(--pill-line); background: transparent;
   color: var(--ink); cursor: pointer; font: 500 14px/1 var(--font-geist-mono);
-  border-radius: 9999px;
-  transition: border-color .14s ease, background .14s ease;
+  border-radius: var(--r-pill);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
 .theme-control:hover { border-color: var(--ink); background: var(--surface-elevated); }
-.theme-accent-dot { width: 13px; height: 13px; border-radius: 9999px; background: var(--accent); }
+.theme-accent-dot { width: 13px; height: 13px; border-radius: var(--r-pill); background: var(--accent); }
 .theme-accent-popover {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 80;
   display: grid; grid-template-columns: repeat(6, 22px); gap: 6px;
-  padding: 10px; background: var(--surface); border: 1px solid var(--line);
-  border-radius: 14px;
+  padding: 10px; border: 0;
+  border-radius: var(--r-inner);
   background: var(--surface-elevated);
+  box-shadow: var(--shadow-float);
+  animation: sel-in var(--dur) var(--ease);
 }
 .theme-accent-swatch {
   width: 22px; height: 22px; padding: 0; border: 1px solid var(--line-strong);
-  cursor: pointer; transition: transform .1s ease;
+  border-radius: var(--r-pill);
+  cursor: pointer; transition: transform var(--dur) var(--ease);
 }
-.theme-accent-swatch:hover { transform: scale(1.1); }
+.theme-accent-swatch:hover { transform: scale(1.12); }
 
 /* Text CTA variant: same chrome as .theme-control, auto width so labels
    like "Copy installer prompt" are a real button, not a 34px square. */
@@ -211,7 +248,7 @@ body {
   min-width: 0;
   height: 34px;
   padding: 0 16px;
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   border-color: transparent;
   background: var(--pill-fill);
   color: var(--pill-fill-ink);
@@ -227,21 +264,27 @@ body {
   filter: brightness(0.88);
   border-color: transparent;
 }
+.theme-control-label { transition: filter var(--dur) var(--ease); }
 
 /* Phone-sized controls. Must live AFTER the base .theme-control rule above:
    same specificity, so source order decides the winner. This also sets the
    masthead's height, which --masthead-h mirrors. */
 @media (max-width: 640px) {
+  .site-masthead {
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
   .theme-control {
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
   }
 
   .theme-control.theme-control-label,
   .theme-control-label {
     width: auto;
-    height: 28px;
-    padding: 0 12px;
+    height: 34px;
+    padding: 0 14px;
   }
 
   .theme-accent-popover {
@@ -501,8 +544,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .installer-prompt {
   max-height: 24rem;
   overflow: auto;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  border: 0;
+  border-radius: var(--r-inner);
+  background: var(--card);
 }
 /* The contribute sample is a whole team file, and the point of showing it
    is that it is short. A scrollbar on twenty lines makes it look long. */
@@ -522,11 +566,13 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: auto;
-  padding: 0;
+  min-height: 26px;
+  padding: 0 10px;
   border: 0;
-  background: transparent;
+  border-radius: var(--r-pill);
+  background: var(--surface);
   color: var(--muted);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
   font-size: 0.55rem;
   font-weight: 500;
   letter-spacing: 0.16em;
@@ -534,11 +580,13 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   white-space: nowrap;
 }
 .chip-verified { color: var(--status-live); }
-.chip-unverified { color: var(--muted); border-style: dashed; }
+.chip-unverified { color: var(--muted); }
 /* Sourcing, not endorsement, so it reads as a citation rather than a
    seal: no fill, no accent, just a bordered label that links out. */
 .chip-xai { color: var(--muted-strong); }
-.chip-xai:hover { color: var(--ink); border-color: var(--accent); }
+.chip-xai:hover { color: var(--ink); background: var(--surface-elevated); }
+/* The only chip that is a link, so the only one that needs a thumb. */
+@media (max-width: 640px) { .chip-xai { min-height: 34px; } }
 .chip-beta {
   color: var(--beta);
   letter-spacing: 0.16em;
@@ -554,26 +602,29 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .filter-chip {
   display: inline-flex;
   align-items: center;
-  height: auto;
-  padding: 0.2rem 0;
+  min-height: 32px;
+  padding: 0 14px;
   border: 0;
-  border-bottom: 1px solid transparent;
-  background: transparent;
-  color: var(--muted);
-  font: 500 0.55rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.16em;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--muted-strong);
+  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
+/* Selected is a solid lozenge: white on the dark theme, black on the
+   light one, which is the only state that needs to shout. */
 .filter-chip.is-on {
+  color: var(--page);
+  background: var(--ink);
+}
+.filter-chip:hover {
   color: var(--ink);
-  background: transparent;
-  border-bottom-color: var(--ink);
+  background: var(--surface-elevated);
 }
-.filter-chip:hover,
-.filter-chip:focus-visible {
-  color: var(--accent-text);
-}
+.filter-chip.is-on:hover { color: var(--page); background: var(--ink); opacity: 0.88; }
 
 .team-grid {
   display: grid;
@@ -585,7 +636,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   flex-direction: column;
   gap: 6px;
   min-height: 100%;
-  padding: 0.45rem 0;
+  padding: 14px 0;
   background: transparent;
   border: 0;
   border-bottom: 1px solid var(--line);
@@ -691,8 +742,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 .bot-row {
   display: grid;
-  gap: 4px;
-  padding: 0.35rem 0;
+  gap: 5px;
+  padding: 13px 0;
   border-top: 1px solid var(--line);
 }
 
@@ -704,7 +755,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .spec-table th,
 .spec-table td {
   text-align: left;
-  padding: 12px 0;
+  padding: 14px 0;
   border-bottom: 1px solid var(--line);
   vertical-align: top;
 }
@@ -746,21 +797,25 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   height: 18px;
 }
 
+/* The index search matches the connector search: a filled pill field,
+   not a hairline underline sitting on top of a row of pills. */
 .search-wrap { display: block; margin-bottom: 14px; }
 .search-input {
   width: 100%;
-  height: 36px;
-  padding: 0;
+  min-height: 44px;
+  padding: 0 16px;
   border: 0;
-  border-bottom: 1px solid var(--line);
-  background: transparent;
+  border-radius: var(--r-pill);
+  background: var(--card);
   color: var(--ink);
-  font: 400 0.9rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  font: 400 0.85rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  transition: background var(--dur) var(--ease);
 }
 .search-input::placeholder { color: var(--muted); }
 .search-input:focus {
-  outline: none;
-  border-bottom-color: var(--ink);
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+  background: var(--surface-elevated);
 }
 
 /* ── Browsing 26 categories ───────────────────────────────────────────
@@ -780,18 +835,20 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-transform: uppercase;
 }
 .browse-pick-btn {
-  padding: 0.2rem 0;
+  min-height: 30px;
+  padding: 0 13px;
   border: 0;
-  border-bottom: 1px solid transparent;
-  background: transparent;
-  color: var(--muted);
-  font: 500 0.55rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.16em;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--muted-strong);
+  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
-.browse-pick-btn:hover { color: var(--accent-text); }
-.browse-pick-btn.is-on { color: var(--ink); border-bottom-color: var(--ink); }
+.browse-pick-btn:hover { color: var(--ink); background: var(--surface-elevated); }
+.browse-pick-btn.is-on { color: var(--page); background: var(--ink); }
 .browse-pick-count {
   margin-left: 3px;
   font-variant-numeric: tabular-nums;
@@ -816,7 +873,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cat-rail::-webkit-scrollbar { display: none; }
 .cat-rail-track {
   display: flex;
-  gap: 7px;
+  gap: 8px;
   width: max-content;
   padding: 2px 22px 2px 14px;
 }
@@ -824,24 +881,24 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 30px;
-  padding: 0 11px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--page);
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--surface);
   color: var(--muted-strong);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   white-space: nowrap;
   cursor: pointer;
-  transition: color .14s ease, border-color .14s ease, background .14s ease;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.cat-pill:hover { color: var(--ink); border-color: var(--accent); }
+.cat-pill:hover { color: var(--ink); background: var(--surface-elevated); }
 .cat-pill:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .cat-pill.is-on {
   color: var(--page);
   background: var(--ink);
-  border-color: var(--ink);
 }
+.cat-pill.is-on:hover { color: var(--page); background: var(--ink); opacity: 0.88; }
 .cat-pill-icon { display: inline-flex; width: 15px; height: 15px; flex: none; opacity: .85; }
 .cat-pill-icon .line-icon { width: 15px; height: 15px; color: currentColor; }
 .cat-pill-count {
@@ -854,28 +911,30 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 /* Tiles: the category is the thing being chosen, not a filter on a list. */
 .cat-tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(146px, 1fr));
-  gap: 8px;
-  margin: 0 0 18px;
+  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+  gap: 12px;
+  margin: 0 0 22px;
 }
 .cat-tile {
   display: flex;
   align-items: center;
   gap: 9px;
-  min-height: 44px;
-  padding: 9px 11px;
-  border: 1px solid var(--line);
-  border-radius: 11px;
-  background: var(--surface);
+  min-height: 46px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--card);
   color: var(--ink-soft);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   text-align: left;
   cursor: pointer;
-  transition: border-color .14s ease, color .14s ease;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
-.cat-tile:hover { border-color: var(--accent); color: var(--ink); }
+.cat-tile:hover { background: var(--surface-elevated); color: var(--ink); }
 .cat-tile:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-.cat-tile.is-on { border-color: var(--ink); color: var(--ink); }
+.cat-tile.is-on { background: var(--ink); color: var(--page); }
+.cat-tile.is-on .cat-tile-icon,
+.cat-tile.is-on .cat-tile-count { color: var(--page); }
 .cat-tile-icon { display: inline-flex; width: 17px; height: 17px; flex: none; color: var(--accent-text); }
 .cat-tile-icon .line-icon { width: 17px; height: 17px; }
 .cat-tile-name {
@@ -904,7 +963,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .filter-views { display: inline-flex; align-items: center; gap: 14px; }
 
 .index-row {
-  padding: 0.35rem 0;
+  padding: 13px 0;
   border-bottom: 1px solid var(--line);
 }
 .index-head {
@@ -919,7 +978,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-weight: 400;
   letter-spacing: -0.02em;
 }
-.index-name:hover { font-style: italic; }
+.index-name:hover { color: var(--accent-text); }
 .index-tagline {
   margin-top: 2px;
   color: var(--muted);
@@ -940,15 +999,15 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   justify-content: center;
   flex: none;
   color: var(--line-strong);
-  transition: color .14s ease;
+  transition: color var(--dur) var(--ease);
 }
 .row-arrow-link {
   width: 28px;
   height: 28px;
   margin-top: 1px;
-  border-radius: 8px;
+  border-radius: var(--r-pill);
 }
-.row-arrow-glyph { transition: transform .14s ease; }
+.row-arrow-glyph { transition: transform var(--dur) var(--ease); }
 .index-row:hover .row-arrow,
 .idx-colrow:hover .row-arrow { color: var(--accent-text); }
 .index-row:hover .row-arrow-glyph,
@@ -971,7 +1030,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   cursor: pointer;
   flex: none;
 }
-.index-body { padding: 0.35rem 0 0.35rem 32px; }
+.index-body { padding: 4px 0 16px 32px; }
 @media (max-width: 640px) {
   .index-body { padding-left: 8px; }
 }
@@ -1067,7 +1126,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 /* CTA pills, after x.ai: fully rounded, ink-inverted, no border. */
 .copy-btn,
 .pill-btn {
-  border-radius: 9999px;
+  border-radius: var(--r-pill);
   border: 0;
   background: var(--ink);
   color: var(--page);
@@ -1120,7 +1179,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
    scrolls under the controls rather than away from them, and the full
    catalog lives in its own scroll box because 306 rows on a phone is a
    stutter, not a page. */
-.cf { margin-top: 36px; }
+.cf { margin-top: 44px; }
 
 .cf-bar {
   position: sticky;
@@ -1146,20 +1205,21 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .cf-input {
   width: 100%;
-  min-height: 46px;
-  padding: 0 52px 0 38px;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  background: var(--surface);
+  min-height: 52px;
+  padding: 0 52px 0 40px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--card);
   color: var(--ink);
   font-family: inherit;
   font-size: 0.95rem;
+  transition: background var(--dur) var(--ease);
 }
 .cf-input::placeholder { color: var(--muted-strong); }
 .cf-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  background: var(--page);
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+  background: var(--surface-elevated);
 }
 .cf-input::-webkit-search-cancel-button { filter: invert(0.6); }
 .cf-kbd {
@@ -1180,31 +1240,31 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cf-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 .cf-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 32px;
-  padding: 0 11px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--page);
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--surface);
   color: var(--muted-strong);
   font-family: inherit;
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   cursor: pointer;
-  transition: color .14s ease, border-color .14s ease, background .14s ease;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.cf-chip:hover:not(:disabled) { color: var(--ink); border-color: var(--accent); }
+.cf-chip:hover:not(:disabled) { color: var(--ink); background: var(--surface-elevated); }
 .cf-chip:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .cf-chip:disabled { opacity: .4; cursor: default; }
 .cf-chip.is-on {
   background: var(--ink);
-  border-color: var(--ink);
   color: var(--page);
 }
+.cf-chip.is-on:hover:not(:disabled) { background: var(--ink); color: var(--page); opacity: 0.88; }
 .cf-chip-icon { width: 14px; height: 14px; flex: none; opacity: .82; }
 .cf-chip.is-on .cf-chip-icon { opacity: 1; }
 .cf-count {
@@ -1271,9 +1331,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .cf-flag {
   flex: none;
-  padding: 2px 7px;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  padding: 3px 9px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--surface-elevated);
   color: var(--muted);
   font: 500 0.55rem/1.4 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.14em;
@@ -1300,10 +1361,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   margin-top: 10px;
   overflow-y: auto;
   overscroll-behavior: contain;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 0 12px;
-  background: var(--surface);
+  border: 0;
+  border-radius: var(--r-card);
+  padding: 0 20px;
+  background: var(--card);
 }
 .cf-scroll:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 
@@ -1313,10 +1374,11 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-top: 1px solid var(--line);
 }
 .cf-browse {
-  min-height: 40px;
-  padding: 0 18px;
+  min-height: 42px;
+  padding: 0 20px;
   border: 1px solid var(--ink);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
+  transition: opacity var(--dur) var(--ease);
   background: var(--ink);
   color: var(--page);
   font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
@@ -1324,13 +1386,14 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-transform: uppercase;
   cursor: pointer;
 }
+.cf-browse:hover { opacity: 0.88; }
 .cf-browse:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 
 .cf-empty {
   margin-top: 26px;
-  padding: 26px 20px;
+  padding: 40px 28px;
   border: 1px dashed var(--line-strong);
-  border-radius: 14px;
+  border-radius: var(--r-card);
   text-align: center;
 }
 .cf-empty-title { font-size: 1rem; }
@@ -1360,26 +1423,27 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   align-items: center;
   gap: 7px;
   max-width: 15rem;
-  padding: 5px 9px 5px 11px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--page);
+  min-height: 32px;
+  padding: 5px 12px 5px 14px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--surface);
   color: var(--muted-strong);
   font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: color .14s ease, border-color .14s ease;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-.sel-button:hover { color: var(--ink); border-color: var(--accent); }
-.sel-button.is-open { color: var(--ink); border-color: var(--accent); }
+.sel-button:hover { color: var(--ink); background: var(--surface-elevated); }
+.sel-button.is-open { color: var(--ink); background: var(--surface-elevated); }
 .sel-button:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .sel-value {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.sel-caret { flex: none; margin-left: auto; opacity: .65; transition: transform .16s ease; }
+.sel-caret { flex: none; margin-left: auto; opacity: .65; transition: transform var(--dur) var(--ease); }
 .sel-button.is-open .sel-caret { transform: rotate(180deg); }
 .sel-icon {
   display: inline-flex;
@@ -1403,17 +1467,19 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   max-height: 19rem;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 5px;
-  border: 1px solid var(--line-strong);
-  border-radius: 12px;
-  background: var(--page);
+  padding: 6px;
+  border: 0;
+  border-radius: var(--r-inner);
   background: var(--surface-elevated);
-  animation: sel-in .12s ease-out;
+  box-shadow: var(--shadow-float);
+  animation: sel-in var(--dur) var(--ease);
 }
 .sel-list.is-end { left: auto; right: 0; }
+/* Fade and sit. A menu that travels reads as a thing being thrown at
+   the reader; this one is simply there. */
 @keyframes sel-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sel-list { animation: none; }
@@ -1423,8 +1489,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 9px;
-  border-radius: 8px;
+  padding: 8px 11px;
+  border-radius: 10px;
   color: var(--ink-soft);
   font-size: 0.8rem;
   line-height: 1.2;
@@ -1460,7 +1526,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   align-items: center;
 }
 .idx-colhead {
-  padding: 0 8px 8px;
+  padding: 0 14px 10px;
   border-bottom: 1px solid var(--line-strong);
   color: var(--muted);
   font: 500 0.55rem/1 var(--font-geist-mono), ui-monospace, monospace;
@@ -1468,13 +1534,13 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-transform: uppercase;
 }
 .idx-colrow {
-  padding: 10px 8px;
-  margin: 0 -8px;
+  padding: 14px 14px;
+  margin: 0 -14px;
   border-bottom: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--r-inner);
   color: inherit;
   min-height: 44px;
-  transition: background .14s ease;
+  transition: background var(--dur) var(--ease);
 }
 .idx-colrow:hover { background: var(--surface); }
 .idx-colcell {
@@ -1518,21 +1584,21 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 .idx-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
+  gap: 16px;
 }
 .idx-card {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  padding: 15px 15px 13px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--surface);
+  gap: 10px;
+  padding: 28px 26px 24px;
+  border: 0;
+  border-radius: var(--r-card);
+  background: var(--card);
   color: inherit;
-  transition: border-color .16s ease, transform .16s ease;
+  transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
-.idx-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.idx-card:hover { background: var(--surface-elevated); transform: translateY(-2px); }
 .idx-card-cat {
   color: var(--accent-text);
   font: 500 0.52rem/1 var(--font-geist-mono), ui-monospace, monospace;
@@ -1637,9 +1703,11 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cz-list { margin-top: 12px; }
 
 .cz-btn {
-  padding: 6px 13px;
+  min-height: 34px;
+  padding: 6px 16px;
   border: 1px solid var(--ink);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
+  transition: opacity var(--dur) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
   background: var(--ink);
   color: var(--page);
   font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
@@ -1647,12 +1715,20 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-transform: uppercase;
   cursor: pointer;
 }
+.cz-btn:hover { opacity: 0.88; }
+/* Ghost: a hairline until it is wanted, then it fills. */
 .cz-btn-quiet {
   background: transparent;
-  border-color: var(--line-strong);
+  border-color: var(--pill-line);
   color: var(--muted-strong);
+  opacity: 1;
 }
-.cz-btn-quiet:hover { color: var(--ink); border-color: var(--accent); }
+.cz-btn-quiet:hover {
+  opacity: 1;
+  color: var(--ink);
+  border-color: var(--ink);
+  background: var(--surface-elevated);
+}
 .cz-btn:focus-visible,
 .cz-chip:focus-visible,
 .cz-mode:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
@@ -1674,7 +1750,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   align-items: center;
   justify-content: space-between;
   gap: 8px 12px;
-  padding: 9px 0;
+  padding: 13px 0;
   border-bottom: 1px solid var(--line);
 }
 .cz-conn-name {
@@ -1688,7 +1764,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cz-modes {
   display: inline-flex;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   overflow: hidden;
 }
 .cz-mode {
@@ -1762,11 +1838,11 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .cz-input {
   width: 100%;
-  min-height: 36px;
-  padding: 7px 11px;
-  border: 1px solid var(--line-strong);
-  border-radius: 9px;
-  background: var(--surface);
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: var(--r-inner);
+  background: var(--card);
   color: var(--ink);
   font-family: inherit;
   font-size: 0.88rem;
@@ -1789,31 +1865,31 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   margin-top: 12px;
 }
 .cz-chip {
-  min-height: 32px;
-  padding: 6px 12px;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  background: transparent;
+  min-height: 34px;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--surface);
   color: var(--muted-strong);
   font-family: inherit;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   text-align: left;
   cursor: pointer;
-  transition: color .14s ease, border-color .14s ease, background .14s ease;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.cz-chip:hover { color: var(--ink); border-color: var(--accent); }
+.cz-chip:hover { color: var(--ink); background: var(--surface-elevated); }
 .cz-chip.is-on {
   background: var(--ink);
-  border-color: var(--ink);
   color: var(--page);
 }
+.cz-chip.is-on:hover { color: var(--page); opacity: 0.88; }
 
 .cz-alert {
   margin-top: 14px;
-  padding: 12px 14px;
+  padding: 16px 18px;
   border: 1px solid var(--line-strong);
-  border-radius: 10px;
-  background: var(--surface);
+  border-radius: var(--r-inner);
+  background: var(--card);
   font-size: 0.82rem;
   line-height: 1.6;
 }
@@ -1868,19 +1944,19 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   position: relative;
   z-index: 10;
   flex-shrink: 0;
-  margin-top: 56px;
+  margin-top: var(--sec-y);
   border-top: 1px solid var(--line);
   background: var(--page);
 }
 .foot-inner {
   max-width: 64rem;
   margin: 0 auto;
-  padding: 34px 24px 40px;
+  padding: 72px 24px 56px;
 }
 .foot-cols {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 26px 20px;
+  gap: 40px 56px;
 }
 .foot-col-title {
   color: var(--muted);
@@ -1888,21 +1964,22 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
-.foot-col ul { margin-top: 10px; }
+.foot-col ul { margin-top: 14px; }
 .foot-link {
   display: flex;
   align-items: center;
   /* A thumb needs 44px. On a phone these are the only links on screen. */
   min-height: 34px;
-  color: var(--ink-soft);
-  font-size: 0.85rem;
+  color: var(--muted-strong);
+  font-size: 0.8125rem;
   overflow-wrap: anywhere;
+  transition: color var(--dur) var(--ease);
 }
 .foot-link:hover { color: var(--accent-text); }
 .foot-link:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .foot-legal {
-  margin-top: 28px;
-  padding-top: 16px;
+  margin-top: 44px;
+  padding-top: 20px;
   border-top: 1px solid var(--line);
   color: var(--muted);
   font-size: 0.76rem;
@@ -1913,8 +1990,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 430px) {
-  .foot-inner { padding: 28px 4px 34px; }
-  .foot-cols { grid-template-columns: 1fr; gap: 20px; }
+  .foot-inner { padding: 40px 4px 40px; }
+  .foot-cols { grid-template-columns: 1fr; gap: 24px; }
   .foot-link { min-height: 44px; }
 }
 
@@ -1951,9 +2028,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .rp-head-id { min-width: 0; flex: 1 1 16rem; }
 .rp-name {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
-  font-size: clamp(1.5rem, 3vw, 2.15rem);
-  font-weight: 300;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.55rem, 3vw, 2.25rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
   line-height: 1.08;
 }
 .rp-job {
@@ -1978,7 +2055,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   min-height: 40px;
   padding: 0 15px;
   border: 1px solid var(--pill-line);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: transparent;
   color: var(--muted-strong);
   font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
@@ -1986,6 +2063,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-transform: uppercase;
   cursor: pointer;
 }
+.rp-secondary { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
 .rp-secondary:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
 .rp-secondary:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .rp-head-chips {
@@ -2002,17 +2080,17 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-transform: uppercase;
 }
 
-.rp-roster { margin-top: 26px; }
+.rp-roster { margin-top: 40px; }
 .rp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .rp-chip {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   min-height: 40px;
-  padding: 0 13px;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  background: var(--surface);
+  padding: 0 15px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--card);
   font-size: 0.88rem;
 }
 .rp-chip-name { white-space: nowrap; }
@@ -2041,7 +2119,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .rc-empty { margin-top: 14px; color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
 
 /* The accordion. Titles always visible, Job open, the rest closed. */
-.rp-acc { margin-top: 34px; border-top: 1px solid var(--line-strong); }
+.rp-acc { margin-top: 48px; border-top: 1px solid var(--line-strong); }
 .rp-sec { border-bottom: 1px solid var(--line); }
 .rp-sum {
   display: flex;
@@ -2071,7 +2149,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-right: 1.5px solid var(--muted);
   border-bottom: 1.5px solid var(--muted);
   transform: rotate(45deg) translate(-2px, -2px);
-  transition: transform .16s ease;
+  transition: transform var(--dur) var(--ease);
 }
 .rp-sec[open] > .rp-sum::after { transform: rotate(-135deg) translate(-3px, -3px); }
 @media (prefers-reduced-motion: reduce) { .rp-sum::after { transition: none; } }
@@ -2106,12 +2184,12 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   flex-direction: column;
   width: min(40rem, 100%);
   height: 100%;
-  background: var(--page);
-  border-left: 1px solid var(--line-strong);
+  border-left: 0;
   background: var(--surface-elevated);
-  animation: rp-sheet-in .18s ease-out;
+  box-shadow: var(--shadow-float);
+  animation: rp-sheet-in var(--dur) var(--ease);
 }
-@keyframes rp-sheet-in { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes rp-sheet-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .rp-sheet { animation: none; } }
 .rp-sheet-head {
   flex: none;
@@ -2170,7 +2248,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   min-height: 34px;
   padding: 0 13px;
   border: 1px solid var(--pill-line);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: transparent;
   color: var(--ink-soft);
   font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
@@ -2178,9 +2256,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-transform: uppercase;
   cursor: pointer;
 }
+.share-btn { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
 .share-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
 .share-btn:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-.share-note,
 .rp-disclaimer {
   color: var(--muted);
   font: 500 0.58rem/1.5 var(--font-geist-mono), ui-monospace, monospace;
@@ -2190,7 +2268,6 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 @media (max-width: 640px) {
   .share-btn { min-height: 44px; }
-  .share-note { flex-basis: 100%; }
 }
 
 .home-disclaimer {
@@ -2198,4 +2275,22 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font: 500 0.6rem/1.5 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+
+/* ── Reduced motion ───────────────────────────────────────────────────
+   One rule for the whole site, so a new transition cannot forget to
+   opt in. Everything lands on its final frame immediately: fades finish,
+   the wings poster hands off, and nothing travels. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
 }

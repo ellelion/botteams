@@ -14,6 +14,10 @@ import { en } from "@/lib/messages/en";
  * The post carries the disclaimer. We are wearing xAI's contrast, so
  * every place this site travels has to say it is not theirs. No handle
  * to mention, because we do not have one worth claiming.
+ *
+ * The bar itself does not repeat it. The page already says it directly
+ * under the H1, and on a phone the two lines landed a thumb apart and
+ * read as a stutter rather than as emphasis.
  */
 export function ShareBar({ name }: { name: string }) {
   const [href, setHref] = useState("");
@@ -51,7 +55,6 @@ export function ShareBar({ name }: { name: string }) {
           {en.share.postOnX}
         </a>
       ) : null}
-      <span className="share-note">{en.notAffiliated}</span>
     </div>
   );
 }

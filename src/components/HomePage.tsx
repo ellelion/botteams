@@ -6,7 +6,6 @@ import { WingsVideo } from "@/components/home/WingsVideo";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
-import { SponsorRail } from "@/components/SponsorRail";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import type { Team } from "@/lib/types";
@@ -57,7 +56,7 @@ export function HomePage({ teams }: { teams: Team[] }) {
                   <GrokBotMark size={22} animate />
                   <RevealText text={en.eyebrow} delay={0.05} step={0.016} className="block" />
                 </p>
-                <h1 className="font-display ledger-anim mx-auto mt-8 w-full max-w-full text-balance text-[clamp(1.65rem,3.4vw,2.75rem)] font-light leading-[1.05] tracking-[-0.03em]" style={{ fontFamily: ledger.serif, animationDelay: "0.55s" }}>
+                <h1 className="font-display ledger-anim mx-auto mt-8 w-full max-w-full text-balance text-[clamp(1.7rem,3.5vw,2.9rem)] font-normal leading-[1.05] tracking-[-0.03em]" style={{ fontFamily: ledger.serif, animationDelay: "0.55s" }}>
                   {en.h1}
                 </h1>
                 <p className="ledger-anim mx-auto mt-6 max-w-md text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft, animationDelay: "0.75s" }}>
@@ -82,12 +81,12 @@ export function HomePage({ teams }: { teams: Team[] }) {
                 {en.home.scrollCue} <span className="cue-bob" aria-hidden>↓</span>
               </a>
             </section>
-            <section className="relative z-10 mx-auto max-w-xl pb-16 pt-6 text-center">
+            <section className="relative z-10 mx-auto max-w-xl pb-[var(--sec-y)] pt-[var(--sec-y)] text-center">
               <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.home.howTitle}</h2>
               <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.howBody}</p>
               <p className="mt-4 text-[0.78rem] leading-relaxed" style={{ color: ledger.inkFaint }}>{en.home.typeIn}</p>
 
-              <h2 id="contribute" className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+              <h2 id="contribute" className="mt-[var(--sec-y)] text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
                 {en.home.contributeTitle}
               </h2>
               <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.contributeBody}</p>
