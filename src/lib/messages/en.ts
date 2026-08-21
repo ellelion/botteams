@@ -78,7 +78,7 @@ export const en = {
     retiredBody:
       "Slack shipped early and was pulled from the catalog before this snapshot. Older team files still resolve it so nothing breaks, but no team here should expect it.",
     marksNote:
-      "Brand marks identify each connector and belong to their owners. Grok Bot Teams is operated by Ellelion LLC and is not affiliated with xAI or with any connector vendor. Connectors without a mark in Simple Icons show a monogram instead.",
+      "Brand marks identify each connector and belong to their owners. Grok Bot Teams is operated by Ellelion LLC and is not affiliated with xAI or with any connector vendor.",
   },
   docs: {
     title: "Team spec",
