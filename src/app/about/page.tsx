@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Block, PageShell } from "@/components/PageShell";
-import { ledger } from "@/lib/ledger-theme";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -68,10 +67,6 @@ export default function AboutPage() {
             </li>
           ))}
         </ul>
-        <p className="text-[0.85rem]" style={{ color: ledger.inkMuted }}>
-          Two of them are on the sponsor rail as house ads, labelled as ours. They pay for nothing and they take no
-          paying slot.
-        </p>
       </Block>
     </PageShell>
   );

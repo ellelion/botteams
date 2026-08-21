@@ -9,10 +9,11 @@ import { site } from "@/lib/site";
  * `sponsors` is paying inventory. It is empty. `filledCount()` reads it
  * and nothing else, so a house ad can never make the rail look sold.
  *
- * `houseAds` are our own Ellelion products. They are here so a visitor is not
- * staring at a column of empty rows, and they are labelled as ours. They
- * are not Promoted, not Verified, they earn us nothing on a click, and
- * they never count toward a taken slot.
+ * `houseAds` are two of our own products. They render in exactly the
+ * chrome a paying sponsor will get, and they carry no chip: not
+ * Promoted, not Verified, not Paid, and nothing announcing that they are
+ * ours. They earn us nothing on a click and they never count toward a
+ * taken slot, which is what filledCount() is for.
  *
  * There are no invented logos and no roster borrowed from another
  * directory. An empty shelf says empty, in one line, once.
@@ -45,9 +46,10 @@ export const SPONSOR_SLOTS_TOTAL = 15;
    mostly empty is more honest and reads better than one padded out. */
 export const sponsors: SponsorSlot[] = [];
 
-/* Our own sites. No wordmark files exist for either, and we are not going
-   to draw one and call it theirs, so both render as a type lockup in the
-   site's own display face. */
+/* No wordmark files exist for either, and we are not going to draw one
+   and call it theirs, so both render as a type lockup in the site's own
+   display face. The umbrella site is not one of these: it belongs in the
+   footer, not in advertising inventory. */
 export const houseAds: HouseAd[] = [
   {
     id: "skillselion",
@@ -56,10 +58,10 @@ export const houseAds: HouseAd[] = [
     href: "https://skillselion.com",
   },
   {
-    id: "ellelion",
-    name: "Ellelion",
-    line: "The company behind this shelf.",
-    href: "https://ellelion.com",
+    id: "agent-plugins-directory",
+    name: "Agent Plugins Directory",
+    line: "A ranked index of tools for coding agents.",
+    href: "https://agentpluginsdirectory.com",
   },
 ];
 

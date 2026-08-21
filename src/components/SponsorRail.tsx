@@ -24,24 +24,19 @@ import { en } from "@/lib/messages/en";
 
 function HouseRow({ ad, campaign }: { ad: (typeof houseAds)[number]; campaign: Campaign }) {
   return (
-    <li className="hairline-row py-3">
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        <a
-          className="accent-hover text-[0.95rem]"
-          href={houseHref(ad, campaign)}
-          target="_blank"
-          rel="nofollow noopener noreferrer"
-          /* A type lockup, not a logo. Neither site ships a wordmark file
-             here, and drawing one would be inventing their brand. */
-          style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
-        >
-          {ad.name}
-        </a>
-        <span className="chip">{en.sponsor.houseLabel}</span>
-      </div>
-      <p className="mt-1 text-[0.78rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-        {ad.line}
-      </p>
+    <li className="hairline-row flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3">
+      <a
+        className="accent-hover text-[0.95rem] underline"
+        href={houseHref(ad, campaign)}
+        target="_blank"
+        rel="nofollow noopener noreferrer"
+        /* A type lockup, not a logo. Neither site ships a wordmark file
+           here, and drawing one would be inventing their brand. */
+        style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
+      >
+        {ad.name}
+      </a>
+      <span className="text-[0.78rem]" style={{ color: ledger.inkMuted }}>{ad.line}</span>
     </li>
   );
 }
@@ -86,12 +81,10 @@ export function SponsorRail({ campaign = "rail" }: { campaign?: Campaign }) {
         ))}
       </ul>
 
-      {/* One block, not a column of empty rows. */}
+      {/* One block, not a column of empty rows. The inventory sentence
+          and nothing else: the rows above do not need explaining. */}
       <div className="spon-open measure">
-        <p className="text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-          {en.sponsor.houseNote}
-        </p>
-        <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+        <p className="text-[0.82rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           {en.sponsor.openLine(open, SPONSOR_SLOTS_TOTAL)}
         </p>
         <a className="spon-cta mt-4" href="/sponsor">{en.sponsor.takeSlot}</a>

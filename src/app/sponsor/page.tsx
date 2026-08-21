@@ -93,33 +93,27 @@ export default function SponsorPage() {
                 <span className="text-[0.78rem]" style={{ color: ledger.inkMuted }}>{slot.line}</span>
               </li>
             ))}
-            {/* Ours, and labelled ours. They are on the rail so a visitor
-                is not reading an empty column, and they take no slot. */}
+            {/* Same chrome a paying row will get. No chip, and nothing on
+                the page announcing whose they are. */}
             {houseAds.map((ad) => (
-              <li key={ad.id} className="hairline-row py-3">
-                <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-                  <a
-                    className="accent-hover"
-                    href={houseHref(ad, "sponsor-page")}
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                    style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
-                  >
-                    {ad.name}
-                  </a>
-                  <span className="chip">{en.sponsor.houseLabel}</span>
-                </div>
-                <p className="measure mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{ad.line}</p>
+              <li key={ad.id} className="hairline-row flex flex-wrap items-baseline justify-between gap-3 py-3">
+                <a
+                  className="accent-hover underline"
+                  href={houseHref(ad, "sponsor-page")}
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                  style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
+                >
+                  {ad.name}
+                </a>
+                <span className="text-[0.78rem]" style={{ color: ledger.inkMuted }}>{ad.line}</span>
               </li>
             ))}
           </ul>
           {/* One block. Fifteen identical Open rows is not inventory, it
               is a page telling you nobody bought anything. */}
           <div className="spon-open measure">
-            <p className="text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-              {en.sponsor.houseNote}
-            </p>
-            <p className="mt-1 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+            <p className="text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
               {en.sponsor.openLine(open, SPONSOR_SLOTS_TOTAL)}
             </p>
             <Suspense fallback={null}>
