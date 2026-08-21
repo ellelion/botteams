@@ -45,6 +45,10 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
   const prompt = installerPrompt(pack);
   const example = isExample(pack);
   const verified = isVerified(pack);
+  // Several teams name themselves after their sidebar section ("Bookkeeping",
+  // "Partnerships"). Printing both gives the page a stuttered
+  // "Partnerships / PARTNERSHIPS · 6 BOTS". Show the section only when it adds a word.
+  const sectionEchoesName = pack.section.trim().toLowerCase() === pack.name.trim().toLowerCase();
   return (
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <JsonLd data={packJsonLd(pack)} />
@@ -64,22 +68,27 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
           {pack.tagline}
         </p>
         <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
-          {`${pack.section} · ${pack.bots} bots`}
+          {sectionEchoesName ? `${pack.bots} bots` : `${pack.section} · ${pack.bots} bots`}
         </p>
-        <div className="mt-5">
-          <ConnectorRow names={pack.connectors} labeled size={18} />
+
+        {/* Connect first, then copy. Both live above the fold: the shelf sells
+            one paste, so the action must not sit below three screens of roster. */}
+        <div className="mt-7 border-t pt-6" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.pack.connectFirst}
+          </h2>
+          <div className="mt-3">
+            <ConnectorRow names={pack.connectors} labeled size={18} />
+          </div>
+          <div className="mt-5">
+            <CopyInstallerButton text={prompt} slug={pack.slug} />
+          </div>
+          <div className="mt-5 grid gap-2 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+            <p>{en.pack.connectorsNote}</p>
+            {example ? <p>{en.pack.exampleNote}</p> : null}
+            <p>{en.pack.installNote}</p>
+          </div>
         </div>
-        <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-          {en.pack.connectorsNote}
-        </p>
-        {example ? (
-          <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-            {en.pack.exampleNote}
-          </p>
-        ) : null}
-        <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-          {en.pack.installNote}
-        </p>
 
         <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.agents}</h2>
@@ -153,6 +162,9 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
         ) : null}
 
         <div className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="mb-4 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.pack.promptTitle}
+          </h2>
           <CopyInstallerButton text={prompt} slug={pack.slug} />
           <pre
             className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed"

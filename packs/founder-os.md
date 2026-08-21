@@ -4,7 +4,7 @@ name: Founder OS
 tagline: Money, inbox, and a chief of staff in one founder room.
 bots: 3
 section: Founder OS
-status: pack
+status: team
 connectors:
   - Stripe
   - Gmail

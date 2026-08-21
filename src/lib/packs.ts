@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import type { Pack, PackAgent, PackRoom, PackRoutine } from "@/lib/types";
+import type { Pack, PackAgent, PackRoom, PackRoutine, PackStatus } from "@/lib/types";
 export type { Pack, PackAgent, PackRoom, PackRoutine, PackStatus } from "@/lib/types";
 export { isExample, isVerified } from "@/lib/types";
 
@@ -90,9 +90,13 @@ export function parsePack(raw: string, filename: string): Pack {
   const bots = typeof data.bots === "number" ? data.bots : data.seats;
   if (typeof bots !== "number") throw new Error(`${filename}: missing bots`);
   if (typeof data.section !== "string") throw new Error(`${filename}: missing section`);
-  if (data.status !== "pack" && data.status !== "example") {
-    throw new Error(`${filename}: status must be pack or example`);
+  // "pack" is the pre-rename spelling of "team". Still parsed so an older
+  // team file (or a fork) keeps working; everything downstream sees "team".
+  const rawStatus = data.status === "pack" ? "team" : data.status;
+  if (rawStatus !== "team" && rawStatus !== "example") {
+    throw new Error(`${filename}: status must be team or example`);
   }
+  const status: PackStatus = rawStatus;
   const connectors = asStringArray(data.connectors, "connectors");
   const agents = asAgents(data.agents, connectors);
   const union = new Set<string>();
@@ -105,7 +109,7 @@ export function parsePack(raw: string, filename: string): Pack {
     tagline: data.tagline,
     bots,
     section: data.section,
-    status: data.status,
+    status,
     connectors: merged,
     agents,
     rooms: asRooms(data.rooms),

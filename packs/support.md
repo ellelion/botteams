@@ -4,7 +4,7 @@ name: Support company
 tagline: Triage, drafts, and follow-ups at one support desk. Drafts, never sends.
 bots: 3
 section: Support
-status: pack
+status: team
 connectors:
   - Gmail
 agents:

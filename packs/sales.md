@@ -4,7 +4,7 @@ name: Sales company
 tagline: Pipeline and follow-ups in one sales floor. Drafts only, never send.
 bots: 2
 section: Sales
-status: pack
+status: team
 connectors:
   - Gmail
   - Calendar
