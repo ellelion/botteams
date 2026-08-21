@@ -4,26 +4,33 @@ name: Community desk
 tagline: Inbound community mail, welcome drafts, calendar. Never posts.
 bots: 6
 section: Community
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - Discord
+  - X
+  - Intercom
 agents:
   - name: Community · Inbound
     persona: Reads inbound community mail. Sorts questions, welcomes, and noise. Never sends. Never posts.
     icon: inbox
     connectors:
       - Gmail
+      - Discord
+      - X
   - name: Community · Welcome
     persona: Drafts welcome replies for new people. Never sends.
     icon: pen
     connectors:
       - Gmail
+      - Discord
   - name: Community · Moderation
     persona: Drafts moderation notes for threads that need a human. Never sends. Never posts. Not a site operator.
     icon: shield
     connectors:
       - Gmail
+      - Discord
   - name: Community · Calendar
     persona: Holds community calls and office hours on Calendar. Drafts reminders. Never sends.
     icon: calendar
@@ -34,6 +41,7 @@ agents:
     icon: inbox
     connectors:
       - Gmail
+      - Intercom
   - name: Community · Recap
     persona: Writes the community recap. What arrived, what was drafted, what needs a human post.
     icon: recap

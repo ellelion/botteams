@@ -4,7 +4,7 @@ name: Infrastructure watch
 tagline: Metrics, on-call, edge, and database health. Alerts and reports only, never touches production.
 bots: 5
 section: Infrastructure
-status: example
+status: team
 connectors:
   - Datadog
   - PagerDuty

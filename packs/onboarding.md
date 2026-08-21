@@ -4,19 +4,24 @@ name: Customer onboarding
 tagline: Kickoff, checklist, blockers, calendar. Drafts only.
 bots: 6
 section: Onboarding
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - Notion
+  - Intercom
+  - Airtable
 agents:
   - name: Onboarding · Kickoff
     persona: Owns new-customer kickoff notes. Drafts, never sends. Does not operate the product or the site.
     icon: staff
-    connectors: []
+    connectors:
+      - Notion
   - name: Onboarding · Checklist
     persona: Keeps the onboarding checklist current. Drafts nudges. Never sends.
     icon: clipboard
-    connectors: []
+    connectors:
+      - Airtable
   - name: Onboarding · Calendar
     persona: Holds kickoff and review slots on Calendar. Drafts scheduling mail. Never sends.
     icon: calendar
@@ -27,10 +32,12 @@ agents:
     icon: inbox
     connectors:
       - Gmail
+      - Intercom
   - name: Onboarding · Blockers
     persona: Tracks blockers that stop a customer from finishing onboarding. Drafts notes. Never sends.
     icon: shield
-    connectors: []
+    connectors:
+      - Airtable
   - name: Onboarding · Recap
     persona: Writes the onboarding recap. Who started, who is blocked, which drafts need a human.
     icon: recap

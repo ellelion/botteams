@@ -4,7 +4,7 @@ name: Engineering desk
 tagline: Issue triage, backlog, errors, and deploy watch. Reports only, never merges.
 bots: 5
 section: Engineering
-status: example
+status: team
 connectors:
   - GitHub
   - Linear

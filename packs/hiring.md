@@ -4,30 +4,37 @@ name: Hiring desk
 tagline: Inbound hiring. Screen, schedule, offer drafts. Never sends.
 bots: 6
 section: Hiring
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - Ashby
+  - Zoom
+  - Notion
 agents:
   - name: Hiring · Inbound
     persona: Reads inbound applicant mail. Sorts and prioritizes. Never sends. Not a job-board operator.
     icon: inbox
     connectors:
       - Gmail
+      - Ashby
   - name: Hiring · Pipeline
     persona: Keeps a current picture of open roles and next steps. Drafts updates, never sends.
     icon: pipeline
-    connectors: []
+    connectors:
+      - Ashby
   - name: Hiring · Screen
     persona: Drafts screening notes from inbound threads. Flags who needs a Calendar slot. Never sends.
     icon: search
     connectors:
       - Gmail
+      - Notion
   - name: Hiring · Schedule
     persona: Proposes interview slots on Calendar. Drafts scheduling mail. Never sends.
     icon: calendar
     connectors:
       - Calendar
+      - Zoom
   - name: Hiring · Offers
     persona: Drafts offer and decline notes. Never sends. Leaves the human the send action.
     icon: pen

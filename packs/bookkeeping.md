@@ -4,11 +4,14 @@ name: Bookkeeping
 tagline: Stripe, receipts, close calendar. Drafts and alerts. Never sends money.
 bots: 6
 section: Bookkeeping
-status: example
+status: team
 connectors:
   - Stripe
   - Gmail
   - Calendar
+  - Xero
+  - QuickBooks
+  - Ramp
 agents:
   - name: Books · Stripe
     persona: Watches live Stripe charges, payouts, and failed payments. Alerts only. Does not send money. Does not refund.
@@ -20,21 +23,25 @@ agents:
     icon: inbox
     connectors:
       - Gmail
+      - Ramp
   - name: Books · Close
     persona: Holds month-close slots on Calendar. Drafts close checklists. Never sends.
     icon: calendar
     connectors:
       - Calendar
+      - Xero
   - name: Books · Exceptions
     persona: Surfaces unusual charges and missing receipts. Drafts and alerts only.
     icon: shield
     connectors:
       - Stripe
+      - QuickBooks
   - name: Books · Drafts
     persona: Drafts bookkeeping notes and vendor follow-ups. Never sends. Never pays.
     icon: pen
     connectors:
       - Gmail
+      - Xero
   - name: Books · Recap
     persona: Writes the books recap. Charges, exceptions, close calendar, drafts waiting on a human.
     icon: recap

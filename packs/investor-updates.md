@@ -4,21 +4,25 @@ name: Investor updates
 tagline: Numbers, narrative, Q&A drafts. Never sends the update.
 bots: 6
 section: Investor updates
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
   - Stripe
+  - Notion
+  - Google Drive
 agents:
   - name: Investor · Numbers
     persona: Pulls founder-layer Stripe movement that belongs in an investor update. Alerts and drafts only. Does not send money. No site ops.
     icon: card
     connectors:
       - Stripe
+      - Google Drive
   - name: Investor · Letter
     persona: Drafts the narrative around the numbers. Stops at a draft. Never sends.
     icon: pen
-    connectors: []
+    connectors:
+      - Notion
   - name: Investor · Calendar
     persona: Holds update and call slots on Calendar. Drafts reminders. Never sends.
     icon: calendar
@@ -29,6 +33,7 @@ agents:
     icon: inbox
     connectors:
       - Gmail
+      - Notion
   - name: Investor · Questions
     persona: Drafts answers to inbound investor questions. Never sends.
     icon: inbox

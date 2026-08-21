@@ -4,7 +4,7 @@ name: Microsoft workplace
 tagline: Mail, calendar, chat, sites, and files across Microsoft 365. Drafts only, never sends.
 bots: 5
 section: Workplace
-status: example
+status: team
 connectors:
   - Outlook
   - Outlook Calendar

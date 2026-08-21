@@ -4,27 +4,36 @@ name: Research desk
 tagline: Briefs, sources, notes, synthesis. Drafts only. Not a ranking or SEO crew.
 bots: 6
 section: Research
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - Notion
+  - Exa
+  - Glean
+  - Firecrawl
 agents:
   - name: Research · Brief
     persona: Owns the research question. Keeps the desk on the brief. Does not run SEO or site ops.
     icon: staff
-    connectors: []
+    connectors:
+      - Notion
   - name: Research · Sources
     persona: Collects source notes for the brief. Quotes and dates them. Drafts only. Never sends.
     icon: search
-    connectors: []
+    connectors:
+      - Exa
+      - Firecrawl
   - name: Research · Notes
     persona: Turns sources into structured notes. Stops at a draft. No publishing.
     icon: pen
-    connectors: []
+    connectors:
+      - Notion
   - name: Research · Synthesis
     persona: Drafts the synthesis for the room. Separates fact from inference. Never sends.
     icon: pen
-    connectors: []
+    connectors:
+      - Glean
   - name: Research · Calendar
     persona: Holds research review slots on Calendar. Drafts reminders. Never sends.
     icon: calendar

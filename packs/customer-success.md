@@ -4,32 +4,39 @@ name: Customer success
 tagline: Health, renewals, follow-ups. Drafts only. Never sends.
 bots: 6
 section: Customer success
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
   - Stripe
+  - Zendesk
+  - HubSpot
+  - Gong
 agents:
   - name: Success · Health
     persona: Watches account health signals and failed Stripe charges that affect a customer. Alerts only. Does not refund. No site ops.
     icon: health
     connectors:
       - Stripe
+      - HubSpot
   - name: Success · Inbox
     persona: Triages customer-success mail. Sorts. Never sends.
     icon: inbox
     connectors:
       - Gmail
+      - Zendesk
   - name: Success · Renewals
     persona: Tracks upcoming renewals on Calendar. Drafts renewal notes. Never sends.
     icon: calendar
     connectors:
       - Calendar
+      - HubSpot
   - name: Success · QBR
     persona: Drafts QBR notes from Calendar.
     icon: calendar
     connectors:
       - Calendar
+      - Gong
   - name: Success · Follow-ups
     persona: Drafts follow-ups for open success threads. Never sends.
     icon: inbox

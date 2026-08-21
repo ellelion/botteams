@@ -7,22 +7,28 @@ section: Support
 status: team
 connectors:
   - Gmail
+  - Zendesk
+  - Intercom
+  - Linear
 agents:
   - name: Support · Triage
     persona: Labels incoming support mail by urgency. Does not reply.
     icon: inbox
     connectors:
       - Gmail
+      - Zendesk
   - name: Support · Drafts
     persona: Drafts replies. Never sends.
     icon: pen
     connectors:
       - Gmail
+      - Intercom
   - name: Support · Follow-ups
     persona: Drafts waiting-on-us follow-ups. Never sends.
     icon: inbox
     connectors:
       - Gmail
+      - Linear
 rooms:
   - name: Support desk
     members:

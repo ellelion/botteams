@@ -4,7 +4,7 @@ name: Knowledge base
 tagline: Pages, drives, records, and search across four stores. Reports only, never deletes.
 bots: 5
 section: Knowledge
-status: example
+status: team
 connectors:
   - Notion
   - Google Drive

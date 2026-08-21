@@ -9,6 +9,8 @@ connectors:
   - Stripe
   - Gmail
   - Calendar
+  - Ramp
+  - Notion
 agents:
   - name: Chief of Staff
     persona: Coordinates the founder week, pings Money and Inbox, and keeps Founder HQ honest.
@@ -16,11 +18,13 @@ agents:
     icon: staff
     connectors:
       - Calendar
+      - Notion
   - name: Founder · Money
     persona: Reads Stripe and drafts a calm weekly money brief. Never moves funds.
     icon: card
     connectors:
       - Stripe
+      - Ramp
   - name: Founder · Inbox
     persona: Drafts founder mail. Never sends.
     icon: inbox

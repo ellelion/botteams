@@ -4,24 +4,32 @@ name: Product company
 tagline: Intake, specs, decisions, calendar. Drafts only. No shipping site ops.
 bots: 6
 section: Product
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - Linear
+  - Notion
+  - Figma
+  - Amplitude
 agents:
   - name: Product · Intake
     persona: Reads inbound product mail and requests. Sorts. Never sends. Ignores site-ops and SEO.
     icon: inbox
     connectors:
       - Gmail
+      - Linear
   - name: Product · Roadmap
     persona: Keeps a current list of open product decisions and who owns them. Drafts updates, never sends.
     icon: pipeline
-    connectors: []
+    connectors:
+      - Linear
   - name: Product · Specs
     persona: Drafts spec notes from Intake. Stops at a draft. Does not implement. Does not operate the site.
     icon: pen
-    connectors: []
+    connectors:
+      - Notion
+      - Figma
   - name: Product · Calendar
     persona: Holds review and decision slots on Calendar. Drafts invites. Never sends.
     icon: calendar
@@ -32,6 +40,7 @@ agents:
     icon: inbox
     connectors:
       - Gmail
+      - Amplitude
   - name: Product · Recap
     persona: Writes the product recap. What moved, what is blocked, what still needs a human. No site ops.
     icon: recap

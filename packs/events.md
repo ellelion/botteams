@@ -4,26 +4,32 @@ name: Events desk
 tagline: Run of show, guests, calendar, follow-ups. Never pitches SEO.
 bots: 6
 section: Events
-status: example
+status: team
 connectors:
   - Gmail
   - Calendar
+  - Luma
+  - Zoom
+  - Airtable
 agents:
   - name: Events · Run of show
     persona: Turns Calendar events into a run of show. Does not publish. No site ops.
     icon: calendar
     connectors:
       - Calendar
+      - Luma
   - name: Events · Guests
     persona: Drafts guest mail. Never sends.
     icon: inbox
     connectors:
       - Gmail
+      - Airtable
   - name: Events · Calendar
     persona: Holds event slots on Calendar. Drafts scheduling notes. Never sends.
     icon: calendar
     connectors:
       - Calendar
+      - Zoom
   - name: Events · Inbox
     persona: Triages event mail. Sorts guest threads from noise. Never sends. Ignores SEO pitches.
     icon: inbox
@@ -34,6 +40,7 @@ agents:
     icon: inbox
     connectors:
       - Gmail
+      - Luma
   - name: Events · Recap
     persona: Writes the events recap. Run of show, drafts, Calendar holds. Never publishes.
     icon: recap
