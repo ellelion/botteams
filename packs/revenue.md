@@ -1,10 +1,11 @@
 ---
 slug: revenue
 name: Revenue desk
-tagline: Deals, accounts, call notes, and booking in one revenue floor. Drafts only, never sends.
+tagline: "Runs a revenue floor: stalled deals surfaced, CRM records kept honest, call commitments pulled out, and no-shows followed up."
 bots: 5
 section: Revenue
 status: team
+added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - HubSpot
   - Salesforce

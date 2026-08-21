@@ -1,10 +1,11 @@
 ---
 slug: knowledge
 name: Knowledge base
-tagline: Pages, drives, records, and search across four stores. Reports only, never deletes.
+tagline: "Runs a knowledge base across four stores: stale pages found, duplicates named, records checked, and gaps in documentation reported."
 bots: 5
 section: Knowledge
 status: team
+added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - Notion
   - Google Drive

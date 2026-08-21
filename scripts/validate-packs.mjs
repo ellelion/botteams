@@ -10,6 +10,21 @@ const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const packsDir = path.join(root, "packs");
 const REQUIRED = ["slug", "name", "tagline", "section", "status", "connectors", "agents", "rooms", "routines"];
 
+/* Closed category list. A team file may only use a section that already
+   exists, so the index chips and the API `category` filter stay a known
+   set instead of growing a typo into a new category. Add here first. */
+const CATEGORIES = new Set([
+  "Agency", "Bookkeeping", "Community", "Content", "Creator", "Customer success",
+  "Data", "Design", "Engineering", "Events", "Founder OS", "Helpdesk", "Hiring",
+  "Infrastructure", "Investor updates", "Knowledge", "Legal", "Onboarding",
+  "Partnerships", "Product", "Recruiting", "Research", "Revenue", "Sales",
+  "Support", "Workplace",
+]);
+
+const seenSlugs = new Set();
+const seenUrls = new Set();
+const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
+
 function fail(message) {
   console.error("validate-packs: " + message);
   process.exitCode = 1;
@@ -35,6 +50,12 @@ for (const file of files) {
     if (data[key] === undefined || data[key] === null || data[key] === "") fail(file + ": missing " + key);
   }
   if (data.slug !== slug) fail(file + ": slug must equal filename (" + slug + ")");
+  if (!/^[a-z0-9-]+$/.test(slug)) fail(file + ": slug must be lowercase alphanumeric and dashes");
+  if (seenSlugs.has(slug)) fail(file + ": duplicate slug " + slug);
+  seenSlugs.add(slug);
+  if (typeof data.section === "string" && !CATEGORIES.has(data.section)) {
+    fail(file + ': unknown category "' + data.section + '". Add it to CATEGORIES in this script first.');
+  }
   const bots = typeof data.bots === "number" ? data.bots : data.seats;
   if (typeof bots !== "number") fail(file + ": bots must be a number");
   if (data.seats !== undefined && data.bots === undefined) fail(file + ": rename seats to bots");
@@ -67,6 +88,34 @@ for (const file of files) {
     }
   });
   if (data.skills !== undefined && !Array.isArray(data.skills)) fail(file + ": skills must be an array when present");
+
+  // Optional attribution. Present means it must be well formed.
+  if (data.added_at !== undefined && !ISO.test(String(data.added_at))) {
+    fail(file + ": added_at must be a quoted ISO 8601 UTC string, e.g. \"2026-08-21T09:00:00.000Z\"");
+  }
+  for (const key of ["contributor", "scouted_by"]) {
+    if (data[key] !== undefined && !isNonEmptyString(data[key])) fail(file + ": " + key + " must be a non-empty string");
+  }
+  for (const key of ["contributor_url", "added_via", "url"]) {
+    if (data[key] !== undefined && !/^https?:\/\//.test(String(data[key]))) {
+      fail(file + ": " + key + " must be an absolute http(s) URL");
+    }
+  }
+  if (data.url !== undefined) {
+    const u = String(data.url);
+    if (seenUrls.has(u)) fail(file + ": duplicate url " + u);
+    seenUrls.add(u);
+  }
+  if (data.integration_urls !== undefined) {
+    if (typeof data.integration_urls !== "object" || Array.isArray(data.integration_urls)) {
+      fail(file + ": integration_urls must be a map of name to URL");
+    } else {
+      for (const [name, href] of Object.entries(data.integration_urls)) {
+        if (!packConnectors.has(name)) fail(file + ': integration_urls names "' + name + '" which is not a connector on this team');
+        if (!/^https?:\/\//.test(String(href))) fail(file + ": integration_urls." + name + " must be an absolute URL");
+      }
+    }
+  }
 }
 
 if (process.exitCode) process.exit(process.exitCode);

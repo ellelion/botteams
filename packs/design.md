@@ -1,10 +1,11 @@
 ---
 slug: design
 name: Design studio
-tagline: Files, assets, specs, and board hygiene in one studio. Drafts only.
+tagline: "Runs a design studio: Figma comments chased, assets tracked, specs drafted for engineering, and board hygiene kept after sessions."
 bots: 5
 section: Design
 status: team
+added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - Figma
   - Canva

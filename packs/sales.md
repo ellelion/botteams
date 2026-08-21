@@ -1,10 +1,11 @@
 ---
 slug: sales
 name: Sales company
-tagline: Pipeline and follow-ups in one sales floor. Drafts only, never send.
+tagline: "Runs a two-Bot sales floor: the pipeline read every morning and follow-ups drafted for everything that went quiet."
 bots: 2
 section: Sales
 status: team
+added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail
   - Calendar

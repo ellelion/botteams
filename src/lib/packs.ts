@@ -116,6 +116,22 @@ export function parsePack(raw: string, filename: string): Pack {
     routines: asRoutines(data.routines),
     skills: data.skills === undefined ? [] : asStringArray(data.skills, "skills"),
     body: content.trim(),
+    addedAt: typeof data.added_at === "string" ? data.added_at : undefined,
+    contributor: typeof data.contributor === "string" ? data.contributor : undefined,
+    // A bare handle implies a GitHub profile; an explicit URL wins.
+    contributorUrl:
+      typeof data.contributor_url === "string"
+        ? data.contributor_url
+        : typeof data.contributor === "string"
+          ? `https://github.com/${String(data.contributor).replace(/^@/, "")}`
+          : undefined,
+    scoutedBy: typeof data.scouted_by === "string" ? data.scouted_by : undefined,
+    addedVia: typeof data.added_via === "string" ? data.added_via : undefined,
+    url: typeof data.url === "string" ? data.url : undefined,
+    integrationUrls:
+      data.integration_urls && typeof data.integration_urls === "object"
+        ? (data.integration_urls as Record<string, string>)
+        : undefined,
   };
 }
 

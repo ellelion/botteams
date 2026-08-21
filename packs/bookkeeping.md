@@ -1,10 +1,11 @@
 ---
 slug: bookkeeping
 name: Bookkeeping
-tagline: Stripe, receipts, close calendar. Drafts and alerts. Never sends money.
+tagline: "Watches Stripe charges and failed payments, triages receipt mail, holds the month-close calendar, and surfaces the exceptions worth a look."
 bots: 6
 section: Bookkeeping
 status: team
+added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Stripe
   - Gmail

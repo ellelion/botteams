@@ -1,10 +1,11 @@
 ---
 slug: community
 name: Community desk
-tagline: Inbound community mail, welcome drafts, calendar. Never posts.
+tagline: "Keeps a community answerable: inbound sorted, new members welcomed, moderation surfaced, and a weekly recap of what people actually asked."
 bots: 6
 section: Community
 status: team
+added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail
   - Calendar

@@ -1,10 +1,11 @@
 ---
 slug: onboarding
 name: Customer onboarding
-tagline: Kickoff, checklist, blockers, calendar. Drafts only.
+tagline: "Runs customer onboarding: kickoff booked, checklist tracked, blockers named early, and mail drafted for the account owner."
 bots: 6
 section: Onboarding
 status: team
+added_at: "2026-08-20T20:50:24.000Z"
 connectors:
   - Gmail
   - Calendar

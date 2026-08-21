@@ -1,10 +1,11 @@
 ---
 slug: engineering
 name: Engineering desk
-tagline: Issue triage, backlog, errors, and deploy watch. Reports only, never merges.
+tagline: "Watches issue triage, backlog drift, production errors, and deploy failures, then says what needs a human decision."
 bots: 5
 section: Engineering
 status: team
+added_at: "2026-08-21T03:57:51.000Z"
 connectors:
   - GitHub
   - Linear

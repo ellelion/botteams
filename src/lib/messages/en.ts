@@ -13,6 +13,8 @@ export const en = {
     packs: "Teams",
     docs: "Spec",
     connectorsNav: "Connectors",
+    api: "API",
+    sponsor: "Sponsor",
     github: "GitHub",
     homeAria: "Grok Bot Teams, home",
     mainAria: "Main",
@@ -28,11 +30,23 @@ export const en = {
     sponsorsNote: "Fifteen slots. All available. No fake advertisers.",
     available: "Available",
     scrollCue: "Browse teams",
+    contributeTitle: "A team is markdown in a repo",
+    contributeBody:
+      "Every team on this shelf is one file. Front matter names the Bots, the group chat, the routines, and the connectors the account needs first. The installer prompt is generated from it, so the file is the product.",
+    contributePr: "Open a pull request",
+    contributeSpec: "Read the spec",
+    contributeGuide: "Contribution guide",
+    contributeSample: "Founder OS, abridged",
     exampleBadge: "Example",
     liveBadge: "Installable",
     filterAll: "All",
     viewCards: "Cards",
     viewTable: "Table",
+    filterConnector: "Filter by connector",
+    anyConnector: "Any connector",
+    sortLabel: "Sort teams",
+    sortNewest: "Newly added",
+    sortName: "A to Z",
     specCta: "Team spec",
   },
   pack: {
@@ -57,6 +71,15 @@ export const en = {
     installNote:
       "Paste the prompt into Grok Bot. This is not one-click OAuth and not a plugin install.",
     ownerBot: "Owner Bot",
+    allTeams: "All teams",
+    viewSource: "View source",
+    runYourself: "Run it yourself",
+    runYourselfBody:
+      "Free to copy, adapt, and edit. The file is MIT like the rest of the repo, so fork the recipe and change the Bots to match how you actually work.",
+    relatedTitle: () => "Teams that share these connectors",
+    contributedBy: "Contributed by",
+    scoutedBy: "Scouted by",
+    basedOn: "Based on this post by",
   },
   connectors: {
     eyebrow: "Grok Bot connectors",
@@ -89,6 +112,14 @@ export const en = {
       "Slack shipped early and was pulled from the catalog before this snapshot. Older team files still resolve it so nothing breaks, but no team here should expect it.",
     marksNote:
       "Brand marks identify each connector and belong to their owners. Grok Bot Teams is operated by Ellelion LLC and is not affiliated with xAI or with any connector vendor.",
+  },
+  sponsor: {
+    railTitle: "Sponsors",
+    railCta: (filled: number, total: number) => `${filled} of ${total} taken`,
+    railEmptyCta: "All slots open",
+    openSlot: "Open",
+    takeSlot: "Take a slot",
+    disclosure: "Marked links earn us a commission. It does not change what a team recommends.",
   },
   docs: {
     title: "Team spec",

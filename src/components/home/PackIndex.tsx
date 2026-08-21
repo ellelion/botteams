@@ -13,6 +13,7 @@ import { installerPrompt } from "@/lib/installer";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { isExample, isVerified, type Pack } from "@/lib/types";
+import { resolveConnector, resolveConnectors } from "@/lib/connectors";
 
 type View = "table" | "cards";
 
@@ -42,20 +43,12 @@ export function PackIndex({
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  const sectionParam = params.get("section") ?? "all";
+  const sectionParam = params.get("category") ?? params.get("section") ?? "all";
+  const integrationParam = params.get("integration") ?? "all";
+  const sortParam = params.get("sort") === "name" ? "name" : "newest";
   const [view, setView] = useState<View>("table");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState<string | null>(null);
-  const [copies, setCopies] = useState<{ total: number; bySlug: Record<string, number> }>({ total: 0, bySlug: {} });
-
-  useEffect(() => {
-    fetch("/api/copy")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && typeof data.total === "number") setCopies({ total: data.total, bySlug: data.bySlug ?? {} });
-      })
-      .catch(() => {});
-  }, []);
 
   const categories = useMemo(() => {
     const map = new Map<string, number>();
@@ -63,25 +56,46 @@ export function PackIndex({
     return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   }, [packs]);
 
+  const connectorOptions = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const pack of packs) {
+      for (const mark of resolveConnectors(pack.connectors)) {
+        map.set(mark.name, (map.get(mark.name) ?? 0) + 1);
+      }
+    }
+    return [...map.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  }, [packs]);
+
   const q = query.trim().toLowerCase();
   const filtered = packs.filter((pack) => {
     if (sectionParam !== "all" && sectionSlug(pack.section) !== sectionParam) return false;
+    if (integrationParam !== "all") {
+      const want = resolveConnector(integrationParam).slug;
+      if (!pack.connectors.some((c) => resolveConnector(c).slug === want)) return false;
+    }
     if (!matchesQuery(pack, q)) return false;
     return true;
   });
+  /* Newest matches the API default. The index has no dates of its own, so
+     it mirrors the file order the API sorts on and falls back to name. */
+  const sorted = sortParam === "name" ? [...filtered].sort((a, b) => a.name.localeCompare(b.name)) : filtered;
 
-  function setSection(next: string) {
+  /* One writer for every filter, so each one lands in the URL and the page
+     stays shareable. "all" clears rather than encoding a default. */
+  function setParam(key: string, next: string) {
     const usp = new URLSearchParams(params.toString());
-    if (next === "all") usp.delete("section");
-    else usp.set("section", next);
+    usp.delete("section");
+    if (!next || next === "all" || (key === "sort" && next === "newest")) usp.delete(key);
+    else usp.set(key, next);
     const qs = usp.toString();
     router.replace(qs ? `${pathname}?${qs}#teams` : `${pathname}#teams`, { scroll: false });
   }
+  const setSection = (next: string) => setParam("category", next);
 
   return (
     <section id="teams">
       <div className="stats-strip">
-        <p className="stats-line">{`${packs.length} teams · ${copies.total} copies · verified ${verifiedOn}`}</p>
+        <p className="stats-line">{`${packs.length} teams · verified ${verifiedOn}`}</p>
         <Sparkline series={added} className="stat-spark" />
       </div>
 
@@ -113,6 +127,23 @@ export function PackIndex({
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <h2 className="section-title">{en.home.indexTitle}</h2>
         <div className="filter-bar">
+          <label className="sr-only" htmlFor="index-integration">{en.home.filterConnector}</label>
+          <select
+            id="index-integration"
+            className="index-select"
+            value={integrationParam}
+            onChange={(e) => setParam("integration", e.target.value)}
+          >
+            <option value="all">{en.home.anyConnector}</option>
+            {connectorOptions.map(([name, count]) => (
+              <option key={name} value={name}>{`${name} (${count})`}</option>
+            ))}
+          </select>
+          <label className="sr-only" htmlFor="index-sort">{en.home.sortLabel}</label>
+          <select id="index-sort" className="index-select" value={sortParam} onChange={(e) => setParam("sort", e.target.value)}>
+            <option value="newest">{en.home.sortNewest}</option>
+            <option value="name">{en.home.sortName}</option>
+          </select>
           <button type="button" className={`filter-chip${view === "table" ? " is-on" : ""}`} onClick={() => setView("table")}>{en.home.viewTable}</button>
           <button type="button" className={`filter-chip${view === "cards" ? " is-on" : ""}`} onClick={() => setView("cards")}>{en.home.viewCards}</button>
         </div>
@@ -120,27 +151,25 @@ export function PackIndex({
 
       {view === "table" ? (
         <div className="pack-table">
-          {filtered.map((pack) => (
+          {sorted.map((pack) => (
             <PackExpandable
               key={pack.slug}
               pack={pack}
               variant="row"
               open={open === pack.slug}
               onToggle={() => setOpen(open === pack.slug ? null : pack.slug)}
-              onCopied={(count, total) => setCopies((c) => ({ total, bySlug: { ...c.bySlug, [pack.slug]: count } }))}
             />
           ))}
         </div>
       ) : (
         <div className="pack-grid">
-          {filtered.map((pack) => (
+          {sorted.map((pack) => (
             <PackExpandable
               key={pack.slug}
               pack={pack}
               variant="card"
               open={open === pack.slug}
               onToggle={() => setOpen(open === pack.slug ? null : pack.slug)}
-              onCopied={(count, total) => setCopies((c) => ({ total, bySlug: { ...c.bySlug, [pack.slug]: count } }))}
             />
           ))}
         </div>
@@ -154,13 +183,11 @@ function PackExpandable({
   variant,
   open,
   onToggle,
-  onCopied,
 }: {
   pack: Pack;
   variant: "row" | "card";
   open: boolean;
   onToggle: () => void;
-  onCopied: (count: number, total: number) => void;
 }) {
   const example = isExample(pack);
   const verified = isVerified(pack);
@@ -216,7 +243,7 @@ function PackExpandable({
             ))}
           </ul>
           <div className="mt-3">
-            <CopyInstallerButton text={prompt} slug={pack.slug} onCopied={onCopied} />
+            <CopyInstallerButton text={prompt} />
           </div>
         </div>
       ) : null}
