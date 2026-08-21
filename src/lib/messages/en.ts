@@ -208,9 +208,6 @@ export const en = {
     /* Always says "paying". Two house ads sit above this line, and a
        bare "0 of 15 taken" beside two visible rows reads as a lie. */
     railCta: (filled: number, total: number) => `${filled} of ${total} paying taken`,
-    /* Not Promoted, not Verified, not Official. It is ours and it says so. */
-    houseLabel: "From Ellelion",
-    houseNote: "No outside sponsors yet. Two Ellelion products are on the rail so it is not empty.",
     openLine: (open: number, total: number) =>
       open === total
         ? `All ${total} paying slots are open.`

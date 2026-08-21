@@ -236,7 +236,7 @@ export function ConnectorFinder({
   return (
     <div className="cf">
       {/* Search and chips stay put while a long list moves under them. */}
-      <div className="cf-bar">
+      <div className={mode === "all" ? "cf-bar is-bare" : "cf-bar"}>
         <label className="cf-search">
           <span className="sr-only">{en.connectors.searchLabel}</span>
           <svg className="cf-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
