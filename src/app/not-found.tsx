@@ -6,7 +6,7 @@ import { en } from "@/lib/messages/en";
 
 export default function NotFound() {
   return (
-    <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
+    <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center py-24 text-center">
         <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>{en.notFound.kicker}</p>

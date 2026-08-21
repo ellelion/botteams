@@ -38,6 +38,9 @@ routines:
     prompt: Read Stripe. Draft the weekly money brief. Never move funds.
 ---`;
 
+/* The homepage keeps its own frame on purpose. The wider content width
+   is for the data pages; this one was already using the full gutter for
+   the split hero and index, and it is not part of that change. */
 export function HomePage({ teams }: { teams: Team[] }) {
   const added = teamsAddedSeries(30);
   return (

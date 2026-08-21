@@ -89,25 +89,38 @@ function PlainList({ items }: { items: FinderEntry[] }) {
 
 function WindowedList({ items }: { items: FinderEntry[] }) {
   const boxRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
   const [top, setTop] = useState(0);
   const [height, setHeight] = useState(520);
+  const [cols, setCols] = useState(1);
 
-  /* The box is sized in CSS so it can respond to the viewport. Measure it
-     rather than duplicating that number in JavaScript. */
+  /* Both numbers are set in CSS so they can respond to the viewport, and
+     both are read back rather than duplicated here. The column count
+     comes from the resolved grid track list, which is the only honest
+     source once the breakpoint lives in the stylesheet. */
   useLayoutEffect(() => {
     const box = boxRef.current;
     if (!box) return;
-    const measure = () => setHeight(box.clientHeight);
+    const measure = () => {
+      setHeight(box.clientHeight);
+      const list = listRef.current;
+      if (!list) return;
+      const tracks = getComputedStyle(list).gridTemplateColumns.split(" ").filter(Boolean).length;
+      setCols(Math.max(1, tracks));
+    };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(box);
     return () => ro.disconnect();
   }, []);
 
-  const visible = Math.ceil(height / ROW);
-  const start = Math.max(0, Math.floor(top / ROW) - 8);
-  const end = Math.min(items.length, start + visible + 16);
-  const slice = items.slice(start, end);
+  /* Rows of `cols` items each, so the scroll height and the window are
+     both counted in grid rows and never in items. */
+  const rows = Math.ceil(items.length / cols);
+  const visibleRows = Math.ceil(height / ROW);
+  const startRow = Math.max(0, Math.floor(top / ROW) - 4);
+  const endRow = Math.min(rows, startRow + visibleRows + 8);
+  const slice = items.slice(startRow * cols, endRow * cols);
 
   return (
     <div
@@ -118,8 +131,12 @@ function WindowedList({ items }: { items: FinderEntry[] }) {
       role="group"
       aria-label={en.connectors.allLabel}
     >
-      <div style={{ height: items.length * ROW, position: "relative" }}>
-        <ul className="cf-list" style={{ position: "absolute", insetInline: 0, transform: `translateY(${start * ROW}px)` }}>
+      <div style={{ height: rows * ROW, position: "relative" }}>
+        <ul
+          ref={listRef}
+          className="cf-list"
+          style={{ position: "absolute", insetInline: 0, transform: `translateY(${startRow * ROW}px)` }}
+        >
           {slice.map((e) => <Row key={e.slug} entry={e} />)}
         </ul>
       </div>
