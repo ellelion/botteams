@@ -10,7 +10,7 @@ export const en = {
   entity: site.entity,
   verified: "Verified",
   nav: {
-    packs: "Teams",
+    teams: "Teams",
     docs: "Spec",
     connectorsNav: "Connectors",
     api: "API",
@@ -104,7 +104,7 @@ export const en = {
     warn: "Worth a look",
     copyAnyway: "You can still copy it.",
   },
-  pack: {
+  team: {
     copy: "Copy installer prompt",
     copied: "Copied",
     copyFail: "Copy failed",

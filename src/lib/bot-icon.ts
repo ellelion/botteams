@@ -1,6 +1,6 @@
-import type { PackAgent } from "@/lib/types";
+import type { TeamAgent } from "@/lib/types";
 
-export function botIconKey(agent: PackAgent): string {
+export function botIconKey(agent: TeamAgent): string {
   if (agent.icon) return agent.icon;
   const n = agent.name.toLowerCase();
   if (n.includes("inbox") || n.includes("mail") || n.includes("follow") || n.includes("welcome") || n.includes("outreach") || n.includes("guest")) return "inbox";

@@ -1,4 +1,4 @@
-import type { Pack } from "@/lib/types";
+import type { Team } from "@/lib/types";
 import { buildPrompt, defaultState } from "@/lib/customize";
 import { site } from "@/lib/site";
 
@@ -9,6 +9,6 @@ import { site } from "@/lib/site";
  * recipe the team page no longer shows, so there is only one, and this is
  * the name the rest of the app already calls it by.
  */
-export function installerPrompt(pack: Pack): string {
-  return buildPrompt(pack, defaultState(pack), site.url, site.github);
+export function installerPrompt(team: Team): string {
+  return buildPrompt(team, defaultState(team), site.url, site.github);
 }

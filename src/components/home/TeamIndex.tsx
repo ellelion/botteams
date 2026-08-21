@@ -14,7 +14,7 @@ import { botMarkStyle, sectionSlug } from "@/lib/bot-icon";
 import { installerPrompt } from "@/lib/installer";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
-import { isVerified, type Pack } from "@/lib/types";
+import { isVerified, type Team } from "@/lib/types";
 import { resolveConnector, resolveConnectors } from "@/lib/connectors";
 
 /*
@@ -83,26 +83,26 @@ function TeamArrow() {
   );
 }
 
-function matchesQuery(pack: Pack, q: string): boolean {
+function matchesQuery(team: Team, q: string): boolean {
   if (!q) return true;
   const hay = [
-    pack.name,
-    pack.tagline,
-    pack.section,
-    pack.slug,
-    ...pack.connectors,
-    ...pack.agents.map((a) => a.name),
-    ...pack.agents.map((a) => a.persona),
+    team.name,
+    team.tagline,
+    team.section,
+    team.slug,
+    ...team.connectors,
+    ...team.agents.map((a) => a.name),
+    ...team.agents.map((a) => a.persona),
   ].join(" ").toLowerCase();
   return hay.includes(q);
 }
 
-export function PackIndex({
-  packs,
+export function TeamIndex({
+  teams,
   added,
   verifiedOn,
 }: {
-  packs: Pack[];
+  teams: Team[];
   added: { date: string; count: number }[];
   verifiedOn: string;
 }) {
@@ -119,23 +119,23 @@ export function PackIndex({
 
   const categories = useMemo(() => {
     const map = new Map<string, number>();
-    for (const pack of packs) map.set(pack.section, (map.get(pack.section) ?? 0) + 1);
+    for (const team of teams) map.set(team.section, (map.get(team.section) ?? 0) + 1);
     return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  }, [packs]);
+  }, [teams]);
 
   const connectorOptions = useMemo(() => {
     const map = new Map<string, number>();
-    for (const pack of packs) {
-      for (const mark of resolveConnectors(pack.connectors)) {
+    for (const team of teams) {
+      for (const mark of resolveConnectors(team.connectors)) {
         map.set(mark.name, (map.get(mark.name) ?? 0) + 1);
       }
     }
     return [...map.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  }, [packs]);
+  }, [teams]);
 
   const categoryOptions: SelectOption[] = useMemo(
     () => [
-      { value: "all", label: en.home.filterAll, count: packs.length, icon: <AllIcon /> },
+      { value: "all", label: en.home.filterAll, count: teams.length, icon: <AllIcon /> },
       ...categories.map(([name, count]) => ({
         value: sectionSlug(name),
         label: name,
@@ -143,7 +143,7 @@ export function PackIndex({
         icon: <SectionIcon section={name} />,
       })),
     ],
-    [categories, packs.length],
+    [categories, teams.length],
   );
 
   const connectorSelectOptions: SelectOption[] = useMemo(
@@ -165,13 +165,13 @@ export function PackIndex({
   ];
 
   const q = query.trim().toLowerCase();
-  const filtered = packs.filter((pack) => {
-    if (sectionParam !== "all" && sectionSlug(pack.section) !== sectionParam) return false;
+  const filtered = teams.filter((team) => {
+    if (sectionParam !== "all" && sectionSlug(team.section) !== sectionParam) return false;
     if (integrationParam !== "all") {
       const want = resolveConnector(integrationParam).slug;
-      if (!pack.connectors.some((c) => resolveConnector(c).slug === want)) return false;
+      if (!team.connectors.some((c) => resolveConnector(c).slug === want)) return false;
     }
-    if (!matchesQuery(pack, q)) return false;
+    if (!matchesQuery(team, q)) return false;
     return true;
   });
   /* Newest matches the API default. The index has no dates of its own, so
@@ -193,7 +193,7 @@ export function PackIndex({
   return (
     <section id="teams">
       <div className="stats-strip">
-        <p className="stats-line">{`${packs.length} teams · verified ${verifiedOn}`}</p>
+        <p className="stats-line">{`${teams.length} teams · verified ${verifiedOn}`}</p>
         <Sparkline series={added} className="stat-spark" />
       </div>
 
@@ -314,42 +314,42 @@ export function PackIndex({
             <span role="columnheader">{en.home.colConnectors}</span>
             <span role="columnheader"><span className="sr-only">{en.home.openTeam}</span></span>
           </div>
-          {sorted.map((pack) => (
-            <Link key={pack.slug} href={`/teams/${pack.slug}`} className="idx-colrow" role="row">
+          {sorted.map((team) => (
+            <Link key={team.slug} href={`/teams/${team.slug}`} className="idx-colrow" role="row">
               <span className="idx-colcell" role="cell">
-                <span className="idx-colname">{pack.name}</span>
-                <span className="idx-coltag">{pack.tagline}</span>
+                <span className="idx-colname">{team.name}</span>
+                <span className="idx-coltag">{team.tagline}</span>
               </span>
-              <span className="idx-colcat" role="cell">{pack.section}</span>
-              <span className="idx-num" role="cell">{pack.bots}</span>
-              <span className="idx-colconn" role="cell"><ConnectorRow names={pack.connectors} size={15} /></span>
+              <span className="idx-colcat" role="cell">{team.section}</span>
+              <span className="idx-num" role="cell">{team.bots}</span>
+              <span className="idx-colconn" role="cell"><ConnectorRow names={team.connectors} size={15} /></span>
               <span className="row-arrow" role="cell"><TeamArrow /></span>
             </Link>
           ))}
         </div>
       ) : view === "cards" ? (
         <div className="idx-cards">
-          {sorted.map((pack) => (
-            <Link key={pack.slug} href={`/teams/${pack.slug}`} className="idx-card">
-              <span className="idx-card-cat">{pack.section}</span>
-              <span className="idx-card-name">{pack.name}</span>
-              <span className="idx-card-tag">{pack.tagline}</span>
+          {sorted.map((team) => (
+            <Link key={team.slug} href={`/teams/${team.slug}`} className="idx-card">
+              <span className="idx-card-cat">{team.section}</span>
+              <span className="idx-card-name">{team.name}</span>
+              <span className="idx-card-tag">{team.tagline}</span>
               <span className="idx-card-foot">
-                <ConnectorRow names={pack.connectors} size={15} />
-                <span className="idx-card-bots">{`${pack.bots} Bots`}</span>
+                <ConnectorRow names={team.connectors} size={15} />
+                <span className="idx-card-bots">{`${team.bots} Bots`}</span>
               </span>
             </Link>
           ))}
         </div>
       ) : (
-        <div className="pack-table">
-          {sorted.map((pack) => (
-            <PackExpandable
-              key={pack.slug}
-              pack={pack}
+        <div className="team-table">
+          {sorted.map((team) => (
+            <TeamExpandable
+              key={team.slug}
+              team={team}
               variant="row"
-              open={open === pack.slug}
-              onToggle={() => setOpen(open === pack.slug ? null : pack.slug)}
+              open={open === team.slug}
+              onToggle={() => setOpen(open === team.slug ? null : team.slug)}
             />
           ))}
         </div>
@@ -358,20 +358,20 @@ export function PackIndex({
   );
 }
 
-function PackExpandable({
-  pack,
+function TeamExpandable({
+  team,
   variant,
   open,
   onToggle,
 }: {
-  pack: Pack;
+  team: Team;
   variant: "row" | "card";
   open: boolean;
   onToggle: () => void;
 }) {
-  const verified = isVerified(pack);
-  const prompt = installerPrompt(pack);
-  const shellClass = variant === "card" ? "pack-card" : "index-row";
+  const verified = isVerified(team);
+  const prompt = installerPrompt(team);
+  const shellClass = variant === "card" ? "team-card" : "index-row";
 
   return (
     <article className={`${shellClass}${open ? " is-open" : ""}`}>
@@ -383,23 +383,23 @@ function PackExpandable({
         </button>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-            <Link href={`/teams/${pack.slug}`} className="index-name" onClick={(e) => e.stopPropagation()}>
-              {pack.name}
+            <Link href={`/teams/${team.slug}`} className="index-name" onClick={(e) => e.stopPropagation()}>
+              {team.name}
             </Link>
-            <span className="pack-card-meta">{`${pack.bots} bots`}</span>
+            <span className="team-card-meta">{`${team.bots} bots`}</span>
           </div>
-          <p className="index-tagline">{pack.tagline}</p>
+          <p className="index-tagline">{team.tagline}</p>
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
-            <ConnectorRow names={pack.connectors} labeled size={16} />
+            <ConnectorRow names={team.connectors} labeled size={16} />
             <span className="inline-flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
               {verified ? <VerifiedChip /> : null}
             </span>
           </div>
         </div>
         <Link
-          href={`/teams/${pack.slug}`}
+          href={`/teams/${team.slug}`}
           className="row-arrow row-arrow-link"
-          aria-label={`${en.home.openTeam}: ${pack.name}`}
+          aria-label={`${en.home.openTeam}: ${team.name}`}
           onClick={(e) => e.stopPropagation()}
         >
           <TeamArrow />
@@ -408,14 +408,14 @@ function PackExpandable({
       {open ? (
         <div className="index-body" onClick={(e) => e.stopPropagation()}>
           <ul>
-            {pack.agents.map((agent, i) => (
+            {team.agents.map((agent, i) => (
               <li key={agent.name} className="bot-row">
                 <div className="flex items-start gap-2">
                   <GrokBotMark size={17} animate className="mt-0.5" style={botMarkStyle(i)} />
                   <div className="min-w-0">
                     <p className="flex flex-wrap items-baseline gap-2 text-[0.92rem]" style={{ fontFamily: ledger.serif }}>
                       {agent.name}
-                      <span className="bot-tag">{en.pack.botTag}</span>
+                      <span className="bot-tag">{en.team.botTag}</span>
                     </p>
                     <p className="mt-0.5 text-[0.75rem] leading-snug" style={{ color: ledger.inkMuted }}>{agent.persona}</p>
                     {agent.connectors.length > 0 ? (

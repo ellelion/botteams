@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import type { ConnectorMode, Pack, PackAgent, PackRoom, PackRoutine, PackStatus, PackSuggestion } from "@/lib/types";
-export type { ConnectorMode, Pack, PackAgent, PackRoom, PackRoutine, PackStatus, PackSuggestion } from "@/lib/types";
+import type { ConnectorMode, Team, TeamAgent, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
+export type { ConnectorMode, Team, TeamAgent, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
 export { isExample, isVerified } from "@/lib/types";
 
-const PACKS_DIR = path.join(process.cwd(), "packs");
+const TEAMS_DIR = path.join(process.cwd(), "teams");
 
 function asStringArray(value: unknown, field: string): string[] {
   if (!Array.isArray(value) || value.some((item) => typeof item !== "string")) {
@@ -14,11 +14,11 @@ function asStringArray(value: unknown, field: string): string[] {
   return value;
 }
 
-function asAgents(value: unknown, packConnectors: string[]): PackAgent[] {
+function asAgents(value: unknown, teamConnectors: string[]): TeamAgent[] {
   if (!Array.isArray(value) || value.length === 0) {
     throw new Error("agents must be a non-empty array");
   }
-  const allowed = new Set(packConnectors.map((name) => name.trim()));
+  const allowed = new Set(teamConnectors.map((name) => name.trim()));
   return value.map((item, i) => {
     if (!item || typeof item !== "object") throw new Error(`agents[${i}] is invalid`);
     const row = item as Record<string, unknown>;
@@ -28,17 +28,17 @@ function asAgents(value: unknown, packConnectors: string[]): PackAgent[] {
     const connectors = row.connectors === undefined ? [] : asStringArray(row.connectors, `agents[${i}].connectors`);
     for (const name of connectors) {
       if (!allowed.has(name)) {
-        throw new Error(`agents[${i}] connector "${name}" is not in pack connectors`);
+        throw new Error(`agents[${i}] connector "${name}" is not in team connectors`);
       }
     }
-    const agent: PackAgent = { name: row.name, persona: row.persona, connectors };
+    const agent: TeamAgent = { name: row.name, persona: row.persona, connectors };
     if (row.reuse === true) agent.reuse = true;
     if (typeof row.icon === "string" && row.icon.trim()) agent.icon = row.icon.trim();
     return agent;
   });
 }
 
-function asRooms(value: unknown): PackRoom[] {
+function asRooms(value: unknown): TeamRoom[] {
   if (!Array.isArray(value) || value.length === 0) {
     throw new Error("rooms must be a non-empty array");
   }
@@ -55,7 +55,7 @@ function asRooms(value: unknown): PackRoom[] {
   });
 }
 
-function asRoutines(value: unknown): PackRoutine[] {
+function asRoutines(value: unknown): TeamRoutine[] {
   if (!Array.isArray(value) || value.length === 0) {
     throw new Error("routines must be a non-empty array");
   }
@@ -82,7 +82,7 @@ function asRoutines(value: unknown): PackRoutine[] {
 /* Chips a team offers under "Also tell Grok Bot". A bare string is a chip
    that starts off; an object may mark it on by default, which is how a team
    ships its own safety lines ("never send mail"). */
-function asSuggestions(value: unknown): PackSuggestion[] {
+function asSuggestions(value: unknown): TeamSuggestion[] {
   if (value === undefined) return [];
   if (!Array.isArray(value)) throw new Error("suggest must be an array");
   return value.map((item, i) => {
@@ -111,7 +111,7 @@ function asConnectorModes(value: unknown, connectors: string[]): Record<string, 
   return out;
 }
 
-export function parsePack(raw: string, filename: string): Pack {
+export function parseTeam(raw: string, filename: string): Team {
   const { data, content } = matter(raw);
   const slug = path.basename(filename, ".md");
   if (typeof data.slug !== "string" || data.slug !== slug) {
@@ -122,13 +122,11 @@ export function parsePack(raw: string, filename: string): Pack {
   const bots = typeof data.bots === "number" ? data.bots : data.seats;
   if (typeof bots !== "number") throw new Error(`${filename}: missing bots`);
   if (typeof data.section !== "string") throw new Error(`${filename}: missing section`);
-  // "pack" is the pre-rename spelling of "team". Still parsed so an older
-  // team file (or a fork) keeps working; everything downstream sees "team".
-  const rawStatus = data.status === "pack" ? "team" : data.status;
+  const rawStatus = data.status;
   if (rawStatus !== "team" && rawStatus !== "example") {
     throw new Error(`${filename}: status must be team or example`);
   }
-  const status: PackStatus = rawStatus;
+  const status: TeamStatus = rawStatus;
   const connectors = asStringArray(data.connectors, "connectors");
   const agents = asAgents(data.agents, connectors);
   const union = new Set<string>();
@@ -169,15 +167,15 @@ export function parsePack(raw: string, filename: string): Pack {
   };
 }
 
-export function listPacks(): Pack[] {
+export function listTeams(): Team[] {
   const files = fs
-    .readdirSync(PACKS_DIR)
+    .readdirSync(TEAMS_DIR)
     .filter((file) => file.endsWith(".md"))
     .sort();
-  return files.map((file) => parsePack(fs.readFileSync(path.join(PACKS_DIR, file), "utf8"), file));
+  return files.map((file) => parseTeam(fs.readFileSync(path.join(TEAMS_DIR, file), "utf8"), file));
 }
 
-export function getPack(slug: string): Pack | null {
-  return listPacks().find((pack) => pack.slug === slug) ?? null;
+export function getTeam(slug: string): Team | null {
+  return listTeams().find((team) => team.slug === slug) ?? null;
 }
 

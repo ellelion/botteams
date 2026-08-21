@@ -502,9 +502,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   }
 }
 
-/* Pack / docs markdown body: inherit the Ledger type, not a blob of raw HTML. */
-.pack-prose h2,
-.pack-prose h3 {
+/* Team / docs markdown body: inherit the Ledger type, not a blob of raw HTML. */
+.team-prose h2,
+.team-prose h3 {
   margin-top: 1.75rem;
   color: var(--accent-text);
   font-size: 0.6rem;
@@ -512,25 +512,25 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   letter-spacing: 0.26em;
   text-transform: uppercase;
 }
-.pack-prose p + p {
+.team-prose p + p {
   margin-top: 1rem;
 }
-.pack-prose a {
+.team-prose a {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
-.pack-prose a:hover,
-.pack-prose a:focus-visible {
+.team-prose a:hover,
+.team-prose a:focus-visible {
   color: var(--accent-text);
 }
-.pack-prose ul {
+.team-prose ul {
   margin-top: 0.75rem;
   padding-left: 1.1rem;
 }
-.pack-prose li + li {
+.team-prose li + li {
   margin-top: 0.35rem;
 }
-.pack-prose code {
+.team-prose code {
   font-family: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, "Cascadia Code", monospace;
   font-size: 0.85em;
 }
@@ -540,6 +540,13 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   overflow: auto;
   background: var(--surface);
   border: 1px solid var(--line);
+}
+/* The contribute sample is a whole team file, and the point of showing it
+   is that it is short. A scrollbar on twenty lines makes it look long. */
+.installer-prompt.is-whole {
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: visible;
 }
 
 .hairline-row + .hairline-row {
@@ -601,12 +608,12 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   color: var(--accent-text);
 }
 
-.pack-grid {
+.team-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
 }
-.pack-card {
+.team-card {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -616,20 +623,20 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border: 0;
   border-bottom: 1px solid var(--line);
 }
-.pack-card h3 {
+.team-card h3 {
   font-family: "General Sans", system-ui, sans-serif;
   font-size: 1.05rem;
   font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1.15;
 }
-.pack-card-top {
+.team-card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
-.pack-card-meta {
+.team-card-meta {
   color: var(--muted);
   font-size: 0.62rem;
   letter-spacing: 0.12em;
@@ -642,7 +649,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   flex: none;
 }
 
-.pack-table {
+.team-table {
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--line);

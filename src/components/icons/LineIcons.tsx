@@ -11,7 +11,7 @@ function I({ children, className = "line-icon" }: { children: ReactNode; classNa
   );
 }
 
-const PACK: Record<string, ReactNode> = {
+const TEAM: Record<string, ReactNode> = {
   "founder-os": (<><path d="M4 15h16v5H4z"/><path d="M7 15V7l5-3 5 3v8"/></>),
   agency: (<><rect x="3.5" y="7" width="17" height="13" rx="1.5"/><path d="M8 7V5.5A2.5 2.5 0 0 1 10.5 3h3A2.5 2.5 0 0 1 16 5.5V7"/></>),
   bookkeeping: (<><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></>),
@@ -60,7 +60,7 @@ const BOT: Record<string, ReactNode> = {
 
 
 /* Facet icons for the connector catalog. Same 24 viewBox, same 1.5 stroke
-   and round joins as PACK and BOT, so the page keeps one icon language
+   and round joins as TEAM and BOT, so the page keeps one icon language
    instead of two. Keyed by the category label itself. */
 const CATEGORY: Record<string, ReactNode> = {
   "built in": (<><path d="M12 3.5 5 6.5v5.2c0 4 2.8 6.9 7 8.3 4.2-1.4 7-4.3 7-8.3V6.5z"/><path d="M9 12l2.2 2.2L15.5 10"/></>),
@@ -80,15 +80,15 @@ export function CategoryIcon({ name, className = "line-icon" }: { name: string }
   return <I className={className}>{CATEGORY[name.trim().toLowerCase()] ?? CATEGORY.featured}</I>;
 }
 
-export function PackIcon({ slug, className = "line-icon" }: { slug: string } & IconProps) {
-  return <I className={className}>{PACK[slug] ?? PACK.product}</I>;
+export function TeamIcon({ slug, className = "line-icon" }: { slug: string } & IconProps) {
+  return <I className={className}>{TEAM[slug] ?? TEAM.product}</I>;
 }
 
 /* A section label ("Customer success") rather than a slug, because that is
    what the index and the team files carry. Every one of the 26 sections has
    its own glyph; the fallback is here for a section added before its icon. */
 export function SectionIcon({ section, className = "line-icon" }: { section: string } & IconProps) {
-  return <I className={className}>{PACK[sectionSlug(section)] ?? PACK.product}</I>;
+  return <I className={className}>{TEAM[sectionSlug(section)] ?? TEAM.product}</I>;
 }
 
 export function BotIcon({ name, className = "line-icon" }: { name?: string } & IconProps) {

@@ -7,7 +7,7 @@ const require = createRequire(import.meta.url);
 const matter = require("gray-matter");
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const packsDir = path.join(root, "packs");
+const teamsDir = path.join(root, "teams");
 const REQUIRED = ["slug", "name", "tagline", "section", "status", "connectors", "agents", "rooms", "routines"];
 
 /* Closed category list. A team file may only use a section that already
@@ -26,7 +26,7 @@ const seenUrls = new Set();
 const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/;
 
 function fail(message) {
-  console.error("validate-packs: " + message);
+  console.error("validate-teams: " + message);
   process.exitCode = 1;
 }
 
@@ -34,11 +34,11 @@ function isNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
-const files = fs.readdirSync(packsDir).filter((file) => file.endsWith(".md")).sort();
-if (files.length === 0) fail("no packs/*.md files");
+const files = fs.readdirSync(teamsDir).filter((file) => file.endsWith(".md")).sort();
+if (files.length === 0) fail("no teams/*.md files");
 
 for (const file of files) {
-  const raw = fs.readFileSync(path.join(packsDir, file), "utf8");
+  const raw = fs.readFileSync(path.join(teamsDir, file), "utf8");
   let parsed;
   try { parsed = matter(raw); } catch (error) {
     fail(file + ": " + (error instanceof Error ? error.message : String(error)));
@@ -59,10 +59,10 @@ for (const file of files) {
   const bots = typeof data.bots === "number" ? data.bots : data.seats;
   if (typeof bots !== "number") fail(file + ": bots must be a number");
   if (data.seats !== undefined && data.bots === undefined) fail(file + ": rename seats to bots");
-  const status = data.status === "pack" ? "team" : data.status;
+  const status = data.status === "team" ? "team" : data.status;
   if (status !== "team" && status !== "example") fail(file + ": status must be team or example");
   if (!Array.isArray(data.connectors)) fail(file + ": connectors must be an array");
-  const packConnectors = new Set((data.connectors || []).map((name) => String(name)));
+  const teamConnectors = new Set((data.connectors || []).map((name) => String(name)));
   if (!Array.isArray(data.agents) || data.agents.length === 0) fail(file + ": agents must be a non-empty array");
   else {
     if (data.agents.length !== bots) fail(file + ": bots count must equal agents length");
@@ -71,7 +71,7 @@ for (const file of files) {
       if (agent.connectors !== undefined) {
         if (!Array.isArray(agent.connectors)) fail(file + ": agents[" + i + "].connectors must be an array");
         else agent.connectors.forEach((name) => {
-          if (!packConnectors.has(name)) fail(file + ": agents[" + i + "] connector \"" + name + "\" is not in pack connectors");
+          if (!teamConnectors.has(name)) fail(file + ": agents[" + i + "] connector \"" + name + "\" is not in team connectors");
         });
       }
     });
@@ -111,7 +111,7 @@ for (const file of files) {
       fail(file + ": integration_urls must be a map of name to URL");
     } else {
       for (const [name, href] of Object.entries(data.integration_urls)) {
-        if (!packConnectors.has(name)) fail(file + ': integration_urls names "' + name + '" which is not a connector on this team');
+        if (!teamConnectors.has(name)) fail(file + ': integration_urls names "' + name + '" which is not a connector on this team');
         if (!/^https?:\/\//.test(String(href))) fail(file + ": integration_urls." + name + " must be an absolute URL");
       }
     }
@@ -125,7 +125,11 @@ for (const file of files) {
       if (!chip || typeof chip !== "object") { fail(file + ": suggest[" + i + "] must be a string or a map"); continue; }
       if (!isNonEmptyString(chip.text)) fail(file + ": suggest[" + i + "].text is required");
       if (chip.on !== undefined && typeof chip.on !== "boolean") fail(file + ": suggest[" + i + "].on must be true or false");
-      if (/\bpack\b|\bseat\b/i.test(String(chip.text))) fail(file + ": suggest[" + i + '] says pack or seat. The nouns are team and Bot.');
+      /* The retired nouns. Nothing in the tree says them any more, so this
+         exists to stop one arriving through a pull request. */
+      if (/\bpacks?\b|\bseats?\b/i.test(String(chip.text))) {
+        fail(file + ": suggest[" + i + "] uses a retired noun. A row is a team and the unit is a Bot.");
+      }
     }
   }
   if (data.connector_modes !== undefined) {
@@ -133,7 +137,7 @@ for (const file of files) {
       fail(file + ": connector_modes must be a map of connector to mode");
     } else {
       for (const [name, mode] of Object.entries(data.connector_modes)) {
-        if (!packConnectors.has(name)) fail(file + ': connector_modes names "' + name + '" which is not a connector on this team');
+        if (!teamConnectors.has(name)) fail(file + ': connector_modes names "' + name + '" which is not a connector on this team');
         if (!["read", "draft", "ask"].includes(mode)) fail(file + ": connector_modes." + name + " must be read, draft, or ask");
       }
     }
@@ -141,4 +145,4 @@ for (const file of files) {
 }
 
 if (process.exitCode) process.exit(process.exitCode);
-console.log("validate-packs: " + files.length + " packs ok");
+console.log("validate-teams: " + files.length + " teams ok");

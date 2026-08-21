@@ -29,7 +29,7 @@ export function CopyInstallerButton({ text, disabled = false }: { text: string; 
       disabled={disabled}
       aria-disabled={disabled}
     >
-      {failed ? en.pack.copyFail : copied ? en.pack.copied : en.pack.copy}
+      {failed ? en.team.copyFail : copied ? en.team.copied : en.team.copy}
     </button>
   );
 }

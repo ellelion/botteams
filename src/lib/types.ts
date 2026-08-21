@@ -1,4 +1,4 @@
-export type PackAgent = {
+export type TeamAgent = {
   name: string;
   persona: string;
   reuse?: boolean;
@@ -6,19 +6,19 @@ export type PackAgent = {
   connectors: string[];
 };
 
-export type PackRoom = {
+export type TeamRoom = {
   name: string;
   members: string[];
 };
 
-export type PackRoutine = {
+export type TeamRoutine = {
   name: string;
   owner: string;
   schedule: string;
   prompt: string;
 };
 
-export type PackStatus = "team" | "example";
+export type TeamStatus = "team" | "example";
 
 /*
  * How far a connector is allowed to go.
@@ -34,22 +34,22 @@ export type ConnectorMode = "read" | "draft" | "ask";
 
 /* One "Also tell Grok Bot" chip, owned by the team file that ships it.
    `on` marks the safety chips a team turns on by default. */
-export type PackSuggestion = {
+export type TeamSuggestion = {
   text: string;
   on?: boolean;
 };
 
-export type Pack = {
+export type Team = {
   slug: string;
   name: string;
   tagline: string;
   bots: number;
   section: string;
-  status: PackStatus;
+  status: TeamStatus;
   connectors: string[];
-  agents: PackAgent[];
-  rooms: PackRoom[];
-  routines: PackRoutine[];
+  agents: TeamAgent[];
+  rooms: TeamRoom[];
+  routines: TeamRoutine[];
   skills: string[];
   body: string;
   /* Attribution, all optional. A team written in-house carries none of
@@ -64,18 +64,18 @@ export type Pack = {
   integrationUrls?: Record<string, string>;
   /* Customize inputs, both per team rather than global. Chips for Sales
      should not read like chips for Founder OS. */
-  suggest: PackSuggestion[];
+  suggest: TeamSuggestion[];
   connectorModes: Record<string, ConnectorMode>;
 };
 
-export function isExample(pack: Pack): boolean {
-  return pack.status === "example";
+export function isExample(team: Team): boolean {
+  return team.status === "example";
 }
 
-export function isVerified(pack: Pack): boolean {
-  if (pack.agents.length === 0) return false;
-  if (pack.rooms.some((room) => room.members.length < 2 || room.members.length > 6)) return false;
-  if (pack.agents.length + pack.rooms.length > 50) return false;
-  if (pack.bots !== pack.agents.length) return false;
+export function isVerified(team: Team): boolean {
+  if (team.agents.length === 0) return false;
+  if (team.rooms.some((room) => room.members.length < 2 || room.members.length > 6)) return false;
+  if (team.agents.length + team.rooms.length > 50) return false;
+  if (team.bots !== team.agents.length) return false;
   return true;
 }

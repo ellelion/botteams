@@ -3,7 +3,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { ledger } from "@/lib/ledger-theme";
 import { DEFAULT_LIMIT, MAX_LIMIT } from "@/lib/api-teams";
-import { listPacks } from "@/lib/packs";
+import { listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
  * response shape without running a line of JavaScript.
  */
 export default function ApiDocsPage() {
-  const total = listPacks().length;
+  const total = listTeams().length;
   const base = site.url;
 
   const params: [string, string][] = [
@@ -148,8 +148,8 @@ export default function ApiDocsPage() {
             ].join("\n")}</code>
           </pre>
           <p className="mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
-            <code style={{ fontFamily: ledger.mono }}>addedAt</code> comes from the commit that first added the team file,
-            unless the file states its own. It is never invented, and it is null when neither exists.
+            <code style={{ fontFamily: ledger.mono }}>addedAt</code> is the date stated in the team file and nothing else.
+            It is never inferred and never invented. A file that does not state one reports null and sorts last.
           </p>
         </section>
       </main>

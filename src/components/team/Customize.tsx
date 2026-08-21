@@ -10,7 +10,7 @@ import { resolveConnector } from "@/lib/connectors";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
-import type { ConnectorMode, Pack } from "@/lib/types";
+import type { ConnectorMode, Team } from "@/lib/types";
 import {
   MODES,
   MODE_HINT,
@@ -39,9 +39,9 @@ import {
 
 const HASH_KEY = "c=";
 
-export function Customize({ pack, children }: { pack: Pack; children?: ReactNode }) {
+export function Customize({ team, children }: { team: Team; children?: ReactNode }) {
   const [editing, setEditing] = useState(false);
-  const [state, setState] = useState<CustomState>(() => defaultState(pack));
+  const [state, setState] = useState<CustomState>(() => defaultState(team));
   const [shared, setShared] = useState(false);
   /* A recipe change while a hand-edited prompt exists parks here until the
      human says which one wins. */
@@ -60,24 +60,24 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
         /* Once, on mount. The server cannot see the hash, so reading it
            any earlier would render one recipe and hydrate another. */
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setState(decodeState(pack, payload));
+        setState(decodeState(team, payload));
         setEditing(true);
       }
     }
     hydrated.current = true;
-  }, [pack]);
+  }, [team]);
 
   /* Keep the address bar in step, so copying the URL is enough to share. */
   useEffect(() => {
     if (!hydrated.current) return;
-    const payload = encodeState(pack, state);
+    const payload = encodeState(team, state);
     const next = payload ? `#${HASH_KEY}${payload}` : window.location.pathname + window.location.search;
     window.history.replaceState(null, "", next);
-  }, [pack, state]);
+  }, [team, state]);
 
-  const resolved = useMemo(() => resolve(pack, state), [pack, state]);
-  const verdict = useMemo(() => check(pack, state), [pack, state]);
-  const generated = useMemo(() => buildPrompt(pack, state, site.url, site.github), [pack, state]);
+  const resolved = useMemo(() => resolve(team, state), [team, state]);
+  const verdict = useMemo(() => check(team, state), [team, state]);
+  const generated = useMemo(() => buildPrompt(team, state, site.url, site.github), [team, state]);
   const prompt = state.override ?? generated;
 
   /* Every recipe edit goes through here. If the prompt has been rewritten
@@ -125,7 +125,7 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
 
   function reset() {
     setPending(null);
-    setState(defaultState(pack));
+    setState(defaultState(team));
   }
 
   async function copyShareLink() {
@@ -139,16 +139,16 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
   }
 
   function download() {
-    const blob = new Blob([toMarkdown(pack, state)], { type: "text/markdown" });
+    const blob = new Blob([toMarkdown(team, state)], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${pack.slug}.md`;
+    a.download = `${team.slug}.md`;
     a.click();
     URL.revokeObjectURL(url);
   }
 
-  const readish = pack.connectors.filter((c) => (state.modes[c] ?? "draft") !== "ask");
+  const readish = team.connectors.filter((c) => (state.modes[c] ?? "draft") !== "ask");
 
   return (
     <>
@@ -156,10 +156,10 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
           sells one paste, so the action cannot sit below three screens. */}
       <div className="mt-7 border-t pt-6" style={{ borderColor: ledger.hairline }}>
         <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-          {en.pack.connectFirst}
+          {en.team.connectFirst}
         </h2>
         <div className="mt-3">
-          <ConnectorRow names={pack.connectors} labeled size={18} />
+          <ConnectorRow names={team.connectors} labeled size={18} />
         </div>
 
         <div className="cz-actions mt-5">
@@ -192,8 +192,8 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
         ) : null}
 
         <div className="mt-5 grid gap-2 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-          <p>{en.pack.connectorsNote}</p>
-          <p>{en.pack.installNote}</p>
+          <p>{en.team.connectorsNote}</p>
+          <p>{en.team.installNote}</p>
         </div>
       </div>
 
@@ -233,7 +233,7 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
             <legend className="cz-legend">{en.customize.connectors}</legend>
             <p className="cz-truth">{en.customize.connectorTruth}</p>
             <ul className="cz-list">
-              {pack.connectors.map((connector) => {
+              {team.connectors.map((connector) => {
                 const mark = resolveConnector(connector);
                 const mode = state.modes[connector] ?? "draft";
                 return (
@@ -270,7 +270,7 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
           <fieldset className="cz-group">
             <legend className="cz-legend">{en.customize.bots}</legend>
             <ul className="cz-list">
-              {pack.agents.map((agent, i) => {
+              {team.agents.map((agent, i) => {
                 const on = isOn(state, agent.name);
                 return (
                   <li key={agent.name} className={`cz-bot${on ? "" : " is-off"}`}>
@@ -333,7 +333,7 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
               </span>
             </p>
             <ul className="cz-members">
-              {pack.agents.filter((a) => isOn(state, a.name)).map((agent) => (
+              {team.agents.filter((a) => isOn(state, a.name)).map((agent) => (
                 <li key={agent.name}>
                   <label className="cz-check cz-check-row">
                     <input
@@ -351,9 +351,9 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
           <fieldset className="cz-group">
             <legend className="cz-legend">{en.customize.also}</legend>
             <p className="cz-truth">{en.customize.alsoLead}</p>
-            {pack.suggest.length > 0 ? (
+            {team.suggest.length > 0 ? (
               <div className="cz-chips">
-                {pack.suggest.map((s) => (
+                {team.suggest.map((s) => (
                   <button
                     key={s.text}
                     type="button"
@@ -405,7 +405,7 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
       {/* The roster, the room, and the routines as they stand right now.
           Read them and you know what the paste will do. */}
       <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-        <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.agents}</h2>
+        <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.agents}</h2>
         <ul className="mt-4">
           {resolved.agents.map(({ source, name, note }, i) => (
             <li key={source.name} className="hairline-row py-3">
@@ -413,8 +413,8 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
                 <GrokBotMark size={19} animate className="mt-0.5" style={botMarkStyle(i)} />
                 <div className="min-w-0">
                   <p className="flex flex-wrap items-baseline gap-2" style={{ fontFamily: ledger.serif }}>
-                    <span>{name || source.name}{source.reuse ? ` · ${en.pack.reuse}` : ""}</span>
-                    <span className="bot-tag">{en.pack.botTag}</span>
+                    <span>{name || source.name}{source.reuse ? ` · ${en.team.reuse}` : ""}</span>
+                    <span className="bot-tag">{en.team.botTag}</span>
                   </p>
                   <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{source.persona}</p>
                   {note ? <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{note}</p> : null}
@@ -429,7 +429,7 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
       </section>
 
       <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-        <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.rooms}</h2>
+        <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.rooms}</h2>
         <ul className="mt-4">
           <li className="hairline-row py-3">
             <p style={{ fontFamily: ledger.serif }}>{resolved.roomName}</p>
@@ -442,13 +442,13 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
 
       {resolved.routines.length > 0 ? (
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.routines}</h2>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.routines}</h2>
           <ul className="mt-4">
             {resolved.routines.map(({ source, owner }) => (
               <li key={source.name} className="hairline-row py-3">
                 <p style={{ fontFamily: ledger.serif }}>{source.name}</p>
                 <p className="mt-1 text-[0.62rem] uppercase tracking-[0.14em]" style={{ color: ledger.label }}>
-                  {en.pack.ownerBot} {owner} · {source.schedule}
+                  {en.team.ownerBot} {owner} · {source.schedule}
                 </p>
                 <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{source.prompt}</p>
               </li>
@@ -461,7 +461,7 @@ export function Customize({ pack, children }: { pack: Pack; children?: ReactNode
 
       <div className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
         <h2 className="mb-4 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-          {en.pack.promptTitle}
+          {en.team.promptTitle}
         </h2>
         <div className="cz-actions">
           <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />

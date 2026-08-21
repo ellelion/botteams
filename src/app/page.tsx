@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { HomePage } from "@/components/HomePage";
-import { listPacks } from "@/lib/packs";
-import { packListJsonLd } from "@/lib/seo";
+import { listTeams } from "@/lib/teams";
+import { teamListJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -15,11 +15,11 @@ function JsonLd({ data }: { data: object }) {
 }
 
 export default function Home() {
-  const packs = listPacks();
+  const teams = listTeams();
   return (
     <>
-      <JsonLd data={packListJsonLd(packs)} />
-      <HomePage packs={packs} />
+      <JsonLd data={teamListJsonLd(teams)} />
+      <HomePage teams={teams} />
     </>
   );
 }
