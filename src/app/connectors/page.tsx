@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ConnectorExplorer, type ExplorerEntry } from "@/components/connectors/ConnectorExplorer";
+import { ConnectorFinder, type FinderEntry } from "@/components/connectors/ConnectorFinder";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { ledger } from "@/lib/ledger-theme";
@@ -8,6 +8,7 @@ import {
   CATALOG_CHECKED_ON,
   CATALOG_SOURCE,
   CONNECTOR_CATALOG,
+  aliasesBySlug,
   catalogByCategory,
   isBuiltIn,
   resolveConnector,
@@ -30,26 +31,23 @@ export default function ConnectorsPage() {
   // through the same alias-aware resolver the rows use, then compare slugs.
   // Comparing the raw strings misses "Calendar", which is what every team
   // actually writes for Google Calendar.
-  const usage = new Map<string, { slug: string; name: string }[]>();
+  const usage = new Map<string, number>();
   for (const team of teams) {
     const slugs = new Set<string>();
     for (const name of team.connectors) slugs.add(resolveConnector(name).slug);
     for (const agent of team.agents) for (const name of agent.connectors) slugs.add(resolveConnector(name).slug);
-    for (const slug of slugs) {
-      const list = usage.get(slug) ?? [];
-      list.push({ slug: team.slug, name: team.name });
-      usage.set(slug, list);
-    }
+    for (const slug of slugs) usage.set(slug, (usage.get(slug) ?? 0) + 1);
   }
 
-  const groups = catalogByCategory();
-  const categories = groups.map((g) => g.category);
-  const entries: ExplorerEntry[] = CONNECTOR_CATALOG.map((e) => ({
+  const aliases = aliasesBySlug();
+  const categories = catalogByCategory().map((g) => g.category);
+  const entries: FinderEntry[] = CONNECTOR_CATALOG.map((e) => ({
     name: e.name,
     slug: e.slug,
     category: e.category,
     builtIn: isBuiltIn(e.slug),
-    teams: usage.get(e.slug) ?? [],
+    teams: usage.get(e.slug) ?? 0,
+    aliases: aliases.get(e.slug) ?? [],
   }));
   const builtInCount = entries.filter((e) => e.builtIn).length;
 
@@ -60,26 +58,34 @@ export default function ConnectorsPage() {
         <h1 className="font-display text-[clamp(2rem,4vw,3.2rem)] leading-[1.05]" style={{ fontFamily: ledger.serif }}>
           {en.connectors.h1}
         </h1>
-        <p className="mt-5 max-w-2xl text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          {en.connectors.intro(CONNECTOR_CATALOG.length, builtInCount)}
-        </p>
-        <p className="mt-4 max-w-2xl text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-          {en.connectors.builtInNote}{" "}
-          <a className="accent-hover underline" href={XAI_CONNECTOR_DOCS} target="_blank" rel="noopener noreferrer">
-            {en.connectors.builtInSource}
-          </a>
-          {". "}
-          {en.connectors.sourceNote}{" "}
-          <a className="accent-hover underline" href={CATALOG_SOURCE} target="_blank" rel="noopener noreferrer">
-            {en.connectors.sourceLabel}
-          </a>
-          {en.connectors.sourceTail(CATALOG_AS_OF)}
-        </p>
-        <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
-          {en.connectors.checked} <time dateTime={CATALOG_CHECKED_ON}>{CATALOG_CHECKED_ON}</time>
+        <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+          {en.connectors.lede(CONNECTOR_CATALOG.length)}
         </p>
 
-        <ConnectorExplorer entries={entries} categories={categories} variant="console" />
+        {/* The finder comes before the provenance. Every claim below is
+            still on the page and still checkable, but a visitor looking for
+            Gmail should not have to read two paragraphs about where the
+            list came from to reach the search field. */}
+        <ConnectorFinder entries={entries} categories={categories} />
+
+        <section className="mt-14 border-t pt-7" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.sourceTitle}</h2>
+          <p className="mt-3 max-w-2xl text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+            {en.connectors.builtInNote(builtInCount)}{" "}
+            <a className="accent-hover underline" href={XAI_CONNECTOR_DOCS} target="_blank" rel="noopener noreferrer">
+              {en.connectors.builtInSource}
+            </a>
+            {". "}
+            {en.connectors.sourceNote}{" "}
+            <a className="accent-hover underline" href={CATALOG_SOURCE} target="_blank" rel="noopener noreferrer">
+              {en.connectors.sourceLabel}
+            </a>
+            {en.connectors.sourceTail(CATALOG_AS_OF)}
+          </p>
+          <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
+            {en.connectors.checked} <time dateTime={CATALOG_CHECKED_ON}>{CATALOG_CHECKED_ON}</time>
+          </p>
+        </section>
 
         <section className="mt-14 border-t pt-7" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.byoTitle}</h2>
