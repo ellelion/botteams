@@ -62,11 +62,11 @@ export const en = {
     eyebrow: "Grok Bot connectors",
     h1: "Connectors",
     intro: (count: number, builtIn: number) =>
-      `Connectors are account-wide. A team on this shelf expects yours to be connected already, and the installer prompt never starts an OAuth flow. xAI documents ${builtIn} of these as built in. The other ${count - builtIn} come from the in-app picker, which xAI does not publish.`,
+      `${count} connectors. Connectors are account-wide. A team on this shelf expects yours to be connected already, and the installer prompt never starts an OAuth flow. xAI documents ${builtIn} of these as built in. The rest come from the in-app picker, the Cursor Marketplace, and tools the community reaches over MCP.`,
     builtInLabel: "Built in",
     builtInNote: "Named by xAI on",
     builtInSource: "docs.x.ai/grok/connectors",
-    sourceNote: "For the rest, xAI says only that there is a catalog of pre-configured OAuth connectors and sends you to the picker in the app. No list, no count. So this page tracks a dated community snapshot rather than a published inventory. Source:",
+    sourceNote: "For the rest, xAI says only that there is a catalog of pre-configured OAuth connectors and sends you to the picker in the app. No list, no count. Anything Grok Bot can reach over MCP works as a connector, so this page also tracks the Cursor Marketplace and community tool lists. Sources:",
     sourceLabel: "awesome-grok-connectors",
     sourceTail: (asOf: string) => `, read as of ${asOf}. Treat it as a checkable snapshot, not as an xAI inventory.`,
     checked: "Checked on",
@@ -78,7 +78,7 @@ export const en = {
     retiredBody:
       "Slack shipped early and was pulled from the catalog before this snapshot. Older team files still resolve it so nothing breaks, but no team here should expect it.",
     marksNote:
-      "Brand marks identify each connector and belong to their owners. Grok Bot Teams is operated by Ellelion LLC and is not affiliated with xAI or with any connector vendor. Twelve connectors have no mark yet and show a monogram.",
+      "Brand marks identify each connector and belong to their owners. Grok Bot Teams is operated by Ellelion LLC and is not affiliated with xAI or with any connector vendor. Connectors without a mark in Simple Icons show a monogram instead.",
   },
   docs: {
     title: "Team spec",
