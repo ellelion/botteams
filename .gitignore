@@ -5,3 +5,7 @@
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts
+
+# Python bytecode from one-off migration scripts
+__pycache__/
+*.pyc
