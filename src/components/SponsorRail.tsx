@@ -87,7 +87,7 @@ export function SponsorRail({ campaign = "rail" }: { campaign?: Campaign }) {
       </ul>
 
       {/* One block, not a column of empty rows. */}
-      <div className="spon-open">
+      <div className="spon-open measure">
         <p className="text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
           {en.sponsor.houseNote}
         </p>

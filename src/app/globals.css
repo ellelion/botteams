@@ -69,6 +69,15 @@
   --shadow-float: 0 24px 64px -12px rgba(0, 0, 0, 0.72), 0 0 0 1px rgba(255, 255, 255, 0.06);
   /* Section rhythm. A desktop can afford to breathe; a phone cannot. */
   --sec-y: 7rem;
+  /* ── Content width ────────────────────────────────────────────────
+     Two widths, set once. Data pages get the reclaimed gutter, because
+     a catalog is worth showing. Prose keeps a measure you can read
+     without losing your place on the way back to the left margin.
+     --w-measure caps the paragraphs that live inside a data page, so
+     widening a page never widens a sentence. */
+  --w-data: 72rem;
+  --w-prose: 48rem;
+  --w-measure: 46rem;
 }
 
 [data-theme="light"] {
@@ -103,6 +112,22 @@
 /* The canvas is painted on body, not only on the page wrapper, so
    overscroll and the browser chrome match the site instead of flashing
    the user agent's white. */
+/* One padding scale for every page frame. It was 24/40/64, and the 64
+   was 128px of empty gutter on a 1280 screen that the catalog wanted. */
+.page-pad { padding-inline: 16px; }
+@media (min-width: 640px) { .page-pad { padding-inline: 24px; } }
+@media (min-width: 1024px) { .page-pad { padding-inline: 32px; } }
+
+.wrap-data,
+.wrap-prose {
+  width: 100%;
+  margin-inline: auto;
+}
+.wrap-data { max-width: var(--w-data); }
+.wrap-prose { max-width: var(--w-prose); }
+/* Paragraph inside a data page. Never the page, only the sentence. */
+.measure { max-width: var(--w-measure); }
+
 html { background: var(--page); }
 body {
   background: var(--page);
@@ -1307,7 +1332,15 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   line-height: 1.55;
 }
 
-.cf-list { margin-top: 6px; }
+.cf-list {
+  margin-top: 6px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 40px;
+}
+@media (min-width: 900px) {
+  .cf-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 .cf-row {
   display: flex;
   align-items: center;
@@ -2086,7 +2119,18 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
    accordion with its title always on screen, which horizontal tabs
    cannot promise: a quarter of people never open one and decide the
    content is missing. */
-.rp-main { max-width: 46rem; }
+.rp-main { max-width: var(--w-data); }
+/* Everything on a recipe page that is a sentence rather than a row. */
+.rp-job,
+.rp-note,
+.rp-room,
+.rc-empty,
+.rp-disclaimer,
+.team-prose,
+.cz-bot-persona,
+.cz-lead,
+.cz-truth,
+.cz-hint { max-width: var(--w-measure); }
 
 .rp-head {
   position: sticky;

@@ -87,10 +87,10 @@ export default async function BotPage({ params }: { params: Promise<{ slug: stri
   ) : null;
 
   return (
-    <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
+    <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
       <JsonLd data={botJsonLd(team)} />
       <SiteMasthead />
-      <main className="rp-main relative z-10 mx-auto w-full max-w-3xl flex-1 pb-[var(--sec-y)] pt-10">
+      <main className="rp-main wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-10">
         <nav className="mb-5 flex flex-wrap items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }} aria-label="Breadcrumb">
           <Link href="/?kind=bot#teams" className="accent-hover">{en.bot.allBots}</Link>
           <span aria-hidden>/</span>

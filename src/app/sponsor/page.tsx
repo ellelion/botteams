@@ -30,17 +30,17 @@ export default function SponsorPage() {
   const mail = `mailto:${site.email}?subject=${encodeURIComponent("Sponsoring Grok Bot Teams")}`;
 
   return (
-    <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
+    <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
-      <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-[var(--sec-y)] pt-12">
+      <main className="wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-12">
         <h1 className="font-display text-[clamp(2rem,4vw,3.2rem)] leading-[1.05]" style={{ fontFamily: ledger.serif }}>
           Sponsor
         </h1>
-        <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+        <p className="measure mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           People arrive here about to give a Grok Bot real work, and the first thing every team tells them is which tools
           to connect first. That is the whole audience: operators picking tools, at the moment they pick them.
         </p>
-        <p className="mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+        <p className="measure mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
           {filled === 0
             ? `${teams} teams on the shelf and no outside sponsors yet, which is worth saying plainly rather than padding the rail with logos we do not have. The rail below is the whole truth of it.`
             : `${filled} of ${SPONSOR_SLOTS_TOTAL} paying slots taken across ${teams} teams.`}
@@ -56,15 +56,15 @@ export default function SponsorPage() {
             ].map(([name, note]) => (
               <div key={name} className="hairline-row py-3">
                 <dt style={{ fontFamily: ledger.serif }}>{name}</dt>
-                <dd className="mt-1 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{note}</dd>
+                <dd className="measure mt-1 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{note}</dd>
               </div>
             ))}
           </dl>
-          <p className="mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+          <p className="measure mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
             Pricing is per enquiry while the shelf is young. We would rather quote against real traffic than publish a
             number we cannot yet justify.
           </p>
-          <p className="mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+          <p className="measure mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
             {en.sponsor.emptyPlacements}
           </p>
         </section>
@@ -104,13 +104,13 @@ export default function SponsorPage() {
                   </a>
                   <span className="chip">{en.sponsor.houseLabel}</span>
                 </div>
-                <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{ad.line}</p>
+                <p className="measure mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{ad.line}</p>
               </li>
             ))}
           </ul>
           {/* One block. Fifteen identical Open rows is not inventory, it
               is a page telling you nobody bought anything. */}
-          <div className="spon-open">
+          <div className="spon-open measure">
             <p className="text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
               {en.sponsor.houseNote}
             </p>
@@ -132,7 +132,7 @@ export default function SponsorPage() {
               "Anywhere we earn on a click is marked, and the disclosure says so.",
               "No dashboard, no impression counts. You get a placement and an honest answer about traffic when you ask.",
             ].map((rule) => (
-              <li key={rule} className="hairline-row py-3 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+              <li key={rule} className="hairline-row measure py-3 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
                 {rule}
               </li>
             ))}
@@ -141,7 +141,7 @@ export default function SponsorPage() {
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Enquire</h2>
-          <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+          <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             Mail {site.company} at{" "}
             <a className="accent-hover underline" href={mail}>{site.email}</a> with the tool, the link you want, and the
             placement. We will tell you what the traffic actually is before you pay anything.

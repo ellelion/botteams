@@ -52,13 +52,13 @@ export default function ConnectorsPage() {
   const builtInCount = entries.filter((e) => e.builtIn).length;
 
   return (
-    <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
+    <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
-      <main className="relative z-10 mx-auto w-full max-w-4xl flex-1 pb-[var(--sec-y)] pt-12">
+      <main className="wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-12">
         <h1 className="font-display text-[clamp(2rem,4vw,3.2rem)] leading-[1.05]" style={{ fontFamily: ledger.serif }}>
           {en.connectors.h1}
         </h1>
-        <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+        <p className="measure mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           {en.connectors.lede(CONNECTOR_CATALOG.length)}
         </p>
 
@@ -70,7 +70,7 @@ export default function ConnectorsPage() {
 
         <section className="mt-20 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.sourceTitle}</h2>
-          <p className="mt-3 max-w-2xl text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+          <p className="measure mt-3 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             {en.connectors.builtInNote(builtInCount)}{" "}
             <a className="accent-hover underline" href={XAI_CONNECTOR_DOCS} target="_blank" rel="noopener noreferrer">
               {en.connectors.builtInSource}
@@ -89,15 +89,15 @@ export default function ConnectorsPage() {
 
         <section className="mt-20 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.byoTitle}</h2>
-          <p className="mt-3 max-w-2xl text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.connectors.byoBody}</p>
+          <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.connectors.byoBody}</p>
         </section>
 
         <section className="mt-10 border-t pt-7" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.retiredTitle}</h2>
-          <p className="mt-3 max-w-2xl text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.connectors.retiredBody}</p>
+          <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.connectors.retiredBody}</p>
         </section>
 
-        <p className="mt-12 max-w-2xl text-[0.78rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+        <p className="measure mt-12 text-[0.78rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
           {en.connectors.marksNote}
         </p>
       </main>
