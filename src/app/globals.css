@@ -2003,6 +2003,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: flex;
   align-items: center;
   /* A thumb needs 44px. On a phone these are the only links on screen. */
+  gap: 8px;
   min-height: 34px;
   color: var(--muted-strong);
   font-size: 0.8125rem;
@@ -2020,6 +2021,44 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   line-height: 1.6;
 }
 
+/* Marks. Owner artwork, owner colours, real space between them.
+   The Invertocat takes --ink, which is exactly #0a0a0a on the light
+   theme and #ffffff on the dark one, so it is GitHub's published black
+   or white mark and not a recolour. */
+.foot-mark { color: var(--ink); flex: none; }
+.foot-marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  /* 40px between the two marks. They are two separate credits and must
+     never read as one lockup. */
+  gap: 16px 40px;
+  margin-top: 40px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+.foot-markline {
+  display: inline-flex;
+  align-items: center;
+  /* Clear space around the Grok logomark. The words sit beside it and
+     never touch it, and nothing is baked into the artwork. */
+  gap: 14px;
+  min-height: 34px;
+  color: var(--muted-strong);
+  font: 500 0.7rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.1em;
+  transition: color var(--dur) var(--ease);
+}
+.foot-markline:hover { color: var(--ink); }
+.foot-markline:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 4px; }
+.foot-mark-grok { width: 20px; height: 20px; flex: none; }
+.foot-mark-text { white-space: nowrap; }
+
+/* One artwork file per background. Never a filter, never a fill swap. */
+.grok-mark-on-dark { display: none; }
+html[data-theme="dark"] .grok-mark-on-light { display: none; }
+html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
+
 @media (max-width: 720px) {
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -2027,6 +2066,11 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .foot-inner { padding: 40px 4px 40px; }
   .foot-cols { grid-template-columns: 1fr; gap: 24px; }
   .foot-link { min-height: 44px; }
+  /* Both marks still fit one line here. The gutter between them has to
+     stay clearly wider than the 14px clear space inside the Grok credit,
+     or the three pieces read as one lockup. */
+  .foot-marks { gap: 18px 34px; margin-top: 32px; }
+  .foot-markline { min-height: 44px; }
 }
 
 

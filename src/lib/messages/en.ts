@@ -206,12 +206,12 @@ export const en = {
   },
   sponsor: {
     railTitle: "Sponsors",
-    /* Always says "paying". Two sister sites sit above this line, and a
+    /* Always says "paying". Two house ads sit above this line, and a
        bare "0 of 15 taken" beside two visible rows reads as a lie. */
     railCta: (filled: number, total: number) => `${filled} of ${total} paying taken`,
     /* Not Promoted, not Verified, not Official. It is ours and it says so. */
-    houseLabel: "Sister site",
-    houseNote: "No outside sponsors yet. Two sister sites are on the rail so it is not empty.",
+    houseLabel: "From Ellelion",
+    houseNote: "No outside sponsors yet. Two Ellelion products are on the rail so it is not empty.",
     openLine: (open: number, total: number) =>
       open === total
         ? `All ${total} paying slots are open.`
@@ -276,9 +276,18 @@ export const en = {
     github: "GitHub",
     email: "Email us",
     mit: "MIT",
-    sisters: "Sister sites",
+    about: "About",
+    terms: "Terms",
+    privacy: "Privacy",
+    /* The company, not a set of pen pals. */
+    ellelion: "Ellelion",
     operated: "Operated by",
     notAffiliated: "Not affiliated with xAI.",
+    marksAria: "Source and tooling",
+    /* One of the two phrases x.ai approves beside its logomark. "Built
+       with Grok" is their own first-party footer, not a badge for us. */
+    createdWithGrok: "Created with Grok",
+    repoAria: "Source on GitHub",
   },
   notFound: {
     kicker: "Not on the shelf",
