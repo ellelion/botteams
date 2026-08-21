@@ -89,6 +89,13 @@ export type CustomState = {
   installed: boolean;
 };
 
+/* A one-Bot recipe has no group chat to edit, and inventing one so the
+   editor has something to show would put a step in the paste that the
+   recipe never asked for. */
+export function isSolo(team: Team): boolean {
+  return team.rooms.length === 0;
+}
+
 export function defaultState(team: Team): CustomState {
   const room = team.rooms[0];
   const modes: Record<string, ConnectorMode> = {};
@@ -96,8 +103,8 @@ export function defaultState(team: Team): CustomState {
   return {
     off: [],
     names: {},
-    roomName: room?.name ?? `${team.name} HQ`,
-    members: room ? [...room.members] : team.agents.slice(0, 6).map((a) => a.name),
+    roomName: room?.name ?? "",
+    members: room ? [...room.members] : [],
     modes,
     notes: {},
     chips: team.suggest.filter((s) => s.on).map((s) => s.text),
@@ -195,6 +202,12 @@ export function check(team: Team, state: CustomState): Check {
   const clash = [...seen.values()].find((names) => names.length > 1);
   if (clash) {
     errors.push(`Two Bots share the name "${clash[0]}". Grok Bot would end up with duplicates, so make them different.`);
+  }
+  if (isSolo(team)) {
+    /* Nothing to check beyond the roster. Verified is a claim about a
+       group chat holding two to six Bots, and this recipe makes no such
+       claim, so it is never Verified however valid it is. */
+    return { errors, warnings, canCopy: errors.length === 0, verified: false };
   }
   if (!r.roomName) {
     errors.push("The group chat needs a name.");
@@ -310,7 +323,7 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
         "",
         ...(renames.length > 0 ? renames.map((a) => `- Rename "${a.source.name}" to "${a.name}".`) : []),
         ...(dropped.length > 0 ? dropped.map((n) => `- "${n}" is no longer part of this team. Leave it alone or delete it yourself. Do not delete anything without asking.`) : []),
-        `- The group chat is now "${r.roomName}" with: ${r.members.join(", ")}.`,
+        ...(isSolo(team) ? [] : [`- The group chat is now "${r.roomName}" with: ${r.members.join(", ")}.`]),
         "- Re-read the connector rules below. They may have changed.",
         "",
       ]
@@ -346,13 +359,17 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     "",
     agents,
     "",
-    "## 2. Create this group chat",
-    "",
-    "In New chat, select two to six of the Bots above. Do not add more than six.",
-    "",
-    `### ${r.roomName}`,
-    `Members (${r.members.length}, two to six Bots): ${r.members.join(", ")}`,
-    "",
+    ...(isSolo(team)
+      ? ["## 2. No group chat", "", "This recipe is one Bot. Do not create a group chat for it.", ""]
+      : [
+          "## 2. Create this group chat",
+          "",
+          "In New chat, select two to six of the Bots above. Do not add more than six.",
+          "",
+          `### ${r.roomName}`,
+          `Members (${r.members.length}, two to six Bots): ${r.members.join(", ")}`,
+          "",
+        ]),
     "## 3. Sidebar section (human does this)",
     "",
     "The installer cannot create sidebar sections.",
@@ -386,7 +403,7 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     "## Done when",
     "",
     "- Named Bots exist",
-    `- Named group chat exists ("${r.roomName}", two to six Bots)`,
+    ...(isSolo(team) ? [] : [`- Named group chat exists ("${r.roomName}", two to six Bots)`]),
     `- Human has created section "${team.section}"`,
     "- Each routine has a confirmed save (or the human declined)",
     "- Connectors listed above are already connected",
@@ -528,8 +545,12 @@ export function toMarkdown(team: Team, state: CustomState): string {
       lines.push("    connectors: []");
     }
   }
-  lines.push("rooms:", `  - name: ${yamlScalar(r.roomName)}`, "    members:");
-  for (const m of r.members) lines.push(`      - ${yamlScalar(m)}`);
+  if (isSolo(team)) {
+    lines.push("rooms: []");
+  } else {
+    lines.push("rooms:", `  - name: ${yamlScalar(r.roomName)}`, "    members:");
+    for (const m of r.members) lines.push(`      - ${yamlScalar(m)}`);
+  }
   lines.push("routines:");
   for (const { source, owner } of r.routines) {
     lines.push(`  - name: ${yamlScalar(source.name)}`);

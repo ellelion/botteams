@@ -4,6 +4,7 @@ import { ConnectorRow } from "@/components/ConnectorRow";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { TeamIcon } from "@/components/icons/LineIcons";
+import { FromXaiChip } from "@/components/FromXaiChip";
 import { Customize } from "@/components/team/Customize";
 import { ledger } from "@/lib/ledger-theme";
 import { renderMarkdown } from "@/lib/markdown";
@@ -71,7 +72,10 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
           <span aria-hidden>/</span>
           <Link href={`/?category=${sectionSlug(team.section)}#teams`} className="accent-hover">{team.section}</Link>
         </nav>
-        <TeamIcon slug={team.slug} />
+        <div className="flex flex-wrap items-center gap-3">
+          <TeamIcon slug={team.slug} />
+          {team.fromXai ? <FromXaiChip /> : null}
+        </div>
         <h1 className="font-display mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>
           {team.name}
         </h1>
@@ -79,8 +83,13 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
           {team.tagline}
         </p>
         <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
-          {sectionEchoesName ? `${team.bots} bots` : `${team.section} · ${team.bots} bots`}
+          {sectionEchoesName ? en.team.botCount(team.bots) : `${team.section} · ${en.team.botCount(team.bots)}`}
         </p>
+        {team.fromXai ? (
+          <p className="mt-3 max-w-2xl text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+            {en.xai.note}
+          </p>
+        ) : null}
 
         <Customize team={team}>
           <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>

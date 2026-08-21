@@ -66,16 +66,35 @@ export type Team = {
      should not read like chips for Founder OS. */
   suggest: TeamSuggestion[];
   connectorModes: Record<string, ConnectorMode>;
+  /* True when the recipe is our write-up of a job xAI publishes in its own
+     Grok Bot use-case gallery. Sourcing, never endorsement: xAI does not
+     review, certify, or endorse anything on this shelf. */
+  fromXai?: boolean;
 };
 
 export function isExample(team: Team): boolean {
   return team.status === "example";
 }
 
+/*
+ * Verified is one claim and only one: this recipe fits the limits Grok Bot
+ * publishes. At least one Bot, at least one group chat holding two to six
+ * of them, the Bot count matching the roster, and the whole thing under
+ * the account cap of 50 Bots and group chats combined.
+ *
+ * `rooms.some(...)` used to carry the group-chat check, which is vacuously
+ * true for an empty list. A one-Bot recipe with no group chat therefore
+ * passed, and the shelf stamped Verified on something that makes no claim
+ * about group chats at all. It now needs a real one.
+ */
+export const MIN_ROOM = 2;
+export const MAX_ROOM = 6;
+export const ACCOUNT_CAP = 50;
+
 export function isVerified(team: Team): boolean {
   if (team.agents.length === 0) return false;
-  if (team.rooms.some((room) => room.members.length < 2 || room.members.length > 6)) return false;
-  if (team.agents.length + team.rooms.length > 50) return false;
   if (team.bots !== team.agents.length) return false;
-  return true;
+  if (team.agents.length + team.rooms.length > ACCOUNT_CAP) return false;
+  if (team.rooms.length === 0) return false;
+  return team.rooms.every((room) => room.members.length >= MIN_ROOM && room.members.length <= MAX_ROOM);
 }

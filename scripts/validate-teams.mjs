@@ -19,6 +19,10 @@ const CATEGORIES = new Set([
   "Infrastructure", "Investor updates", "Knowledge", "Legal", "Onboarding",
   "Partnerships", "Product", "Recruiting", "Research", "Revenue", "Sales",
   "Support", "Workplace",
+  /* Gallery categories, kept exactly as xAI spells them so a From xAI
+     recipe files where its source filed it. */
+  "General", "Customer Success & Support", "Recruiting & People",
+  "Operations & Finance", "Life & Leverage", "Marketing",
 ]);
 
 const seenSlugs = new Set();
@@ -76,18 +80,21 @@ for (const file of files) {
       }
     });
   }
-  if (!Array.isArray(data.rooms) || data.rooms.length === 0) fail(file + ": rooms must be a non-empty array");
+  /* Empty is legal: a one-Bot recipe has nobody to talk to. It just is
+     not Verified, which the rule assertions at the bottom pin down. */
+  if (!Array.isArray(data.rooms)) fail(file + ": rooms must be an array");
   else data.rooms.forEach((room, i) => {
     if (!isNonEmptyString(room?.name) || !Array.isArray(room?.members)) fail(file + ": rooms[" + i + "] needs name and members[]");
     else if (room.members.length < 2 || room.members.length > 6) fail(file + ": rooms[" + i + "] must have two to six Bots");
   });
-  if (!Array.isArray(data.routines) || data.routines.length === 0) fail(file + ": routines must be a non-empty array");
+  if (!Array.isArray(data.routines)) fail(file + ": routines must be an array");
   else data.routines.forEach((routine, i) => {
     if (!isNonEmptyString(routine?.name) || !isNonEmptyString(routine?.owner) || !isNonEmptyString(routine?.schedule) || !isNonEmptyString(routine?.prompt)) {
       fail(file + ": routines[" + i + "] needs name, owner, schedule, prompt");
     }
   });
   if (data.skills !== undefined && !Array.isArray(data.skills)) fail(file + ": skills must be an array when present");
+  if (data.from_xai !== undefined && data.from_xai !== true) fail(file + ": from_xai must be true when present, or absent");
 
   // Optional attribution. Present means it must be well formed.
   if (data.added_at !== undefined && !ISO.test(String(data.added_at))) {
@@ -141,6 +148,34 @@ for (const file of files) {
         if (!["read", "draft", "ask"].includes(mode)) fail(file + ": connector_modes." + name + " must be read, draft, or ask");
       }
     }
+  }
+}
+
+/* Verified, asserted rather than described.
+   A recipe is Verified only with at least one Bot, a matching bots count,
+   at least one group chat, every group chat holding two to six Bots, and
+   Bots plus group chats under the account cap of 50. An empty rooms list
+   is NOT Verified: it makes no claim about a group chat at all. */
+const MIN_ROOM = 2, MAX_ROOM = 6, ACCOUNT_CAP = 50;
+function verifiedByRule(t) {
+  if (!Array.isArray(t.agents) || t.agents.length === 0) return false;
+  if (t.bots !== t.agents.length) return false;
+  const rooms = Array.isArray(t.rooms) ? t.rooms : [];
+  if (t.agents.length + rooms.length > ACCOUNT_CAP) return false;
+  if (rooms.length === 0) return false;
+  return rooms.every((r) => Array.isArray(r.members) && r.members.length >= MIN_ROOM && r.members.length <= MAX_ROOM);
+}
+for (const [name, team, expected] of [
+  ["a solo Bot with no group chat", { agents: [{}], bots: 1, rooms: [] }, false],
+  ["a group chat of one", { agents: [{}, {}], bots: 2, rooms: [{ members: ["a"] }] }, false],
+  ["a group chat of seven", { agents: [{}], bots: 1, rooms: [{ members: "abcdefg".split("") }] }, false],
+  ["a mismatched bots count", { agents: [{}, {}], bots: 3, rooms: [{ members: ["a", "b"] }] }, false],
+  ["no Bots at all", { agents: [], bots: 0, rooms: [{ members: ["a", "b"] }] }, false],
+  ["a two-Bot room", { agents: [{}, {}], bots: 2, rooms: [{ members: ["a", "b"] }] }, true],
+  ["a six-Bot room", { agents: Array(6).fill({}), bots: 6, rooms: [{ members: "abcdef".split("") }] }, true],
+]) {
+  if (verifiedByRule(team) !== expected) {
+    fail(`isVerified rule: ${name} should be ${expected ? "Verified" : "not Verified"}`);
   }
 }
 

@@ -25,6 +25,7 @@ const TEAM_PROPERTIES: Record<keyof ApiTeam, Schema> = {
   tagline: str("One line saying what the team does."),
   category: str("Section the team files under, and the value the category filter matches."),
   status: { type: "string", enum: ["team", "example"], description: "team is a recipe to install. example is a format demonstration." },
+  fromXai: { type: "boolean", description: "True when the recipe is our write-up of a job published in xAI's own Grok Bot use-case gallery. Sourcing, not endorsement: xAI does not review or certify anything on this shelf." },
   bots: { type: "integer", minimum: 1, description: "Number of Bots. Always equal to agents.length." },
   addedAt: { type: ["string", "null"], format: "date-time", description: "Date stated in the team file. Never inferred. Null when the file does not state one, and those sort last." },
   connectors: { type: "array", items: { type: "string" }, description: "Connectors the account must already have. Connectors are account-wide in Grok Bot." },
