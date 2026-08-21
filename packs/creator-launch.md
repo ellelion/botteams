@@ -11,6 +11,11 @@ connectors:
   - Stripe
   - Notion
   - Webflow
+connector_modes:
+  Gmail: draft
+  Stripe: read
+  Notion: draft
+  Webflow: draft
 agents:
   - name: Launch · Sequence
     persona: Drafts the launch email sequence with the actual dates. Never sends.
@@ -48,6 +53,13 @@ routines:
     owner: Launch · Sales
     schedule: Every day at 18:00
     prompt: Report today's sales and refunds against plan. Never issue a refund.
+suggest:
+  - text: Never publish or schedule without a human yes.
+    on: true
+  - text: Never reply as me in public.
+    on: true
+  - text: Keep captions under the platform limit.
+  - text: Tell me which idea you dropped and why.
 ---
 
 Four Bots around a launch. Drafts, checks, reports. Never sends or refunds.

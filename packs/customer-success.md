@@ -13,6 +13,13 @@ connectors:
   - Zendesk
   - HubSpot
   - Gong
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Stripe: read
+  Zendesk: ask
+  HubSpot: ask
+  Gong: draft
 agents:
   - name: Success · Health
     persona: Watches account health signals and failed Stripe charges that affect a customer. Alerts only. Does not refund. No site ops.
@@ -69,6 +76,13 @@ routines:
     owner: Success · Recap
     schedule: Every weekday at 16:30
     prompt: Recap health, renewals, and drafts waiting on a human send.
+suggest:
+  - text: Never send to a customer without a human yes.
+    on: true
+  - text: Never promise a date engineering has not agreed.
+    on: true
+  - text: Flag any account that went quiet for 30 days.
+  - text: Quote the customer own words in the summary.
 ---
 
 Example six-Bot customer-success desk. Distinct from Support, which is inbound triage. Nothing sends.

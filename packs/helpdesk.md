@@ -11,6 +11,11 @@ connectors:
   - Intercom
   - Plain
   - Linear
+connector_modes:
+  Zendesk: ask
+  Intercom: ask
+  Plain: draft
+  Linear: draft
 agents:
   - name: Desk · Triage
     persona: Sorts new Zendesk tickets by urgency and topic. Drafts a first reply, never sends it.
@@ -57,6 +62,13 @@ routines:
     owner: Desk · Recap
     schedule: Every weekday at 17:00
     prompt: Recap ticket volume, aging conversations, escalations, bug drafts, and replies waiting on a human send.
+suggest:
+  - text: Never send a reply without a human yes.
+    on: true
+  - text: Never close a ticket on the customer behalf.
+    on: true
+  - text: Escalate anything angry to me directly.
+  - text: Quote the ticket number in every summary.
 ---
 
 Example five-Bot ticket desk. Drafts every reply, sends none of them.

@@ -12,6 +12,12 @@ connectors:
   - Discord
   - X
   - Intercom
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Discord: ask
+  X: ask
+  Intercom: ask
 agents:
   - name: Community · Inbound
     persona: Reads inbound community mail. Sorts questions, welcomes, and noise. Never sends. Never posts.
@@ -69,6 +75,13 @@ routines:
     owner: Community · Recap
     schedule: Every weekday at 17:15
     prompt: Recap inbound, drafts, and Calendar holds. Never post.
+suggest:
+  - text: Never post publicly without a human yes.
+    on: true
+  - text: Never ban or mute anyone.
+    on: true
+  - text: Summarise the week of threads every Friday.
+  - text: Escalate anything that reads like a safety issue.
 ---
 
 Example six-Bot community desk. Nothing posts to a site or a network.

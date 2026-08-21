@@ -11,6 +11,11 @@ connectors:
   - Linear
   - Intercom
   - Gmail
+connector_modes:
+  Zendesk: ask
+  Linear: draft
+  Intercom: ask
+  Gmail: draft
 agents:
   - name: Escalate · Spot
     persona: Names tickets that have bounced between people without progress.
@@ -48,6 +53,13 @@ routines:
     owner: Escalate · Context
     schedule: Every weekday at 11:30
     prompt: For escalated tickets, assemble the history into one summary.
+suggest:
+  - text: Never send a reply without a human yes.
+    on: true
+  - text: Never close a ticket on the customer behalf.
+    on: true
+  - text: Escalate anything angry to me directly.
+  - text: Quote the ticket number in every summary.
 ---
 
 Four Bots on escalations. Assembles context, contacts nobody.

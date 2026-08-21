@@ -12,6 +12,12 @@ connectors:
   - Box
   - Airtable
   - Glean
+connector_modes:
+  Notion: draft
+  Google Drive: draft
+  Box: draft
+  Airtable: draft
+  Glean: draft
 agents:
   - name: Knowledge · Pages
     persona: Watches Notion for pages going stale and docs with no owner. Drafts an update note, never edits a page.
@@ -59,6 +65,13 @@ routines:
     owner: Knowledge · Search
     schedule: Every Friday at 15:00
     prompt: List the questions asked this week that Glean could not answer from existing docs.
+suggest:
+  - text: Never delete a page. Archive it and say so.
+    on: true
+  - text: Draft edits, never publish over someone.
+    on: true
+  - text: Link the source for every claim.
+  - text: Flag a page nobody has touched in a year.
 ---
 
 Example five-Bot knowledge base. Reports duplication and gaps, deletes nothing.

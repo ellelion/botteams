@@ -11,6 +11,11 @@ connectors:
   - Glean
   - Google Drive
   - Slack
+connector_modes:
+  Notion: draft
+  Glean: draft
+  Google Drive: draft
+  Slack: ask
 agents:
   - name: Docs · Firstweek
     persona: Lists the documents new joiners actually open in week one.
@@ -48,6 +53,13 @@ routines:
     owner: Docs · Owner
     schedule: Every month on the 1st at 09:00
     prompt: List first-week documents with no owner.
+suggest:
+  - text: Never delete a page. Archive it and say so.
+    on: true
+  - text: Draft edits, never publish over someone.
+    on: true
+  - text: Link the source for every claim.
+  - text: Flag a page nobody has touched in a year.
 ---
 
 Four Bots on the documents that mislead new joiners.

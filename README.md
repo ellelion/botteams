@@ -25,11 +25,30 @@ it end to end.
 | Route | What |
 |---|---|
 | `/` | Team index. Search, category, connector filter, sort. |
-| `/teams/<slug>` | A team: Bots, group chat, routines, installer prompt. (`/packs/<slug>` serves the same page.) |
+| `/teams/<slug>` | A team: Bots, group chat, routines, installer prompt, and Customize. (`/packs/<slug>` serves the same page.) |
 | `/docs` | The team spec. Our recipe format, mapped onto official Grok Bot nouns. |
 | `/connectors` | Every connector Grok Bot reaches, and which teams use each. |
 | `/api` | Public API contract, readable without JavaScript. |
 | `/sponsor` | Placements and rules. |
+
+## Customize
+
+Every team page can be edited in place: turn Bots off, rename them, set the
+group chat, set how far each connector goes, and add standing instructions.
+The installer prompt rewrites as you go and one Copy pill takes it.
+
+The edits live in the URL hash, so a customized team is shareable and
+nothing is stored on the site. Download gives you the same team back as a
+team file you could open a pull request with.
+
+A connector mode is **wording in the prompt, not a permission**. Grok Bot
+connectors are account-wide: every Bot on the account can reach every
+connected tool, and separate Bots are not a security boundary. The only
+real switch is Grok Bot Settings, then Plugins, which is account-wide too.
+The UI says so rather than drawing a lock the product does not have.
+
+Per team, in the team file: `connector_modes` and `suggest`. See
+[CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## API
 

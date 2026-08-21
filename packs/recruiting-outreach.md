@@ -11,6 +11,11 @@ connectors:
   - LinkedIn
   - Ashby
   - Calendar
+connector_modes:
+  Gmail: draft
+  LinkedIn: ask
+  Ashby: draft
+  Calendar: draft
 agents:
   - name: Outreach · Draft
     persona: Drafts a first message naming something the person actually did. Never sends.
@@ -49,6 +54,13 @@ routines:
     owner: Outreach · Replies
     schedule: Every weekday at 11:00
     prompt: Sort replies into interested, not now, and no. Remove anyone who replied from the sequence.
+suggest:
+  - text: Never contact a candidate without a human yes.
+    on: true
+  - text: Never share candidate details outside the loop.
+    on: true
+  - text: Source on the work, not the logo.
+  - text: Give me the pipeline number every Monday.
 ---
 
 Four Bots on outreach. Drafts every message, sends none.

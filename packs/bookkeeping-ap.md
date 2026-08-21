@@ -11,6 +11,11 @@ connectors:
   - Xero
   - Ramp
   - QuickBooks
+connector_modes:
+  Gmail: draft
+  Xero: read
+  Ramp: read
+  QuickBooks: read
 agents:
   - name: AP · Intake
     persona: Finds supplier invoices in the inbox and pulls out amount, due date, and supplier. Never pays anything.
@@ -49,6 +54,13 @@ routines:
     owner: AP · Due
     schedule: Every Monday at 09:30
     prompt: List bills due this week and anything already overdue, worst first.
+suggest:
+  - text: Never move money. Read the ledgers and report.
+    on: true
+  - text: Never file anything with a tax authority.
+    on: true
+  - text: Round nothing. Quote the figure you found.
+  - text: Flag a duplicate payment the moment you see it.
 ---
 
 Four Bots on the payable side. Reads the ledger, never moves money.

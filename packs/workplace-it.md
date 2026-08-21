@@ -11,6 +11,11 @@ connectors:
   - 1Password
   - Notion
   - Gmail
+connector_modes:
+  Microsoft Teams: ask
+  1Password: draft
+  Notion: draft
+  Gmail: draft
 agents:
   - name: IT · Queue
     persona: Sorts requests by urgency and names what is aging.
@@ -48,6 +53,13 @@ routines:
     owner: IT · Access
     schedule: Every weekday at 09:30
     prompt: List pending access requests with whether the role justifies them. Never grant access.
+suggest:
+  - text: Never mail the whole company without a yes.
+    on: true
+  - text: Never book or cancel anything for anyone.
+    on: true
+  - text: Keep the office calendar in one place.
+  - text: Flag anything that looks like a safety issue.
 ---
 
 Four Bots on internal IT. Recommends access, grants none.

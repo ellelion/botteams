@@ -11,6 +11,11 @@ connectors:
   - PagerDuty
   - Cloudflare
   - Supabase
+connector_modes:
+  Datadog: draft
+  PagerDuty: draft
+  Cloudflare: draft
+  Supabase: draft
 agents:
   - name: Infra · Metrics
     persona: Watches Datadog dashboards for sustained changes, not single spikes. Reports what moved and since when.
@@ -57,6 +62,13 @@ routines:
     owner: Infra · Recap
     schedule: Every weekday at 18:00
     prompt: Recap pages, sustained metric changes, edge errors, and anything still unexplained.
+suggest:
+  - text: Never apply a change. Draft the plan.
+    on: true
+  - text: Never touch production without a human yes.
+    on: true
+  - text: Name the blast radius before the fix.
+  - text: Page me only for real user impact.
 ---
 
 Example five-Bot infrastructure watch. Reads production, changes nothing in it.

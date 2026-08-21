@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Ashby
   - Notion
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Ashby: draft
+  Notion: draft
 agents:
   - name: Hire · Inbound
     persona: Sorts applications and names the ones worth a conversation, with the reason.
@@ -49,6 +54,13 @@ routines:
     owner: Hire · Notes
     schedule: Every weekday at 18:00
     prompt: List interviews held today with no note filed.
+suggest:
+  - text: Never send mail. Draft only.
+    on: true
+  - text: Never move funds.
+    on: true
+  - text: Brief me Mondays in Founder HQ.
+  - text: Tell me what you did not get to.
 ---
 
 Four Bots on founder-led hiring. Never replies to a candidate.

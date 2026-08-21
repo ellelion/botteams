@@ -13,6 +13,13 @@ connectors:
   - HubSpot
   - Docusign
   - Notion
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Stripe: read
+  HubSpot: ask
+  Docusign: draft
+  Notion: draft
 agents:
   - name: Agency · Intake
     persona: Reads inbound agency mail. Sorts new work from noise. Never sends. Does not run a client website.
@@ -69,6 +76,13 @@ routines:
     owner: Agency · Recap
     schedule: Every weekday at 17:00
     prompt: Recap accounts, delivery, billing alerts, and drafts waiting on a human send.
+suggest:
+  - text: Never send client mail. Draft only.
+    on: true
+  - text: Never change a signed scope without asking.
+    on: true
+  - text: Flag any retainer that goes over budget in the group chat.
+  - text: Use the client name, never the internal codename.
 ---
 
 Example six-Bot agency floor. No client site ops.

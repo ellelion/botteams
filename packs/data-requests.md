@@ -11,6 +11,11 @@ connectors:
   - Google Cloud BigQuery
   - Gmail
   - Linear
+connector_modes:
+  Notion: draft
+  Google Cloud BigQuery: draft
+  Gmail: draft
+  Linear: draft
 agents:
   - name: Requests · Intake
     persona: Reads incoming data questions and restates each one precisely enough to answer.
@@ -48,6 +53,13 @@ routines:
     owner: Requests · Queue
     schedule: Every Monday at 09:30
     prompt: List open data requests by age, oldest first, with requester.
+suggest:
+  - text: Read only. Never write back to a warehouse table.
+    on: true
+  - text: Never present a number without the query behind it.
+    on: true
+  - text: Say out loud when a dashboard is stale.
+  - text: Flag a metric that moved more than 20 percent.
 ---
 
 Four Bots on ad-hoc requests. Answers once, then makes it findable.

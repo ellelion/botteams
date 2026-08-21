@@ -11,6 +11,11 @@ connectors:
   - Xero
   - Gmail
   - Calendar
+connector_modes:
+  Stripe: read
+  Xero: read
+  Gmail: draft
+  Calendar: draft
 agents:
   - name: AR · Aging
     persona: Builds the aged debtor list from Xero and Stripe, grouped by how late each one is.
@@ -49,6 +54,13 @@ routines:
     owner: AR · Chase
     schedule: Every weekday at 10:00
     prompt: Draft a chase for every invoice that crossed a lateness threshold since yesterday. Never send.
+suggest:
+  - text: Never move money. Read the ledgers and report.
+    on: true
+  - text: Never file anything with a tax authority.
+    on: true
+  - text: Round nothing. Quote the figure you found.
+  - text: Flag a duplicate payment the moment you see it.
 ---
 
 Four Bots chasing money. Drafts every chase, sends none.

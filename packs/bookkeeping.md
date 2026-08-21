@@ -13,6 +13,13 @@ connectors:
   - Xero
   - QuickBooks
   - Ramp
+connector_modes:
+  Stripe: read
+  Gmail: draft
+  Calendar: draft
+  Xero: read
+  QuickBooks: read
+  Ramp: read
 agents:
   - name: Books · Stripe
     persona: Watches live Stripe charges, payouts, and failed payments. Alerts only. Does not send money. Does not refund.
@@ -69,6 +76,13 @@ routines:
     owner: Books · Recap
     schedule: Every weekday at 16:00
     prompt: Recap Stripe movement, exceptions, and close calendar. Never pay.
+suggest:
+  - text: Never move money. Read the ledgers and report.
+    on: true
+  - text: Never file anything with a tax authority.
+    on: true
+  - text: Round nothing. Quote the figure you found.
+  - text: Flag a duplicate payment the moment you see it.
 ---
 
 Example six-Bot bookkeeping desk. Nothing sends money.

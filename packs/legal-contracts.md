@@ -11,6 +11,11 @@ connectors:
   - Notion
   - Google Drive
   - Calendar
+connector_modes:
+  Docusign: draft
+  Notion: draft
+  Google Drive: draft
+  Calendar: draft
 agents:
   - name: Contract · Register
     persona: Keeps the register of signed agreements and their key terms.
@@ -48,6 +53,13 @@ routines:
     owner: Contract · Obligations
     schedule: Every month on the 1st at 10:00
     prompt: List obligations falling due this month and who owns each.
+suggest:
+  - text: Never sign or send anything.
+    on: true
+  - text: Say clearly that this is not legal advice.
+    on: true
+  - text: Quote the clause, do not paraphrase it.
+  - text: Flag any auto-renew inside 60 days.
 ---
 
 Four Bots on signed agreements. Tracks obligations, signs nothing.

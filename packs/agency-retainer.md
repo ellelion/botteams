@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Gmail
   - Notion
+connector_modes:
+  Stripe: read
+  Calendar: draft
+  Gmail: draft
+  Notion: draft
 agents:
   - name: Retainer · Ledger
     persona: Reads Stripe subscriptions and lists which retainers renewed, which failed, and which changed amount. Never issues a charge or a refund.
@@ -48,6 +53,13 @@ routines:
     owner: Retainer · Overrun
     schedule: Every Friday at 15:00
     prompt: Compare delivered hours to the retainer band per client. Name only the accounts over the line, with the hours.
+suggest:
+  - text: Never send client mail. Draft only.
+    on: true
+  - text: Never change a signed scope without asking.
+    on: true
+  - text: Flag any retainer that goes over budget in the group chat.
+  - text: Use the client name, never the internal codename.
 ---
 
 Four Bots on the money side of an agency. Reads Stripe and Calendar, writes to neither.

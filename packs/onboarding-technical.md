@@ -11,6 +11,11 @@ connectors:
   - Linear
   - Notion
   - Mixpanel
+connector_modes:
+  Intercom: ask
+  Linear: draft
+  Notion: draft
+  Mixpanel: draft
 agents:
   - name: Technical · Progress
     persona: Tracks each customer against the integration steps and names where they stalled.
@@ -48,6 +53,13 @@ routines:
     owner: Technical · Blockers
     schedule: Every Friday at 14:00
     prompt: Name blockers hit by three or more customers this week.
+suggest:
+  - text: Never mail a new starter without a human yes.
+    on: true
+  - text: Never grant access to anything.
+    on: true
+  - text: Check day one is ready by the Friday before.
+  - text: Ask the buddy how week one went, not the manager.
 ---
 
 Four Bots on integration onboarding. Finds stalls, contacts nobody.

@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Ramp
   - Gmail
+connector_modes:
+  Luma: draft
+  Calendar: draft
+  Ramp: read
+  Gmail: draft
 agents:
   - name: Field · Guests
     persona: Tracks invited, confirmed, and likely-to-show, and says which is which.
@@ -48,6 +53,13 @@ routines:
     owner: Field · Budget
     schedule: Every weekday at 11:00
     prompt: Report spend against budget per event. Name anything trending over.
+suggest:
+  - text: Never email attendees without a human yes.
+    on: true
+  - text: Never change a booking or a contract.
+    on: true
+  - text: Keep the run of show in one place.
+  - text: Flag anything still unconfirmed 14 days out.
 ---
 
 Four Bots on in-person events. Watches money and guests.

@@ -10,6 +10,10 @@ connectors:
   - Notion
   - Google Drive
   - Gmail
+connector_modes:
+  Notion: draft
+  Google Drive: draft
+  Gmail: draft
 agents:
   - name: Editorial · Claims
     persona: Flags every factual claim without a source and every number without a date.
@@ -47,6 +51,13 @@ routines:
     owner: Editorial · Style
     schedule: Every weekday at 11:30
     prompt: Check drafts against the house style sheet. Quote each break. Never rewrite the draft yourself.
+suggest:
+  - text: Never publish. Draft only.
+    on: true
+  - text: Never claim a number you cannot source.
+    on: true
+  - text: Keep every draft in our house voice.
+  - text: Flag anything that reads like a legal claim.
 ---
 
 Four Bots ahead of the editor. Marks up drafts, never rewrites them.

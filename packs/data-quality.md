@@ -11,6 +11,11 @@ connectors:
   - dbt Labs
   - Snowflake
   - Notion
+connector_modes:
+  Google Cloud BigQuery: draft
+  dbt Labs: draft
+  Snowflake: draft
+  Notion: draft
 agents:
   - name: Quality · Freshness
     persona: Names tables that stopped updating, and when they stopped.
@@ -49,6 +54,13 @@ routines:
     owner: Quality · Volume
     schedule: Every weekday at 07:30
     prompt: Report row count changes over twenty percent against the trailing week.
+suggest:
+  - text: Read only. Never write back to a warehouse table.
+    on: true
+  - text: Never present a number without the query behind it.
+    on: true
+  - text: Say out loud when a dashboard is stale.
+  - text: Flag a metric that moved more than 20 percent.
 ---
 
 Four Bots checking numbers before they are quoted. Read-only throughout.

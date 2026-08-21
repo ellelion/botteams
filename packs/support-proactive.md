@@ -11,6 +11,11 @@ connectors:
   - Zendesk
   - HubSpot
   - Gmail
+connector_modes:
+  Mixpanel: draft
+  Zendesk: ask
+  HubSpot: ask
+  Gmail: draft
 agents:
   - name: Proactive · Errors
     persona: Finds accounts hitting errors repeatedly without filing a ticket.
@@ -49,6 +54,13 @@ routines:
     owner: Proactive · Stuck
     schedule: Every weekday at 09:30
     prompt: List accounts repeating a failing action more than five times.
+suggest:
+  - text: Never send a reply without a human yes.
+    on: true
+  - text: Never promise a refund.
+    on: true
+  - text: Escalate anything about data loss immediately.
+  - text: Summarise the top three themes each week.
 ---
 
 Four Bots finding problems before the ticket. Contacts nobody.

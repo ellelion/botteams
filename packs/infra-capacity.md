@@ -11,6 +11,11 @@ connectors:
   - Cloudflare
   - Supabase
   - Notion
+connector_modes:
+  Datadog: draft
+  Cloudflare: draft
+  Supabase: draft
+  Notion: draft
 agents:
   - name: Capacity · Trend
     persona: Projects load growth from the trailing quarter, not from last week.
@@ -48,6 +53,13 @@ routines:
     owner: Capacity · Limits
     schedule: Every weekday at 08:00
     prompt: Report each component against its known ceiling. Never change a limit.
+suggest:
+  - text: Never apply a change. Draft the plan.
+    on: true
+  - text: Never touch production without a human yes.
+    on: true
+  - text: Name the blast radius before the fix.
+  - text: Page me only for real user impact.
 ---
 
 Four Bots ahead of the spike. Read-only against production.

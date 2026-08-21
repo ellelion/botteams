@@ -11,6 +11,11 @@ connectors:
   - Stripe
   - Calendar
   - Gmail
+connector_modes:
+  Notion: draft
+  Stripe: read
+  Calendar: draft
+  Gmail: draft
 agents:
   - name: Board · Numbers
     persona: Pulls the operating numbers and shows the trend rather than a snapshot.
@@ -49,6 +54,13 @@ routines:
     owner: Board · Schedule
     schedule: Every weekday at 08:00
     prompt: Name the next board date and whether the pack is on track to circulate on time.
+suggest:
+  - text: Never send mail. Draft only.
+    on: true
+  - text: Never move funds.
+    on: true
+  - text: Brief me Mondays in Founder HQ.
+  - text: Tell me what you did not get to.
 ---
 
 Four Bots around a board meeting. Leads with bad news by design.

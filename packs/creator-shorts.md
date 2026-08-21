@@ -10,6 +10,10 @@ connectors:
   - YouTube
   - Canva
   - Notion
+connector_modes:
+  YouTube: ask
+  Canva: draft
+  Notion: draft
 agents:
   - name: Shorts · Mine
     persona: Reads back catalogue performance and names the moments most likely to work as a standalone clip.
@@ -47,6 +51,13 @@ routines:
     owner: Shorts · Track
     schedule: Every Friday at 15:00
     prompt: Report how this week's shorts did against prediction. Name where the prediction was wrong.
+suggest:
+  - text: Never publish or schedule without a human yes.
+    on: true
+  - text: Never reply as me in public.
+    on: true
+  - text: Keep captions under the platform limit.
+  - text: Tell me which idea you dropped and why.
 ---
 
 Four Bots on short-form. Plans cuts, edits nothing.

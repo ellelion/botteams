@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Notion
   - Stripe
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Notion: draft
+  Stripe: read
 agents:
   - name: Sponsor · Inbound
     persona: Sorts real brand enquiries from mass outreach and pulls out budget and ask.
@@ -54,6 +59,13 @@ routines:
     owner: Sponsor · Deliverables
     schedule: Every Monday at 09:00
     prompt: Per live deal, list what was promised, what shipped, and what is late.
+suggest:
+  - text: Never publish or schedule without a human yes.
+    on: true
+  - text: Never reply as me in public.
+    on: true
+  - text: Keep captions under the platform limit.
+  - text: Tell me which idea you dropped and why.
 ---
 
 Five Bots on brand deals. Tracks and drafts, never signs or sends.

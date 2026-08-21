@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import type { Pack, PackAgent, PackRoom, PackRoutine, PackStatus } from "@/lib/types";
-export type { Pack, PackAgent, PackRoom, PackRoutine, PackStatus } from "@/lib/types";
+import type { ConnectorMode, Pack, PackAgent, PackRoom, PackRoutine, PackStatus, PackSuggestion } from "@/lib/types";
+export type { ConnectorMode, Pack, PackAgent, PackRoom, PackRoutine, PackStatus, PackSuggestion } from "@/lib/types";
 export { isExample, isVerified } from "@/lib/types";
 
 const PACKS_DIR = path.join(process.cwd(), "packs");
@@ -79,6 +79,38 @@ function asRoutines(value: unknown): PackRoutine[] {
   });
 }
 
+/* Chips a team offers under "Also tell Grok Bot". A bare string is a chip
+   that starts off; an object may mark it on by default, which is how a team
+   ships its own safety lines ("never send mail"). */
+function asSuggestions(value: unknown): PackSuggestion[] {
+  if (value === undefined) return [];
+  if (!Array.isArray(value)) throw new Error("suggest must be an array");
+  return value.map((item, i) => {
+    if (typeof item === "string") return { text: item };
+    if (!item || typeof item !== "object") throw new Error(`suggest[${i}] is invalid`);
+    const row = item as Record<string, unknown>;
+    if (typeof row.text !== "string" || !row.text.trim()) throw new Error(`suggest[${i}] needs text`);
+    return row.on === true ? { text: row.text.trim(), on: true } : { text: row.text.trim() };
+  });
+}
+
+function asConnectorModes(value: unknown, connectors: string[]): Record<string, ConnectorMode> {
+  if (value === undefined) return {};
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw new Error("connector_modes must be a map of connector to mode");
+  }
+  const allowed = new Set(connectors.map((name) => name.trim()));
+  const out: Record<string, ConnectorMode> = {};
+  for (const [name, mode] of Object.entries(value as Record<string, unknown>)) {
+    if (!allowed.has(name)) throw new Error(`connector_modes names "${name}", which the team does not list`);
+    if (mode !== "read" && mode !== "draft" && mode !== "ask") {
+      throw new Error(`connector_modes["${name}"] must be read, draft, or ask`);
+    }
+    out[name] = mode;
+  }
+  return out;
+}
+
 export function parsePack(raw: string, filename: string): Pack {
   const { data, content } = matter(raw);
   const slug = path.basename(filename, ".md");
@@ -132,6 +164,8 @@ export function parsePack(raw: string, filename: string): Pack {
       data.integration_urls && typeof data.integration_urls === "object"
         ? (data.integration_urls as Record<string, string>)
         : undefined,
+    suggest: asSuggestions(data.suggest),
+    connectorModes: asConnectorModes(data.connector_modes, merged),
   };
 }
 

@@ -12,6 +12,12 @@ connectors:
   - Notion
   - Webflow
   - Canva
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Notion: draft
+  Webflow: draft
+  Canva: draft
 agents:
   - name: Content · Calendar
     persona: Keeps the editorial calendar. Holds review slots. Never publishes. Not an SEO calendar.
@@ -65,6 +71,13 @@ routines:
     owner: Content · Calendar
     schedule: Every Thursday at 16:00
     prompt: Place finished drafts on Calendar. Do not publish.
+suggest:
+  - text: Never publish. Draft only.
+    on: true
+  - text: Never claim a number you cannot source.
+    on: true
+  - text: Keep every draft in our house voice.
+  - text: Flag anything that reads like a legal claim.
 ---
 
 Example six-Bot editorial desk. Distinct from Creator: this desk is written content, not filming. Explicitly not SEO and not site ops.

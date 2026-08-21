@@ -10,6 +10,10 @@ connectors:
   - GitHub
   - Linear
   - Sentry
+connector_modes:
+  GitHub: draft
+  Linear: draft
+  Sentry: draft
 agents:
   - name: Review · Waiting
     persona: Lists pull requests waiting on review, by how long, not by author.
@@ -48,6 +52,13 @@ routines:
     owner: Review · Risk
     schedule: Every weekday at 10:00
     prompt: Flag open pull requests touching payment, auth, or migrations.
+suggest:
+  - text: Never merge or deploy. Draft only.
+    on: true
+  - text: Never touch production data.
+    on: true
+  - text: Link the commit or the issue in every summary.
+  - text: Say plainly when you are not sure.
 ---
 
 Four Bots on review flow. Makes waiting visible, never nags.

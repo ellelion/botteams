@@ -12,6 +12,12 @@ connectors:
   - HubSpot
   - Notion
   - Zoom
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  HubSpot: ask
+  Notion: draft
+  Zoom: draft
 agents:
   - name: Partnerships · Inbound
     persona: Reads inbound partner mail. Sorts. Never sends. Ignores site-ops and ad-network SEO.
@@ -67,6 +73,13 @@ routines:
     owner: Partnerships · Recap
     schedule: Every weekday at 16:45
     prompt: Recap pipeline, drafts, and Calendar holds.
+suggest:
+  - text: Never mail a partner without a human yes.
+    on: true
+  - text: Never agree to terms.
+    on: true
+  - text: Track every promise we made, with a date.
+  - text: Flag a partner who went quiet for a month.
 ---
 
 Example six-Bot partnerships desk. Nothing sends and nothing runs partner websites.

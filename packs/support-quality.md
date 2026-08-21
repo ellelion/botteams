@@ -10,6 +10,10 @@ connectors:
   - Zendesk
   - Intercom
   - Notion
+connector_modes:
+  Zendesk: ask
+  Intercom: ask
+  Notion: draft
 agents:
   - name: Quality · Sample
     persona: Samples resolved tickets across people and topics.
@@ -46,6 +50,13 @@ routines:
     owner: Quality · Reopened
     schedule: Every Monday at 09:00
     prompt: Report tickets reopened after being solved, with the reason.
+suggest:
+  - text: Never send a reply without a human yes.
+    on: true
+  - text: Never promise a refund.
+    on: true
+  - text: Escalate anything about data loss immediately.
+  - text: Summarise the top three themes each week.
 ---
 
 Four Bots on whether answers were right. Coaches privately.

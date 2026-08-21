@@ -12,6 +12,12 @@ connectors:
   - Docusign
   - Box
   - Notion
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Docusign: draft
+  Box: draft
+  Notion: draft
 agents:
   - name: Legal · Intake
     persona: Reads inbound legal-adjacent mail. Sorts contracts, questions, and noise. Never sends. Does not give legal advice.
@@ -67,6 +73,13 @@ routines:
     owner: Legal · Recap
     schedule: Every weekday at 17:00
     prompt: Recap open matters, Calendar holds, and drafts. Not legal advice.
+suggest:
+  - text: Never sign or send anything.
+    on: true
+  - text: Say clearly that this is not legal advice.
+    on: true
+  - text: Quote the clause, do not paraphrase it.
+  - text: Flag any auto-renew inside 60 days.
 ---
 
 Example six-Bot legal desk. Drafts and calendar only. Not legal advice. A human lawyer remains the send and advice action.

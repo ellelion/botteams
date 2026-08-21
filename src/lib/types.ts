@@ -20,6 +20,25 @@ export type PackRoutine = {
 
 export type PackStatus = "team" | "example";
 
+/*
+ * How far a connector is allowed to go.
+ *
+ * This is wording in the installer prompt, not an access control. Grok Bot
+ * connectors are account-wide: every Bot on the account can reach every
+ * connected tool, and separate Bots are not a security boundary. The only
+ * real switch is Settings, then Plugins, which is also account-wide. The
+ * mode is here so the recipe says what it expects, and so the UI can point
+ * at the switch that actually exists.
+ */
+export type ConnectorMode = "read" | "draft" | "ask";
+
+/* One "Also tell Grok Bot" chip, owned by the team file that ships it.
+   `on` marks the safety chips a team turns on by default. */
+export type PackSuggestion = {
+  text: string;
+  on?: boolean;
+};
+
 export type Pack = {
   slug: string;
   name: string;
@@ -43,6 +62,10 @@ export type Pack = {
   addedVia?: string;
   url?: string;
   integrationUrls?: Record<string, string>;
+  /* Customize inputs, both per team rather than global. Chips for Sales
+     should not read like chips for Founder OS. */
+  suggest: PackSuggestion[];
+  connectorModes: Record<string, ConnectorMode>;
 };
 
 export function isExample(pack: Pack): boolean {

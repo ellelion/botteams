@@ -11,6 +11,11 @@ connectors:
   - Zendesk
   - Mixpanel
   - Notion
+connector_modes:
+  Stripe: read
+  Zendesk: ask
+  Mixpanel: draft
+  Notion: draft
 agents:
   - name: Churn · Events
     persona: Records every cancellation with the account's real history.
@@ -48,6 +53,13 @@ routines:
     owner: Churn · Brief
     schedule: Every month on the 1st at 11:00
     prompt: Split last month's churn into preventable and not. Do not flatter us.
+suggest:
+  - text: Never move money or issue a credit.
+    on: true
+  - text: Never mail a customer about billing without a yes.
+    on: true
+  - text: Reconcile before you report.
+  - text: Flag any churn risk worth over a month of revenue.
 ---
 
 Four Bots on churn. Looks past the reason box.

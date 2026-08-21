@@ -11,6 +11,11 @@ connectors:
   - GitHub
   - Ashby
   - Notion
+connector_modes:
+  LinkedIn: ask
+  GitHub: draft
+  Ashby: draft
+  Notion: draft
 agents:
   - name: Source · Search
     persona: Finds candidates by what they have built rather than by title.
@@ -49,6 +54,13 @@ routines:
     owner: Source · Dedupe
     schedule: Every weekday at 10:30
     prompt: Flag sourced candidates already contacted or recently rejected.
+suggest:
+  - text: Never contact a candidate without a human yes.
+    on: true
+  - text: Never share candidate details outside the loop.
+    on: true
+  - text: Source on the work, not the logo.
+  - text: Give me the pipeline number every Monday.
 ---
 
 Four Bots sourcing on evidence. Never contacts anyone.

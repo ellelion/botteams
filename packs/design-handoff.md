@@ -10,6 +10,10 @@ connectors:
   - Figma
   - Linear
   - Notion
+connector_modes:
+  Figma: draft
+  Linear: draft
+  Notion: draft
 agents:
   - name: Handoff · States
     persona: Checks each screen has empty, loading, error, and long-content states drawn.
@@ -47,6 +51,13 @@ routines:
     owner: Handoff · Copy
     schedule: Every weekday at 10:30
     prompt: Flag lorem ipsum or placeholder copy in any file marked ready.
+suggest:
+  - text: Never overwrite a file someone else is working in.
+    on: true
+  - text: Draft feedback, never post it as final.
+    on: true
+  - text: Reference the component name, not a screenshot.
+  - text: Flag anything that breaks the type scale.
 ---
 
 Four Bots between design and engineering. Checks files, edits none.

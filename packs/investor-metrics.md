@@ -11,6 +11,11 @@ connectors:
   - Google Cloud BigQuery
   - Notion
   - Xero
+connector_modes:
+  Stripe: read
+  Google Cloud BigQuery: draft
+  Notion: draft
+  Xero: read
 agents:
   - name: Metrics · Revenue
     persona: Pulls recognised revenue and separates new, expansion, and churn.
@@ -48,6 +53,13 @@ routines:
     owner: Metrics · Consistency
     schedule: Every month on the 2nd at 09:00
     prompt: Compare this month's definitions to last month. Name any that changed.
+suggest:
+  - text: Never send to investors without a human yes.
+    on: true
+  - text: Never state a number you cannot source.
+    on: true
+  - text: Keep the update to one page.
+  - text: Lead with the bad news.
 ---
 
 Four Bots assembling investor numbers consistently. Read-only.

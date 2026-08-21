@@ -69,6 +69,37 @@ Body prose is optional. It renders under the roster.
 | `url` | Canonical homepage for the team. Must be unique across the shelf. |
 | `integration_urls` | Map of connector name to URL. Names must be connectors on this team. |
 
+### Customize inputs
+
+Both are optional, and both belong to the team rather than to the site. A
+Sales team and a Founder OS team should not offer the same chips.
+
+| Field | Meaning |
+|---|---|
+| `connector_modes` | Map of connector name to `read`, `draft`, or `ask`. Sets where the Customize control starts. Names must be connectors on this team. |
+| `suggest` | Chips offered under "Also tell Grok Bot". A string, or a map with `text` and `on: true` to start it selected. Three to five is plenty. |
+
+Use `on: true` for the lines this team should never ship without, and leave
+the rest off. The reader can drop a default chip; that is the point of
+showing it rather than hard-coding it into the prompt.
+
+A mode is wording in the prompt, not a permission. Grok Bot connectors are
+account-wide, so every Bot on the account can reach every connected tool.
+Write the chip and the mode as an instruction to the Bots, never as a claim
+that something is locked.
+
+```yaml
+connector_modes:
+  Stripe: read
+  Gmail: draft
+suggest:
+  - text: Never send mail. Draft only.
+    on: true
+  - text: Never move funds.
+    on: true
+  - text: Brief me Mondays in Founder HQ.
+```
+
 ### Categories
 
 The category list is closed so a typo cannot quietly become a new category.

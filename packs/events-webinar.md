@@ -11,6 +11,11 @@ connectors:
   - Zoom
   - Gmail
   - Calendar
+connector_modes:
+  Luma: draft
+  Zoom: draft
+  Gmail: draft
+  Calendar: draft
 agents:
   - name: Webinar · Signups
     persona: Reports registrations against target and where they came from.
@@ -54,6 +59,13 @@ routines:
     owner: Webinar · Follow
     schedule: Every weekday at 17:00
     prompt: For webinars held today, draft separate follow-ups for attendees and no-shows. Never send.
+suggest:
+  - text: Never email attendees without a human yes.
+    on: true
+  - text: Never change a booking or a contract.
+    on: true
+  - text: Keep the run of show in one place.
+  - text: Flag anything still unconfirmed 14 days out.
 ---
 
 Five Bots around a webinar. Drafts every email, sends none.

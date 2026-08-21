@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Notion
   - HubSpot
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Notion: draft
+  HubSpot: ask
 agents:
   - name: Raise · Pipeline
     persona: Tracks every investor conversation and its actual stage.
@@ -48,6 +53,13 @@ routines:
     owner: Raise · Pipeline
     schedule: Every Monday at 08:00
     prompt: Report the raise pipeline by stage. Name conversations that have gone quiet.
+suggest:
+  - text: Never send mail. Draft only.
+    on: true
+  - text: Never move funds.
+    on: true
+  - text: Brief me Mondays in Founder HQ.
+  - text: Tell me what you did not get to.
 ---
 
 Four Bots through a raise. Tracks and drafts, sends nothing.

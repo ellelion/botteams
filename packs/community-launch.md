@@ -11,6 +11,11 @@ connectors:
   - X
   - Notion
   - Gmail
+connector_modes:
+  Discord: ask
+  X: ask
+  Notion: draft
+  Gmail: draft
 agents:
   - name: Launch · Draft
     persona: Drafts the announcement for each channel in that channel's register. Never posts.
@@ -49,6 +54,13 @@ routines:
     owner: Launch · Watch
     schedule: Every 2 hours during waking hours
     prompt: "Report reaction to the live launch: questions, confusion, breakage. Do not reply to anyone."
+suggest:
+  - text: Never post publicly without a human yes.
+    on: true
+  - text: Never ban or mute anyone.
+    on: true
+  - text: Summarise the week of threads every Friday.
+  - text: Escalate anything that reads like a safety issue.
 ---
 
 Four Bots around a community launch. Drafts and watches, never posts.

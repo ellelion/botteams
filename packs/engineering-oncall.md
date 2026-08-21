@@ -11,6 +11,11 @@ connectors:
   - Linear
   - Sentry
   - Notion
+connector_modes:
+  PagerDuty: draft
+  Linear: draft
+  Sentry: draft
+  Notion: draft
 agents:
   - name: Oncall · Night
     persona: Lists what paged during the shift, who acknowledged, and how long each stayed open.
@@ -49,6 +54,13 @@ routines:
     owner: Oncall · Unresolved
     schedule: Every weekday at 09:00
     prompt: List incidents closed in the last day with no cause recorded.
+suggest:
+  - text: Never merge or deploy. Draft only.
+    on: true
+  - text: Never touch production data.
+    on: true
+  - text: Link the commit or the issue in every summary.
+  - text: Say plainly when you are not sure.
 ---
 
 Four Bots making handovers written. Never resolves an incident.

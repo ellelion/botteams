@@ -11,6 +11,11 @@ connectors:
   - Zendesk
   - Mixpanel
   - Gmail
+connector_modes:
+  HubSpot: ask
+  Zendesk: ask
+  Mixpanel: draft
+  Gmail: draft
 agents:
   - name: Health · Usage
     persona: Reads product usage and names accounts whose activity has fallen for three weeks running.
@@ -48,6 +53,13 @@ routines:
     owner: Health · Usage
     schedule: Every weekday at 08:00
     prompt: List accounts with three consecutive weeks of falling activity. Never contact them.
+suggest:
+  - text: Never send to a customer without a human yes.
+    on: true
+  - text: Never promise a date engineering has not agreed.
+    on: true
+  - text: Flag any account that went quiet for 30 days.
+  - text: Quote the customer own words in the summary.
 ---
 
 Four Bots on churn risk. Names the accounts, contacts none of them.

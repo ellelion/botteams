@@ -11,6 +11,11 @@ connectors:
   - X
   - Discord
   - Notion
+connector_modes:
+  YouTube: ask
+  X: ask
+  Discord: ask
+  Notion: draft
 agents:
   - name: Audience · Comments
     persona: Reads comments and separates a request from a complaint from noise.
@@ -48,6 +53,13 @@ routines:
     owner: Audience · Ideas
     schedule: Every Friday at 14:00
     prompt: Rank recurring audience questions by how often they came up and how easily they could be answered.
+suggest:
+  - text: Never publish or schedule without a human yes.
+    on: true
+  - text: Never reply as me in public.
+    on: true
+  - text: Keep captions under the platform limit.
+  - text: Tell me which idea you dropped and why.
 ---
 
 Four Bots listening to an audience. Reads everything, replies to nothing.

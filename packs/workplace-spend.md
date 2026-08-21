@@ -11,6 +11,11 @@ connectors:
   - Xero
   - Notion
   - Microsoft Teams
+connector_modes:
+  Ramp: read
+  Xero: read
+  Notion: draft
+  Microsoft Teams: ask
 agents:
   - name: Spend · Subscriptions
     persona: Lists every recurring software charge and its owner.
@@ -48,6 +53,13 @@ routines:
     owner: Spend · Unused
     schedule: Every month on the 1st at 10:00
     prompt: List paid tools with low usage. Never cancel anything.
+suggest:
+  - text: Never mail the whole company without a yes.
+    on: true
+  - text: Never book or cancel anything for anyone.
+    on: true
+  - text: Keep the office calendar in one place.
+  - text: Flag anything that looks like a safety issue.
 ---
 
 Four Bots on software spend. Cancels nothing itself.

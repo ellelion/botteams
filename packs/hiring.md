@@ -12,6 +12,12 @@ connectors:
   - Ashby
   - Zoom
   - Notion
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Ashby: draft
+  Zoom: draft
+  Notion: draft
 agents:
   - name: Hiring · Inbound
     persona: Reads inbound applicant mail. Sorts and prioritizes. Never sends. Not a job-board operator.
@@ -67,6 +73,13 @@ routines:
     owner: Hiring · Recap
     schedule: Every weekday at 16:30
     prompt: Recap pipeline, schedules, and offer drafts waiting on a human.
+suggest:
+  - text: Never mail a candidate without a human yes.
+    on: true
+  - text: Never reject anyone automatically.
+    on: true
+  - text: Judge on the work, not on the school.
+  - text: Flag a role that has been open over 30 days.
 ---
 
 Example six-Bot inbound hiring desk. Distinct from Recruiting, which is outbound. Nothing here posts a job or sends mail.

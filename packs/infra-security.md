@@ -11,6 +11,11 @@ connectors:
   - GitHub
   - 1Password
   - Snyk
+connector_modes:
+  Cloudflare: draft
+  GitHub: draft
+  1Password: draft
+  Snyk: draft
 agents:
   - name: Security · Secrets
     persona: Finds credentials committed to a repository or left in a log.
@@ -48,6 +53,13 @@ routines:
     owner: Security · Access
     schedule: Every Monday at 09:00
     prompt: List accounts with access beyond their role. Never change a permission.
+suggest:
+  - text: Never apply a change. Draft the plan.
+    on: true
+  - text: Never touch production without a human yes.
+    on: true
+  - text: Name the blast radius before the fix.
+  - text: Page me only for real user impact.
 ---
 
 Four Bots on security hygiene. Reports privately, changes nothing.

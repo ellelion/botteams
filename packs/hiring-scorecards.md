@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Notion
   - Gmail
+connector_modes:
+  Ashby: draft
+  Calendar: draft
+  Notion: draft
+  Gmail: draft
 agents:
   - name: Score · Missing
     persona: Names interviews held with no scorecard filed.
@@ -49,6 +54,13 @@ routines:
     owner: Score · Thin
     schedule: Every weekday at 09:00
     prompt: Flag scorecards with a rating and no supporting evidence.
+suggest:
+  - text: Never mail a candidate without a human yes.
+    on: true
+  - text: Never reject anyone automatically.
+    on: true
+  - text: Judge on the work, not on the school.
+  - text: Flag a role that has been open over 30 days.
 ---
 
 Four Bots on hiring evidence. Chases scorecards, decides nothing.

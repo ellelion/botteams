@@ -11,6 +11,11 @@ connectors:
   - PostHog
   - Intercom
   - Notion
+connector_modes:
+  Mixpanel: draft
+  PostHog: draft
+  Intercom: ask
+  Notion: draft
 agents:
   - name: Activation · Funnel
     persona: Reports where new accounts stop, step by step.
@@ -48,6 +53,13 @@ routines:
     owner: Activation · Questions
     schedule: Every weekday at 16:00
     prompt: List questions from accounts under seven days old that the product should have answered.
+suggest:
+  - text: Never mail a new starter without a human yes.
+    on: true
+  - text: Never grant access to anything.
+    on: true
+  - text: Check day one is ready by the Friday before.
+  - text: Ask the buddy how week one went, not the manager.
 ---
 
 Four Bots on activation. Watches, never messages a user.

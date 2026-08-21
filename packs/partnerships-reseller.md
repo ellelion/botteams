@@ -11,6 +11,11 @@ connectors:
   - Salesforce
   - Gmail
   - Notion
+connector_modes:
+  HubSpot: ask
+  Salesforce: ask
+  Gmail: draft
+  Notion: draft
 agents:
   - name: Channel · Deals
     persona: Tracks registered deals and flags conflicts with direct sales.
@@ -48,6 +53,13 @@ routines:
     owner: Channel · Performance
     schedule: Every month on the 1st at 10:00
     prompt: Report registered versus closed per partner. Name partners registering but never closing.
+suggest:
+  - text: Never mail a partner without a human yes.
+    on: true
+  - text: Never agree to terms.
+    on: true
+  - text: Track every promise we made, with a date.
+  - text: Flag a partner who went quiet for a month.
 ---
 
 Four Bots on the reseller channel. Flags conflicts, sends nothing.

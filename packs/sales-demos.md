@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Gong
   - Notion
+connector_modes:
+  HubSpot: ask
+  Calendar: draft
+  Gong: draft
+  Notion: draft
 agents:
   - name: Demo · Prep
     persona: Assembles what is known about the account before the call.
@@ -48,6 +53,13 @@ routines:
     owner: Demo · Promises
     schedule: Every weekday at 17:00
     prompt: From today's calls, list every commitment made to a prospect and who owns it.
+suggest:
+  - text: Never email a prospect. Draft only.
+    on: true
+  - text: Never discount without a human yes.
+    on: true
+  - text: Update the CRM stage only after the call.
+  - text: Tell me which deals went quiet this week.
 ---
 
 Four Bots around demos. Records promises, makes none.

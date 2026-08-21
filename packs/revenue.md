@@ -11,6 +11,11 @@ connectors:
   - Salesforce
   - Gong
   - Calendly
+connector_modes:
+  HubSpot: ask
+  Salesforce: ask
+  Gong: draft
+  Calendly: draft
 agents:
   - name: Revenue · Deals
     persona: Watches the HubSpot pipeline for stalled deals and missing next steps. Drafts nudges, never sends them.
@@ -57,6 +62,13 @@ routines:
     owner: Revenue · Recap
     schedule: Every weekday at 17:30
     prompt: Recap deal movement, stale accounts, call commitments, and drafts waiting on a human send.
+suggest:
+  - text: Never move money or issue a credit.
+    on: true
+  - text: Never mail a customer about billing without a yes.
+    on: true
+  - text: Reconcile before you report.
+  - text: Flag any churn risk worth over a month of revenue.
 ---
 
 Example five-Bot revenue desk. Reads the CRM, never writes to it.

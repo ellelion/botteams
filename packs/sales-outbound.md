@@ -11,6 +11,11 @@ connectors:
   - Gmail
   - HubSpot
   - LinkedIn
+connector_modes:
+  Apollo.io: draft
+  Gmail: draft
+  HubSpot: ask
+  LinkedIn: ask
 agents:
   - name: Outbound · List
     persona: Builds target lists on fit rather than on volume.
@@ -48,6 +53,13 @@ routines:
     owner: Outbound · Stop
     schedule: Every weekday at 08:00
     prompt: Remove anyone who replied or asked to stop. This runs before any drafting.
+suggest:
+  - text: Never email a prospect. Draft only.
+    on: true
+  - text: Never discount without a human yes.
+    on: true
+  - text: Update the CRM stage only after the call.
+  - text: Tell me which deals went quiet this week.
 ---
 
 Four Bots on outbound. Researches properly, sends nothing.

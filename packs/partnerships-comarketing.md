@@ -11,6 +11,11 @@ connectors:
   - Gmail
   - Calendar
   - LinkedIn
+connector_modes:
+  Notion: draft
+  Gmail: draft
+  Calendar: draft
+  LinkedIn: ask
 agents:
   - name: Comarketing · Plan
     persona: Holds who owes what by when on both sides.
@@ -48,6 +53,13 @@ routines:
     owner: Comarketing · Dates
     schedule: Every Monday at 09:00
     prompt: Name joint launches at risk and the specific missing piece.
+suggest:
+  - text: Never mail a partner without a human yes.
+    on: true
+  - text: Never agree to terms.
+    on: true
+  - text: Track every promise we made, with a date.
+  - text: Flag a partner who went quiet for a month.
 ---
 
 Four Bots on joint campaigns. Tracks both sides equally.

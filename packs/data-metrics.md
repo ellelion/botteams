@@ -10,6 +10,10 @@ connectors:
   - Notion
   - dbt Labs
   - Google Cloud BigQuery
+connector_modes:
+  Notion: draft
+  dbt Labs: draft
+  Google Cloud BigQuery: draft
 agents:
   - name: Metrics · Registry
     persona: Holds the definition of every headline metric and where it is computed.
@@ -46,6 +50,13 @@ routines:
     owner: Metrics · Check
     schedule: Every weekday at 08:00
     prompt: Recompute headline metrics from source and report any that disagree with the dashboard.
+suggest:
+  - text: Read only. Never write back to a warehouse table.
+    on: true
+  - text: Never present a number without the query behind it.
+    on: true
+  - text: Say out loud when a dashboard is stale.
+  - text: Flag a metric that moved more than 20 percent.
 ---
 
 Four Bots on one job: one metric, one definition.

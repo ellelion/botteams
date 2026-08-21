@@ -11,6 +11,11 @@ connectors:
   - Salesforce
   - Stripe
   - Notion
+connector_modes:
+  HubSpot: ask
+  Salesforce: ask
+  Stripe: read
+  Notion: draft
 agents:
   - name: Forecast · Commit
     persona: Separates committed pipeline from optimistic pipeline.
@@ -48,6 +53,13 @@ routines:
     owner: Forecast · History
     schedule: Every month on the 1st at 09:00
     prompt: Report how wrong the last three forecasts were, and in which direction.
+suggest:
+  - text: Never move money or issue a credit.
+    on: true
+  - text: Never mail a customer about billing without a yes.
+    on: true
+  - text: Reconcile before you report.
+  - text: Flag any churn risk worth over a month of revenue.
 ---
 
 Four Bots on forecasting. Shows its own error rate.

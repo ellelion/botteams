@@ -116,6 +116,28 @@ for (const file of files) {
       }
     }
   }
+  /* Customize inputs. Chips belong to the team that ships them, so this
+     checks shape, not content: a team with none is fine. */
+  if (data.suggest !== undefined) {
+    if (!Array.isArray(data.suggest)) fail(file + ": suggest must be an array");
+    else for (const [i, chip] of data.suggest.entries()) {
+      if (typeof chip === "string") { if (!chip.trim()) fail(file + ": suggest[" + i + "] is empty"); continue; }
+      if (!chip || typeof chip !== "object") { fail(file + ": suggest[" + i + "] must be a string or a map"); continue; }
+      if (!isNonEmptyString(chip.text)) fail(file + ": suggest[" + i + "].text is required");
+      if (chip.on !== undefined && typeof chip.on !== "boolean") fail(file + ": suggest[" + i + "].on must be true or false");
+      if (/\bpack\b|\bseat\b/i.test(String(chip.text))) fail(file + ": suggest[" + i + '] says pack or seat. The nouns are team and Bot.');
+    }
+  }
+  if (data.connector_modes !== undefined) {
+    if (typeof data.connector_modes !== "object" || Array.isArray(data.connector_modes)) {
+      fail(file + ": connector_modes must be a map of connector to mode");
+    } else {
+      for (const [name, mode] of Object.entries(data.connector_modes)) {
+        if (!packConnectors.has(name)) fail(file + ': connector_modes names "' + name + '" which is not a connector on this team');
+        if (!["read", "draft", "ask"].includes(mode)) fail(file + ": connector_modes." + name + " must be read, draft, or ask");
+      }
+    }
+  }
 }
 
 if (process.exitCode) process.exit(process.exitCode);

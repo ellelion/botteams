@@ -11,6 +11,11 @@ connectors:
   - Notion
   - GitHub
   - Linear
+connector_modes:
+  Figma: draft
+  Notion: draft
+  GitHub: draft
+  Linear: draft
 agents:
   - name: System · Components
     persona: Watches Figma for components edited outside the library.
@@ -49,6 +54,13 @@ routines:
     owner: System · Tokens
     schedule: Every Wednesday at 10:00
     prompt: Find hardcoded colours and spacing added since last check. Never edit code.
+suggest:
+  - text: Never overwrite a file someone else is working in.
+    on: true
+  - text: Draft feedback, never post it as final.
+    on: true
+  - text: Reference the component name, not a screenshot.
+  - text: Flag anything that breaks the type scale.
 ---
 
 Four Bots keeping a design system real. Reports drift, edits nothing.

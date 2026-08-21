@@ -11,6 +11,11 @@ connectors:
   - Calendar
   - Xero
   - Ramp
+connector_modes:
+  Gmail: draft
+  Calendar: draft
+  Xero: read
+  Ramp: read
 agents:
   - name: Payroll · Headcount
     persona: Lists starters, leavers, and contract changes since last run, and flags anyone whose pay should change this month.
@@ -54,6 +59,13 @@ routines:
     owner: Payroll · Calendar
     schedule: Every month on the 20th at 09:00
     prompt: Name the payroll cutoff, approval, and payment dates for this month and who owns each.
+suggest:
+  - text: Never move money. Read the ledgers and report.
+    on: true
+  - text: Never file anything with a tax authority.
+    on: true
+  - text: Round nothing. Quote the figure you found.
+  - text: Flag a duplicate payment the moment you see it.
 ---
 
 Five Bots for the run-up to payday. Explains the numbers, approves nothing.

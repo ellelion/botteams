@@ -11,6 +11,11 @@ connectors:
   - Mixpanel
   - Intercom
   - Glean
+connector_modes:
+  Notion: draft
+  Mixpanel: draft
+  Intercom: ask
+  Glean: draft
 agents:
   - name: Discovery · Questions
     persona: Turns a vague product idea into the question that would settle it.
@@ -48,6 +53,13 @@ routines:
     owner: Discovery · Voice
     schedule: Every Wednesday at 11:00
     prompt: For active discovery areas, find what customers already told us.
+suggest:
+  - text: Never change a roadmap date without asking.
+    on: true
+  - text: Draft specs, never ship them as decided.
+    on: true
+  - text: Tie every request to the person who asked.
+  - text: Say what we are choosing not to build.
 ---
 
 Four Bots keeping product decisions honest about evidence.

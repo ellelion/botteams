@@ -11,6 +11,11 @@ connectors:
   - Zendesk
   - Linear
   - Notion
+connector_modes:
+  Intercom: ask
+  Zendesk: ask
+  Linear: draft
+  Notion: draft
 agents:
   - name: Feedback · Collect
     persona: Gathers feedback from support and chat into one place with the source kept.
@@ -49,6 +54,13 @@ routines:
     owner: Feedback · Route
     schedule: Every Monday at 09:30
     prompt: Draft issues for themes raised by five or more accounts. Never close an existing issue.
+suggest:
+  - text: Never change a roadmap date without asking.
+    on: true
+  - text: Draft specs, never ship them as decided.
+    on: true
+  - text: Tie every request to the person who asked.
+  - text: Say what we are choosing not to build.
 ---
 
 Four Bots on feedback. Counts and sources it, decides nothing.

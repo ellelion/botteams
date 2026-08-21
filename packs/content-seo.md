@@ -11,6 +11,11 @@ connectors:
   - Webflow
   - Exa
   - Gmail
+connector_modes:
+  Notion: draft
+  Webflow: draft
+  Exa: draft
+  Gmail: draft
 agents:
   - name: SEO · Decay
     persona: Finds pages whose traffic has fallen steadily rather than sharply, which is the kind nobody notices.
@@ -48,6 +53,13 @@ routines:
     owner: SEO · Gaps
     schedule: Every Wednesday at 10:00
     prompt: Find questions readers ask that the site does not answer. Say which are worth writing and why.
+suggest:
+  - text: Never publish. Draft only.
+    on: true
+  - text: Never claim a number you cannot source.
+    on: true
+  - text: Keep every draft in our house voice.
+  - text: Flag anything that reads like a legal claim.
 ---
 
 Four Bots on published content. Improves what exists before adding more.
