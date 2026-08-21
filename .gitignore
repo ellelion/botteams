@@ -9,3 +9,8 @@ next-env.d.ts
 # Python bytecode from one-off migration scripts
 __pycache__/
 *.pyc
+
+# Secrets. Never committed. See .env.example for the names.
+.env
+.env*.local
+.env.local

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
+import { PageTitle } from "@/components/PageShell";
 import { ledger } from "@/lib/ledger-theme";
 import { DEFAULT_LIMIT, MAX_LIMIT } from "@/lib/api-teams";
 import { PARAMS } from "@/lib/openapi";
@@ -28,15 +29,13 @@ export default function ApiDocsPage() {
   return (
     <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
-      <main className="wrap-prose relative z-10 flex-1 pb-[var(--sec-y)] pt-12">
-        <h1 className="font-display text-[clamp(2rem,4vw,3.2rem)] leading-[1.05]" style={{ fontFamily: ledger.serif }}>
-          API
-        </h1>
-        <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+      <main className="wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-12">
+        <PageTitle>API</PageTitle>
+        <p className="measure mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           Every team on this shelf is readable as JSON. No key, no account, no rate limit worth mentioning. CORS is open,
           so a browser or an agent can call it directly. {teamCount} teams and {botCount} bots today.
         </p>
-        <p className="mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+        <p className="measure mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
           Two shapes, two collections. A <strong>team</strong> is a recipe with a group chat: two to six named Bots, standing
           routines, and the connectors the account needs first. A <strong>bot</strong> is a recipe with one Bot and no group
           chat. They never appear in the same list, because adding them up and calling the total teams is not true. The
@@ -57,7 +56,7 @@ export default function ApiDocsPage() {
               </div>
             ))}
           </dl>
-          <p className="mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+          <p className="measure mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
             There is no per-item endpoint. <code style={{ fontFamily: ledger.mono }}>/api/teams/&lt;slug&gt;</code> and{" "}
             <code style={{ fontFamily: ledger.mono }}>/api/bots/&lt;slug&gt;</code> both return 404 by design. Filter the
             collection instead.
@@ -66,7 +65,7 @@ export default function ApiDocsPage() {
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Machine contract</h2>
-          <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+          <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             OpenAPI 3.1, generated from the same types this endpoint returns rather than written alongside them, so it
             cannot drift from the response. Defaults on this page and in the document come from one list.
           </p>
@@ -74,7 +73,7 @@ export default function ApiDocsPage() {
             <a className="accent-hover underline" href="/openapi.json">Download OpenAPI 3.1 (JSON)</a>
             <a className="accent-hover underline" href="/openapi.yaml">YAML</a>
           </p>
-          <p className="mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+          <p className="measure mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
             Default limit {DEFAULT_LIMIT}, maximum {MAX_LIMIT}. Values outside the range clamp rather than error.
           </p>
         </section>
@@ -120,7 +119,7 @@ export default function ApiDocsPage() {
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Sync</h2>
-          <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+          <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             Cursor mode walks oldest first, so a team added after your last sync always lands after your cursor. A page
             never shifts underneath you. Start at <code style={{ fontFamily: ledger.mono }}>cursor=start</code>, store{" "}
             <code style={{ fontFamily: ledger.mono }}>sync.nextCursor</code>, and keep the same filters on every call.
@@ -167,7 +166,7 @@ export default function ApiDocsPage() {
               `}`,
             ].join("\n")}</code>
           </pre>
-          <p className="mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+          <p className="measure mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
             <code style={{ fontFamily: ledger.mono }}>addedAt</code> is the date stated in the team file and nothing else.
             It is never inferred and never invented. A file that does not state one reports null and sorts last.
           </p>

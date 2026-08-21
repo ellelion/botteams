@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <PageShell
-      eyebrow="Legal"
       title="Privacy"
       lead={`What this site does with data today, not what a template says it might. ${site.company} is the operator. If any of this changes, this page changes with it.`}
     >
@@ -48,6 +47,26 @@ export default function PrivacyPage() {
         </p>
       </Block>
 
+      <Block title="If you buy a rail slot">
+        <p>
+          Payment happens on Stripe&apos;s own hosted page, not on this site. Stripe is the processor and we never see or
+          store a card number. Their handling of it is covered by{" "}
+          <a className="accent-hover underline" href="https://stripe.com/privacy" rel="nofollow noopener noreferrer" target="_blank">
+            Stripe&apos;s privacy policy
+          </a>
+          .
+        </p>
+        <p>
+          What reaches us from that transaction is what we need to write your row and to reach you about it: the company
+          name, the destination URL, the one line, the email address you gave Stripe, and the amount and term. We keep it
+          as business records for the placement. We do not sell it and we do not use it to advertise to you.
+        </p>
+        <p>
+          Buying still sets no cookie on this site and adds no tracking to it. There is no pixel on the success page and
+          no conversion script anywhere.
+        </p>
+      </Block>
+
       <Block title="Links off this site">
         <p>
           Connector marks, sponsor rows, and every link to xAI&apos;s docs point at other people&apos;s sites. Once you
@@ -59,8 +78,9 @@ export default function PrivacyPage() {
 
       <Block title="Children and jurisdiction">
         <p>
-          The site is for people doing work in Grok Bot and is not directed at children. Since we collect nothing, there
-          is nothing here to request, correct, or delete. If you believe otherwise, write to us and we will look.
+          The site is for people doing work in Grok Bot and is not directed at children. Browsing collects nothing, so
+          for a reader there is nothing to request, correct, or delete. If you have bought a placement, write to us and
+          we will show you what we hold, correct it, or delete what we are not required to keep for accounting.
         </p>
       </Block>
 

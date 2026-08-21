@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ConnectorFinder, type FinderEntry } from "@/components/connectors/ConnectorFinder";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
+import { PageTitle } from "@/components/PageShell";
 import { ledger } from "@/lib/ledger-theme";
 import {
   CATALOG_AS_OF,
@@ -55,9 +56,7 @@ export default function ConnectorsPage() {
     <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
       <main className="wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-12">
-        <h1 className="font-display text-[clamp(2rem,4vw,3.2rem)] leading-[1.05]" style={{ fontFamily: ledger.serif }}>
-          {en.connectors.h1}
-        </h1>
+        <PageTitle>{en.connectors.h1}</PageTitle>
         <p className="measure mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           {en.connectors.lede(CONNECTOR_CATALOG.length)}
         </p>

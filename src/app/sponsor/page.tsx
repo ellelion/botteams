@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
+import { Suspense } from "react";
+import { PageTitle } from "@/components/PageShell";
+import { BuySlot } from "@/components/sponsor/BuySlot";
+import { PaidNotice } from "@/components/sponsor/PaidNotice";
+import { RAIL_PLANS } from "@/lib/rail";
+import { railCheckoutReady } from "@/lib/stripe";
 import { ledger } from "@/lib/ledger-theme";
 import {
   SPONSOR_SLOTS_TOTAL,
@@ -27,15 +33,14 @@ export default function SponsorPage() {
   const filled = filledCount();
   const paid = paidSlots();
   const open = openCount();
+  const canBuy = open > 0 && railCheckoutReady(RAIL_PLANS);
   const mail = `mailto:${site.email}?subject=${encodeURIComponent("Sponsoring Grok Bot Teams")}`;
 
   return (
     <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
       <main className="wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-12">
-        <h1 className="font-display text-[clamp(2rem,4vw,3.2rem)] leading-[1.05]" style={{ fontFamily: ledger.serif }}>
-          Sponsor
-        </h1>
+        <PageTitle>Sponsor</PageTitle>
         <p className="measure mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           People arrive here about to give a Grok Bot real work, and the first thing every team tells them is which tools
           to connect first. That is the whole audience: operators picking tools, at the moment they pick them.
@@ -61,8 +66,8 @@ export default function SponsorPage() {
             ))}
           </dl>
           <p className="measure mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
-            Pricing is per enquiry while the shelf is young. We would rather quote against real traffic than publish a
-            number we cannot yet justify.
+            The side rail is priced and you can buy it below. The other two are per enquiry: we would rather quote those
+            against real traffic than publish a number we cannot yet justify.
           </p>
           <p className="measure mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
             {en.sponsor.emptyPlacements}
@@ -117,7 +122,21 @@ export default function SponsorPage() {
             <p className="mt-1 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
               {en.sponsor.openLine(open, SPONSOR_SLOTS_TOTAL)}
             </p>
-            <a className="spon-cta mt-4" href={mail}>{en.sponsor.takeSlot}</a>
+            <Suspense fallback={null}>
+              <PaidNotice />
+            </Suspense>
+            {canBuy ? (
+              <BuySlot soldOut={false} />
+            ) : open <= 0 ? (
+              <BuySlot soldOut />
+            ) : (
+              /* No keys wired yet. Say so plainly rather than showing a
+                 button that cannot open Stripe. */
+              <p className="spon-fine">
+                Card checkout is not switched on yet. Mail{" "}
+                <a className="accent-hover underline" href={mail}>{site.email}</a> and we will invoice you.
+              </p>
+            )}
           </div>
         </section>
 
@@ -142,7 +161,8 @@ export default function SponsorPage() {
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Enquire</h2>
           <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-            Mail {site.company} at{" "}
+            The side rail is above and you can buy it without talking to us. For the connect first slot or a promoted
+            team, mail {site.company} at{" "}
             <a className="accent-hover underline" href={mail}>{site.email}</a> with the tool, the link you want, and the
             placement. We will tell you what the traffic actually is before you pay anything.
           </p>
