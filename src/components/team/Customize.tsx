@@ -10,9 +10,8 @@ import { botMarkStyle } from "@/lib/bot-icon";
 import { resolveConnector } from "@/lib/connectors";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
-import { isShell, type RecipeLayout } from "@/lib/recipe-layout";
 import { site } from "@/lib/site";
-import type { ConnectorMode, Team } from "@/lib/types";
+import type { Team } from "@/lib/types";
 import {
   MODES,
   MODE_HINT,
@@ -42,31 +41,19 @@ import {
 
 const HASH_KEY = "c=";
 
-type WorkbenchTab = "roster" | "routines" | "customize" | "notes";
 
 export function Customize({
   team,
-  layout = "rail",
-  identity,
   related,
   extras,
   children,
 }: {
   team: Team;
-  layout?: RecipeLayout;
-  /* The identity block is rendered by the page and passed in, because
-     where it sits is a layout decision and the page cannot know it. */
-  identity?: ReactNode;
   related?: ReactNode;
   extras?: ReactNode;
   children?: ReactNode;
 }) {
-  const [tab, setTab] = useState<WorkbenchTab>("roster");
-  /* Shell state: a sheet for deck, a picked Bot for inspector. */
-  const [sheet, setSheet] = useState<WorkbenchTab | null>(null);
-  const [picked, setPicked] = useState(0);
-  const topActionsRef = useRef<HTMLDivElement>(null);
-  const [showBar, setShowBar] = useState(false);
+  const [sheet, setSheet] = useState<"customize" | null>(null);
   const [editing, setEditing] = useState(false);
   const [state, setState] = useState<CustomState>(() => defaultState(team));
   const [shared, setShared] = useState(false);
@@ -179,40 +166,16 @@ export function Customize({
     URL.revokeObjectURL(url);
   }
 
-  /* The mobile bar appears only once the in-page Copy has left the
-     viewport, so a phone does not arrive with a pinned bar over content
-     it has not read yet. Desktop never shows it. */
-  useEffect(() => {
-    const el = topActionsRef.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(([entry]) => setShowBar(!entry.isIntersecting), { threshold: 0 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [layout]);
+  /* The page hands us several sibling sections. Key them once so the
+     array is safe to render wherever it lands. */
+  const notes = Children.toArray(children);
+
+  function openCustomize() {
+    setEditing(true);
+    setSheet("customize");
+  }
 
   const readish = team.connectors.filter((c) => (state.modes[c] ?? "draft") !== "ask");
-  /*
-   * The page is assembled from named parts rather than one long column,
-   * because the three layouts put the same parts in different places.
-   * Nothing below decides where it goes; the switch at the bottom does.
-   */
-  const actionsPart = (
-    <div className="cz-actions" ref={topActionsRef}>
-      <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
-      <button
-        type="button"
-        className="theme-control theme-control-label"
-        aria-expanded={editing}
-        onClick={() => setEditing((v) => !v)}
-      >
-        {editing ? en.customize.close : en.customize.open}
-      </button>
-      {/* Beside Copy, not in the page header, so it describes the recipe
-          as it stands rather than the one on the shelf. */}
-      {solo ? null : <VerifiedChip on={verdict.verified} />}
-    </div>
-  );
-
   const verdictPart = (
     <>
       {verdict.errors.length > 0 ? (
@@ -459,10 +422,6 @@ export function Customize({
      them and you know what the paste will do. */
   const rosterPart = (
     <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-      {/* One Bot is a job, not a roster. */}
-      <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-        {solo ? en.recipe.secJob : en.team.agents}
-      </h2>
       <ul className="mt-4">
         {resolved.agents.map(({ source, name, note }, i) => (
           <li key={source.name} className="hairline-row py-3">
@@ -502,7 +461,6 @@ export function Customize({
 
   const routinesPart = resolved.routines.length > 0 ? (
       <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-        <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.routines}</h2>
         <ul className="mt-4">
           {resolved.routines.map(({ source, owner }) => (
             <li key={source.name} className="hairline-row py-3">
@@ -549,449 +507,142 @@ export function Customize({
     </div>
   );
 
-  /* ── Shell layouts ──────────────────────────────────────────────────
-     One viewport, no document scroll. The bar is persistent chrome and
-     is where Copy lives, so it is reachable whatever a pane is doing. */
+  /*
+   * One page.
+   *
+   * It used to be eight arrangements of the same pile, which is a way of
+   * avoiding the question of what belongs where. This answers it:
+   *
+   *   The install never leaves. Name, chip, one line of job, and Copy sit
+   *   in a header that stays put, because copying the prompt is the whole
+   *   transaction and it should never require scrolling back.
+   *
+   *   The Bots are the product, so they are chips you can see without
+   *   clicking anything. A recipe with one Bot still shows that Bot here.
+   *
+   *   Job, routines, notes and the prompt are skippable and wildly
+   *   different lengths, so they are a vertical accordion with every
+   *   title visible. Not tabs: roughly a quarter of people never open a
+   *   horizontal tab and conclude the content is missing.
+   *
+   *   Customize is a mode rather than a read, so it opens as a sheet over
+   *   this page and closes back onto it.
+   */
   const rosterLabel = solo ? en.recipe.secJob : en.recipe.secRoster;
 
-  const shellBar = (
-    <header className="rcs-bar">
-      <div className="rcs-bar-id">
-        <h1 className="rcs-name">{team.name}</h1>
-        <p className="rcs-tag">{team.tagline}</p>
-      </div>
-      <div className="rcs-bar-chips">
-        {team.fromXai ? <FromXaiChip /> : null}
-        {solo ? null : <VerifiedChip on={verdict.verified} />}
-        <span className="rcs-shape">{en.home.shape(team.bots, team.rooms.length)}</span>
-      </div>
-      <div className="rcs-bar-actions" ref={topActionsRef}>
-        <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
-        <button
-          type="button"
-          className="theme-control theme-control-label"
-          aria-expanded={editing}
-          onClick={() => setEditing((v) => !v)}
-        >
-          {editing ? en.customize.close : en.customize.open}
-        </button>
-      </div>
-    </header>
-  );
-
-  const installPane = (
-    <>
-      {connectorsPart}
-      {panelPart}
-      {promptPart}
-    </>
-  );
-
-  /* The page hands us several sibling sections. Rendering that array in
-     more than one slot makes React ask for keys, so key it once here. */
-  const notes = Children.toArray(children);
-  const notesPane = notes.length > 0 ? notes : <p className="rc-empty">{en.recipe.noNotes}</p>;
-  const routinesPane = resolved.routines.length > 0 ? routinesPart : <p className="rc-empty">{en.recipe.noRoutines}</p>;
-
-  if (isShell(layout)) {
-    /* 1. Studio. Two panes filling what is left of the viewport: the
-       recipe on the left, everything install on the right. */
-    if (layout === "studio") {
-      return (
-        <div className="rcs rcs--studio">
-          {shellBar}
-          {verdictPart}
-          {overwritePart}
-          <div className="rcs-body rcs-two">
-            <section className="rcs-pane" aria-label={rosterLabel}>
-              {rosterPart}
-              {solo ? null : roomPart}
-              {routinesPart}
-              {notes}
-              {related}
-            </section>
-            <section className="rcs-pane rcs-pane-alt" aria-label={en.recipe.secInstall}>
-              {installPane}
-            </section>
-          </div>
-        </div>
-      );
-    }
-
-    /* 2. Deck. One screen and nothing below it. The rest arrives as a
-       sheet over the top, and closing it puts you back on the same
-       screen rather than somewhere down a page. */
-    if (layout === "deck") {
-      const sheets: { id: WorkbenchTab; label: string; node: ReactNode }[] = [
-        { id: "routines", label: en.recipe.secRoutines, node: routinesPane },
-        { id: "customize", label: en.customize.title, node: installPane },
-        { id: "notes", label: en.recipe.secNotes, node: notesPane },
-      ];
-      const openSheet = sheets.find((x) => x.id === sheet) ?? null;
-      return (
-        <div className="rcs rcs--deck">
-          {shellBar}
-          {verdictPart}
-          {overwritePart}
-          <div className="rcs-body rcs-deck-body">
-            <div className="rcs-deck-face">
-              <p className="rc-h2">{rosterLabel}</p>
-              <ul className="rcs-chiplist">
-                {resolved.agents.map(({ source, name }, i) => (
-                  <li key={source.name} className="rcs-botchip">
-                    <GrokBotMark size={16} animate style={botMarkStyle(i)} />
-                    <span>{name || source.name}</span>
-                  </li>
-                ))}
-              </ul>
-              {solo ? null : (
-                <p className="rcs-deck-room">
-                  {en.recipe.secRoom}: {resolved.roomName} · {resolved.members.join(", ")}
-                </p>
-              )}
-              <div className="mt-4">
-                <ConnectorRow names={team.connectors} labeled size={16} />
-              </div>
-              <div className="rcs-deck-open">
-                {sheets.map((x) => (
-                  <button
-                    key={x.id}
-                    type="button"
-                    className="cz-btn cz-btn-quiet"
-                    onClick={() => {
-                      setSheet(x.id);
-                      if (x.id === "customize") setEditing(true);
-                    }}
-                  >
-                    {x.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {openSheet ? (
-            <div className="rcs-sheet" role="dialog" aria-modal="false" aria-label={openSheet.label}>
-              <div className="rcs-sheet-head">
-                <p className="rc-h2">{openSheet.label}</p>
-                <button type="button" className="cz-btn cz-btn-quiet" onClick={() => setSheet(null)}>
-                  {en.recipe.close}
-                </button>
-              </div>
-              <div className="rcs-pane rcs-sheet-body">{openSheet.node}</div>
-            </div>
-          ) : null}
-        </div>
-      );
-    }
-
-    /* 3. Bento. A grid of cards that each clip. No card can make the page
-       taller than the window, because the grid is exactly the window. */
-    if (layout === "bento") {
-      return (
-        <div className="rcs rcs--bento">
-          {shellBar}
-          {verdictPart}
-          {overwritePart}
-          <div className="rcs-body rcs-grid">
-            <section className="rcs-card rcs-pane rcs-card-wide" aria-label={rosterLabel}>
-              {rosterPart}
-              {solo ? null : roomPart}
-            </section>
-            <section className="rcs-card rcs-pane" aria-label={en.recipe.secRoutines}>{routinesPane}</section>
-            <section className="rcs-card rcs-pane rcs-card-tall" aria-label={en.recipe.secInstall}>{installPane}</section>
-            <section className="rcs-card rcs-pane" aria-label={en.recipe.secNotes}>{notesPane}</section>
-            <section className="rcs-card rcs-pane" aria-label={en.recipe.secRelated}>
-              {related ?? <p className="rc-empty">{en.recipe.noNotes}</p>}
-            </section>
-          </div>
-        </div>
-      );
-    }
-
-    /* 4. Inspector. Three panes: pick a Bot, read the Bot, see what it
-       reaches. A one-Bot recipe uses the same frame with one row in the
-       list, rather than a different screen. */
-    if (layout === "inspector") {
-      const current = resolved.agents[Math.min(picked, resolved.agents.length - 1)];
-      return (
-        <div className="rcs rcs--inspector">
-          {shellBar}
-          {verdictPart}
-          {overwritePart}
-          <div className="rcs-body rcs-three">
-            <nav className="rcs-pane rcs-list" aria-label={en.recipe.pickBot}>
-              <p className="rc-h2">{rosterLabel}</p>
-              <ul>
-                {resolved.agents.map(({ source, name }, i) => (
-                  <li key={source.name}>
-                    <button
-                      type="button"
-                      className={`rcs-listrow${i === Math.min(picked, resolved.agents.length - 1) ? " is-on" : ""}`}
-                      aria-current={i === picked}
-                      onClick={() => setPicked(i)}
-                    >
-                      <GrokBotMark size={16} animate style={botMarkStyle(i)} />
-                      <span>{name || source.name}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              {solo ? null : (
-                <>
-                  <p className="rc-h2 mt-6">{en.recipe.secRoom}</p>
-                  <p className="rcs-quiet">{resolved.roomName}</p>
-                  <p className="rcs-quiet">{resolved.members.join(", ")}</p>
-                </>
-              )}
-            </nav>
-
-            <section className="rcs-pane" aria-label={en.recipe.secJob}>
-              {current ? (
-                <>
-                  <p className="rc-h2">{en.recipe.secJob}</p>
-                  <h2 className="rcs-jobname" style={{ fontFamily: ledger.serif }}>{current.name || current.source.name}</h2>
-                  <p className="rcs-jobtext">{current.source.persona}</p>
-                  {current.note ? <p className="rcs-jobtext">{current.note}</p> : null}
-                  {current.source.connectors.length > 0 ? (
-                    <div className="mt-4"><ConnectorRow names={current.source.connectors} labeled size={16} /></div>
-                  ) : null}
-                  {notes}
-                </>
-              ) : null}
-            </section>
-
-            <section className="rcs-pane rcs-pane-alt" aria-label={en.recipe.secInstall}>
-              {connectorsPart}
-              {routinesPane}
-              {panelPart}
-              {promptPart}
-            </section>
-          </div>
-        </div>
-      );
-    }
-
-    /* 5. Stage. Identity and the action stay pinned; one stage below
-       them. Switching tabs swaps what is on the stage and never adds a
-       pixel of page height. */
-    const stages: { id: WorkbenchTab; label: string; node: ReactNode }[] = [
-      { id: "roster", label: rosterLabel, node: (<>{rosterPart}{solo ? null : roomPart}{related}</>) },
-      { id: "routines", label: en.recipe.secRoutines, node: routinesPane },
-      { id: "customize", label: en.customize.title, node: installPane },
-      { id: "notes", label: en.recipe.secNotes, node: notesPane },
-    ];
-    const onStage = stages.find((x) => x.id === tab) ?? stages[0];
-    return (
-      <div className="rcs rcs--stage">
-        {shellBar}
-        {verdictPart}
-        {overwritePart}
-        <div className="rc-tabs rcs-tabs" role="tablist" aria-label={en.recipe.tabsAria}>
-          {stages.map((x) => (
-            <button
-              key={x.id}
-              type="button"
-              role="tab"
-              id={`rcs-tab-${x.id}`}
-              aria-selected={x.id === onStage.id}
-              aria-controls={`rcs-stage-${x.id}`}
-              className={`rc-tab${x.id === onStage.id ? " is-on" : ""}`}
-              onClick={() => {
-                setTab(x.id);
-                if (x.id === "customize") setEditing(true);
-              }}
-            >
-              {x.label}
-            </button>
-          ))}
-        </div>
-        <div
-          className="rcs-body rcs-pane"
-          role="tabpanel"
-          id={`rcs-stage-${onStage.id}`}
-          aria-labelledby={`rcs-tab-${onStage.id}`}
-        >
-          {onStage.node}
-        </div>
-      </div>
-    );
-  }
-
-  const sections: { id: string; label: string }[] = [
-    { id: "overview", label: en.recipe.secOverview },
-    { id: "roster", label: solo ? en.recipe.secJob : en.recipe.secRoster },
-    ...(solo ? [] : [{ id: "room", label: en.recipe.secRoom }]),
-    ...(resolved.routines.length > 0 ? [{ id: "routines", label: en.recipe.secRoutines }] : []),
-    { id: "installer", label: en.recipe.secInstaller },
-    ...(related ? [{ id: "related", label: en.recipe.secRelated }] : []),
-  ];
-
-  /* A. Rail. Two columns on desktop, the action column sticky. The reading
-     column keeps everything you scroll through, including Related, which
-     belongs to the page rather than to the action. */
-  if (layout === "rail") {
-    return (
-      <div className="rc rc-rail">
-        <div className="rc-rail-main">
-          {identity}
-          {/* On a phone the action is here, in the identity block, not
-              pinned to the bottom on arrival. The bar comes later. */}
-          <div className="rc-inline-actions">
-            {actionsPart}
-            {verdictPart}
-          </div>
-          {overwritePart}
-          <div className="rc-rail-connectors">{connectorsPart}</div>
-          {panelPart}
-          <div id="roster">{rosterPart}</div>
-          {solo ? null : <div id="room">{roomPart}</div>}
-          {resolved.routines.length > 0 ? <div id="routines">{routinesPart}</div> : null}
-          {notes}
-          <div id="installer">{promptPart}</div>
-          {related ? <div id="related">{related}</div> : null}
-          {extras}
-        </div>
-
-        <aside className="rc-rail-side" aria-label={en.recipe.sideAria}>
-          <div className="rc-rail-stick">
-            {actionsPart}
-            {verdictPart}
-            {connectorsPart}
-            {editing ? null : <p className="rc-side-hint">{en.recipe.sideHint}</p>}
-          </div>
-        </aside>
-
-        {/* Mobile only, and only once the first Copy has scrolled away.
-            It sits above the safe area and never covers Customize, which
-            is why the bar carries Customize too. */}
-        <div className={`rc-bottom${showBar ? " is-up" : ""}`} aria-hidden={!showBar}>
-          <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
-          <button
-            type="button"
-            className="theme-control theme-control-label"
-            aria-expanded={editing}
-            onClick={() => setEditing((v) => !v)}
-          >
-            {editing ? en.customize.close : en.customize.open}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  /* B. Workbench. Identity and the action above the fold, then one panel
-     at a time. Tabs here are sibling panels, not navigation, which is the
-     only thing tabs are good at. */
-  if (layout === "workbench") {
-    const panels: { id: WorkbenchTab; label: string; node: React.ReactNode }[] = [
-      { id: "roster", label: solo ? en.recipe.secJob : en.recipe.secRoster, node: (
-        <>
-          {rosterPart}
-          {solo ? null : roomPart}
-        </>
-      ) },
-      { id: "routines", label: en.recipe.secRoutines, node: resolved.routines.length > 0 ? routinesPart : <p className="rc-empty">{en.recipe.noRoutines}</p> },
-      { id: "customize", label: en.customize.title, node: (
-        <>
-          {connectorsPart}
-          {editing ? panelPart : <p className="rc-empty">{en.recipe.customizeClosed}</p>}
-          {promptPart}
-        </>
-      ) },
-      { id: "notes", label: en.recipe.secNotes, node: children ?? <p className="rc-empty">{en.recipe.noNotes}</p> },
-    ];
-    const current = panels.find((p) => p.id === tab) ?? panels[0];
-
-    return (
-      <div className="rc rc-workbench">
-        {identity}
-        <div className="rc-inline-actions">
-          {actionsPart}
-          {verdictPart}
-        </div>
-        {overwritePart}
-
-        {/* Four labels wrap to two lines at 390px, which is fine. A
-            select would be needed past that, and it is not. */}
-        <div className="rc-tabs" role="tablist" aria-label={en.recipe.tabsAria}>
-          {panels.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              role="tab"
-              id={`rc-tab-${p.id}`}
-              aria-selected={p.id === current.id}
-              aria-controls={`rc-panel-${p.id}`}
-              className={`rc-tab${p.id === current.id ? " is-on" : ""}`}
-              onClick={() => {
-                setTab(p.id);
-                if (p.id === "customize") setEditing(true);
-              }}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="rc-panel" role="tabpanel" id={`rc-panel-${current.id}`} aria-labelledby={`rc-tab-${current.id}`}>
-          {current.node}
-        </div>
-
-        {related ? <div className="rc-after">{related}</div> : null}
-        {extras}
-      </div>
-    );
-  }
-
-  /* C. Outline. One reading column. The page owns the scroll; the only
-     fixed thing is a short list of where you are, and on a phone that is
-     a closed disclosure rather than a third sticky strip. */
   return (
-    <div className="rc rc-outline">
-      <details className="rc-toc-m">
-        <summary>{en.recipe.onThisPage}</summary>
-        <ul>
-          {sections.map((s) => (
-            <li key={s.id}><a href={`#${s.id}`}>{s.label}</a></li>
+    <div className="rp">
+      <header className="rp-head">
+        <div className="rp-head-row">
+          <div className="rp-head-id">
+            <h1 className="rp-name">{team.name}</h1>
+            <p className="rp-job">{team.tagline}</p>
+          </div>
+          <div className="rp-head-act">
+            <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
+            {/* Secondary on purpose. Copy is the transaction. */}
+            <button type="button" className="rp-secondary" aria-expanded={sheet !== null} onClick={openCustomize}>
+              {en.customize.open}
+            </button>
+          </div>
+        </div>
+        <div className="rp-head-chips">
+          {team.fromXai ? <FromXaiChip /> : null}
+          {solo ? null : <VerifiedChip on={verdict.verified} />}
+          <span className="rp-shape">{en.home.shape(team.bots, team.rooms.length)}</span>
+        </div>
+      </header>
+
+      {verdictPart}
+      {overwritePart}
+
+      {/* The roster, visible without a click. Inline actions land on these
+          chips later; today they are honest labels. */}
+      <section className="rp-roster" aria-label={rosterLabel}>
+        <h2 className="rc-h2">{rosterLabel}</h2>
+        <ul className="rp-chips">
+          {resolved.agents.map(({ source, name }, i) => (
+            <li key={source.name} className="rp-chip">
+              <GrokBotMark size={17} animate style={botMarkStyle(i)} />
+              <span className="rp-chip-name">{name || source.name}</span>
+              {source.reuse ? <span className="rp-chip-note">{en.team.reuse}</span> : null}
+            </li>
           ))}
         </ul>
-      </details>
-
-      <div className="rc-outline-main">
-        <div id="overview">
-          {identity}
-          <div className="rc-inline-actions">
-            {actionsPart}
-            {verdictPart}
-          </div>
-          {overwritePart}
-          {connectorsPart}
+        {solo ? null : (
+          <p className="rp-room">
+            <span className="rp-room-label">{en.recipe.secRoom}</span>
+            {resolved.roomName}: {resolved.members.join(", ")}
+          </p>
+        )}
+        {/* The connectors the account needs, in the open, not behind a
+            fourth mystery tab. */}
+        <div className="rp-connectors">
+          <ConnectorRow names={team.connectors} labeled size={17} />
         </div>
-        {panelPart}
-        <div id="roster">{rosterPart}</div>
-        {solo ? null : <div id="room">{roomPart}</div>}
-        {resolved.routines.length > 0 ? <div id="routines">{routinesPart}</div> : null}
-        {notes}
-        <div id="installer">{promptPart}</div>
-        {related ? <div id="related">{related}</div> : null}
-        {extras}
+        <p className="rp-note">{solo ? en.xai.soloNote : en.team.connectorsNote}</p>
+      </section>
+
+      <div className="rp-acc">
+        <details className="rp-sec" open>
+          <summary className="rp-sum"><span>{en.recipe.secJob}</span></summary>
+          <div className="rp-secbody">
+            {rosterPart}
+            {solo ? null : roomPart}
+          </div>
+        </details>
+
+        <details className="rp-sec">
+          <summary className="rp-sum">
+            <span>{en.recipe.secRoutines}</span>
+            <span className="rp-count">{resolved.routines.length}</span>
+          </summary>
+          <div className="rp-secbody">
+            {resolved.routines.length > 0 ? routinesPart : <p className="rc-empty">{en.recipe.noRoutines}</p>}
+          </div>
+        </details>
+
+        <details className="rp-sec">
+          <summary className="rp-sum"><span>{en.recipe.secNotes}</span></summary>
+          <div className="rp-secbody">{notes.length > 0 ? notes : <p className="rc-empty">{en.recipe.noNotes}</p>}</div>
+        </details>
+
+        <details className="rp-sec">
+          <summary className="rp-sum"><span>{en.recipe.secInstaller}</span></summary>
+          <div className="rp-secbody">
+            <p className="rp-note">{en.team.installNote}</p>
+            <pre className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
+              <code>{prompt}</code>
+            </pre>
+          </div>
+        </details>
       </div>
 
-      <nav className="rc-toc" aria-label={en.recipe.onThisPage}>
-        <div className="rc-toc-stick">
-          <p className="rc-toc-title">{en.recipe.onThisPage}</p>
-          <ul>
-            {sections.map((s) => (
-              <li key={s.id}><a href={`#${s.id}`}>{s.label}</a></li>
-            ))}
-          </ul>
-          {/* Small, not a second column. The real Copy is in Installer. */}
-          <div className="rc-toc-copy">
-            <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
+      {related}
+      {extras}
+
+      {/* Customize: a mode over the page, not a different page. Closing it
+          leaves the URL exactly as it was. */}
+      {sheet !== null ? (
+        <div className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-label={en.customize.title}>
+          <button type="button" className="rp-scrim" aria-label={en.recipe.close} onClick={() => setSheet(null)} />
+          <div className="rp-sheet">
+            <div className="rp-sheet-head">
+              <p className="rc-h2">{en.customize.title}</p>
+              <div className="rp-sheet-act">
+                <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
+                <button type="button" className="rp-secondary" onClick={() => setSheet(null)}>{en.recipe.close}</button>
+              </div>
+            </div>
+            <div className="rp-sheet-body">
+              {verdictPart}
+              {connectorsPart}
+              {panelPart}
+              {promptPart}
+            </div>
           </div>
         </div>
-      </nav>
+      ) : null}
     </div>
   );
 }
