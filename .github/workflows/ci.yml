@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate packs
+      - name: Validate teams
         run: npm run validate
       - name: Build
         run: npm run build

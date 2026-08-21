@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
-import { listPacks } from "@/lib/packs";
+import { listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date(site.updatedAt);
-  const teamPages = listPacks().map((pack) => ({ url: `${site.url}/teams/${pack.slug}`, lastModified }));
+  const teamPages = listTeams().map((team) => ({ url: `${site.url}/teams/${team.slug}`, lastModified }));
   return [
     { url: site.url, lastModified },
     { url: `${site.url}/connectors`, lastModified },

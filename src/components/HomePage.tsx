@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { PackIndex } from "@/components/home/PackIndex";
+import { TeamIndex } from "@/components/home/TeamIndex";
 import { RevealText } from "@/components/home/RevealText";
 import { WingsVideo } from "@/components/home/WingsVideo";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
@@ -9,9 +9,9 @@ import { SiteMasthead } from "@/components/SiteMasthead";
 import { SponsorRail } from "@/components/SponsorRail";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
-import type { Pack } from "@/lib/types";
+import type { Team } from "@/lib/types";
 import { site } from "@/lib/site";
-import { packsAddedSeries } from "@/lib/stats";
+import { teamsAddedSeries } from "@/lib/stats";
 
 
 /* Abridged Founder OS front matter. Real fields, real values, trimmed to
@@ -38,8 +38,8 @@ routines:
     prompt: Read Stripe. Draft the weekly money brief. Never move funds.
 ---`;
 
-export function HomePage({ packs }: { packs: Pack[] }) {
-  const added = packsAddedSeries(30);
+export function HomePage({ teams }: { teams: Team[] }) {
+  const added = teamsAddedSeries(30);
   return (
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
@@ -80,7 +80,7 @@ export function HomePage({ packs }: { packs: Pack[] }) {
                 {en.home.contributeTitle}
               </h2>
               <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.contributeBody}</p>
-              <pre className="installer-prompt mt-5 overflow-x-auto p-4 text-left text-[0.68rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
+              <pre className="installer-prompt is-whole mt-5 p-4 text-left text-[0.68rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
                 <code>{CONTRIBUTE_SAMPLE}</code>
               </pre>
               <p className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.72rem]">
@@ -98,7 +98,7 @@ export function HomePage({ packs }: { packs: Pack[] }) {
         </div>
         <div className="relative z-10 col-start-1 row-start-2 min-w-0 pb-10 pt-4 lg:col-start-2 lg:row-start-1 lg:sticky lg:top-[var(--masthead-h)] lg:flex lg:h-[calc(100dvh-var(--masthead-h))] lg:flex-col lg:justify-start lg:overflow-y-auto lg:py-6">
           <Suspense fallback={<p className="eyebrow">Loading teams</p>}>
-            <PackIndex packs={packs} added={added} verifiedOn={site.verifiedOn} />
+            <TeamIndex teams={teams} added={added} verifiedOn={site.verifiedOn} />
           </Suspense>
         </div>
       </main>

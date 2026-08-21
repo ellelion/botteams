@@ -45,7 +45,7 @@ rooms:
       - Demo · Promises
       - Demo · Follow
 routines:
-  - name: Prep pack
+  - name: Prep brief
     owner: Demo · Prep
     schedule: Every weekday at 08:00
     prompt: For today's demos, assemble what is known and what to ask.

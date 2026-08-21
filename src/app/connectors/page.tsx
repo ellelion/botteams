@@ -14,7 +14,7 @@ import {
   XAI_CONNECTOR_DOCS,
 } from "@/lib/connectors";
 import { en } from "@/lib/messages/en";
-import { listPacks } from "@/lib/packs";
+import { listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -24,20 +24,20 @@ export const metadata: Metadata = {
 };
 
 export default function ConnectorsPage() {
-  const packs = listPacks();
+  const teams = listTeams();
 
   // Which teams expect a given connector. Resolve every name a team writes
   // through the same alias-aware resolver the rows use, then compare slugs.
   // Comparing the raw strings misses "Calendar", which is what every team
   // actually writes for Google Calendar.
   const usage = new Map<string, { slug: string; name: string }[]>();
-  for (const pack of packs) {
+  for (const team of teams) {
     const slugs = new Set<string>();
-    for (const name of pack.connectors) slugs.add(resolveConnector(name).slug);
-    for (const agent of pack.agents) for (const name of agent.connectors) slugs.add(resolveConnector(name).slug);
+    for (const name of team.connectors) slugs.add(resolveConnector(name).slug);
+    for (const agent of team.agents) for (const name of agent.connectors) slugs.add(resolveConnector(name).slug);
     for (const slug of slugs) {
       const list = usage.get(slug) ?? [];
-      list.push({ slug: pack.slug, name: pack.name });
+      list.push({ slug: team.slug, name: team.name });
       usage.set(slug, list);
     }
   }

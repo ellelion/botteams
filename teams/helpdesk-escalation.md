@@ -49,7 +49,7 @@ routines:
     owner: Escalate · Spot
     schedule: Every weekday at 11:00
     prompt: List tickets reassigned more than twice without resolution.
-  - name: Context pack
+  - name: Context brief
     owner: Escalate · Context
     schedule: Every weekday at 11:30
     prompt: For escalated tickets, assemble the history into one summary.

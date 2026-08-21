@@ -3,34 +3,34 @@ import { notFound } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
-import { PackIcon } from "@/components/icons/LineIcons";
+import { TeamIcon } from "@/components/icons/LineIcons";
 import { Customize } from "@/components/team/Customize";
 import { ledger } from "@/lib/ledger-theme";
 import { renderMarkdown } from "@/lib/markdown";
 import { en } from "@/lib/messages/en";
-import { getPack, listPacks } from "@/lib/packs";
+import { getTeam, listTeams } from "@/lib/teams";
 import Link from "next/link";
 import { sectionSlug } from "@/lib/bot-icon";
 import { resolveConnector } from "@/lib/connectors";
 import { SponsorRail } from "@/components/SponsorRail";
-import { packJsonLd } from "@/lib/seo";
+import { teamJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 export function generateStaticParams() {
-  return listPacks().map((pack) => ({ slug: pack.slug }));
+  return listTeams().map((team) => ({ slug: team.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const pack = getPack(slug);
-  if (!pack) return {};
-  const title = pack.name;
-  const description = pack.tagline;
+  const team = getTeam(slug);
+  if (!team) return {};
+  const title = team.name;
+  const description = team.tagline;
   return {
     title,
     description,
-    alternates: { canonical: `${site.url}/teams/${pack.slug}` },
-    openGraph: { title: `${title} · ${site.name}`, description, url: `${site.url}/teams/${pack.slug}`, type: "website" },
+    alternates: { canonical: `${site.url}/teams/${team.slug}` },
+    openGraph: { title: `${title} · ${site.name}`, description, url: `${site.url}/teams/${team.slug}`, type: "website" },
   };
 }
 
@@ -38,24 +38,24 @@ function JsonLd({ data }: { data: object }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }
 
-export default async function PackPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function TeamPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const pack = getPack(slug);
-  if (!pack) notFound();
+  const team = getTeam(slug);
+  if (!team) notFound();
   // Several teams name themselves after their sidebar section ("Bookkeeping",
   // "Partnerships"). Printing both gives the page a stuttered
   // "Partnerships / PARTNERSHIPS · 6 BOTS". Show the section only when it adds a word.
-  const sectionEchoesName = pack.section.trim().toLowerCase() === pack.name.trim().toLowerCase();
+  const sectionEchoesName = team.section.trim().toLowerCase() === team.name.trim().toLowerCase();
   /* Three neighbours. Category first, but every category currently holds
      exactly one team, so that alone never renders. Fall back to the teams
      sharing the most connectors, which is the more useful question anyway:
      what else would I run with the tools I have already connected. */
-  const others = listPacks().filter((other) => other.slug !== pack.slug);
-  const mine = new Set(pack.connectors.map((c) => resolveConnector(c).slug));
+  const others = listTeams().filter((other) => other.slug !== team.slug);
+  const mine = new Set(team.connectors.map((c) => resolveConnector(c).slug));
   const related = [
-    ...others.filter((o) => o.section === pack.section),
+    ...others.filter((o) => o.section === team.section),
     ...others
-      .filter((o) => o.section !== pack.section)
+      .filter((o) => o.section !== team.section)
       .map((o) => ({ team: o, shared: o.connectors.filter((c) => mine.has(resolveConnector(c).slug)).length }))
       .filter((x) => x.shared > 0)
       .sort((a, b) => b.shared - a.shared || a.team.name.localeCompare(b.team.name))
@@ -63,74 +63,74 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
   ].slice(0, 3);
   return (
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
-      <JsonLd data={packJsonLd(pack)} />
+      <JsonLd data={teamJsonLd(team)} />
       <SiteMasthead />
       <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-20 pt-12">
         <nav className="mb-6 flex flex-wrap items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }} aria-label="Breadcrumb">
-          <Link href="/#teams" className="accent-hover">{en.pack.allTeams}</Link>
+          <Link href="/#teams" className="accent-hover">{en.team.allTeams}</Link>
           <span aria-hidden>/</span>
-          <Link href={`/?category=${sectionSlug(pack.section)}#teams`} className="accent-hover">{pack.section}</Link>
+          <Link href={`/?category=${sectionSlug(team.section)}#teams`} className="accent-hover">{team.section}</Link>
         </nav>
-        <PackIcon slug={pack.slug} />
+        <TeamIcon slug={team.slug} />
         <h1 className="font-display mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>
-          {pack.name}
+          {team.name}
         </h1>
         <p className="mt-4 text-[1.05rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          {pack.tagline}
+          {team.tagline}
         </p>
         <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
-          {sectionEchoesName ? `${pack.bots} bots` : `${pack.section} · ${pack.bots} bots`}
+          {sectionEchoesName ? `${team.bots} bots` : `${team.section} · ${team.bots} bots`}
         </p>
 
-        <Customize pack={pack}>
+        <Customize team={team}>
           <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-            <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.section}</h2>
-            <p className="mt-3">{pack.section}</p>
+            <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.section}</h2>
+            <p className="mt-3">{team.section}</p>
           </section>
 
-          {pack.body ? (
+          {team.body ? (
             <article
-              className="pack-prose mt-10 border-t pt-8 text-[0.95rem] leading-relaxed"
+              className="team-prose mt-10 border-t pt-8 text-[0.95rem] leading-relaxed"
               style={{ color: ledger.inkSoft }}
-              dangerouslySetInnerHTML={{ __html: renderMarkdown(pack.body) }}
+              dangerouslySetInnerHTML={{ __html: renderMarkdown(team.body) }}
             />
           ) : null}
 
-          {pack.contributor || pack.scoutedBy ? (
+          {team.contributor || team.scoutedBy ? (
             <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
               <p className="text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-                {pack.addedVia ? (
+                {team.addedVia ? (
                   <>
-                    {en.pack.basedOn}{" "}
-                    <a className="accent-hover underline" href={pack.addedVia} target="_blank" rel="noopener noreferrer">
-                      {pack.contributor}
+                    {en.team.basedOn}{" "}
+                    <a className="accent-hover underline" href={team.addedVia} target="_blank" rel="noopener noreferrer">
+                      {team.contributor}
                     </a>
                   </>
-                ) : pack.contributor ? (
+                ) : team.contributor ? (
                   <>
-                    {en.pack.contributedBy}{" "}
-                    <a className="accent-hover underline" href={pack.contributorUrl} target="_blank" rel="noopener noreferrer">
-                      {pack.contributor}
+                    {en.team.contributedBy}{" "}
+                    <a className="accent-hover underline" href={team.contributorUrl} target="_blank" rel="noopener noreferrer">
+                      {team.contributor}
                     </a>
                   </>
                 ) : null}
-                {pack.scoutedBy ? <> · {en.pack.scoutedBy} {pack.scoutedBy}</> : null}
+                {team.scoutedBy ? <> · {en.team.scoutedBy} {team.scoutedBy}</> : null}
               </p>
             </section>
           ) : null}
         </Customize>
 
         <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.pack.runYourself}</h2>
-          <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.pack.runYourselfBody}</p>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.runYourself}</h2>
+          <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.team.runYourselfBody}</p>
           <p className="mt-4 text-[0.8rem]">
             <a
               className="accent-hover underline"
-              href={`${site.github}/blob/main/packs/${pack.slug}.md`}
+              href={`${site.github}/blob/main/teams/${team.slug}.md`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              {en.pack.viewSource}
+              {en.team.viewSource}
             </a>
           </p>
         </section>
@@ -138,7 +138,7 @@ export default async function PackPage({ params }: { params: Promise<{ slug: str
         {related.length > 0 ? (
           <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
             <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-              {en.pack.relatedTitle()}
+              {en.team.relatedTitle()}
             </h2>
             <ul className="mt-4">
               {related.map((other) => (

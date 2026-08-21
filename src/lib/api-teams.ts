@@ -1,9 +1,8 @@
-import { execSync } from "node:child_process";
 import { installerPrompt } from "@/lib/installer";
-import { listPacks } from "@/lib/packs";
+import { listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
 import { resolveConnector } from "@/lib/connectors";
-import type { Pack } from "@/lib/types";
+import type { Team } from "@/lib/types";
 
 export const API_VERSION = 1;
 export const DEFAULT_LIMIT = 25;
@@ -31,63 +30,39 @@ export type ApiTeam = {
 };
 
 /*
- * A team file carries added_at only when a contributor supplied one, so the
- * rest fall back to the commit that first added the file. That keeps
- * sort=newest and the cursor honest without stamping invented dates into
- * the markdown. Read once per process; the catalog is static per deploy.
+ * addedAt comes from the team file and nowhere else.
+ *
+ * It used to fall back to `git log --diff-filter=A`, which stopped being
+ * true the day the folder was renamed: git reports every file as added in
+ * the rename commit. A date we cannot stand behind is worse than no date,
+ * so a file without added_at reports null and sorts last.
  */
-let addedCache: Map<string, string> | null = null;
 
-function addedDates(): Map<string, string> {
-  if (addedCache) return addedCache;
-  const map = new Map<string, string>();
-  try {
-    const out = execSync("git log --diff-filter=A --pretty=format:%cI --name-only -- packs/", {
-      encoding: "utf8",
-      cwd: process.cwd(),
-    });
-    let stamp = "";
-    for (const line of out.split(/\r?\n/)) {
-      const trimmed = line.trim();
-      if (/^\d{4}-\d{2}-\d{2}T/.test(trimmed)) stamp = trimmed;
-      else if (trimmed.endsWith(".md") && stamp) {
-        const slug = trimmed.replace(/^packs\//, "").replace(/\.md$/, "");
-        // git log walks newest first, so the last write per slug is the add.
-        map.set(slug, new Date(stamp).toISOString());
-      }
-    }
-  } catch {
-    // No git (a tarball deploy). addedAt stays null rather than invented.
-  }
-  addedCache = map;
-  return map;
-}
-
-export function toApiTeam(pack: Pack): ApiTeam {
+export function toApiTeam(team: Team): ApiTeam {
   return {
-    slug: pack.slug,
-    name: pack.name,
-    tagline: pack.tagline,
-    category: pack.section,
-    status: pack.status,
-    bots: pack.bots,
-    addedAt: pack.addedAt ?? addedDates().get(pack.slug) ?? null,
-    connectors: pack.connectors,
-    agents: pack.agents.map((a) => ({ name: a.name, persona: a.persona, connectors: a.connectors })),
-    rooms: pack.rooms.map((r) => ({ name: r.name, members: r.members })),
-    routines: pack.routines.map((r) => ({ name: r.name, owner: r.owner, schedule: r.schedule, prompt: r.prompt })),
-    installer: installerPrompt(pack),
-    contributor: pack.contributor ?? null,
-    contributorUrl: pack.contributorUrl ?? null,
-    scoutedBy: pack.scoutedBy ?? null,
-    sourceUrl: pack.addedVia ?? null,
-    url: pack.url ?? null,
-    detailUrl: `${site.url}/teams/${pack.slug}`,
+    slug: team.slug,
+    name: team.name,
+    tagline: team.tagline,
+    category: team.section,
+    status: team.status,
+    bots: team.bots,
+    addedAt: team.addedAt ?? null,
+    connectors: team.connectors,
+    agents: team.agents.map((a) => ({ name: a.name, persona: a.persona, connectors: a.connectors })),
+    rooms: team.rooms.map((r) => ({ name: r.name, members: r.members })),
+    routines: team.routines.map((r) => ({ name: r.name, owner: r.owner, schedule: r.schedule, prompt: r.prompt })),
+    installer: installerPrompt(team),
+    contributor: team.contributor ?? null,
+    contributorUrl: team.contributorUrl ?? null,
+    scoutedBy: team.scoutedBy ?? null,
+    sourceUrl: team.addedVia ?? null,
+    url: team.url ?? null,
+    detailUrl: `${site.url}/teams/${team.slug}`,
   };
 }
 
 export function allApiTeams(): ApiTeam[] {
-  return listPacks().map(toApiTeam);
+  return listTeams().map(toApiTeam);
 }
 
 export type Filters = { q: string | null; category: string | null; integration: string | null; sort: string };

@@ -8,8 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "validate": "node scripts/validate-packs.mjs",
-    "test": "node scripts/validate-packs.mjs && next build"
+    "validate": "node scripts/validate-teams.mjs",
+    "test": "node scripts/validate-teams.mjs && next build"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

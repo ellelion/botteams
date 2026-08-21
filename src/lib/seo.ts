@@ -1,4 +1,4 @@
-import type { Pack } from "@/lib/packs";
+import type { Team } from "@/lib/teams";
 import { site } from "@/lib/site";
 
 export function organizationJsonLd() {
@@ -32,24 +32,24 @@ export function websiteJsonLd() {
   };
 }
 
-export function packListJsonLd(packs: Pack[]) {
+export function teamListJsonLd(teams: Team[]) {
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Grok Bot company teams",
     description: site.entity,
-    numberOfItems: packs.length,
-    itemListElement: packs.map((pack, i) => ({ "@type": "ListItem", position: i + 1, name: pack.name, url: `${site.url}/teams/${pack.slug}`, description: pack.tagline })),
+    numberOfItems: teams.length,
+    itemListElement: teams.map((team, i) => ({ "@type": "ListItem", position: i + 1, name: team.name, url: `${site.url}/teams/${team.slug}`, description: team.tagline })),
   };
 }
 
-export function packJsonLd(pack: Pack) {
+export function teamJsonLd(team: Team) {
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: pack.name,
-    url: `${site.url}/teams/${pack.slug}`,
-    description: pack.tagline,
+    name: team.name,
+    url: `${site.url}/teams/${team.slug}`,
+    description: team.tagline,
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     dateModified: site.updatedAt,

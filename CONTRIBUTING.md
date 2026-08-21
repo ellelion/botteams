@@ -1,6 +1,6 @@
 # Add a team
 
-A team is one markdown file in [`packs/`](./packs). Front matter names the
+A team is one markdown file in [`teams/`](./teams). Front matter names the
 Bots, the group chat, the routines, and the connectors the account needs
 first. The installer prompt is generated from that file, so the file is the
 product. There is no database and no admin.
@@ -104,7 +104,7 @@ suggest:
 
 The category list is closed so a typo cannot quietly become a new category.
 Current values live in `CATEGORIES` in
-[`scripts/validate-packs.mjs`](./scripts/validate-packs.mjs). To add one,
+[`scripts/validate-teams.mjs`](./scripts/validate-teams.mjs). To add one,
 change that list in the same pull request and say why.
 
 ## Checks
@@ -121,7 +121,7 @@ not on the team.
 
 ## Language
 
-- A row is a **team**, never a pack.
+- A row is a **team**.
 - The unit is a **Bot**, capital B, never a seat.
 - Group chats hold **two to six Bots**.
 - No em-dashes.

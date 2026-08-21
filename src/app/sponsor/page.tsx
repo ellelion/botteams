@@ -3,7 +3,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
 import { ledger } from "@/lib/ledger-theme";
 import { SPONSOR_SLOTS_TOTAL, filledCount, railSlots, sponsorHref } from "@/data/sponsors";
-import { listPacks } from "@/lib/packs";
+import { listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function SponsorPage() {
-  const teams = listPacks().length;
+  const teams = listTeams().length;
   const filled = filledCount();
   const slots = railSlots(SPONSOR_SLOTS_TOTAL);
   const mail = `mailto:${site.email}?subject=${encodeURIComponent("Sponsoring Grok Bot Teams")}`;

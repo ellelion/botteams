@@ -13,7 +13,7 @@ Ellelion LLC · info@ellelion.com · MIT · **Not affiliated with xAI.**
 
 ## The shelf is a repo
 
-A team is one markdown file in [`packs/`](./packs). Front matter names the Bots,
+A team is one markdown file in [`teams/`](./teams). Front matter names the Bots,
 the group chat, the routines, and the connectors. The installer prompt is
 generated from it, so the file is the product and GitHub is the CMS.
 
@@ -25,7 +25,7 @@ it end to end.
 | Route | What |
 |---|---|
 | `/` | Team index. Search, category, connector filter, sort. |
-| `/teams/<slug>` | A team: Bots, group chat, routines, installer prompt, and Customize. (`/packs/<slug>` serves the same page.) |
+| `/teams/<slug>` | A team: Bots, group chat, routines, installer prompt, and Customize. |
 | `/docs` | The team spec. Our recipe format, mapped onto official Grok Bot nouns. |
 | `/connectors` | Every connector Grok Bot reaches, and which teams use each. |
 | `/api` | Public API contract, readable without JavaScript. |
@@ -76,11 +76,12 @@ Node 22.12.0 (see `.nvmrc`).
 
 ## Language
 
-A row is a **team**, never a pack. The unit is a **Bot**, capital B, never a
-seat. Group chats hold two to six Bots. No em-dashes.
+A row is a **team**. The unit is a **Bot**, capital B. Group chats hold two to six Bots. No em-dashes.
 
-`status: team` is an installable team. `status: example` is a format demo.
-Folder and route names still say `packs` for history; the UI says team.
+`status: team` is a team you can install. `status: example` is a format demo.
+The folder, the route, the type, and the copy all say team. There is no
+older spelling kept alive as an alias: nothing had shipped to anyone, so a
+second name would only have been a second thing to maintain.
 
 Canonical domain: grokbotteams.ai. `grokbotteam.ai` (no s) is a type-in that
 should 301 when DNS exists. This repo does not buy or configure DNS.

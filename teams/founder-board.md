@@ -22,8 +22,8 @@ agents:
     icon: card
     connectors:
       - Stripe
-  - name: Board · Pack
-    persona: Drafts the board pack, leading with what went badly.
+  - name: Board · Brief
+    persona: Drafts the board brief, leading with what went badly.
     icon: pen
     connectors:
       - Notion
@@ -33,7 +33,7 @@ agents:
     connectors:
       - Notion
   - name: Board · Schedule
-    persona: Holds meeting dates and the deadline for circulating the pack.
+    persona: Holds meeting dates and the deadline for circulating the brief.
     icon: calendar
     connectors:
       - Calendar
@@ -42,7 +42,7 @@ rooms:
   - name: Board room
     members:
       - Board · Numbers
-      - Board · Pack
+      - Board · Brief
       - Board · Actions
       - Board · Schedule
 routines:
@@ -50,10 +50,10 @@ routines:
     owner: Board · Actions
     schedule: Every Monday at 09:00
     prompt: List board actions from last meeting and their status. Name anything not started.
-  - name: Pack deadline
+  - name: Brief deadline
     owner: Board · Schedule
     schedule: Every weekday at 08:00
-    prompt: Name the next board date and whether the pack is on track to circulate on time.
+    prompt: Name the next board date and whether the brief is on track to circulate on time.
 suggest:
   - text: Never send mail. Draft only.
     on: true

@@ -1,4 +1,4 @@
-import type { ConnectorMode, Pack, PackAgent, PackRoutine } from "@/lib/types";
+import type { ConnectorMode, Team, TeamAgent, TeamRoutine } from "@/lib/types";
 import { resolveConnector } from "@/lib/connectors";
 
 /*
@@ -65,8 +65,8 @@ export function defaultMode(connector: string): ConnectorMode {
 }
 
 /** The mode a team ships, falling back to the shape of the connector. */
-export function packMode(pack: Pack, connector: string): ConnectorMode {
-  return pack.connectorModes[connector] ?? defaultMode(connector);
+export function teamMode(team: Team, connector: string): ConnectorMode {
+  return team.connectorModes[connector] ?? defaultMode(connector);
 }
 
 export type CustomState = {
@@ -89,18 +89,18 @@ export type CustomState = {
   installed: boolean;
 };
 
-export function defaultState(pack: Pack): CustomState {
-  const room = pack.rooms[0];
+export function defaultState(team: Team): CustomState {
+  const room = team.rooms[0];
   const modes: Record<string, ConnectorMode> = {};
-  for (const connector of pack.connectors) modes[connector] = packMode(pack, connector);
+  for (const connector of team.connectors) modes[connector] = teamMode(team, connector);
   return {
     off: [],
     names: {},
-    roomName: room?.name ?? `${pack.name} HQ`,
-    members: room ? [...room.members] : pack.agents.slice(0, 6).map((a) => a.name),
+    roomName: room?.name ?? `${team.name} HQ`,
+    members: room ? [...room.members] : team.agents.slice(0, 6).map((a) => a.name),
     modes,
     notes: {},
-    chips: pack.suggest.filter((s) => s.on).map((s) => s.text),
+    chips: team.suggest.filter((s) => s.on).map((s) => s.text),
     free: "",
     override: null,
     installed: false,
@@ -117,22 +117,22 @@ export function finalName(state: CustomState, name: string): string {
   return (renamed === undefined ? name : renamed).trim();
 }
 
-export function activeAgents(pack: Pack, state: CustomState): PackAgent[] {
-  return pack.agents.filter((agent) => isOn(state, agent.name));
+export function activeAgents(team: Team, state: CustomState): TeamAgent[] {
+  return team.agents.filter((agent) => isOn(state, agent.name));
 }
 
 /* ── The recipe after edits ─────────────────────────────────────────── */
 
 export type Resolved = {
-  agents: { source: PackAgent; name: string; note: string }[];
+  agents: { source: TeamAgent; name: string; note: string }[];
   roomName: string;
   members: string[];
-  routines: { source: PackRoutine; owner: string }[];
+  routines: { source: TeamRoutine; owner: string }[];
   connectors: string[];
 };
 
-export function resolve(pack: Pack, state: CustomState): Resolved {
-  const agents = activeAgents(pack, state).map((source) => ({
+export function resolve(team: Team, state: CustomState): Resolved {
+  const agents = activeAgents(team, state).map((source) => ({
     source,
     name: finalName(state, source.name),
     note: (state.notes[source.name] ?? "").trim(),
@@ -145,10 +145,10 @@ export function resolve(pack: Pack, state: CustomState): Resolved {
        here rather than trusted from state. */
     members: state.members.filter((m) => live.has(m)).map((m) => finalName(state, m)),
     /* Same for a routine: its owner Bot has to exist to own it. */
-    routines: pack.routines
+    routines: team.routines
       .filter((r) => live.has(r.owner))
       .map((r) => ({ source: r, owner: finalName(state, r.owner) })),
-    connectors: pack.connectors,
+    connectors: team.connectors,
   };
 }
 
@@ -171,10 +171,10 @@ const WRITE_WORDS = [
   "cancel the", "issue a credit", "move funds", "invoice them",
 ];
 
-export function check(pack: Pack, state: CustomState): Check {
+export function check(team: Team, state: CustomState): Check {
   const errors: string[] = [];
   const warnings: string[] = [];
-  const r = resolve(pack, state);
+  const r = resolve(team, state);
 
   if (r.agents.length === 0) {
     errors.push("A team needs at least one Bot. Turn one back on, or reset to the recipe.");
@@ -231,11 +231,11 @@ export function check(pack: Pack, state: CustomState): Check {
 
 /* ── The prompt ─────────────────────────────────────────────────────── */
 
-function connectorSection(pack: Pack, state: CustomState): string[] {
+function connectorSection(team: Team, state: CustomState): string[] {
   const lines: string[] = [];
   const needsPlugins: string[] = [];
-  for (const connector of pack.connectors) {
-    const mode = state.modes[connector] ?? packMode(pack, connector);
+  for (const connector of team.connectors) {
+    const mode = state.modes[connector] ?? teamMode(team, connector);
     lines.push(`- ${connector}: ${MODE_LABEL[mode]}. ${modeRule(connector, mode)}`);
     if (mode !== "ask") needsPlugins.push(connector);
   }
@@ -258,9 +258,9 @@ function alsoSection(state: CustomState): string[] {
   return out;
 }
 
-export function buildPrompt(pack: Pack, state: CustomState, siteUrl: string, siteGithub: string): string {
-  const r = resolve(pack, state);
-  const stock = new Set(pack.agents.map((a) => a.name));
+export function buildPrompt(team: Team, state: CustomState, siteUrl: string, siteGithub: string): string {
+  const r = resolve(team, state);
+  const stock = new Set(team.agents.map((a) => a.name));
 
   const agents = r.agents
     .map(({ source, name, note }) => {
@@ -291,8 +291,8 @@ export function buildPrompt(pack: Pack, state: CustomState, siteUrl: string, sit
     )
     .join("\n\n");
 
-  const skills = pack.skills.length > 0
-    ? pack.skills.map((name) => `- ${name}`).join("\n")
+  const skills = team.skills.length > 0
+    ? team.skills.map((name) => `- ${name}`).join("\n")
     : "(none listed. Skills cannot be attached at create time anyway.)";
 
   const also = alsoSection(state);
@@ -300,7 +300,7 @@ export function buildPrompt(pack: Pack, state: CustomState, siteUrl: string, sit
   /* An already-installed team gets a diff, not a second copy of itself.
      Pasting the full recipe twice is how people end up with two Chiefs of
      Staff, which is exactly what the reuse flag exists to prevent. */
-  const dropped = pack.agents.filter((a) => !isOn(state, a.name)).map((a) => a.name);
+  const dropped = team.agents.filter((a) => !isOn(state, a.name)).map((a) => a.name);
   const renames = r.agents.filter((a) => a.name !== a.source.name && stock.has(a.source.name));
   const changeNote = state.installed
     ? [
@@ -316,7 +316,7 @@ export function buildPrompt(pack: Pack, state: CustomState, siteUrl: string, sit
       ]
     : [];
 
-  const exampleBanner = pack.status === "example"
+  const exampleBanner = team.status === "example"
     ? ["NOTE: This is an EXAMPLE team from the public shelf. Use it to learn the format.", "Do not treat it as a production company recipe.", ""]
     : [];
 
@@ -329,9 +329,9 @@ export function buildPrompt(pack: Pack, state: CustomState, siteUrl: string, sit
     "",
     `Catalog: ${siteUrl}`,
     `Source: ${siteGithub}`,
-    `Team: ${pack.name} (${pack.slug})`,
+    `Team: ${team.name} (${team.slug})`,
     `Bots: ${r.agents.length}`,
-    `Sidebar section name: ${pack.section}`,
+    `Sidebar section name: ${team.section}`,
     "",
     ...changeNote,
     /* The heading has to agree with section 0. "Create these Bots" over a
@@ -357,7 +357,7 @@ export function buildPrompt(pack: Pack, state: CustomState, siteUrl: string, sit
     "",
     "The installer cannot create sidebar sections.",
     "Human: in the Grok Bot sidebar, use Move to, then New section.",
-    `Name that section exactly: ${pack.section}`,
+    `Name that section exactly: ${team.section}`,
     "Move the group chat and Bots into that section.",
     "",
     "## 4. Routines (confirm card required)",
@@ -373,7 +373,7 @@ export function buildPrompt(pack: Pack, state: CustomState, siteUrl: string, sit
     "Do not walk an OAuth flow from this prompt.",
     "Every Bot on this account can reach every connected tool. The per-Bot lists above are which Bot is expected to use which, not a second OAuth and not a boundary.",
     "",
-    ...connectorSection(pack, state),
+    ...connectorSection(team, state),
     "",
     "## 6. Skills",
     "",
@@ -387,7 +387,7 @@ export function buildPrompt(pack: Pack, state: CustomState, siteUrl: string, sit
     "",
     "- Named Bots exist",
     `- Named group chat exists ("${r.roomName}", two to six Bots)`,
-    `- Human has created section "${pack.section}"`,
+    `- Human has created section "${team.section}"`,
     "- Each routine has a confirmed save (or the human declined)",
     "- Connectors listed above are already connected",
     "",
@@ -431,8 +431,8 @@ function fromBase64Url(text: string): string {
   return new TextDecoder().decode(bytes);
 }
 
-export function encodeState(pack: Pack, state: CustomState): string {
-  const base = defaultState(pack);
+export function encodeState(team: Team, state: CustomState): string {
+  const base = defaultState(team);
   const wire: Wire = {};
   if (state.off.length > 0) wire.o = state.off;
   const names = Object.entries(state.names).filter(([k, v]) => v !== k);
@@ -451,8 +451,8 @@ export function encodeState(pack: Pack, state: CustomState): string {
   return toBase64Url(JSON.stringify(wire));
 }
 
-export function decodeState(pack: Pack, payload: string): CustomState {
-  const state = defaultState(pack);
+export function decodeState(team: Team, payload: string): CustomState {
+  const state = defaultState(team);
   if (!payload) return state;
   let wire: Wire;
   try {
@@ -462,7 +462,7 @@ export function decodeState(pack: Pack, payload: string): CustomState {
        than an error page. The team is still readable either way. */
     return state;
   }
-  const known = new Set(pack.agents.map((a) => a.name));
+  const known = new Set(team.agents.map((a) => a.name));
   if (Array.isArray(wire.o)) state.off = wire.o.filter((n) => known.has(n));
   if (Array.isArray(wire.n)) {
     for (const pair of wire.n) {
@@ -500,20 +500,20 @@ function yamlScalar(value: string): string {
 }
 
 /** The customized team as a team file, so an edit can go back into a repo. */
-export function toMarkdown(pack: Pack, state: CustomState): string {
-  const r = resolve(pack, state);
+export function toMarkdown(team: Team, state: CustomState): string {
+  const r = resolve(team, state);
   const lines = [
     "---",
-    `slug: ${pack.slug}`,
-    `name: ${yamlScalar(pack.name)}`,
-    `tagline: ${yamlScalar(pack.tagline)}`,
+    `slug: ${team.slug}`,
+    `name: ${yamlScalar(team.name)}`,
+    `tagline: ${yamlScalar(team.tagline)}`,
     `bots: ${r.agents.length}`,
-    `section: ${yamlScalar(pack.section)}`,
+    `section: ${yamlScalar(team.section)}`,
     "status: team",
     "connectors:",
-    ...pack.connectors.map((c) => `  - ${yamlScalar(c)}`),
+    ...team.connectors.map((c) => `  - ${yamlScalar(c)}`),
     "connector_modes:",
-    ...pack.connectors.map((c) => `  ${yamlScalar(c)}: ${state.modes[c] ?? packMode(pack, c)}`),
+    ...team.connectors.map((c) => `  ${yamlScalar(c)}: ${state.modes[c] ?? teamMode(team, c)}`),
     "agents:",
   ];
   for (const { source, name, note } of r.agents) {
@@ -543,7 +543,7 @@ export function toMarkdown(pack: Pack, state: CustomState): string {
     for (const chip of state.chips) lines.push(`  - text: ${yamlScalar(chip)}`, "    on: true");
   }
   lines.push("---", "");
-  lines.push(pack.body);
+  lines.push(team.body);
   if (state.free.trim()) {
     lines.push("", "## Also told to Grok Bot", "", state.free.trim());
   }
