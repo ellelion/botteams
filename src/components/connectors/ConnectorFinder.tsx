@@ -35,7 +35,7 @@ export type FinderEntry = {
 
 /* Row height has to be a constant for windowing to know where it is, so
    rows are one line with the name ellipsised rather than wrapping. */
-const ROW = 46;
+const ROW = 52;
 /* Below this, a plain list is cheaper than the machinery. */
 const WINDOW_FROM = 60;
 

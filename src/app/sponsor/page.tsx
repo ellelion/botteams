@@ -22,7 +22,7 @@ export default function SponsorPage() {
   return (
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
-      <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-20 pt-12">
+      <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-[var(--sec-y)] pt-12">
         <h1 className="font-display text-[clamp(2rem,4vw,3.2rem)] leading-[1.05]" style={{ fontFamily: ledger.serif }}>
           Sponsor
         </h1>

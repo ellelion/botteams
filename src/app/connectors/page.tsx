@@ -54,7 +54,7 @@ export default function ConnectorsPage() {
   return (
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
-      <main className="relative z-10 mx-auto w-full max-w-4xl flex-1 pb-20 pt-12">
+      <main className="relative z-10 mx-auto w-full max-w-4xl flex-1 pb-[var(--sec-y)] pt-12">
         <h1 className="font-display text-[clamp(2rem,4vw,3.2rem)] leading-[1.05]" style={{ fontFamily: ledger.serif }}>
           {en.connectors.h1}
         </h1>
@@ -68,7 +68,7 @@ export default function ConnectorsPage() {
             list came from to reach the search field. */}
         <ConnectorFinder entries={entries} categories={categories} />
 
-        <section className="mt-14 border-t pt-7" style={{ borderColor: ledger.hairline }}>
+        <section className="mt-20 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.sourceTitle}</h2>
           <p className="mt-3 max-w-2xl text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             {en.connectors.builtInNote(builtInCount)}{" "}
@@ -87,7 +87,7 @@ export default function ConnectorsPage() {
           </p>
         </section>
 
-        <section className="mt-14 border-t pt-7" style={{ borderColor: ledger.hairline }}>
+        <section className="mt-20 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.byoTitle}</h2>
           <p className="mt-3 max-w-2xl text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.connectors.byoBody}</p>
         </section>

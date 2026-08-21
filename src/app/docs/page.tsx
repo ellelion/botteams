@@ -14,9 +14,9 @@ export default function DocsPage() {
   return (
     <div className="relative flex min-h-dvh flex-col px-6 sm:px-10 lg:px-16" style={{ background: ledger.paper, color: ledger.ink }}>
       <SiteMasthead />
-      <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-20 pt-12">
+      <main className="relative z-10 mx-auto w-full max-w-2xl flex-1 pb-[var(--sec-y)] pt-12">
         <p className="text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>Ellelion recipe</p>
-        <h1 className="font-display mt-4 text-[clamp(2rem,4vw,3.2rem)] font-light leading-[1.05]" style={{ fontFamily: ledger.serif }}>
+        <h1 className="font-display mt-4 text-[clamp(2.1rem,4.2vw,3.4rem)] font-normal tracking-[-0.03em] leading-[1.05]" style={{ fontFamily: ledger.serif }}>
           Team spec
         </h1>
         <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
@@ -26,7 +26,7 @@ export default function DocsPage() {
           Verified on <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
         </p>
 
-        <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Fields</h2>
+        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Fields</h2>
         <table className="spec-table mt-4">
           <tbody>
             <tr><th><code>name</code></th><td>Team title on the shelf.</td></tr>
@@ -42,7 +42,7 @@ export default function DocsPage() {
           </tbody>
         </table>
 
-        <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Published limits we map to</h2>
+        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Published limits we map to</h2>
         <ul className="mt-4 space-y-3 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           <li>
             <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.overview} rel="nofollow noopener noreferrer">Bot definition</a>: In the Docs and in the Grok Bot app, a Bot = a single persistent, named agent or one AI teammate.
@@ -67,7 +67,7 @@ export default function DocsPage() {
           </li>
         </ul>
 
-        <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Two shapes</h2>
+        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Two shapes</h2>
         <p className="mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           A <strong>bot</strong> is one Bot doing one job. A <strong>team</strong> is two to six Bots in one group chat. They
           are different files in different folders, and the shelf never adds them up into a single count, because a recipe
@@ -86,7 +86,7 @@ export default function DocsPage() {
           </tbody>
         </table>
 
-        <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>From xAI</h2>
+        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>From xAI</h2>
         <p className="mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           A <strong>From xAI</strong> chip means the job is our write-up of one xAI publishes in its{" "}
           <a className="accent-hover underline underline-offset-2" href={XAI_USE_CASE_GALLERY} rel="nofollow noopener noreferrer">Grok Bot use-case gallery</a>.
@@ -95,7 +95,7 @@ export default function DocsPage() {
           standing instructions are ours.
         </p>
 
-        <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Verified</h2>
+        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Verified</h2>
         <p className="mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           Verified exists for teams only. A team is Verified when it has at least one group chat, every group chat holds two
           to six Bots, the Bot count matches the roster, and Bots plus group chats stay under the account cap of 50.
@@ -106,7 +106,7 @@ export default function DocsPage() {
           counted as teams.
         </p>
 
-        <h2 className="mt-14 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Install notes</h2>
+        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Install notes</h2>
         <div className="mt-4 space-y-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           <p>A team is one markdown file under teams/, and a bot is one under bots/, both with YAML frontmatter. GitHub is the CMS. There are no accounts and no connector API on this site.</p>
           <p>A bot installer creates one Bot and its routines. It never asks for a group chat or a sidebar section, because neither means anything for a single Bot.</p>
