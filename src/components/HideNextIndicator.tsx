@@ -12,9 +12,9 @@ export function HideNextIndicator() {
         const root = portal.shadowRoot;
         if (!root) continue;
         const mark = root.getElementById("devtools-indicator");
-        if (mark) mark.style.setProperty("display", "none", "important");
+        if (mark instanceof HTMLElement) mark.style.setProperty("display", "none", "important");
         for (const toast of root.querySelectorAll(".nextjs-toast")) {
-          toast.style.setProperty("display", "none", "important");
+          if (toast instanceof HTMLElement) toast.style.setProperty("display", "none", "important");
         }
       }
     };
