@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteMasthead } from "@/components/SiteMasthead";
-import { PageTitle } from "@/components/PageShell";
+import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
 import { APD_HOME, STRIPE_BEST_PRACTICES, XAI_DOCS, XAI_USE_CASE_GALLERY, site } from "@/lib/site";
 
@@ -13,18 +11,19 @@ export const metadata: Metadata = {
 
 export default function DocsPage() {
   return (
-    <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
-      <SiteMasthead />
-      <main className="wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-12">
-        <PageTitle>Team spec</PageTitle>
-        <p className="measure mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          This is Ellelion&apos;s recipe format for a company team. It is not an xAI file format. xAI did not author these teams. The YAML below is ours. The nouns it maps onto are xAI&apos;s, documented by them.
-        </p>
-        <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
-          Verified on <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
-        </p>
-
-        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Fields</h2>
+    <WingsSplit
+      hero={
+        <WingsHero title="Team spec">
+          <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+            This is Ellelion&apos;s recipe format for a company team. It is not an xAI file format. xAI did not author these teams. The YAML below is ours. The nouns it maps onto are xAI&apos;s, documented by them.
+          </p>
+          <p className="meta mt-3">
+            Verified on <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
+          </p>
+        </WingsHero>
+      }
+    >
+        <h2 className="mt-2 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Fields</h2>
         <table className="spec-table mt-4">
           <tbody>
             <tr><th><code>name</code></th><td>Team title on the shelf.</td></tr>
@@ -112,8 +111,6 @@ export default function DocsPage() {
           <p>Skills cannot be attached at Bot create time. A team may point at references such as the <a className="accent-hover underline underline-offset-2" href={STRIPE_BEST_PRACTICES} rel="nofollow noopener">stripe-best-practices skill on Skillselion</a> or a plugin in the <a className="accent-hover underline underline-offset-2" href={APD_HOME} rel="nofollow noopener">Agent Plugins Directory</a>. Those are named destinations the team expects, not installs this site performs.</p>
           <p>Uninstall is sidebar delete. Remove the Bots and group chats in Grok Bot. There is no remote uninstall from grokbotteams.ai.</p>
         </div>
-      </main>
-      <SiteFooter />
-    </div>
+    </WingsSplit>
   );
 }

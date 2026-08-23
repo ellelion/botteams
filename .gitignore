@@ -14,3 +14,13 @@ __pycache__/
 .env
 .env*.local
 .env.local
+
+# Buyer marks stored locally when Blob is not wired.
+/public/uploads/rail/*
+!/public/uploads/rail/.gitkeep
+.vercel
+.env*
+
+# Local review dumps
+.audit/
+.audit-tmp.mjs

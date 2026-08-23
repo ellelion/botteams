@@ -80,6 +80,19 @@ const CATEGORY: Record<string, ReactNode> = {
   support: (<><path d="M20 12a8 8 0 1 0-3.2 6.4L20 19.5z"/><path d="M9.8 9.8a2.3 2.3 0 1 1 3 2.2v1.2"/><path d="M12.8 16h.01"/></>),
 };
 
+
+const RECIPE = {
+  job: (<><rect x="6" y="5" width="12" height="16" rx="2"/><path d="M9 4.5h6v2.2H9z"/><path d="M9 11.5h6M9 15.5h4.5"/></>),
+  routines: (<><circle cx="12" cy="12" r="8"/><path d="M12 8v4.4l3.2 1.8"/></>),
+  skills: (<><path d="M12 3.8l1.15 3.1 3.3.15-2.55 2.15.85 3.2L12 10.7 9.25 12.4l.85-3.2-2.55-2.15 3.3-.15z"/><circle cx="12" cy="18.4" r="2"/><path d="M12 14.4v2"/></>),
+  notes: (<><path d="M7 3.5h8.2L19 7.3V20.5H7z"/><path d="M15.2 3.5V7.3H19"/><path d="M10 12h6M10 15.5h4"/></>),
+  installer: (<><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M7.4 10.2 9.8 12.4 7.4 14.6"/><path d="M12.2 14.6h4.2"/></>),
+} as const;
+
+export function RecipeSecIcon({ name, className = "line-icon" }: { name: "job" | "routines" | "skills" | "notes" | "installer"; className?: string }) {
+  return <I className={className}>{RECIPE[name]}</I>;
+}
+
 export function CategoryIcon({ name, className = "line-icon" }: { name: string } & IconProps) {
   return <I className={className}>{CATEGORY[name.trim().toLowerCase()] ?? CATEGORY.featured}</I>;
 }

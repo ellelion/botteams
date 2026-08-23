@@ -4,12 +4,9 @@ import { useSearchParams } from "next/navigation";
 import { en } from "@/lib/messages/en";
 
 /*
- * The line after a payment. It says what actually happened: the money
- * arrived, a person writes the row, and the rail does not change until
- * that person places it. Anything warmer would be a lie about a rail
- * that nobody has been placed on yet.
- *
- * Client side so /sponsor stays static.
+ * Fallback for the old /sponsor?paid=1 return. Checkout now opens
+ * /sponsor/setup. This line only catches someone who bookmarked the
+ * old URL. It does not say a human will place the ad.
  */
 export function PaidNotice() {
   const paid = useSearchParams().get("paid") === "1";

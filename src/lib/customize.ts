@@ -1,5 +1,8 @@
 import type { ConnectorMode, Team, TeamAgent, TeamRoutine } from "@/lib/types";
 import { resolveConnector } from "@/lib/connectors";
+import { seedSkillPicks } from "@/lib/skill-defaults";
+import { grokBotName, grokMemberName, grokRoomName, grokTeamName } from "@/lib/grok-names";
+import { normalizeSkillPick, type SkillPick } from "@/lib/skillselion";
 
 /*
  * Customize edits the installer RECIPE.
@@ -87,6 +90,8 @@ export type CustomState = {
   override: string | null;
   /* "I already installed the stock team": the paste becomes a diff. */
   installed: boolean;
+  /* Skillselion skills on this recipe. Per-team; the prompt lists them for every live Bot. */
+  skillPicks: SkillPick[];
 };
 
 /* A one-Bot recipe has no group chat to edit, and inventing one so the
@@ -103,7 +108,7 @@ export function defaultState(team: Team): CustomState {
   return {
     off: [],
     names: {},
-    roomName: room?.name ?? "",
+    roomName: room ? grokRoomName(room.name) : "",
     members: room ? [...room.members] : [],
     modes,
     notes: {},
@@ -111,6 +116,7 @@ export function defaultState(team: Team): CustomState {
     free: "",
     override: null,
     installed: false,
+    skillPicks: seedSkillPicks(team),
   };
 }
 
@@ -141,20 +147,20 @@ export type Resolved = {
 export function resolve(team: Team, state: CustomState): Resolved {
   const agents = activeAgents(team, state).map((source) => ({
     source,
-    name: finalName(state, source.name),
+    name: grokMemberName(team.name, finalName(state, source.name)),
     note: (state.notes[source.name] ?? "").trim(),
   }));
   const live = new Set(agents.map((a) => a.source.name));
   return {
     agents,
-    roomName: state.roomName.trim(),
+    roomName: grokRoomName(state.roomName),
     /* A Bot that is off cannot sit in the room, so membership is filtered
        here rather than trusted from state. */
-    members: state.members.filter((m) => live.has(m)).map((m) => finalName(state, m)),
+    members: state.members.filter((m) => live.has(m)).map((m) => grokMemberName(team.name, finalName(state, m))),
     /* Same for a routine: its owner Bot has to exist to own it. */
     routines: team.routines
       .filter((r) => live.has(r.owner))
-      .map((r) => ({ source: r, owner: finalName(state, r.owner) })),
+      .map((r) => ({ source: r, owner: grokMemberName(team.name, finalName(state, r.owner)) })),
     connectors: team.connectors,
   };
 }
@@ -271,6 +277,74 @@ function alsoSection(state: CustomState): string[] {
   return out;
 }
 
+function botTitle(persona: string): string {
+  const first = persona.split(/(?<=[.!?])\s+/)[0]?.trim() ?? persona.trim();
+  if (first.length <= 90) return first;
+  return `${first.slice(0, 89).trimEnd()}…`;
+}
+
+function botDescription(persona: string): string {
+  const body = persona.trim();
+  return `${body} Never send, spend, or delete anything without my approval. Wait for a confirm card when the product shows one.`;
+}
+
+function profileLines(name: string, persona: string): string[] {
+  return [
+    "After this Bot exists, set its profile (Bot actions → Edit Profile):",
+    `- Name: exactly ${name}`,
+    `- Title: ${botTitle(persona)}`,
+    `- Description: ${botDescription(persona)}`,
+    "Then tell me to open Edit Profile and set the avatar. You cannot stamp a custom image yourself unless I attach one.",
+    "If you create this Bot from an existing Bot, ask the new Bot to set those profile fields after create.",
+  ];
+}
+
+function skillsSection(team: Team, state: CustomState, botNames: string[]): string[] {
+  const picks = state.skillPicks;
+  const who = botNames.length === 1 ? botNames[0] : "each Bot named above";
+  const lines: string[] = [
+    "Skills live under Settings → Plugins → Yours, and they are per Bot. Enable the ones listed here for the named Bots. Reference a skill with /.",
+    "You cannot flip the human Notifications toggle. Tell me to leave Settings → “Get notified when this Bot finishes or needs input” on.",
+    "Do not pin or hide a Bot unless I say so. Hide does not pause routines.",
+    "Sidebar sections are human-only: tell me to Move to → New section. A group chat holds two to six Bots. An account holds 50 Bots and group chats combined. One Bot can own 50 routines. Confirm cards stay on me.",
+  ];
+  if (team.routines.length > 0 || picks.length > 0) {
+    lines.push("If a workflow should be demonstrated later, mention Teach a task after the first success (browser workflows).");
+  }
+  lines.push("");
+  if (picks.length === 0) {
+    if (team.skills.length === 0) {
+      lines.push("(none picked. Look skills up on Skillselion if I name one later.)");
+      return lines;
+    }
+    lines.push("Recipe skill names (look each one up on Skillselion, then enable it under Plugins → Yours):");
+    for (const name of team.skills) lines.push(`- ${name}`);
+    return lines;
+  }
+  lines.push("Connect the Skillselion connector first if any skill below is Fetch at run (Settings → Plugins). Do not start OAuth from this prompt.");
+  lines.push("");
+  for (const pick of picks) {
+    const scoped =
+      pick.scope === "team"
+        ? "every Bot on this team (team scope)"
+        : `only ${pick.scope} (enable under Plugins → Yours for that Bot only)`;
+    lines.push(`### ${pick.name}`);
+    lines.push(pick.url);
+    if (pick.author) lines.push(`Creator: ${pick.author}`);
+    if (pick.summary) lines.push(pick.summary);
+    lines.push(`Scope: ${scoped}.`);
+    if (pick.use === "install") {
+      if (pick.install) lines.push(`Install: ${pick.install}`);
+      else lines.push("Install it from the Skillselion page, then enable it.");
+      lines.push(`Then enable it under Settings → Plugins → Yours for ${pick.scope === "team" ? who : pick.scope}.`);
+    } else {
+      lines.push(`Do not install. When this job comes up, use the Skillselion connector to search/load \`${pick.id}\`. Connect Skillselion in Settings → Plugins first.`);
+    }
+    lines.push("");
+  }
+  return lines;
+}
+
 export function buildPrompt(team: Team, state: CustomState, siteUrl: string, siteGithub: string): string {
   const r = resolve(team, state);
   const stock = new Set(team.agents.map((a) => a.name));
@@ -286,7 +360,7 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
         : "No team connectors assigned to this Bot.";
       const lines = [`### ${name}`];
       if (renamed && stock.has(source.name)) lines.push(`(Named "${source.name}" in the published recipe.)`);
-      lines.push(reuse, connectors, "", "Job:", source.persona);
+      lines.push(reuse, connectors, "", "Job:", source.persona, "", ...profileLines(name, source.persona));
       if (note) {
         lines.push(
           "",
@@ -300,15 +374,12 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
 
   const routines = r.routines
     .map(({ source, owner }) =>
-      [`### ${source.name}`, `Owner Bot: ${owner}`, `Schedule: ${source.schedule}`, "", "Prompt to save (human must confirm):", source.prompt].join("\n"),
+      [`### ${source.name}`, `Owner Bot: ${owner}`, `Schedule: ${source.schedule}`, "",  "Prompt to save (I will confirm the card):", source.prompt].join("\n"),
     )
     .join("\n\n");
 
-  const skills = team.skills.length > 0
-    ? team.skills.map((name) => `- ${name}`).join("\n")
-    : "(none listed. Skills cannot be attached at create time anyway.)";
-
   const also = alsoSection(state);
+  const skillLines = skillsSection(team, state, r.agents.map((a) => a.name).filter(Boolean));
 
   /* An already-installed team gets a diff, not a second copy of itself.
      Pasting the full recipe twice is how people end up with two Chiefs of
@@ -322,7 +393,7 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
         "Do not create anything that already exists. Add or rename only what changed, and leave the rest alone.",
         "",
         ...(renames.length > 0 ? renames.map((a) => `- Rename "${a.source.name}" to "${a.name}".`) : []),
-        ...(dropped.length > 0 ? dropped.map((n) => `- "${n}" is no longer part of this team. Leave it alone or delete it yourself. Do not delete anything without asking.`) : []),
+        ...(dropped.length > 0 ? dropped.map((n) => `- "${n}" is no longer part of this team. Leave it alone. Do not delete anything without asking me.`) : []),
         ...(isSolo(team) ? [] : [`- The group chat is now "${r.roomName}" with: ${r.members.join(", ")}.`]),
         "- Re-read the connector rules below. They may have changed.",
         "",
@@ -337,14 +408,12 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     "# Grok Bot Teams installer",
     "",
     ...exampleBanner,
-    "Paste this into Grok Bot. It is a prompt, not an OAuth app and not a plugin.",
-    "Do not claim one-click connect. Do not start OAuth.",
+    isSolo(team)
+      ? `Set up a new Bot for me called ${grokBotName(team.name)}. Walk me through anything you need, then save it.`
+      : `Set up a team for me called ${grokTeamName(team.name)}. Create the named Bots, then the group chat, then save the routines.`,
+    "Ask me only for things you cannot see. Do not start OAuth. If a connector is missing, tell me to connect it in Settings, then Plugins.",
     "",
-    `Catalog: ${siteUrl}`,
-    `Source: ${siteGithub}`,
-    isSolo(team) ? `Bot: ${team.name} (${team.slug})` : `Team: ${team.name} (${team.slug})`,
-    `Bots: ${r.agents.length}`,
-    ...(isSolo(team) ? [`Category: ${team.section}`] : [`Sidebar section name: ${team.section}`]),
+    `From ${siteUrl} (${team.slug}). Source: ${siteGithub}.`,
     "",
     ...changeNote,
     /* The heading has to agree with section 0. "Create these Bots" over a
@@ -355,9 +424,8 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     "",
     state.installed
       ? "Check each one against what is already in the sidebar. Create only the ones that are missing, and rename the ones listed above."
-      : "In Grok Bot: New chat, then Create new agent. Then Edit Profile (name, title, description, avatar).",
-    "Use the names exactly, including any prefix.",
-    "A Bot is a single persistent, named agent. Give each Bot a job.",
+      : "Create each Bot below. Use the names exactly, including any prefix. After create, set Name, Title, and Description on the profile, then tell me to set the avatar.",
+    "A Bot is a single persistent, named agent. Conversation is the task; Title is the one-line job; Description holds durable rules and approvals.",
     "",
     agents,
     "",
@@ -371,17 +439,16 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
       : [
           "## 2. Create this group chat",
           "",
-          "In New chat, select two to six of the Bots above. Do not add more than six.",
+          "Open a group chat with two to six of the Bots above. Do not add more than six.",
           "",
           `### ${r.roomName}`,
           `Members (${r.members.length}, two to six Bots): ${r.members.join(", ")}`,
           "",
-          "## 3. Sidebar section (human does this)",
+          "## 3. Sidebar section",
           "",
-          "The installer cannot create sidebar sections.",
-          "Human: in the Grok Bot sidebar, use Move to, then New section.",
-          `Name that section exactly: ${team.section}`,
-          "Move the group chat and Bots into that section.",
+          "You cannot create sidebar sections. When the Bots and group chat exist, tell me to Move to, then New section.",
+          `I will name that section exactly: ${team.section}.`,
+          "Ask me to move the group chat and Bots into it.",
           "",
         ]),
     isSolo(team) ? "## 3. Routines (confirm card required)" : "## 4. Routines (confirm card required)",
@@ -394,8 +461,8 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
           /* xAI's documented cap, stated where the human is about to
              create them. There is no documented team-level cap, so the
              prompt does not invent one. */
-          "A routine is owned by one Bot, and one Bot can own up to 50 of them. A confirm card will appear. The human must confirm each one.",
-          "Do not assume a routine is saved until the human confirms.",
+          "A routine is owned by one Bot, and one Bot can own up to 50 of them. A confirm card will appear. I will confirm each one.",
+          "Do not assume a routine is saved until I confirm.",
           "",
           routines,
         ].join("\n")
@@ -404,7 +471,7 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     isSolo(team) ? "## 4. Connectors and how far they go" : "## 5. Connectors and how far they go",
     "",
     "Connectors are account-wide. They must already be connected.",
-    "If any are missing, tell the human to connect them in Grok Bot settings first.",
+    "If any are missing, tell me to connect them in Settings, then Plugins, first.",
     "Do not walk an OAuth flow from this prompt.",
     "Every Bot on this account can reach every connected tool. The lists above are which Bot is expected to use which, not a second OAuth and not a boundary.",
     "",
@@ -412,10 +479,7 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     "",
     isSolo(team) ? "## 5. Skills" : "## 6. Skills",
     "",
-    "Skills cannot be attached at Bot create time.",
-    "If the human wants skills later, they add them after the Bots exist.",
-    "",
-    skills,
+    ...skillLines,
     "",
     ...(also.length > 0
       ? [
@@ -431,8 +495,8 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     "",
     isSolo(team) ? "- The named Bot exists" : "- Named Bots exist",
     ...(isSolo(team) ? [] : [`- Named group chat exists ("${r.roomName}", two to six Bots)`]),
-    ...(isSolo(team) ? [] : [`- Human has created section "${team.section}"`]),
-    "- Each routine has a confirmed save (or the human declined)",
+    ...(isSolo(team) ? [] : [`- I have created section "${team.section}"`]),
+    "- Each routine has a confirmed save (or I declined)",
     "- Connectors listed above are already connected",
     "",
     isSolo(team) ? "Uninstall: delete the Bot in the Grok Bot sidebar." : "Uninstall: delete the Bots and group chats in the Grok Bot sidebar.",
@@ -455,6 +519,7 @@ type Wire = {
   f?: string;
   p?: string;
   i?: 1;
+  s?: SkillPick[];
 };
 
 function sameList(a: string[], b: string[]): boolean {
@@ -491,6 +556,7 @@ export function encodeState(team: Team, state: CustomState): string {
   if (state.free.trim()) wire.f = state.free;
   if (state.override !== null) wire.p = state.override;
   if (state.installed) wire.i = 1;
+  if (JSON.stringify(state.skillPicks) !== JSON.stringify(base.skillPicks)) wire.s = state.skillPicks;
   if (Object.keys(wire).length === 0) return "";
   return toBase64Url(JSON.stringify(wire));
 }
@@ -531,6 +597,10 @@ export function decodeState(team: Team, payload: string): CustomState {
   if (typeof wire.f === "string") state.free = wire.f;
   if (typeof wire.p === "string") state.override = wire.p;
   if (wire.i === 1) state.installed = true;
+  if (Array.isArray(wire.s)) {
+    const next = wire.s.map(normalizeSkillPick).filter((p): p is SkillPick => p !== null);
+    if (next.length > 0) state.skillPicks = next;
+  }
   return state;
 }
 
@@ -549,7 +619,7 @@ export function toMarkdown(team: Team, state: CustomState): string {
   const lines = [
     "---",
     `slug: ${team.slug}`,
-    `name: ${yamlScalar(team.name)}`,
+    `name: ${yamlScalar(isSolo(team) ? grokBotName(team.name) : grokTeamName(team.name))}`,
     `tagline: ${yamlScalar(team.tagline)}`,
     `bots: ${r.agents.length}`,
     `section: ${yamlScalar(team.section)}`,

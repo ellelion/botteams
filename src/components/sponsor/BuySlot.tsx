@@ -8,8 +8,8 @@ import { en } from "@/lib/messages/en";
  * Buy a rail slot on the page.
  *
  * Three prices, published. No card fields here: the button opens Stripe's
- * hosted page, which is where the company name, destination and one line
- * are collected too. This component never sees a card number.
+ * hosted page. The listing form is /sponsor/setup after pay. This
+ * component never sees a card number.
  */
 export function BuySlot({ soldOut }: { soldOut: boolean }) {
   const [busy, setBusy] = useState<RailInterval | null>(null);

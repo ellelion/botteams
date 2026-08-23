@@ -1,32 +1,6 @@
 /*
- * The Grok Bot face mark. This is our icon for a Bot: wherever the shelf
- * lists a Bot, it wears this, the way x.ai does.
- *
- * The silhouette is xAI's, reproduced for identification on the same
- * footing as the connector marks under /public/connectors. Grok Bot Teams
- * is operated by Ellelion LLC and is not affiliated with xAI.
- *
- * Artwork comes from the clean bezier in x.ai's own defs/clipPath rather
- * than the 3,577-character polygon they render, so this scales without
- * faceting at a fraction of the size.
- *
- * Colour follows x.ai's own hooks: --fg and --bg are set per instance
- * (their Engineering chips run --fg:#EA4045), so one copy of the artwork
- * serves a whole roster of differently tinted Bots.
- *
- * MOTION. x.ai drives the face from bundled JS with three states, which
- * we sampled at 20Hz for 48s off the live page rather than guessed at:
- *
- *   data-state   idle -> curious -> happy
- *   head rotate  -2.9deg .. +18deg   (rests near -1, tilts ~+9 when curious)
- *   head scaleY  0.98 .. 1.02        (a slow breathe; scaleX never moves)
- *   eye scale    1.0 .. 1.17         (grows while engaged)
- *   eye scaleY   down to 0.04        (a full blink, ~5% of frames)
- *   eyes         travel to a second anchor and wander while curious
- *
- * Reproduced here as CSS keyframes on our own rig, so the mark stays a
- * server component with no JS. The head sits in its own group because a
- * rotation has to pivot on the face, not on the SVG box.
+ * The Bot face on this shelf. Colour is --fg / --bg. Motion is CSS.
+ * Ellelion LLC, not affiliated with xAI.
  */
 
 const HEAD =
@@ -55,9 +29,12 @@ export function GrokBotMark({
     >
       <g className="grok-bot-mark__face">
         <path className="grok-bot-mark__head" d={HEAD} />
-        {/* Eye geometry measured off the live mark in its idle state. */}
         <ellipse className="grok-bot-mark__eye" cx="105.63" cy="94.13" rx="17.7" ry="23.45" />
         <ellipse className="grok-bot-mark__eye" cx="163.48" cy="82.18" rx="15.7" ry="23.4" />
+        <path
+          className="grok-bot-mark__smile"
+          d="M114.2 141.6C126.4 161.8 151.8 159.4 167.6 128.8C154.2 149.2 130.6 151.4 114.2 141.6Z"
+        />
       </g>
     </svg>
   );

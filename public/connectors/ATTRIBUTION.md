@@ -55,3 +55,5 @@ chip. A letter is honest; a mark we invented is not.
 `agent-compatibility`, `docs-canvas`, `pr-review-canvas`, and
 `compound-engineering` keep their marketplace icons. Those are the vendor's
 own artwork, not ours.
+- `semrush.svg` is simple-icons (CC0) in official hex `#FF642D`. `google-analytics.svg` is Google's full-colour product logo from gstatic (`analytics-suite` header icon). `yandex.svg` is the Yandex icon from Wikimedia Commons. `bing.svg` is the Bing mark from gilbarbara/logos (CC0); current simple-icons has no `bing`, `ahrefs`, `yandex`, or `indexnow` slugs. `ahrefs.png` and `indexnow.png` are vendor site icons via Google's favicon service at 128px (`ahrefs.com`, `indexnow.org`).
+- `search-console.svg` is Google's Search Console product mark from ssl.gstatic.com/search-console/scfe/logo_search_console.svg.

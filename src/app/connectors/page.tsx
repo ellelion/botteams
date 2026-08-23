@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { ConnectorFinder, type FinderEntry } from "@/components/connectors/ConnectorFinder";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteMasthead } from "@/components/SiteMasthead";
-import { PageTitle } from "@/components/PageShell";
+import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
 import {
   CATALOG_AS_OF,
@@ -21,7 +19,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Grok Bot connectors",
-  description: `Every connector Grok Bot supports, ${CONNECTOR_CATALOG.length} of them, by category, with the teams on this shelf that expect each one. Checked ${CATALOG_CHECKED_ON}.`,
+  description: `Every connector Grok Bot supports, ${CONNECTOR_CATALOG.length} of them, by category, with the teams here that expect each one. Checked ${CATALOG_CHECKED_ON}.`,
   alternates: { canonical: `${site.url}/connectors` },
 };
 
@@ -53,14 +51,15 @@ export default function ConnectorsPage() {
   const builtInCount = entries.filter((e) => e.builtIn).length;
 
   return (
-    <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
-      <SiteMasthead />
-      <main className="wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-12">
-        <PageTitle>{en.connectors.h1}</PageTitle>
-        <p className="measure mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          {en.connectors.lede(CONNECTOR_CATALOG.length)}
-        </p>
-
+    <WingsSplit
+      hero={
+        <WingsHero title={en.connectors.h1}>
+          <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+            {en.connectors.lede(CONNECTOR_CATALOG.length)}
+          </p>
+        </WingsHero>
+      }
+    >
         {/* The finder comes before the provenance. Every claim below is
             still on the page and still checkable, but a visitor looking for
             Gmail should not have to read two paragraphs about where the
@@ -81,7 +80,7 @@ export default function ConnectorsPage() {
             </a>
             {en.connectors.sourceTail(CATALOG_AS_OF)}
           </p>
-          <p className="mt-3 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }}>
+          <p className="meta mt-3">
             {en.connectors.checked} <time dateTime={CATALOG_CHECKED_ON}>{CATALOG_CHECKED_ON}</time>
           </p>
         </section>
@@ -99,8 +98,6 @@ export default function ConnectorsPage() {
         <p className="measure mt-12 text-[0.78rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
           {en.connectors.marksNote}
         </p>
-      </main>
-      <SiteFooter />
-    </div>
+    </WingsSplit>
   );
 }

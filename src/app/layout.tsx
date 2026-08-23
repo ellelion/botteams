@@ -4,6 +4,8 @@ import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { SiteFrame } from "@/components/SiteFrame";
+import { Analytics } from "@/components/analytics";
 import { DEFAULT_THEME, createThemeBootstrapScript, themeColorFor } from "@/lib/theme";
 
 /*
@@ -22,6 +24,13 @@ export const metadata: Metadata = {
   publisher: site.company,
   openGraph: { title: site.title, description: site.description, url: site.url, siteName: site.name, locale: "en_US", type: "website" },
   twitter: { card: "summary_large_image", title: site.title, description: site.description },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "IgAzFR5IFY00bPLdcKWNI_8_zaOiefyE_C3LAx_MJL8",
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || "38e78504e4477fab",
+    other: {
+      "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION || "1665BF3175A7C6441F67030D83357559",
+    },
+  },
 };
 
 function JsonLd({ data }: { data: object }) {
@@ -37,7 +46,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd()} />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SiteFrame>{children}</SiteFrame>
+        <Analytics />
+      </body>
     </html>
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GitHubIcon } from "@/components/icons/GitHubIcon";
+import { SiteMenu } from "@/components/SiteMenu";
 import { ThemeControls } from "@/components/theme/ThemeControls";
 import { WingsMark } from "@/components/WingsMark";
 import { en } from "@/lib/messages/en";
@@ -14,8 +15,8 @@ export function SiteMasthead() {
       </Link>
       <div className="site-masthead-actions">
         <nav className="site-masthead-nav" aria-label={en.nav.mainAria}>
-          <Link href="/#teams" className="accent-hover">{en.nav.teams}</Link>
-          <Link href="/?kind=bot#teams" className="accent-hover">{en.nav.bots}</Link>
+          <Link href="/" scroll={false} className="accent-hover">{en.nav.teams}</Link>
+          <Link href="/?kind=bot" scroll={false} className="accent-hover">{en.nav.bots}</Link>
           <Link href="/connectors" className="accent-hover">{en.nav.connectorsNav}</Link>
           <Link href="/docs" className="accent-hover">{en.nav.docs}</Link>
           <Link href="/api" className="accent-hover">{en.nav.api}</Link>
@@ -25,6 +26,7 @@ export function SiteMasthead() {
           </a>
         </nav>
         <ThemeControls />
+        <SiteMenu />
       </div>
     </header>
   );

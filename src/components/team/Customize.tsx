@@ -1,13 +1,17 @@
 "use client";
 
+import { grokBotName, grokDisplayBotName, grokMemberName, grokRecipeTitle } from "@/lib/grok-names";
 import { Children, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
-import { VerifiedChip } from "@/components/VerifiedChip";
 import { FromXaiChip } from "@/components/FromXaiChip";
 import { ShareBar } from "@/components/team/ShareBar";
+import { SkillHitFace } from "@/components/team/SkillHitFace";
+import { SkillselionPicker } from "@/components/team/SkillselionPicker";
+import type { SkillselionHit } from "@/lib/skillselion";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
+import { RecipeSecIcon } from "@/components/icons/LineIcons";
 import { botMarkStyle } from "@/lib/bot-icon";
 import { resolveConnector } from "@/lib/connectors";
 import { ledger } from "@/lib/ledger-theme";
@@ -61,6 +65,8 @@ export function Customize({
   const [editing, setEditing] = useState(false);
   const [state, setState] = useState<CustomState>(() => defaultState(team));
   const [shared, setShared] = useState(false);
+  const [liveHits, setLiveHits] = useState<Record<string, SkillselionHit>>({});
+
   /* A recipe change while a hand-edited prompt exists parks here until the
      human says which one wins. */
   const [pending, setPending] = useState<(() => void) | null>(null);
@@ -87,6 +93,32 @@ export function Customize({
     }
     hydrated.current = true;
   }, [team]);
+
+  const askedHits = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    if (!mounted) return;
+    const ids = [...new Set(state.skillPicks.map((p) => p.id).filter(Boolean))];
+    const missing = ids.filter((id) => !liveHits[id] && !askedHits.current.has(id));
+    if (missing.length === 0) return;
+    for (const id of missing) askedHits.current.add(id);
+    let cancelled = false;
+    fetch(`/api/skillselion/listings?ids=${missing.map(encodeURIComponent).join(",")}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((body: { skills?: SkillselionHit[] } | null) => {
+        if (cancelled || !body?.skills) return;
+        setLiveHits((prev) => {
+          const next = { ...prev };
+          for (const hit of body.skills ?? []) next[hit.id] = hit;
+          return next;
+        });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [mounted, state.skillPicks, liveHits]);
+
+
 
   /* Keep the address bar in step, so copying the URL is enough to share. */
   useEffect(() => {
@@ -306,7 +338,7 @@ export function Customize({
                       <input
                         type="text"
                         className="cz-input"
-                        value={state.names[agent.name] ?? agent.name}
+                        value={state.names[agent.name] ?? grokMemberName(team.name, agent.name)}
                         disabled={!on}
                         onChange={(e) => patch({ names: { ...state.names, [agent.name]: e.target.value } })}
                       />
@@ -363,13 +395,21 @@ export function Customize({
                     checked={state.members.includes(agent.name)}
                     onChange={() => toggleMember(agent.name)}
                   />
-                  <span>{state.names[agent.name] ?? agent.name}</span>
+                  <span>{grokDisplayBotName(state.names[agent.name] ?? agent.name)}</span>
                 </label>
               </li>
             ))}
           </ul>
         </fieldset>
         )}
+
+
+        <SkillselionPicker
+          picks={state.skillPicks}
+          agents={team.agents}
+          liveHits={liveHits}
+          onChange={(skillPicks) => patch({ skillPicks })}
+        />
 
         <fieldset className="cz-group">
           <legend className="cz-legend">{en.customize.also}</legend>
@@ -428,15 +468,15 @@ export function Customize({
   /* The roster, the room, and the routines as they stand right now. Read
      them and you know what the paste will do. */
   const rosterPart = (
-    <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-      <ul className="mt-4">
+    <section className="rp-job-list">
+      <ul>
         {resolved.agents.map(({ source, name, note }, i) => (
-          <li key={source.name} className="hairline-row py-3">
+          <li key={source.name} className="hairline-row">
             <div className="flex gap-3">
               <GrokBotMark size={19} animate className="mt-0.5" style={botMarkStyle(i)} />
               <div className="min-w-0">
                 <p className="flex flex-wrap items-baseline gap-2" style={{ fontFamily: ledger.serif }}>
-                  <span>{name || source.name}{source.reuse ? ` · ${en.team.reuse}` : ""}</span>
+                  <span>{grokDisplayBotName(name || source.name)}{source.reuse ? ` · ${en.team.reuse}` : ""}</span>
                   <span className="bot-tag">{en.team.botTag}</span>
                 </p>
                 <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{source.persona}</p>
@@ -452,28 +492,15 @@ export function Customize({
     </section>
   );
 
-  const roomPart = solo ? null : (
-    <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-      <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.rooms}</h2>
-      <ul className="mt-4">
-        <li className="hairline-row py-3">
-          <p style={{ fontFamily: ledger.serif }}>{resolved.roomName}</p>
-          <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-            {resolved.members.join(", ")}
-          </p>
-        </li>
-      </ul>
-    </section>
-  );
-
   const routinesPart = resolved.routines.length > 0 ? (
-      <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-        <ul className="mt-4">
+      <section className="rp-job-list">
+        <ul>
           {resolved.routines.map(({ source, owner }) => (
-            <li key={source.name} className="hairline-row py-3">
+            <li key={source.name} className="hairline-row">
               <p style={{ fontFamily: ledger.serif }}>{source.name}</p>
-              <p className="mt-1 text-[0.62rem] uppercase tracking-[0.14em]" style={{ color: ledger.label }}>
-                {en.team.ownerBot} {owner} · {source.schedule}
+              <p className="rp-run-meta">
+                <span className="rp-run-owner"><span className="rp-run-k">{en.team.ownerBot}</span> {grokDisplayBotName(owner)}</span>
+                <span className="rp-run-cadence">{source.schedule}</span>
               </p>
               <p className="mt-1 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{source.prompt}</p>
             </li>
@@ -484,7 +511,7 @@ export function Customize({
 
   const promptPart = (
     <div className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-      <h2 className="mb-4 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+      <h2 className="eyebrow mb-4">
         {en.team.promptTitle}
       </h2>
       <div className="cz-actions">
@@ -542,7 +569,7 @@ export function Customize({
       <header className="rp-head">
         <div className="rp-head-row">
           <div className="rp-head-id">
-            <h1 className="rp-name">{team.name}</h1>
+            <h1 className="rp-name">{grokRecipeTitle(team.kind, team.name)}</h1>
             <p className="rp-job">{team.tagline}</p>
           </div>
           <div className="rp-head-act">
@@ -551,17 +578,15 @@ export function Customize({
             <button type="button" className="rp-secondary" aria-expanded={sheet !== null} onClick={openCustomize}>
               {en.customize.open}
             </button>
+            <ShareBar name={grokRecipeTitle(team.kind, team.name)} />
           </div>
         </div>
-        <div className="rp-head-chips">
-          {team.fromXai ? <FromXaiChip /> : null}
-          {solo ? null : <VerifiedChip on={verdict.verified} />}
-          <span className="rp-shape">{en.home.shape(team.bots, team.rooms.length)}</span>
-          <span className="rp-disclaimer">{en.notAffiliated}</span>
-        </div>
+        {team.fromXai ? (
+          <div className="rp-head-chips">
+            <FromXaiChip />
+          </div>
+        ) : null}
       </header>
-
-      <ShareBar name={team.name} />
 
       {verdictPart}
       {overwritePart}
@@ -574,37 +599,42 @@ export function Customize({
           {resolved.agents.map(({ source, name }, i) => (
             <li key={source.name} className="rp-chip">
               <GrokBotMark size={17} animate style={botMarkStyle(i)} />
-              <span className="rp-chip-name">{name || source.name}</span>
+              <span className="rp-chip-name">{grokDisplayBotName(name || source.name)}</span>
               {source.reuse ? <span className="rp-chip-note">{en.team.reuse}</span> : null}
             </li>
           ))}
         </ul>
         {solo ? null : (
-          <p className="rp-room">
+          <div className="rp-room">
             <span className="rp-room-label">{en.recipe.secRoom}</span>
-            {resolved.roomName}: {resolved.members.join(", ")}
-          </p>
+            <p className="rp-room-name">{resolved.roomName}</p>
+            <ul className="rp-room-grid">
+              {resolved.members.map((m) => (
+                <li key={m}>{grokDisplayBotName(m)}</li>
+              ))}
+            </ul>
+          </div>
         )}
         {/* The connectors the account needs, in the open, not behind a
             fourth mystery tab. */}
         <div className="rp-connectors">
-          <ConnectorRow names={team.connectors} labeled size={17} />
+          <span className="rp-room-label">{en.recipe.secConnectors}</span>
+          <ConnectorRow names={team.connectors} labeled size={18} />
         </div>
-        <p className="rp-note">{solo ? en.xai.soloNote : en.team.connectorsNote}</p>
       </section>
 
       <div className="rp-acc">
         <details className="rp-sec" open>
-          <summary className="rp-sum"><span>{en.recipe.secJob}</span></summary>
+          <summary className="rp-sum"><RecipeSecIcon name="job" /><span className="rp-sum-lab">{en.recipe.secJob}</span></summary>
           <div className="rp-secbody">
             {rosterPart}
-            {solo ? null : roomPart}
           </div>
         </details>
 
         <details className="rp-sec">
           <summary className="rp-sum">
-            <span>{en.recipe.secRoutines}</span>
+            <RecipeSecIcon name="routines" />
+            <span className="rp-sum-lab">{en.recipe.secRoutines}</span>
             <span className="rp-count">{resolved.routines.length}</span>
           </summary>
           <div className="rp-secbody">
@@ -613,12 +643,39 @@ export function Customize({
         </details>
 
         <details className="rp-sec">
-          <summary className="rp-sum"><span>{en.recipe.secNotes}</span></summary>
+          <summary className="rp-sum">
+            <RecipeSecIcon name="skills" />
+            <span className="rp-sum-lab">{en.customize.skills}</span>
+            <span className="rp-count">{state.skillPicks.length || team.skills.length}</span>
+          </summary>
+          <div className="rp-secbody">
+            {state.skillPicks.length > 0 ? (
+              <ul className="cz-list">
+                {state.skillPicks.map((pick) => (
+                  <li key={`${pick.id}::${pick.scope}`} className="hairline-row">
+                    <SkillHitFace
+                      hit={pick}
+                      live={liveHits[pick.id]}
+                      extra={pick.use === "install" ? en.customize.skillsInstall : en.customize.skillsFetch}
+                    />
+                  </li>
+                ))}
+              </ul>
+            ) : team.skills.length > 0 ? (
+              <ul className="cz-list">{team.skills.map((name) => <li key={name} className="hairline-row">{name}</li>)}</ul>
+            ) : (
+              <p className="rc-empty">{en.customize.skillsLead}</p>
+            )}
+          </div>
+        </details>
+
+        <details className="rp-sec">
+          <summary className="rp-sum"><RecipeSecIcon name="notes" /><span className="rp-sum-lab">{en.recipe.secNotes}</span></summary>
           <div className="rp-secbody">{notes.length > 0 ? notes : <p className="rc-empty">{en.recipe.noNotes}</p>}</div>
         </details>
 
         <details className="rp-sec">
-          <summary className="rp-sum"><span>{en.recipe.secInstaller}</span></summary>
+          <summary className="rp-sum"><RecipeSecIcon name="installer" /><span className="rp-sum-lab">{en.recipe.secInstaller}</span></summary>
           <div className="rp-secbody">
             <p className="rp-note">{en.team.installNote}</p>
             <pre className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
