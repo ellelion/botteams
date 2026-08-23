@@ -68,7 +68,7 @@ export default function TermsPage() {
           <Link className="accent-hover underline" href="/sponsor">
             placement
           </Link>{" "}
-          buys a marked listing on the side rail for the term you pay: $1,500 for one month, $4,000 for three months,
+          buys a marked listing on the side rail and the listing row for the term you pay: $1,500 for one month, $4,000 for three months,
           $7,500 for six months, one-time, card on Stripe. It is advertising. It is not Verified, it is not a team, and it
           is not an endorsement. House listings count toward the twelve slots. We may edit the one-liner after it is live
           so it reads like the rest of the directory. We may refuse or remove a listing that breaks the rules on the

@@ -22,7 +22,7 @@ const HOUSE_COUNT = houseSlots.length;
 export const metadata: Metadata = {
   title: "Sponsor",
   description:
-    "Put a tool next to 140 Grok Bot teams and 59 one-job Bots on botteams.ai. Twelve rail slots. $1,500, $4,000, or $7,500. Operated by Ellelion LLC.",
+    "Put a tool on the side rail and the listing row next to 140 Grok Bot teams and 59 one-job Bots on botteams.ai. Twelve slots. $1,500, $4,000, or $7,500. Operated by Ellelion LLC.",
   alternates: { canonical: `${site.url}/sponsor` },
 };
 
@@ -75,6 +75,9 @@ export default async function SponsorPage() {
             {en.sponsor.answer(teamCount, botCount, SPONSOR_SLOTS_TOTAL, HOUSE_COUNT, open, STATS_AS_OF)}
           </p>
           <p className="home-disclaimer mt-5">{en.notAffiliated}</p>
+          <a className="theme-control theme-control-label spon-hero-cta" href="#buy">
+            {en.sponsor.buyHeroCta}
+          </a>
         </WingsHero>
       }
     >
@@ -134,112 +137,101 @@ export default async function SponsorPage() {
           </dl>
         </section>
 
-        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Placements</h2>
-          <dl className="mt-4">
-            {[
-              ["Side rail", `Logo, name, one line. Rides the team index and every team page. Rotated evenly, never two in a row from the same category. ${en.sponsor.placementPrice}`],
-              ["Connect first slot", "A single marked slot inside a team page, beside the connectors that team expects. Separate from the rail. Price on enquiry."],
-              ["Promoted team", "A team you actually ship, marked Promoted in the index. It has to be a real, working recipe. We will not list an ad as a team. Price on enquiry."],
-            ].map(([name, note]) => (
-              <div key={name} className="hairline-row py-3">
-                <dt style={{ fontFamily: ledger.serif }}>{name}</dt>
-                <dd className="measure mt-1 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{note}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="measure mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
-            {en.sponsor.emptyPlacements}
-          </p>
-        </section>
-
-        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+        <section id="buy" className="spon-stage-sec mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-            {en.sponsor.railTodayTitle}
+            {en.sponsor.buyTitle}
           </h2>
-          <ul className="mt-4">
-            {slots.map((slot) => (
-              <li key={slot.id} className="hairline-row py-3">
-                <a
-                  className="spon-paid-link accent-hover"
-                  href={sponsorHref(slot, "sponsor-page")}
-                  target="_blank"
-                  rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
-                  style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
-                >
-                  {slot.mark ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img className="spon-mark" src={slot.mark} alt="" width={18} height={18} />
-                  ) : null}
-                  <span className="underline">{slot.name}</span>
-                </a>
-                {slot.line ? (
-                  <span className="mt-1.5 block text-[0.78rem] leading-snug" style={{ color: ledger.inkMuted }}>
-                    {slot.line}
-                  </span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-          <div className="spon-open measure">
-            <p className="text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-              {en.sponsor.openLine(open, SPONSOR_SLOTS_TOTAL)}
-            </p>
-            <Suspense fallback={null}>
-              <PaidNotice />
-            </Suspense>
-            {canBuy ? (
-              <BuySlot soldOut={false} />
-            ) : open <= 0 ? (
-              <BuySlot soldOut />
-            ) : (
-              <p className="spon-fine">
-                Card checkout is not switched on yet. Mail{" "}
-                <a className="accent-hover underline" href={mail}>{site.email}</a> and we will invoice you.
-              </p>
-            )}
+          <div className="spon-stage mt-5">
+            <div className="spon-stage-pay">
+              <p className="spon-stage-left">{en.sponsor.openLine(open, SPONSOR_SLOTS_TOTAL)}</p>
+              <Suspense fallback={null}>
+                <PaidNotice />
+              </Suspense>
+              {canBuy ? (
+                <BuySlot soldOut={false} />
+              ) : open <= 0 ? (
+                <BuySlot soldOut />
+              ) : (
+                <p className="spon-fine">
+                  Card checkout is not switched on yet. Mail{" "}
+                  <a className="accent-hover underline" href={mail}>{site.email}</a> and we will invoice you.
+                </p>
+              )}
+            </div>
+            <div className="spon-stage-offer">
+              <h3 className="spon-stage-name" style={{ fontFamily: ledger.serif }}>
+                {en.sponsor.whatYouBuyName}
+              </h3>
+              <p className="spon-stage-body">{en.sponsor.whatYouBuyBody}</p>
+              <dl className="spon-surfaces">
+                <div>
+                  <dt>{en.sponsor.offerRail}</dt>
+                  <dd>{en.sponsor.offerRailHint}</dd>
+                </div>
+                <div>
+                  <dt>{en.sponsor.offerRow}</dt>
+                  <dd>{en.sponsor.offerRowHint}</dd>
+                </div>
+              </dl>
+              <p className="spon-live-kicker">{en.sponsor.liveNowTitle}</p>
+              <ul className="spon-live">
+                {slots.map((slot) => (
+                  <li key={slot.id}>
+                    <a
+                      className="spon-paid-link accent-hover"
+                      href={sponsorHref(slot, "sponsor-page")}
+                      target="_blank"
+                      rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
+                      style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
+                    >
+                      {slot.mark ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img className="spon-mark" src={slot.mark} alt="" width={18} height={18} />
+                      ) : null}
+                      <span className="underline">{slot.name}</span>
+                    </a>
+                    {slot.line ? <span className="spon-live-line">{slot.line}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-            {en.sponsor.acceptTitle}
-          </h2>
-          <ul className="mt-4">
-            {ACCEPT.map((rule) => (
-              <li key={rule} className="hairline-row measure py-3 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-                {rule}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-            {en.sponsor.needTitle}
+            {en.sponsor.afterPayTitle}
           </h2>
           <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             {en.sponsor.needLead}
           </p>
-          <ul className="mt-4">
-            {NEED.map((rule) => (
-              <li key={rule} className="hairline-row measure py-3 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-                {rule}
+          <ol className="spon-steps">
+            {NEED.map((rule, i) => (
+              <li key={rule}>
+                <span className="spon-step-n" aria-hidden>
+                  {i + 1}
+                </span>
+                <span>{rule}</span>
               </li>
             ))}
-          </ul>
-          <p className="measure mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+          </ol>
+          <p className="measure mt-5 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             {en.sponsor.reviewLead}
           </p>
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Rules</h2>
-          <ul className="mt-4">
-            {RULES.map((rule) => (
-              <li key={rule} className="hairline-row measure py-3 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-                {rule}
-              </li>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.sponsor.whoTitle}
+          </h2>
+          <ul className="spon-gate">
+            {ACCEPT.map((rule) => (
+              <li key={rule}>{rule}</li>
+            ))}
+          </ul>
+          <ul className="spon-gate spon-gate-more">
+            {RULES.filter((rule) => !ACCEPT.includes(rule) && !rule.startsWith("No competing") && !rule.startsWith("No crypto")).map((rule) => (
+              <li key={rule}>{rule}</li>
             ))}
           </ul>
         </section>
@@ -279,15 +271,20 @@ export default async function SponsorPage() {
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Enquire</h2>
           <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-            The side rail is above and you can buy it without talking to us. For the connect first slot or a promoted
-            team, mail {site.company} at{" "}
-            <a className="accent-hover underline" href={mail}>{site.email}</a> with the tool, the link you want, and the
-            placement. We will tell you what the traffic actually is before you pay anything.
+            The listing is bought above. Mail {site.company} at{" "}
+            <a className="accent-hover underline" href={mail}>{site.email}</a> if you have a question first. We will tell
+            you what the traffic actually is.
           </p>
           <p className="mt-6 text-[0.72rem]" style={{ color: ledger.inkFaint }}>
             <time dateTime={STATS_AS_OF_ISO}>{en.sponsor.updated(STATS_AS_OF)}</time>
           </p>
         </section>
+        {canBuy ? (
+          <a className="spon-dock" href="#buy">
+            <span>{en.sponsor.openLine(open, SPONSOR_SLOTS_TOTAL)}</span>
+            <span>{en.sponsor.buyHeroCta}</span>
+          </a>
+        ) : null}
     </WingsSplit>
   );
 }
