@@ -2172,9 +2172,21 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-radius: var(--r-card);
   background: var(--card);
 }
+.spon-place {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  padding: 20px 22px;
+  border: 0;
+  border-radius: var(--r-card);
+  background: var(--card);
+}
 .spon-cta {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  gap: 8px;
   min-height: 38px;
   padding: 0 18px;
   border: 0;
@@ -2189,16 +2201,133 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .spon-cta:hover { opacity: 0.88; }
 .spon-cta:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-
-/* Three published prices. Same pill, three terms; none of them is
-   dressed up as a recommendation. */
-.spon-buy { margin-top: 18px; }
-.spon-prices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
 .spon-cta:disabled { opacity: 0.55; cursor: default; }
+.spon-cta-ghost {
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--pill-line);
+}
+.spon-cta-ghost:hover { opacity: 1; background: var(--surface-elevated); }
+.spon-cta-out { flex: none; }
+
+.spon-hero-cta {
+  margin-top: 22px;
+}
+
+.spon-stage-sec {
+  scroll-margin-top: calc(var(--masthead-h) + 12px);
+}
+.spon-stage {
+  display: grid;
+  gap: 28px;
+  padding: 22px 20px 24px;
+  border-radius: var(--r-card);
+  background: var(--card);
+}
+.spon-stage-left {
+  margin: 0 0 14px;
+  color: var(--accent-text);
+  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.spon-stage-name {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+.spon-stage-body {
+  margin: 10px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.spon-surfaces {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+  margin: 18px 0 0;
+}
+.spon-surfaces dt {
+  font-size: 0.92rem;
+  letter-spacing: -0.02em;
+}
+.spon-surfaces dd {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+.spon-live-kicker {
+  margin: 22px 0 0;
+  color: var(--muted);
+  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.spon-live {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.spon-live li + li { margin-top: 12px; }
+.spon-live-line {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.spon-buy { margin-top: 4px; }
+.spon-terms {
+  display: grid;
+  gap: 10px;
+}
+.spon-term {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  padding: 14px 14px 16px;
+  border-radius: var(--r-inner);
+}
+.spon-term-hot {
+  order: -1;
+  background: var(--surface-elevated);
+}
+.spon-term-tag {
+  margin: 0 0 8px;
+  color: var(--accent-text);
+  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.spon-term-tag-quiet { color: var(--muted); }
+.spon-term-label {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.spon-term-price {
+  margin: 4px 0 0;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.spon-term-month {
+  margin: 6px 0 12px;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+.spon-term .spon-cta { width: 100%; }
+
 .spon-fine {
   margin-top: 12px;
   color: var(--muted);
@@ -2210,6 +2339,99 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   color: var(--accent-text);
   font-size: 0.8rem;
 }
+
+.spon-steps {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.spon-steps li {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.spon-step-n {
+  color: var(--accent-text);
+  font: 500 0.7rem/1.6rem var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.06em;
+}
+.spon-gate {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.spon-gate li {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.spon-gate li + li { margin-top: 10px; }
+.spon-gate-more { margin-top: 18px; }
+
+.spon-dock { display: none; }
+
+@media (min-width: 860px) {
+  .spon-stage {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: 8px 32px;
+    padding: 26px 26px 28px;
+    align-items: start;
+  }
+  .spon-stage-offer { order: -1; }
+  .spon-terms {
+    grid-template-columns: 1fr;
+  }
+  .spon-term-hot { order: 0; }
+}
+@media (max-width: 859px) {
+  .wings-main-col:has(.spon-dock) {
+    padding-bottom: 80px;
+  }
+  body:has(.spon-dock) .spon-mq--bottom {
+    display: none;
+  }
+  .spon-surfaces { grid-template-columns: 1fr; }
+  .spon-cta { min-height: 44px; }
+  .spon-dock {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 56px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: var(--page);
+    box-shadow: 0 -1px 0 var(--line);
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+    text-decoration: none;
+  }
+  .spon-dock span:last-child {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: var(--r-pill);
+    background: var(--pill-fill);
+    color: var(--pill-fill-ink);
+    font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+}
+
+/* Paid return + setup chrome */
 .spon-paid {
   margin-top: 14px;
   padding: 14px 16px;

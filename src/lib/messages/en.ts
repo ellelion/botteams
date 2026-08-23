@@ -252,25 +252,44 @@ export const en = {
     needTitle: "What we need",
     needLead: "After you pay, a form asks for these. Stripe only takes the card.",
     reviewLead:
-      "An automated review checks a closed list, up to three times. If it passes, you go on the rail immediately. After three fails, our team will review your listing and get back to you shortly.",
+      "An automated review checks a closed list, up to three times. If it passes, you go live immediately on the side rail and the listing row. After three fails, our team will review your listing and get back to you shortly.",
     guidelinesTitle: "Guidelines",
     buyTitle: "Buy a slot",
+    buyHeroCta: "Buy a slot",
+    liveNowTitle: "On the rail now",
+    afterPayTitle: "After you pay",
+    whoTitle: "Who can list",
+    offerRail: "Side rail",
+    offerRailHint: "Team index and every team page.",
+    offerRow: "Listing row",
+    offerRowHint: "The sponsored row in the directory.",
+    getStarted: "Get started",
+    termMonth: {
+      "1m": "$1,500 / month",
+      "3m": "$1,333 / month",
+      "6m": "$1,250 / month",
+    },
+    termSave: {
+      "3m": "Save $500 vs monthly",
+      "6m": "Save $1,500 vs monthly",
+    },
+    tryMonth: "Try a month",
     buyLead:
-      "Prepaid advertising on the rail. Pick a term and pay on Stripe. Then you submit the listing.",
+      "Prepaid advertising. One purchase puts you on the side rail and the listing row. Pick a term and pay on Stripe. Then you submit the listing.",
     buyFine:
       "By paying you confirm you are 18 or older and agree to the Terms and the Privacy policy. Stripe takes the card on their page. A paid row is a paid placement. It is not Verified, it is not a team, and it is not an endorsement.",
     buyError: "Could not start checkout. Try again, or mail us.",
-    opening: "Opening Stripe",
+    opening: "Get started",
     soldOut: "Every paying slot is taken. Mail us and we will tell you when one frees up.",
     paid:
       "Payment received. Finish the listing on the form Stripe opened after checkout. If you closed it, mail us with the receipt.",
     setupTitle: "Finish your listing",
     setupLead:
-      "You paid for a rail slot. Submit the tool. If the review passes, it goes live on this page, the team index, and every team page.",
+      "You paid for a rail listing. Submit the tool. If the review passes, it goes live on the listing row, the team index, and every team page.",
     setupMissing: "We cannot open this form without a paid checkout session.",
     setupBack: "Back to sponsor",
     setupExpired: "This payment has expired. Mail us if you think that is wrong.",
-    setupLive: "You are live on the rail.",
+    setupLive: "You are live on the side rail and the listing row.",
     setupHuman: "This is with us now. Our team will review your listing and get back to you shortly. You are not on the rail yet.",
     setupSubmit: "Submit for review",
     setupReviewing: "Reviewing",
@@ -280,8 +299,10 @@ export const en = {
     fieldLine: "Short description",
     fieldUrl: "Destination URL",
     fieldMark: "Mark",
-    emptyPlacements:
-      "The connect-first slot and the promoted team stay empty until there is a buyer, and a promoted team has to be a recipe that actually ships. We will not list an ad as a team.",
+    whatYouBuyTitle: "What you buy",
+    whatYouBuyName: "Sponsorship",
+    whatYouBuyBody:
+      "One sponsorship. Logo, name, and one line on the side rail and the listing row. The rail sits on the team index and every team page. Rotated evenly with the other slots.",
     pageH1: "Reach people standing up a Grok Bot team",
     answer: (
       teams: number,
@@ -305,13 +326,13 @@ export const en = {
     faqTitle: "Before you ask",
     faqPriceQ: "How is a slot priced?",
     faqPriceA:
-      "$1,500 for one month, $4,000 for three months, $7,500 for six months. One-time. Stripe takes the card. Then a form and an automated review. A pass goes live on the rail the same day.",
+      "$1,500 for one month, $4,000 for three months, $7,500 for six months. One-time. Stripe takes the card. Then a form and an automated review. A pass goes live the same day on the side rail and the listing row.",
     faqMonthQ: "Can I test one month?",
     faqMonthA:
       "Yes. The shortest term is one month at $1,500, prepaid. Three months is $4,000 and six months is $7,500. These are not subscriptions. The term runs from the day you pay. There is no mid-term cancel.",
     faqShownQ: "Why twelve slots if house listings already sit on the rail?",
     faqShownA:
-      "Twelve is the cap, and house listings count. Skillselion and Agent Plugins Directory take two of those twelve. Every live listing, house or paid, is on the rail. There is no off-screen rotation of extras.",
+      "Twelve is the cap, and house listings count. Skillselion and Agent Plugins Directory take two of those twelve. Every live listing, house or paid, is on the side rail and the listing row. There is no off-screen rotation of extras.",
     faqRefuseQ: "What do you not accept?",
     faqRefuseA:
       "No competing directories of Grok Bot teams or Bots. No crypto, no trading signals, no lead-generation. Digital products only, with a public URL, not a shortener. The listing has to be a tool a Bot could use. This is not general display advertising.",

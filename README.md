@@ -30,7 +30,7 @@ it end to end.
 | `/docs` | The team spec. Our recipe format, mapped onto official Grok Bot nouns. |
 | `/connectors` | Every connector Grok Bot reaches, and which teams use each. |
 | `/api` | Public API contract, readable without JavaScript. |
-| `/sponsor` | Placements and rules. |
+| `/sponsor` | Sponsor listing and rules. |
 
 ## Where the teams come from
 

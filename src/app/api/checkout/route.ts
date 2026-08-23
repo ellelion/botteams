@@ -14,6 +14,9 @@ export const dynamic = "force-dynamic";
  * Pay first. The form, the review, and the rail write happen after
  * return. Checkout collects a card only. Company name, URL, and the
  * one-liner live on /sponsor/setup.
+ *
+ * The sponsor page posts a form. This route 303s to Stripe so the
+ * browser leaves the site. JSON POST still returns { url } for tools.
  */
 
 function safeOrigin(request: Request): string {
@@ -28,36 +31,71 @@ function safeOrigin(request: Request): string {
   return canonical.origin;
 }
 
+function fromForm(request: Request): boolean {
+  const type = request.headers.get("content-type") ?? "";
+  return type.includes("application/x-www-form-urlencoded") || type.includes("multipart/form-data");
+}
+
+function fail(request: Request, error: string, status: number) {
+  if (fromForm(request)) {
+    const url = new URL("/sponsor", safeOrigin(request));
+    url.searchParams.set("checkout", "error");
+    return Response.redirect(url, 303);
+  }
+  return Response.json({ error }, { status });
+}
+
+function ok(request: Request, checkoutUrl: string) {
+  if (fromForm(request)) return Response.redirect(checkoutUrl, 303);
+  return Response.json({ url: checkoutUrl });
+}
+
+async function readInterval(request: Request): Promise<{ interval: unknown; email?: string }> {
+  if (fromForm(request)) {
+    const form = await request.formData();
+    const email = form.get("email");
+    return {
+      interval: form.get("interval"),
+      email: typeof email === "string" ? email : undefined,
+    };
+  }
+  const body = (await request.json()) as { interval?: unknown; email?: unknown } | null;
+  const email = body?.email;
+  return {
+    interval: body?.interval,
+    email: typeof email === "string" ? email : undefined,
+  };
+}
+
 export async function POST(request: Request) {
-  let body: unknown;
+  let parsed: { interval: unknown; email?: string };
   try {
-    body = await request.json();
+    parsed = await readInterval(request);
   } catch {
-    return Response.json({ error: "Send JSON." }, { status: 400 });
+    return fail(request, "Send JSON.", 400);
   }
 
-  const interval = (body as { interval?: unknown } | null)?.interval;
+  const interval = parsed.interval;
   if (!isRailInterval(interval)) {
-    return Response.json({ error: "interval must be 1m, 3m, or 6m." }, { status: 400 });
+    return fail(request, "interval must be 1m, 3m, or 6m.", 400);
   }
 
   if (!databaseUrl()) {
-    return Response.json({ error: "Checkout is not configured yet." }, { status: 503 });
+    return fail(request, "Checkout is not configured yet.", 503);
   }
 
   const { filled } = await getRailInventory();
   if (filled >= SPONSOR_SLOTS_TOTAL) {
-    return Response.json({ error: "Every paying slot is taken." }, { status: 409 });
+    return fail(request, "Every paying slot is taken.", 409);
   }
 
   const plan = railPlan(interval);
   const price = railPriceId(plan);
   if (!price || !process.env.STRIPE_SECRET_KEY) {
-    return Response.json({ error: "Checkout is not configured yet." }, { status: 503 });
+    return fail(request, "Checkout is not configured yet.", 503);
   }
 
-  const rawEmail = (body as { email?: unknown }).email;
-  const email = typeof rawEmail === "string" && rawEmail.includes("@") ? rawEmail.trim() : undefined;
+  const email = parsed.email && parsed.email.includes("@") ? parsed.email.trim() : undefined;
 
   try {
     /* Restricted live keys for this app can create Checkout Sessions but
@@ -82,16 +120,16 @@ export async function POST(request: Request) {
       if (session.id) {
         await stripe().checkout.sessions.expire(session.id).catch(() => undefined);
       }
-      return Response.json({ error: "Checkout is not configured yet." }, { status: 503 });
+      return fail(request, "Checkout is not configured yet.", 503);
     }
 
     if (!session.url) {
-      return Response.json({ error: "Stripe did not return a checkout URL." }, { status: 502 });
+      return fail(request, "Stripe did not return a checkout URL.", 502);
     }
-    return Response.json({ url: session.url });
+    return ok(request, session.url);
   } catch (error) {
     console.error("[checkout] could not open a session", error);
-    return Response.json({ error: "Could not start checkout." }, { status: 502 });
+    return fail(request, "Could not start checkout.", 502);
   }
 }
 
