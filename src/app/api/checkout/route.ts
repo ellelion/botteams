@@ -60,15 +60,8 @@ export async function POST(request: Request) {
   const email = typeof rawEmail === "string" && rawEmail.includes("@") ? rawEmail.trim() : undefined;
 
   try {
-    const live = await stripe().prices.retrieve(price);
-    if (live.unit_amount !== plan.amount || live.currency !== "usd" || live.recurring) {
-      console.error(
-        `[checkout] price ${price} does not match the published plan`,
-        { expected: plan.amount, actual: live.unit_amount, recurring: Boolean(live.recurring) },
-      );
-      return Response.json({ error: "Checkout is not configured yet." }, { status: 503 });
-    }
-
+    /* Restricted live keys for this app can create Checkout Sessions but
+       may not read Prices. Charge amount is checked on the session. */
     const origin = safeOrigin(request);
     const session = await stripe().checkout.sessions.create({
       mode: "payment",
@@ -80,6 +73,17 @@ export async function POST(request: Request) {
       integration_identifier: railIntegrationIdentifier(),
       ...(email ? { customer_email: email } : {}),
     });
+
+    if (session.amount_total !== plan.amount || session.currency !== "usd") {
+      console.error(
+        `[checkout] session ${session.id} does not match the published plan`,
+        { expected: plan.amount, actual: session.amount_total, currency: session.currency },
+      );
+      if (session.id) {
+        await stripe().checkout.sessions.expire(session.id).catch(() => undefined);
+      }
+      return Response.json({ error: "Checkout is not configured yet." }, { status: 503 });
+    }
 
     if (!session.url) {
       return Response.json({ error: "Stripe did not return a checkout URL." }, { status: 502 });
