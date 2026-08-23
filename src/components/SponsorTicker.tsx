@@ -44,9 +44,9 @@ function ChipRow({
     <div
       className="spon-mq-copy"
       style={{
-        flex: 1,
+        flex: "0 1 auto",
         minWidth: 0,
-        justifyContent: "safe center",
+        justifyContent: "center",
         overflowX: "auto",
         gap: 6,
         paddingRight: 0,
@@ -79,28 +79,8 @@ export function SponsorTicker({
   return (
     <div className={`spon-mq spon-mq--${place}`} aria-label={en.sponsor.listingKicker}>
       {place === "bottom" ? <HideNextIndicator /> : null}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-          height: "100%",
-          padding: "0 10px",
-          gap: 8,
-        }}
-      >
-        <span
-          className="spon-mq-label"
-          style={{
-            position: "static",
-            flex: "none",
-            boxShadow: "none",
-            background: "transparent",
-            padding: 0,
-            fontSize: "0.5rem",
-            letterSpacing: "0.14em",
-          }}
-        >
+      <div className="spon-mq-row">
+        <span className="spon-mq-label">
           {en.sponsor.listingKicker}
         </span>
         <ChipRow slots={list} campaign={campaign} />

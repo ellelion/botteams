@@ -53,9 +53,8 @@ export function HomePage({ teams }: { teams: Team[] }) {
               </h1>
               <p className="mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed lg:mt-6 lg:text-[0.95rem]" style={{ color: ledger.inkSoft }}>
                 {en.answer}
-              </p>
-              <p className="mx-auto mt-2 max-w-md text-[0.75rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
-                {en.home.lastUpdated("23 August 2026")} {teamCount} teams and {botCount} Bots in the repo that day. {en.notAffiliated}
+                <br />
+                {en.answerUse}
               </p>
               <p className="mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
                 <Link href="/?kind=bot" className="accent-hover underline">{en.onRamp}</Link>

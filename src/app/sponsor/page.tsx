@@ -278,6 +278,9 @@ export default async function SponsorPage() {
           <p className="mt-6 text-[0.72rem]" style={{ color: ledger.inkFaint }}>
             <time dateTime={STATS_AS_OF_ISO}>{en.sponsor.updated(STATS_AS_OF)}</time>
           </p>
+          <a className="theme-control theme-control-label spon-ask-cta" href={canBuy ? "#buy" : mail}>
+            {canBuy ? en.sponsor.getStarted : en.sponsor.mailCta}
+          </a>
         </section>
         {canBuy ? (
           <a className="spon-dock" href="#buy">
