@@ -1,8 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import type { ConnectorMode, Team, TeamAgent, TeamKind, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
-export type { ConnectorMode, Team, TeamAgent, TeamKind, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
+import { generateConversation, isFirstParty } from "@/lib/conversation-script";
+import type { ConnectorMode, ConversationTurn, Team, TeamAgent, TeamKind, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
+export type { ConnectorMode, ConversationTurn, Team, TeamAgent, TeamKind, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
 export { isExample, isVerified } from "@/lib/types";
 
 const TEAMS_DIR = path.join(process.cwd(), "teams");
@@ -35,6 +36,7 @@ function asAgents(value: unknown, teamConnectors: string[]): TeamAgent[] {
     const agent: TeamAgent = { name: row.name, persona: row.persona, connectors };
     if (row.reuse === true) agent.reuse = true;
     if (typeof row.icon === "string" && row.icon.trim()) agent.icon = row.icon.trim();
+    if (row.skills !== undefined) agent.skills = asStringArray(row.skills, `agents[${i}].skills`);
     return agent;
   });
 }
@@ -114,6 +116,56 @@ function asConnectorModes(value: unknown, connectors: string[]): Record<string, 
   return out;
 }
 
+
+function asConversationBots(value: unknown): Record<string, ConversationTurn[]> | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== "object" || Array.isArray(value)) return undefined;
+  const out: Record<string, ConversationTurn[]> = {};
+  for (const [key, raw] of Object.entries(value as Record<string, unknown>)) {
+    const name = key.trim();
+    if (!name) continue;
+    const turns = asConversation(raw);
+    if (turns?.length) out[name] = turns;
+  }
+  return Object.keys(out).length ? out : undefined;
+}
+
+function asConversation(value: unknown): ConversationTurn[] | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (!Array.isArray(value) || value.length === 0) return undefined;
+  return value.map((item, i) => {
+    if (!item || typeof item !== "object") throw new Error(`conversation[${i}] is invalid`);
+    const row = item as Record<string, unknown>;
+    if (typeof row.speaker !== "string" || !row.speaker.trim()) {
+      throw new Error(`conversation[${i}] needs speaker`);
+    }
+    if (typeof row.text !== "string" || !row.text.trim()) {
+      throw new Error(`conversation[${i}] needs text`);
+    }
+    const turn: ConversationTurn = { speaker: row.speaker.trim(), text: row.text.trim() };
+    if (row.role === "user" || row.role === "agent") turn.role = row.role;
+    if (typeof row.speakerKey === "string" && row.speakerKey.trim()) turn.speakerKey = row.speakerKey.trim();
+    if (Array.isArray(row.checks) && row.checks.every((c) => typeof c === "string")) {
+      turn.checks = row.checks.map((c) => c.trim()).filter(Boolean);
+    }
+    if (row.working && typeof row.working === "object") {
+      const w = row.working as Record<string, unknown>;
+      if (typeof w.label === "string" && typeof w.detail === "string") {
+        turn.working = { label: w.label.trim(), detail: w.detail.trim() };
+        if (w.state === "work" || w.state === "done") turn.working.state = w.state;
+        if (typeof w.screen === "string" && w.screen.trim()) turn.working.screen = w.screen.trim();
+      }
+    }
+    if (row.fromBots && typeof row.fromBots === "object") {
+      const f = row.fromBots as Record<string, unknown>;
+      if (Array.isArray(f.keys) && f.keys.every((k) => typeof k === "string") && typeof f.text === "string" && f.text.trim()) {
+        turn.fromBots = { keys: f.keys.map((k) => String(k).trim()).filter(Boolean), text: f.text.trim() };
+      }
+    }
+    return turn;
+  });
+}
+
 export function parseTeam(raw: string, filename: string): Team {
   const { data, content } = matter(raw);
   const slug = path.basename(filename, ".md");
@@ -150,7 +202,7 @@ export function parseTeam(raw: string, filename: string): Team {
   for (const agent of agents) for (const name of agent.connectors) union.add(name);
   const merged = connectors.slice();
   for (const name of union) if (!merged.includes(name)) merged.push(name);
-  return {
+  const team: Team = {
     slug: data.slug,
     kind,
     name: data.name,
@@ -181,9 +233,16 @@ export function parseTeam(raw: string, filename: string): Team {
         ? (data.integration_urls as Record<string, string>)
         : undefined,
     fromXai: data.from_xai === true ? true : undefined,
+    featured: data.featured === true ? true : undefined,
     suggest: asSuggestions(data.suggest),
     connectorModes: asConnectorModes(data.connector_modes, merged),
+    conversation: asConversation(data.conversation),
+    conversationByBot: asConversationBots(data.conversation_bots),
   };
+  if (!team.conversation && isFirstParty(team) && team.agents.length > 0) {
+    team.conversation = generateConversation(team);
+  }
+  return team;
 }
 
 function readDir(dir: string): Team[] {
@@ -205,8 +264,15 @@ export function listBots(): Team[] {
   return readDir(BOTS_DIR);
 }
 
+function byFeaturedThenNewest(a: Team, b: Team): number {
+  const af = a.featured ? 1 : 0;
+  const bf = b.featured ? 1 : 0;
+  if (af !== bf) return bf - af;
+  return String(b.addedAt ?? "").localeCompare(String(a.addedAt ?? "")) || a.slug.localeCompare(b.slug);
+}
+
 export function listAll(): Team[] {
-  return [...listTeams(), ...listBots()];
+  return [...listTeams(), ...listBots()].sort(byFeaturedThenNewest);
 }
 
 export function getTeam(slug: string): Team | null {

@@ -43,18 +43,28 @@ function norm(value: string) {
   return value.toLowerCase().trim();
 }
 
-/* Prefix beats substring beats alias, so "not" puts Notion above
+/* Case-insensitive substring on name, slug, and aliases.
+   Prefix still ranks first so "not" puts Notion above
    "Cloudflare Notifications". Ties fall back to name order. */
+function haystacks(entry: FinderEntry): string[] {
+  const slug = norm(entry.slug);
+  return [norm(entry.name), slug, slug.replace(/-/g, " "), ...entry.aliases.map(norm)];
+}
+
+function matches(entry: FinderEntry, q: string): boolean {
+  if (!q) return false;
+  return haystacks(entry).some((field) => field.includes(q));
+}
+
 function score(entry: FinderEntry, q: string): number {
+  if (!matches(entry, q)) return -1;
   const name = norm(entry.name);
-  if (name === q) return 0;
-  if (name.startsWith(q)) return 1;
-  if (entry.slug.startsWith(q.replace(/\s+/g, "-"))) return 2;
-  if (name.includes(q)) return 3;
-  if (entry.aliases.some((a) => a.startsWith(q))) return 4;
-  if (entry.aliases.some((a) => a.includes(q))) return 5;
-  if (norm(entry.category).includes(q)) return 6;
-  return -1;
+  const slug = norm(entry.slug);
+  const slugQ = q.replace(/\s+/g, "-");
+  if (name === q || slug === slugQ) return 0;
+  if (name.startsWith(q) || slug.startsWith(slugQ)) return 1;
+  if (name.includes(q) || slug.includes(slugQ) || slug.replace(/-/g, " ").includes(q)) return 2;
+  return 3;
 }
 
 function Row({ entry }: { entry: FinderEntry }) {
@@ -69,7 +79,7 @@ function Row({ entry }: { entry: FinderEntry }) {
         /* The count is a link into the team index filtered by this
            connector, which is a page that already exists. No invented
            install numbers: this is teams on this shelf, and nothing else. */
-        <Link className="cf-row-teams" href={`/?integration=${encodeURIComponent(entry.name)}#teams`}>
+        <Link className="cf-row-teams" href={`/?integration=${encodeURIComponent(entry.name)}`}>
           {en.connectors.teamCount(entry.teams)}
         </Link>
       ) : (

@@ -57,7 +57,7 @@ export default async function Image() {
             COMPANY TEAMS FOR GROK BOT
           </div>
           <div style={{ display: "flex", fontSize: 148, marginTop: 12 }}>
-            <span>Grok Bot Teams</span>
+            <span>botteams.ai</span>
             <span style={{ color: ledger.oxblood }}>.</span>
           </div>
           <div
@@ -69,7 +69,7 @@ export default async function Image() {
               marginTop: 8,
             }}
           >
-            Install a Grok Bot team, not a bot. Copy one prompt
+            Grok Bot teams directory. Copy one prompt
             and paste it into Grok Bot.
           </div>
         </div>

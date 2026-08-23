@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Privacy",
   description:
-    "What Grok Bot Teams does with data today: no account, no analytics, no cookies. Operated by Ellelion LLC. Not affiliated with xAI.",
+    "What Grok Bot Teams does with data today: no account, no cookies, OpenPanel for first-party page counts. Operated by Ellelion LLC. Not affiliated with xAI.",
   alternates: { canonical: `${site.url}/privacy` },
 };
 
@@ -16,15 +16,26 @@ export default function PrivacyPage() {
       title="Privacy"
       lead={`What this site does with data today, not what a template says it might. ${site.company} is the operator. If any of this changes, this page changes with it.`}
     >
-      <Block title="No account, no analytics, no cookies">
+      <Block title="No account, no cookies, first-party analytics">
         <p>
-          There is nothing to sign up for, so there is no profile, no password, and no mailing list. We set no cookies
-          and we run no analytics: no page-view script, no tag manager, no session recording, no advertising pixel. That
-          is why you are not being asked to accept anything.
+          There is nothing to sign up for, so there is no profile, no password, and no mailing list. Visiting the
+          directory does not require an account. We set no cookies. There is no tag manager, no session recording, and
+          no advertising pixel. That is why you are not being asked to accept anything.
         </p>
         <p>
-          We expect to add basic traffic counts later, because we tell sponsors we will quote against real numbers. When
-          that lands, this page says which tool, what it stores, and how long, before it is switched on.
+          On production at{" "}
+          <a className="accent-hover underline" href="https://botteams.ai" rel="noopener noreferrer">
+            https://botteams.ai
+          </a>
+          , the site sends cookieless page-view / <code>screen_view</code> and <code>session_start</code> events, plus
+          outbound-link clicks, through{" "}
+          <a className="accent-hover underline" href="https://openpanel.dev" rel="nofollow noopener noreferrer" target="_blank">
+            OpenPanel
+          </a>{" "}
+          via <code>@openpanel/nextjs</code>. OpenPanel is first-party analytics. A typical event stores the page path,
+          referrer, device, browser, operating system, coarse geo (country and city), and timestamps. We use those
+          counts to see what is used and to quote traffic honestly to sponsors. We do not sell the data and we do not
+          use it to advertise to you.
         </p>
       </Block>
 
@@ -62,8 +73,8 @@ export default function PrivacyPage() {
           as business records for the placement. We do not sell it and we do not use it to advertise to you.
         </p>
         <p>
-          Buying still sets no cookie on this site and adds no tracking to it. There is no pixel on the success page and
-          no conversion script anywhere.
+          Buying still sets no cookie on this site. There is no pixel on the success page and no conversion script
+          anywhere.
         </p>
       </Block>
 
@@ -78,9 +89,10 @@ export default function PrivacyPage() {
 
       <Block title="Children and jurisdiction">
         <p>
-          The site is for people doing work in Grok Bot and is not directed at children. Browsing collects nothing, so
-          for a reader there is nothing to request, correct, or delete. If you have bought a placement, write to us and
-          we will show you what we hold, correct it, or delete what we are not required to keep for accounting.
+          The site is for people doing work in Grok Bot and is not directed at children. Browsing is not an account, so
+          there is no profile to request. OpenPanel holds the visit events described above. If you have bought a
+          placement, write to us and we will show you what we hold, correct it, or delete what we are not required to
+          keep for accounting.
         </p>
       </Block>
 

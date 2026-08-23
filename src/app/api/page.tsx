@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteMasthead } from "@/components/SiteMasthead";
-import { PageTitle } from "@/components/PageShell";
+import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
 import { DEFAULT_LIMIT, MAX_LIMIT } from "@/lib/api-teams";
 import { PARAMS } from "@/lib/openapi";
@@ -27,15 +25,17 @@ export default function ApiDocsPage() {
 
 
   return (
-    <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
-      <SiteMasthead />
-      <main className="wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-12">
-        <PageTitle>API</PageTitle>
-        <p className="measure mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          Every team on this shelf is readable as JSON. No key, no account, no rate limit worth mentioning. CORS is open,
-          so a browser or an agent can call it directly. {teamCount} teams and {botCount} bots today.
-        </p>
-        <p className="measure mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+    <WingsSplit
+      hero={
+        <WingsHero title="API">
+          <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+            Every team on this shelf is readable as JSON. No key, no account, no rate limit worth mentioning. CORS is open,
+            so a browser or an agent can call it directly. {teamCount} teams and {botCount} bots today.
+          </p>
+        </WingsHero>
+      }
+    >
+        <p className="measure mt-2 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
           Two shapes, two collections. A <strong>team</strong> is a recipe with a group chat: two to six named Bots, standing
           routines, and the connectors the account needs first. A <strong>bot</strong> is a recipe with one Bot and no group
           chat. They never appear in the same list, because adding them up and calling the total teams is not true. The
@@ -171,8 +171,6 @@ export default function ApiDocsPage() {
             It is never inferred and never invented. A file that does not state one reports null and sorts last.
           </p>
         </section>
-      </main>
-      <SiteFooter />
-    </div>
+    </WingsSplit>
   );
 }

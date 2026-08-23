@@ -1,25 +1,18 @@
 import type { Metadata } from "next";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteMasthead } from "@/components/SiteMasthead";
 import { Suspense } from "react";
-import { PageTitle } from "@/components/PageShell";
+import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { BuySlot } from "@/components/sponsor/BuySlot";
 import { PaidNotice } from "@/components/sponsor/PaidNotice";
 import { RAIL_PLANS } from "@/lib/rail";
 import { railCheckoutReady } from "@/lib/stripe";
+import { getRailInventory } from "@/lib/rail-inventory";
 import { ledger } from "@/lib/ledger-theme";
-import {
-  SPONSOR_SLOTS_TOTAL,
-  filledCount,
-  houseAds,
-  houseHref,
-  openCount,
-  paidSlots,
-  sponsorHref,
-} from "@/data/sponsors";
+import { SPONSOR_SLOTS_TOTAL, sponsorHref } from "@/data/sponsors";
 import { en } from "@/lib/messages/en";
 import { listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Sponsor",
@@ -28,30 +21,85 @@ export const metadata: Metadata = {
   alternates: { canonical: `${site.url}/sponsor` },
 };
 
-export default function SponsorPage() {
+const ACCEPT = [
+  "Digital products only.",
+  "Public URL, not a shortener, not a competing Grok Bot team or bot directory.",
+  "No crypto, no trading signals, no lead-generation for either.",
+];
+
+const NEED = [
+  "Title, 28 characters or fewer.",
+  "Short description, 52 characters or fewer, as plain as the shelf.",
+  "Destination URL.",
+  "A simple mark (png, svg, webp, or jpg). Not a landing screenshot, not a person photo, not a watermarked stock ad.",
+];
+
+const RULES = [
+  "No competing directories of Grok Bot teams or bots.",
+  "No crypto, no trading signals, no lead-generation for either.",
+  "The tool has to be something a Bot could use. This is not general display advertising.",
+  "We may edit the one-liner after it is live, so it reads like the rest of the shelf.",
+  "Anywhere we earn on a click is marked, and the disclosure says so.",
+  "No dashboard, no impression counts. You get a placement and an honest answer about traffic when you ask.",
+];
+
+export default async function SponsorPage() {
   const teams = listTeams().length;
-  const filled = filledCount();
-  const paid = paidSlots();
-  const open = openCount();
+  const { filled, open, paid } = await getRailInventory();
   const canBuy = open > 0 && railCheckoutReady(RAIL_PLANS);
   const mail = `mailto:${site.email}?subject=${encodeURIComponent("Sponsoring Grok Bot Teams")}`;
 
   return (
-    <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
-      <SiteMasthead />
-      <main className="wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-12">
-        <PageTitle>Sponsor</PageTitle>
-        <p className="measure mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-          People arrive here about to give a Grok Bot real work, and the first thing every team tells them is which tools
-          to connect first. That is the whole audience: operators picking tools, at the moment they pick them.
-        </p>
-        <p className="measure mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-          {filled === 0
-            ? `${teams} teams on the shelf and no outside sponsors yet, which is worth saying plainly rather than padding the rail with logos we do not have. The rail below is the whole truth of it.`
-            : `${filled} of ${SPONSOR_SLOTS_TOTAL} paying slots taken across ${teams} teams.`}
-        </p>
+    <WingsSplit
+      hero={
+        <WingsHero title="Sponsor">
+          <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+            People arrive here about to give a Grok Bot real work, and the first thing every team tells them is which tools
+            to connect first. That is the whole audience: operators picking tools, at the moment they pick them.
+          </p>
+          <p className="mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+            {filled === 0
+              ? `${teams} teams on the shelf and two house listings on the rail and ten slots open. The rail is the whole truth of it.`
+              : `${filled} of ${SPONSOR_SLOTS_TOTAL} slots taken across ${teams} teams.`}
+          </p>
+          <p className="home-disclaimer mt-5">{en.notAffiliated}</p>
+        </WingsHero>
+      }
+    >
 
         <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.sponsor.acceptTitle}
+          </h2>
+          <ul className="mt-4">
+            {ACCEPT.map((rule) => (
+              <li key={rule} className="hairline-row measure py-3 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+                {rule}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            {en.sponsor.needTitle}
+          </h2>
+          <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+            {en.sponsor.needLead}
+          </p>
+          <ul className="mt-4">
+            {NEED.map((rule) => (
+              <li key={rule} className="hairline-row measure py-3 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+                {rule}
+              </li>
+            ))}
+          </ul>
+          <p className="measure mt-4 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+            {en.sponsor.reviewLead}
+          </p>
+        </section>
+
+        <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Placements</h2>
           <dl className="mt-4">
             {[
@@ -80,38 +128,24 @@ export default function SponsorPage() {
           </h2>
           <ul className="mt-4">
             {paid.map((slot) => (
-              <li key={slot.id} className="hairline-row flex flex-wrap items-baseline justify-between gap-3 py-3">
+              <li key={slot.id} className="hairline-row flex flex-wrap items-center justify-between gap-3 py-3">
                 <a
-                  className="accent-hover underline"
+                  className="spon-paid-link accent-hover underline"
                   href={sponsorHref(slot, "sponsor-page")}
                   target="_blank"
                   rel="noopener sponsored"
                   style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
                 >
+                  {slot.mark ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img className="spon-mark" src={slot.mark} alt="" width={18} height={18} />
+                  ) : null}
                   {slot.name}
                 </a>
                 <span className="text-[0.78rem]" style={{ color: ledger.inkMuted }}>{slot.line}</span>
               </li>
             ))}
-            {/* Same chrome a paying row will get. No chip, and nothing on
-                the page announcing whose they are. */}
-            {houseAds.map((ad) => (
-              <li key={ad.id} className="hairline-row flex flex-wrap items-baseline justify-between gap-3 py-3">
-                <a
-                  className="accent-hover underline"
-                  href={houseHref(ad, "sponsor-page")}
-                  target="_blank"
-                  rel="nofollow noopener noreferrer"
-                  style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
-                >
-                  {ad.name}
-                </a>
-                <span className="text-[0.78rem]" style={{ color: ledger.inkMuted }}>{ad.line}</span>
-              </li>
-            ))}
           </ul>
-          {/* One block. Fifteen identical Open rows is not inventory, it
-              is a page telling you nobody bought anything. */}
           <div className="spon-open measure">
             <p className="text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
               {en.sponsor.openLine(open, SPONSOR_SLOTS_TOTAL)}
@@ -124,8 +158,6 @@ export default function SponsorPage() {
             ) : open <= 0 ? (
               <BuySlot soldOut />
             ) : (
-              /* No keys wired yet. Say so plainly rather than showing a
-                 button that cannot open Stripe. */
               <p className="spon-fine">
                 Card checkout is not switched on yet. Mail{" "}
                 <a className="accent-hover underline" href={mail}>{site.email}</a> and we will invoice you.
@@ -137,14 +169,7 @@ export default function SponsorPage() {
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Rules</h2>
           <ul className="mt-4">
-            {[
-              "No competing directories of Grok Bot teams or bots.",
-              "No crypto, no trading signals, no lead-generation for either.",
-              "The tool has to be something a Bot could plausibly use. This is not general display advertising.",
-              "We write or edit the one-line description. It has to read like the rest of the shelf.",
-              "Anywhere we earn on a click is marked, and the disclosure says so.",
-              "No dashboard, no impression counts. You get a placement and an honest answer about traffic when you ask.",
-            ].map((rule) => (
+            {RULES.map((rule) => (
               <li key={rule} className="hairline-row measure py-3 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
                 {rule}
               </li>
@@ -161,8 +186,6 @@ export default function SponsorPage() {
             placement. We will tell you what the traffic actually is before you pay anything.
           </p>
         </section>
-      </main>
-      <SiteFooter />
-    </div>
+    </WingsSplit>
   );
 }

@@ -33,17 +33,41 @@ export function sectionSlug(section: string): string {
  * than sitting still waiting for its turn.
  */
 const BOT_MARK_COLORS = [
-  "#0891b2", // cyan, the house accent
-  "#ea4045", // red
-  "#7856ff", // violet
-  "#1f8a65", // green
-  "#e0803a", // amber
-  "#3b6fd4", // blue
+  "#54B9A6",
+  "#F19D38",
+  "#6464EF",
+  "#885CF5",
+  "#3C82F6",
+  "#ED712E",
 ];
 
-export function botMarkStyle(index: number): Record<string, string> {
+export function botUiKind(name: string, persona = ""): "product" | "code" | "find" | "market" | "trust" | "money" | "desk" {
+  const n = `${name} ${persona}`.toLowerCase();
+  if (/money|stripe|ramp|billing|cfo/.test(n)) return "money";
+  if (/trust|legal|secur|compliance/.test(n)) return "trust";
+  if (/market|growth|social|x.com|gmail/.test(n)) return "market";
+  if (/findab|seo|aeo|geo|citation|ahrefs|semrush/.test(n)) return "find";
+  if (/cod|engineer|github|ship/.test(n)) return "code";
+  if (/product|pm|linear|week list/.test(n)) return "product";
+  return "desk";
+}
+
+const KIND_COLORS: Record<ReturnType<typeof botUiKind>, string> = {
+  product: "#54B9A6",
+  code: "#3C82F6",
+  find: "#6464EF",
+  market: "#F19D38",
+  trust: "#885CF5",
+  money: "#ED712E",
+  desk: "#54B9A6",
+};
+
+export function botMarkStyle(index: number, name = "", persona = ""): Record<string, string> {
+  const kind = name ? botUiKind(name, persona) : "desk";
+  const fg = name ? KIND_COLORS[kind] : BOT_MARK_COLORS[index % BOT_MARK_COLORS.length];
   return {
-    "--fg": BOT_MARK_COLORS[index % BOT_MARK_COLORS.length],
+    "--fg": fg,
+    "--bot-accent": fg,
     "--gb-delay": `-${((index * 1.9) % 12).toFixed(2)}s`,
   };
 }

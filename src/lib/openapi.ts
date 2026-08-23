@@ -27,6 +27,7 @@ const TEAM_PROPERTIES: Record<keyof ApiTeam, Schema> = {
   kind: { type: "string", enum: ["bot", "team"], description: "bot is one Bot doing one job with no group chat. team is two to six Bots in one group chat. The two never appear in the same collection." },
   status: { type: "string", enum: ["installable", "example"], description: "installable is a recipe to use. example is a format demonstration." },
   fromXai: { type: "boolean", description: "True when the recipe is our write-up of a job published in xAI's own Grok Bot use-case gallery. Sourcing, not endorsement: xAI does not review or certify anything on this shelf." },
+  featured: { type: "boolean", description: "True when this team is pinned first on the public index." },
   bots: { type: "integer", minimum: 1, description: "Number of Bots. Always equal to agents.length, and always 1 on a bot." },
   addedAt: { type: ["string", "null"], format: "date-time", description: "Date stated in the team file. Never inferred. Null when the file does not state one, and those sort last." },
   connectors: { type: "array", items: { type: "string" }, description: "Connectors the account must already have. Connectors are account-wide in Grok Bot." },

@@ -2,11 +2,11 @@ import { site } from "@/lib/site";
 
 export const en = {
   siteName: site.name,
-  wordmark: "Grok Bot Teams",
-  h1: "Install a Grok Bot team, not a bot.",
-  eyebrow: "Company teams for Grok Bot",
+  wordmark: "botteams.ai",
+  h1: "Grok Bot teams directory",
+  eyebrow: "Grok Bot teams",
   answer:
-    "Give each Bot a job. Copy one installer prompt, paste it into Grok Bot, and stand up a named team: Bots, a group chat, a sidebar section, and routines you confirm. No accounts on this site. No connector API. No one-click OAuth.",
+    "botteams.ai is a directory of teams and Bots you paste into Grok Bot. Each team is named Bots, a group chat, and routines. Use them at work, in a business, or for everyday life. Copy one installer prompt. Nothing is installed on this site.",
   onRamp: "Or start with one Bot.",
   notAffiliated: "Not affiliated with xAI.",
   share: {
@@ -17,28 +17,29 @@ export const en = {
   entity: site.entity,
   verified: "Verified",
   nav: {
-    teams: "Teams",
-    bots: "Bots",
+    teams: "Grok Bot Teams",
+    bots: "Grok Bots",
     docs: "Spec",
     connectorsNav: "Connectors",
     api: "API",
     sponsor: "Sponsor",
     github: "GitHub",
-    homeAria: "Grok Bot Teams, home",
+    homeAria: "botteams.ai, home",
     mainAria: "Main",
   },
   home: {
-    indexTitle: "Company teams",
-    indexTitleBots: "Bots",
-    indexTitleAll: "Teams and bots",
+    indexTitle: "Grok Bot Teams",
+    indexTitleBots: "Grok Bots",
+    indexTitleAll: "Grok Bot Teams and Grok Bots",
     /* Two facts, never one total. 56 of these have no group chat, so
        adding them up and calling the sum "teams" is the lie. */
     counts: (teams: number, bots: number) =>
       `${teams} ${teams === 1 ? "team" : "teams"} · ${bots} ${bots === 1 ? "bot" : "bots"}`,
-    kindTeams: "Teams",
-    kindBots: "Bots",
+    kindTeams: "Grok Bot Teams",
+    kindBots: "Grok Bots",
     kindAll: "All",
-    kindLabel: "Shelf",
+    kindLabel: "Kind",
+    featured: "Featured",
     labelTeam: "Team",
     labelBot: "Bot",
     /* "3 Bots · 1 group chat" for a team, "1 Bot" for a bot. Never a
@@ -53,12 +54,12 @@ export const en = {
     typeIn:
       "Canonical domain grokbotteams.ai. grokbotteam.ai (no s) is a type-in that should 301 when DNS exists. This repo does not buy or configure DNS.",
     sponsorsTitle: "Sponsor slots",
-    sponsorsNote: "Fifteen slots. All available. No fake advertisers.",
+    sponsorsNote: "Twelve slots. Skillselion and Agent Plugins Directory are the first two.",
     available: "Available",
     scrollCue: "Browse teams",
     contributeTitle: "A team is markdown in a repo",
     contributeBody:
-      "Every team on this shelf is one file. Front matter names the Bots, the group chat, the routines, and the connectors the account needs first. The installer prompt is generated from it, so the file is the product.",
+      "Every team here is one file. Front matter names the Bots, the group chat, the routines, and the connectors the account needs first. The installer prompt is generated from it, so the file is the product.",
     contributePr: "Open a pull request",
     contributeSpec: "Read the spec",
     contributeGuide: "Contribution guide",
@@ -74,6 +75,7 @@ export const en = {
     botCount: (n: number) => (n === 1 ? "1 Bot" : `${n} Bots`),
     colConnectors: "Connectors",
     openTeam: "Open team",
+    viewFull: (kind: "team" | "bot") => kind === "bot" ? "View the full Bot" : "View the full team",
     browseLabel: "Browse",
     categoriesAria: "Team categories",
     filterCategory: "Filter by category",
@@ -92,7 +94,7 @@ export const en = {
       "Edit the recipe, then copy it. Nothing is saved to this site and nothing is sent to Grok Bot from here. Copy and paste is still how it installs.",
     reset: "Reset to recipe",
     resetHint: "Puts every Bot, name, mode, and chip back to the published team.",
-    bots: "Bots",
+    bots: "Grok Bots",
     botOn: "On this team",
     botName: "Bot name",
     botNote: "Extra wording for this Bot",
@@ -130,6 +132,23 @@ export const en = {
     blocked: "Fix this before you copy",
     warn: "Worth a look",
     copyAnyway: "You can still copy it.",
+    skills: "Skills",
+    skillsLead:
+      "Search Skillselion, add a skill to this recipe, then choose Install (npx skills add, then enable under Plugins → Yours) or Fetch at run (Skillselion MCP). This is wording in the paste.",
+    skillsScope: "Apply to",
+    skillsScopeTeam: "Whole team",
+    skillsScopeLead:
+      "Team-scoped skills apply to every Bot. Bot-scoped skills apply only to that Bot (enable under Plugins → Yours for that Bot only).",
+    skillsSearch: "Search Skillselion",
+    skillsPlaceholder: "frontend design, tdd, …",
+    skillsSearching: "Searching Skillselion…",
+    skillsEmpty: "Nothing matched. Try a shorter name.",
+    skillsAdd: "Add",
+    skillsView: "View on Skillselion",
+    skillsInstall: "Install",
+    skillsFetch: "Fetch at run",
+    skillsRemove: "Remove",
+    skillsMeta: (installs: string, stars: string) => `${installs} installs · ${stars} stars`,
   },
   team: {
     copy: "Copy installer prompt",
@@ -142,9 +161,9 @@ export const en = {
     connectFirst: "Connect first",
     promptTitle: "Installer prompt",
     connectorsNote:
-      "Connectors are account-wide. This team expects these already on the account. The per-Bot row is which Bot uses which ones, not a second OAuth.",
+      "The prompt asks for these as it goes. They are account-wide. The per-Bot row is which Bot uses which ones, not a second OAuth.",
     agents: "Bots",
-    botTag: "Bot",
+    botTag: "Grok Bot",
     rooms: "Group chat",
     routines: "Routines",
     skills: "Skills",
@@ -153,10 +172,11 @@ export const en = {
       "Example team. The copy button still builds a real prompt so you can see the format. Do not treat this as a production recipe.",
     installNote:
       "Paste the prompt into Grok Bot. This is not one-click OAuth and nothing is installed on this site.",
-    ownerBot: "Owner Bot",
+    ownerBot: "Owner:",
     allTeams: "All teams",
     viewSource: "View source",
     runYourself: "Run it yourself",
+    runName: (name: string) => `Run ${name} yourself`,
     runYourselfBody:
       "Free to copy, adapt, and edit. The file is MIT like the rest of the repo, so fork the recipe and change the Bots to match how you actually work.",
     relatedTitle: () => "Teams that share these connectors",
@@ -182,10 +202,10 @@ export const en = {
     builtInTitle: "Built in",
     builtInShelfNote: "The ones xAI documents by name. Every other connector comes from the picker in the app.",
     shelfSummary: (total: number) =>
-      `Start typing to search all ${total}, or pick a category. This shelf is the short list.`,
+      `Start typing to search all ${total}, or pick a category. This is the short list.`,
     browseAll: (total: number) => `Browse all ${total}`,
     browseAllNote: "Every connector, in one windowed list. Search reaches all of them without this.",
-    backToShelf: "Back to the shelf",
+    backToShelf: "Back to the short list",
     allLabel: "All connectors",
     noTeams: "No team yet",
     summary: (shown: number, total: number) =>
@@ -205,28 +225,50 @@ export const en = {
   },
   sponsor: {
     railTitle: "Sponsors",
+    listingKicker: "Sponsored",
     /* Always says "paying". Two house ads sit above this line, and a
        bare "0 of 15 taken" beside two visible rows reads as a lie. */
-    railCta: (filled: number, total: number) => `${filled} of ${total} paying taken`,
+    railCta: (filled: number, total: number) => `${filled} of ${total} taken`,
     openLine: (open: number, total: number) =>
-      open === total
-        ? `All ${total} paying slots are open.`
-        : `${open} of ${total} paying slots are open.`,
-    takeSlot: "Take a slot",
+      `${open} of ${total} slots left.`,
+    takeSlot: "Add yours",
+    addYours: "Add yours",
+    putListing: "Put your listing here",
+    slotsLeft: (open: number, total: number) => `${open} of ${total} slots left`,
     disclosure: "Marked links earn us a commission. It does not change what a team recommends.",
     railTodayTitle: "The rail today",
-    /* Published prices. Enquire stays for the two placements we cannot
-       sell off the shelf yet. */
+    acceptTitle: "What we take",
+    needTitle: "What we need",
+    needLead: "After you pay, a form asks for these. Stripe only takes the card.",
+    reviewLead:
+      "An automated review checks a closed list, up to three times. If it passes, you go on the rail immediately. After three fails, our team will review your listing and get back to you shortly.",
+    guidelinesTitle: "Guidelines",
     buyTitle: "Buy a slot",
     buyLead:
-      "Prepaid advertising on the rail. Pick a term, pay on Stripe, and give us the company name, the destination, and one line while you are there.",
+      "Prepaid advertising on the rail. Pick a term and pay on Stripe. Then you submit the listing.",
     buyFine:
-      "Stripe takes the card on their page. A paid row is labelled as a paid placement. It is not Verified, it is not a team, and it is not an endorsement.",
+      "Stripe takes the card on their page. A paid row is a paid placement. It is not Verified, it is not a team, and it is not an endorsement.",
     buyError: "Could not start checkout. Try again, or mail us.",
     opening: "Opening Stripe",
     soldOut: "Every paying slot is taken. Mail us and we will tell you when one frees up.",
     paid:
-      "Payment received. We write your row by hand and mail you before it goes up. You are not on the rail yet.",
+      "Payment received. Finish the listing on the form Stripe opened after checkout. If you closed it, mail us with the receipt.",
+    setupTitle: "Finish your listing",
+    setupLead:
+      "You paid for a rail slot. Submit the tool. If the review passes, it goes live on this page, the team index, and every team page.",
+    setupMissing: "We cannot open this form without a paid checkout session.",
+    setupBack: "Back to sponsor",
+    setupExpired: "This payment has expired. Mail us if you think that is wrong.",
+    setupLive: "You are live on the rail.",
+    setupHuman: "This is with us now. Our team will review your listing and get back to you shortly. You are not on the rail yet.",
+    setupSubmit: "Submit for review",
+    setupReviewing: "Reviewing",
+    setupError: "Could not submit. Try again, or mail us.",
+    setupTries: (n: number) => (n === 1 ? "1 review left." : `${n} reviews left.`),
+    fieldTitle: "Title",
+    fieldLine: "Short description",
+    fieldUrl: "Destination URL",
+    fieldMark: "Mark",
     emptyPlacements:
       "The connect-first slot and the promoted team stay empty until there is a buyer, and a promoted team has to be a recipe that actually ships. We will not list an ad as a team.",
   },
@@ -239,8 +281,9 @@ export const en = {
     secRoster: "Bots",
     secJob: "Job",
     secRoom: "Group chat",
+    secConnectors: "Connectors",
     secRoutines: "Routines",
-    secInstaller: "Installer",
+    secInstaller: "Prompt Installer for Grok Bot",
     secRelated: "Related",
     secNotes: "Notes",
     noRoutines: "No routines in this recipe.",
@@ -266,15 +309,15 @@ export const en = {
       "One Bot, so there is no group chat to edit. Verified is a claim about a group chat holding two to six Bots, and a bot does not make one.",
     soloRoster: "A bot is one Bot. Growing it into a team would be our idea, not the published job, so the roster is fixed here.",
     note:
-      "Our write-up of a job xAI publishes in its Grok Bot use-case gallery. The title and the category are theirs. The Bot, the connectors, and the standing instructions are ours. xAI does not review or certify anything on this shelf.",
+      "Our write-up of a job xAI publishes in its Grok Bot use-case gallery. The title and the category are theirs. The Bot, the connectors, and the standing instructions are ours. xAI does not review or certify anything here.",
   },
   footer: {
     aria: "Site",
     product: "Product",
     docs: "Docs",
     company: "Company",
-    teams: "Teams",
-    bots: "Bots",
+    teams: "Grok Bot Teams",
+    bots: "Grok Bots",
     connectors: "Connectors",
     sponsor: "Sponsor",
     spec: "Spec",
@@ -298,8 +341,8 @@ export const en = {
     repoAria: "Source on GitHub",
   },
   notFound: {
-    kicker: "Not on the shelf",
-    body: "This page is not on the shelf. Teams live under /teams, bots under /bots.",
+    kicker: "Not found",
+    body: "This page is not here. Teams live under /teams, bots under /bots.",
     back: "Back to teams",
     backBots: "Browse bots",
   },

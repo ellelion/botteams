@@ -1,37 +1,60 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { SectionIcon } from "@/components/icons/LineIcons";
 import { Select, type SelectOption } from "@/components/ui/Select";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
-import { Sparkline } from "@/components/Sparkline";
-import { VerifiedChip } from "@/components/VerifiedChip";
+import { FeaturedChip } from "@/components/FeaturedChip";
 import { FromXaiChip } from "@/components/FromXaiChip";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
+import { RosterShape } from "@/components/RosterShape";
 import { botMarkStyle, sectionSlug } from "@/lib/bot-icon";
 import { installerPrompt } from "@/lib/installer";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
-import { isVerified, type Team } from "@/lib/types";
+import { grokDisplayBotName, grokRecipeTitle } from "@/lib/grok-names";
+import { type Team } from "@/lib/types";
+import { houseSlots, sponsorHref, type SponsorSlot } from "@/data/sponsors";
+import { SponsorTicker } from "@/components/SponsorTicker";
 import { resolveConnector, resolveConnectors } from "@/lib/connectors";
 
 /*
- * Three index layouts, one filter model.
+ * Two index layouts, one filter model.
  *   ledger   grouped hairline rows. Densest, closest to the house style.
- *   columns  a real table: team, category, bots, connectors. F-pattern,
- *            titles left, metadata secondary, best for comparing.
  *   cards    two-up with the tagline visible. Browsing rather than looking
  *            something up.
  */
-type View = "ledger" | "columns" | "cards";
+type View = "ledger" | "cards";
 
-const VIEWS: { id: View; label: string }[] = [
-  { id: "ledger", label: "Ledger" },
-  { id: "columns", label: "Columns" },
-  { id: "cards", label: "Cards" },
+function ViewListIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden>
+      <rect x="4.5" y="3.5" width="15" height="17" rx="3" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <rect x="7" y="6.2" width="10" height="2.4" rx="1.1" />
+      <rect x="7" y="10.8" width="10" height="2.4" rx="1.1" />
+      <rect x="7" y="15.4" width="10" height="2.4" rx="1.1" />
+    </svg>
+  );
+}
+
+function ViewGridIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden>
+      <rect x="4.5" y="3.5" width="15" height="17" rx="3" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      <rect x="6.8" y="6" width="4.4" height="4.4" rx="1" />
+      <rect x="12.8" y="6" width="4.4" height="4.4" rx="1" />
+      <rect x="6.8" y="13.2" width="4.4" height="4.4" rx="1" />
+      <rect x="12.8" y="13.2" width="4.4" height="4.4" rx="1" />
+    </svg>
+  );
+}
+
+const VIEWS: { id: View; label: string; icon: ReactNode }[] = [
+  { id: "ledger", label: "List", icon: <ViewListIcon /> },
+  { id: "cards", label: "Cards", icon: <ViewGridIcon /> },
 ];
 
 /*
@@ -45,14 +68,6 @@ const VIEWS: { id: View; label: string }[] = [
  *   tiles  a grid of icon, name, count. Browsing-first: the category is
  *          the thing you are choosing, not a filter on something else.
  */
-type Browse = "rail" | "menu" | "tiles";
-
-const BROWSE: { id: Browse; label: string }[] = [
-  { id: "rail", label: "Rail" },
-  { id: "menu", label: "Menu" },
-  { id: "tiles", label: "Tiles" },
-];
-
 /* "All" needs a mark too, or the first pill is the only bare one. */
 function AllIcon() {
   return (
@@ -104,15 +119,64 @@ function matchesQuery(team: Team, q: string): boolean {
   return hay.includes(q);
 }
 
-export function TeamIndex({
-  teams,
-  added,
-  verifiedOn,
-}: {
-  teams: Team[];
-  added: { date: string; count: number }[];
-  verifiedOn: string;
-}) {
+
+const AD_EVERY = 7;
+const SLOT_EVERY = 21;
+
+type ListingRow =
+  | { kind: "team"; team: Team }
+  | { kind: "ad"; slot: SponsorSlot; key: string }
+  | { kind: "slot"; key: string };
+
+function interleaveAds(teams: Team[], ads: SponsorSlot[]): ListingRow[] {
+  const pool = ads.length ? ads : houseSlots;
+  const out: ListingRow[] = [];
+  let n = 0;
+  teams.forEach((team, i) => {
+    out.push({ kind: "team", team });
+    const k = i + 1;
+    if (k % SLOT_EVERY === 0) {
+      out.push({ kind: "slot", key: `slot-${i}` });
+    } else if (k % AD_EVERY === 0) {
+      const slot = pool[(n + 1) % pool.length];
+      out.push({ kind: "ad", slot, key: `ad-${i}-${slot.id}` });
+      n += 1;
+    }
+  });
+  return out;
+}
+
+function ListingAd({ slot, as }: { slot: SponsorSlot; as: "row" | "card" }) {
+  return (
+    <a
+      className={as === "card" ? "idx-card idx-ad" : "index-ad"}
+      href={sponsorHref(slot, "rail")}
+      target="_blank"
+      rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
+    >
+      <span className="idx-ad-kicker">{en.sponsor.listingKicker}</span>
+      <span className="idx-ad-name">
+        {slot.mark ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="spon-chip-mark" src={slot.mark} alt="" width={16} height={16} />
+        ) : null}
+        {slot.name ?? "Sponsor"}
+      </span>
+      {slot.line ? <span className="idx-ad-line">{slot.line}</span> : null}
+    </a>
+  );
+}
+
+function ListingSlot({ as }: { as: "row" | "card" }) {
+  return (
+    <a className={as === "card" ? "idx-card idx-ad idx-ad-open" : "index-ad index-ad-open"} href="/sponsor">
+      <span className="idx-ad-kicker">{en.sponsor.takeSlot}</span>
+      <span className="idx-ad-name">{en.sponsor.putListing}</span>
+    </a>
+  );
+}
+
+export function TeamIndex({ teams }: { teams: Team[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -127,7 +191,6 @@ export function TeamIndex({
   const kindRaw = params.get("kind");
   const kindParam: "team" | "bot" | "all" = kindRaw === "bot" ? "bot" : kindRaw === "all" ? "all" : "team";
   const [view, setView] = useState<View>("ledger");
-  const [browse, setBrowse] = useState<Browse>("rail");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState<string | null>(null);
 
@@ -199,7 +262,12 @@ export function TeamIndex({
   });
   /* Newest matches the API default. The index has no dates of its own, so
      it mirrors the file order the API sorts on and falls back to name. */
-  const sorted = sortParam === "name" ? [...filtered].sort((a, b) => a.name.localeCompare(b.name)) : filtered;
+  const sorted = [...filtered].sort((a, b) => {
+    const feat = Number(!!b.featured) - Number(!!a.featured);
+    if (feat) return feat;
+    if (sortParam === "name") return a.name.localeCompare(b.name);
+    return String(b.addedAt ?? "").localeCompare(String(a.addedAt ?? "")) || a.slug.localeCompare(b.slug);
+  });
 
   /* One writer for every filter, so each one lands in the URL and the page
      stays shareable. "all" clears rather than encoding a default. */
@@ -209,7 +277,7 @@ export function TeamIndex({
     if (!next || next === "all" || (key === "sort" && next === "newest")) usp.delete(key);
     else usp.set(key, next);
     const qs = usp.toString();
-    router.replace(qs ? `${pathname}?${qs}#teams` : `${pathname}#teams`, { scroll: false });
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }
   const setSection = (next: string) => setParam("category", next);
 
@@ -223,16 +291,12 @@ export function TeamIndex({
     if (next === "team") usp.delete("kind");
     else usp.set("kind", next);
     const qs = usp.toString();
-    router.replace(qs ? `${pathname}?${qs}#teams` : `${pathname}#teams`, { scroll: false });
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }
 
   return (
     <section id="teams">
-      <div className="stats-strip">
-        <p className="stats-line">{`${en.home.counts(teamCount, botCount)} · verified ${verifiedOn}`}</p>
-        <Sparkline series={added} className="stat-spark" />
-      </div>
-
+      <SponsorTicker place="top" />
       <label className="search-wrap">
         <span className="sr-only">Search teams</span>
         <input
@@ -245,7 +309,6 @@ export function TeamIndex({
       </label>
 
       <div className="browse-pick">
-        <span className="browse-pick-label">{en.home.kindLabel}</span>
         {([
           ["team", en.home.kindTeams, teamCount],
           ["bot", en.home.kindBots, botCount],
@@ -263,23 +326,7 @@ export function TeamIndex({
         ))}
       </div>
 
-      <div className="browse-pick">
-        <span className="browse-pick-label">{en.home.browseLabel}</span>
-        {BROWSE.map((b) => (
-          <button
-            key={b.id}
-            type="button"
-            className={`browse-pick-btn${browse === b.id ? " is-on" : ""}`}
-            aria-pressed={browse === b.id}
-            onClick={() => setBrowse(b.id)}
-          >
-            {b.label}
-          </button>
-        ))}
-      </div>
-
-      {browse === "rail" ? (
-        <nav className="cat-rail" aria-label={en.home.categoriesAria}>
+      <nav className="cat-rail" aria-label={en.home.categoriesAria}>
           <ul className="cat-rail-track">
             {categoryOptions.map((option) => (
               <li key={option.value}>
@@ -297,40 +344,13 @@ export function TeamIndex({
             ))}
           </ul>
         </nav>
-      ) : null}
-
-      {browse === "tiles" ? (
-        <nav className="cat-tiles" aria-label={en.home.categoriesAria}>
-          {categoryOptions.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              className={`cat-tile${sectionParam === option.value ? " is-on" : ""}`}
-              aria-pressed={sectionParam === option.value}
-              onClick={() => setSection(option.value)}
-            >
-              <span className="cat-tile-icon" aria-hidden>{option.icon}</span>
-              <span className="cat-tile-name">{option.label}</span>
-              <span className="cat-tile-count">{option.count}</span>
-            </button>
-          ))}
-        </nav>
-      ) : null}
 
       <div className="index-header">
         <h2 className="section-title">
           {kindParam === "bot" ? en.home.indexTitleBots : kindParam === "all" ? en.home.indexTitleAll : en.home.indexTitle}
         </h2>
         <div className="filter-bar">
-          {browse === "menu" ? (
-            <Select
-              id="index-category"
-              label={en.home.filterCategory}
-              value={sectionParam}
-              options={categoryOptions}
-              onChange={setSection}
-            />
-          ) : null}
+          <div className="filter-selects">
           <Select
             id="index-integration"
             label={en.home.filterConnector}
@@ -346,75 +366,65 @@ export function TeamIndex({
             onChange={(next) => setParam("sort", next)}
             align="end"
           />
-          <span className="filter-views">
+          </div>
+          <span className="filter-views" role="group" aria-label="Listing view">
             {VIEWS.map((v) => (
               <button
                 key={v.id}
                 type="button"
-                className={`filter-chip${view === v.id ? " is-on" : ""}`}
+                className={`filter-chip filter-chip--icon${view === v.id ? " is-on" : ""}`}
                 aria-pressed={view === v.id}
+                aria-label={v.label}
+                title={v.label}
                 onClick={() => setView(v.id)}
               >
-                {v.label}
+                {v.icon}
               </button>
             ))}
           </span>
         </div>
       </div>
 
-      {view === "columns" ? (
-        <div className="idx-cols" role="table" aria-label={en.home.indexTitle}>
-          <div className="idx-colhead" role="row">
-            <span role="columnheader">{en.home.colTeam}</span>
-            <span role="columnheader">{en.home.colCategory}</span>
-            <span role="columnheader" className="idx-num">{en.home.colBots}</span>
-            <span role="columnheader">{en.home.colConnectors}</span>
-            <span role="columnheader"><span className="sr-only">{en.home.openTeam}</span></span>
-          </div>
-          {sorted.map((team) => (
-            <Link key={team.slug} href={hrefFor(team)} className="idx-colrow" role="row">
-              <span className="idx-colcell" role="cell">
-                <span className="idx-colname">{team.name}</span>
-                <span className="idx-coltag">{team.tagline}</span>
-              </span>
-              <span className="idx-colcat" role="cell">
-                {kindParam === "all" ? `${team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
-                {team.section}
-              </span>
-              <span className="idx-num" role="cell">{team.bots}</span>
-              <span className="idx-colconn" role="cell"><ConnectorRow names={team.connectors} size={15} /></span>
-              <span className="row-arrow" role="cell"><TeamArrow /></span>
-            </Link>
-          ))}
-        </div>
-      ) : view === "cards" ? (
+      {view === "cards" ? (
         <div className="idx-cards">
-          {sorted.map((team) => (
-            <Link key={team.slug} href={hrefFor(team)} className="idx-card">
+          {interleaveAds(sorted, houseSlots).map((row) =>
+            row.kind === "ad" ? (
+              <ListingAd key={row.key} slot={row.slot} as="card" />
+            ) : row.kind === "slot" ? (
+              <ListingSlot key={row.key} as="card" />
+            ) : (
+            <Link key={row.team.slug} href={hrefFor(row.team)} className="idx-card">
               <span className="idx-card-cat">
-                {kindParam === "all" ? `${team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
-                {team.section}
+                {kindParam === "all" ? `${row.team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
+                {row.team.section}
               </span>
-              <span className="idx-card-name">{team.name}</span>
-              <span className="idx-card-tag">{team.tagline}</span>
+              <span className="idx-card-name">{grokRecipeTitle(row.team.kind, row.team.name)}</span>
+              <span className="idx-card-tag">{row.team.tagline}</span>
               <span className="idx-card-foot">
-                <ConnectorRow names={team.connectors} size={15} />
-                <span className="idx-card-bots">{en.home.shape(team.bots, team.rooms.length)}</span>
+                <ConnectorRow names={row.team.connectors} size={15} />
+                <span className="idx-card-bots"><RosterShape bots={row.team.bots} rooms={row.team.rooms.length} routines={row.team.routines} /></span>
               </span>
             </Link>
-          ))}
+            ),
+          )}
         </div>
       ) : (
         <div className="team-table">
-          {sorted.map((team) => (
+          {interleaveAds(sorted, houseSlots).map((row) =>
+            row.kind === "ad" ? (
+              <ListingAd key={row.key} slot={row.slot} as="row" />
+            ) : row.kind === "slot" ? (
+              <ListingSlot key={row.key} as="row" />
+            ) : (
             <TeamExpandable
-              key={team.slug}
-              team={team}
+              key={row.team.slug}
+              team={row.team}
               variant="row"
-              open={open === team.slug}
-              onToggle={() => setOpen(open === team.slug ? null : team.slug)}
+              open={open === row.team.slug}
+              onToggle={() => setOpen(open === row.team.slug ? null : row.team.slug)}
             />
-          ))}
+            ),
+          )}
         </div>
       )}
     </section>
@@ -432,43 +442,43 @@ function TeamExpandable({
   open: boolean;
   onToggle: () => void;
 }) {
-  const verified = isVerified(team);
   const prompt = installerPrompt(team);
   const shellClass = variant === "card" ? "team-card" : "index-row";
 
   return (
     <article className={`${shellClass}${open ? " is-open" : ""}`}>
       <div className="index-head" onClick={onToggle} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onToggle(); } }}>
-        <button type="button" className="chevron" aria-expanded={open} aria-label={open ? "Collapse team" : "Expand team"} onClick={(e) => { e.stopPropagation(); onToggle(); }}>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
-            <path d={open ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"} />
-          </svg>
-        </button>
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+          <div className="index-titleline flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
             <Link href={hrefFor(team)} className="index-name" onClick={(e) => e.stopPropagation()}>
-              {team.name}
+              {grokRecipeTitle(team.kind, team.name)}
             </Link>
-            <span className="team-card-meta">{en.home.shape(team.bots, team.rooms.length)}</span>
+            <button type="button" className="chevron" aria-expanded={open} aria-label={open ? "Collapse team" : "Expand team"} onClick={(e) => { e.stopPropagation(); onToggle(); }}>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                <path d={open ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"} />
+              </svg>
+            </button>
+            <span className="team-card-meta"><RosterShape bots={team.bots} rooms={team.rooms.length} routines={team.routines} /></span>
           </div>
           <p className="index-tagline">{team.tagline}</p>
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
-            <ConnectorRow names={team.connectors} labeled size={16} />
+            <ConnectorRow names={team.connectors} size={16} />
             <span className="inline-flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
+              {team.featured ? <FeaturedChip /> : null}
               {team.fromXai ? <FromXaiChip /> : null}
-              {verified ? <VerifiedChip /> : null}
             </span>
           </div>
         </div>
+      </div>
         <Link
           href={hrefFor(team)}
           className="row-arrow row-arrow-link"
-          aria-label={`${en.home.openTeam}: ${team.name}`}
+          aria-label={`${en.home.viewFull(team.kind)}: ${grokRecipeTitle(team.kind, team.name)}`}
           onClick={(e) => e.stopPropagation()}
         >
+          <span className="row-arrow-text">{en.home.viewFull(team.kind)}</span>
           <TeamArrow />
         </Link>
-      </div>
       {open ? (
         <div className="index-body" onClick={(e) => e.stopPropagation()}>
           <ul>
@@ -478,13 +488,13 @@ function TeamExpandable({
                   <GrokBotMark size={17} animate className="mt-0.5" style={botMarkStyle(i)} />
                   <div className="min-w-0">
                     <p className="flex flex-wrap items-baseline gap-2 text-[0.92rem]" style={{ fontFamily: ledger.serif }}>
-                      {agent.name}
+                      {grokDisplayBotName(agent.name)}
                       <span className="bot-tag">{en.team.botTag}</span>
                     </p>
                     <p className="mt-0.5 text-[0.75rem] leading-snug" style={{ color: ledger.inkMuted }}>{agent.persona}</p>
                     {agent.connectors.length > 0 ? (
                       <div className="mt-1.5">
-                        <ConnectorRow names={agent.connectors} labeled size={15} />
+                        <ConnectorRow names={agent.connectors} size={15} />
                       </div>
                     ) : null}
                   </div>

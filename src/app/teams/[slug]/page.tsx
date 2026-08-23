@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
+import { grokRecipeTitle } from "@/lib/grok-names";
 import { notFound } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
-import { SiteFooter } from "@/components/SiteFooter";
-import { SiteMasthead } from "@/components/SiteMasthead";
+import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { Customize } from "@/components/team/Customize";
+import { WatchControl } from "@/components/ConversationStage";
+import { VerifiedChip } from "@/components/VerifiedChip";
+import { RosterShape } from "@/components/RosterShape";
 import { ledger } from "@/lib/ledger-theme";
 import { renderMarkdown } from "@/lib/markdown";
 import { en } from "@/lib/messages/en";
 import { getTeam, listTeams } from "@/lib/teams";
+import { isVerified } from "@/lib/types";
 import Link from "next/link";
-import { sectionSlug } from "@/lib/bot-icon";
 import { resolveConnector } from "@/lib/connectors";
-import { SponsorRail } from "@/components/SponsorRail";
 import { teamJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 
@@ -79,19 +81,37 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
   ) : null;
 
   return (
-    <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
+    <WingsSplit
+      hero={
+        <WingsHero
+          title={grokRecipeTitle(team.kind, team.name)}
+          kicker={(
+            <nav className="meta flex flex-wrap items-center justify-center gap-2" aria-label="Breadcrumb">
+              <span>{team.name}</span>
+              <span aria-hidden>/</span>
+              <Link href="/" className="accent-hover">{en.team.allTeams}</Link>
+            </nav>
+          )}
+        >
+          <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{team.tagline}</p>
+          {team.kind === "team" ? (
+            <div className="mt-4 flex flex-col items-center gap-3">
+              <VerifiedChip on={isVerified(team)} />
+              <RosterShape bots={team.bots} rooms={0} routines={team.routines} />
+              <WatchControl team={team} />
+            </div>
+          ) : (
+            <WatchControl team={team} />
+          )}
+        </WingsHero>
+      }
+    >
+    <>
       <JsonLd data={teamJsonLd(team)} />
-      <SiteMasthead />
-      <main className="rp-main wrap-data relative z-10 flex-1 pb-[var(--sec-y)] pt-10">
-        <nav className="mb-5 flex flex-wrap items-center gap-2 text-[0.62rem] uppercase tracking-[0.18em]" style={{ color: ledger.label }} aria-label="Breadcrumb">
-          <Link href="/#teams" className="accent-hover">{en.team.allTeams}</Link>
-          <span aria-hidden>/</span>
-          <Link href={`/?category=${sectionSlug(team.section)}#teams`} className="accent-hover">{team.section}</Link>
-        </nav>
+      <div className="rp-main">
         <Customize
           team={team}
           related={relatedNode}
-          extras={<SponsorRail campaign="team-page" />}
         >
           <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
             <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.section}</h2>
@@ -112,14 +132,14 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
                 {team.addedVia ? (
                   <>
                     {en.team.basedOn}{" "}
-                    <a className="accent-hover underline" href={team.addedVia} target="_blank" rel="noopener noreferrer">
+                    <a className="rp-secondary" href={team.addedVia} target="_blank" rel="noopener noreferrer">
                       {team.contributor}
                     </a>
                   </>
                 ) : team.contributor ? (
                   <>
                     {en.team.contributedBy}{" "}
-                    <a className="accent-hover underline" href={team.contributorUrl} target="_blank" rel="noopener noreferrer">
+                    <a className="rp-secondary" href={team.contributorUrl} target="_blank" rel="noopener noreferrer">
                       {team.contributor}
                     </a>
                   </>
@@ -128,24 +148,26 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
               </p>
             </section>
           ) : null}
-          <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-            <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.team.runYourself}</h2>
-            <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{en.team.runYourselfBody}</p>
-            <p className="mt-4 text-[0.8rem]">
+          <section className="run-bar">
+            <div className="run-bar-copy">
+              <h2>{en.team.runName(team.name)}</h2>
+              <p>{en.team.runYourselfBody}</p>
+            </div>
+            <div className="run-bar-act">
               <a
-                className="accent-hover underline"
+                className="rp-secondary"
                 href={`${site.github}/blob/main/teams/${team.slug}.md`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 {en.team.viewSource}
               </a>
-            </p>
+            </div>
           </section>
         </Customize>
 
-      </main>
-      <SiteFooter />
-    </div>
+      </div>
+    </>
+    </WingsSplit>
   );
 }

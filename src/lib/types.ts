@@ -4,6 +4,7 @@ export type TeamAgent = {
   reuse?: boolean;
   icon?: string;
   connectors: string[];
+  skills?: string[];
 };
 
 export type TeamRoom = {
@@ -30,6 +31,18 @@ export type TeamRoutine = {
  * status says whether it is a recipe or a format demo, and neither has to
  * do the other's job.
  */
+
+export type ConversationTurn = {
+  speaker: string;
+  /* Agent name as in the recipe, used to highlight the rail. */
+  speakerKey?: string;
+  role?: "user" | "agent";
+  text: string;
+  checks?: string[];
+  working?: { label: string; detail: string; state?: "work" | "done"; screen?: string };
+  fromBots?: { keys: string[]; text: string };
+};
+
 export type TeamKind = "bot" | "team";
 export type TeamStatus = "installable" | "example";
 
@@ -84,6 +97,13 @@ export type Team = {
      Grok Bot use-case gallery. Sourcing, never endorsement: xAI does not
      review, certify, or endorse anything on this shelf. */
   fromXai?: boolean;
+  /* One team can sit first on the index. Not a pack. */
+  featured?: boolean;
+  /* Optional staged group chat. Omit it and the page has no Watch
+     control. First-party recipes get a generated script at load if this
+     is empty. Contributor files stay quiet unless they author turns. */
+  conversation?: ConversationTurn[];
+  conversationByBot?: Record<string, ConversationTurn[]>;
 };
 
 export function isExample(team: Team): boolean {

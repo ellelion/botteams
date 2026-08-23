@@ -16,6 +16,7 @@ export type ApiTeam = {
   kind: string;
   status: string;
   fromXai: boolean;
+  featured: boolean;
   bots: number;
   addedAt: string | null;
   connectors: string[];
@@ -49,6 +50,7 @@ export function toApiTeam(team: Team): ApiTeam {
     kind: team.kind,
     status: team.status,
     fromXai: team.fromXai === true,
+    featured: team.featured === true,
     bots: team.bots,
     addedAt: team.addedAt ?? null,
     connectors: team.connectors,
@@ -104,12 +106,12 @@ export function applyFilters(teams: ApiTeam[], f: Filters): ApiTeam[] {
 
 export function sortTeams(teams: ApiTeam[], sort: string): ApiTeam[] {
   const copy = [...teams];
-  if (sort === "name") return copy.sort((a, b) => a.name.localeCompare(b.name));
+  if (sort === "name") return copy.sort((a, b) => Number(b.featured) - Number(a.featured) || a.name.localeCompare(b.name));
   if (sort === "oldest") {
-    return copy.sort((a, b) => String(a.addedAt ?? "").localeCompare(String(b.addedAt ?? "")) || a.slug.localeCompare(b.slug));
+    return copy.sort((a, b) => Number(b.featured) - Number(a.featured) || String(a.addedAt ?? "").localeCompare(String(b.addedAt ?? "")) || a.slug.localeCompare(b.slug));
   }
   // newest: undated teams sort last rather than pretending to be new.
-  return copy.sort((a, b) => String(b.addedAt ?? "").localeCompare(String(a.addedAt ?? "")) || a.slug.localeCompare(b.slug));
+  return copy.sort((a, b) => Number(b.featured) - Number(a.featured) || String(b.addedAt ?? "").localeCompare(String(a.addedAt ?? "")) || a.slug.localeCompare(b.slug));
 }
 
 export function normalizeSort(value: string | null, cursorMode: boolean): string {

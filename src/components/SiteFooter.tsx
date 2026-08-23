@@ -49,8 +49,8 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   const product: Item[] = [
-    { label: en.footer.teams, href: "/#teams" },
-    { label: en.footer.bots, href: "/?kind=bot#teams" },
+    { label: en.footer.teams, href: "/" },
+    { label: en.footer.bots, href: "/?kind=bot" },
     { label: en.footer.connectors, href: "/connectors" },
     { label: en.footer.sponsor, href: "/sponsor" },
   ];
@@ -71,19 +71,8 @@ export function SiteFooter() {
               <span className="foot-id-name">{en.wordmark}</span>
             </Link>
             <p className="foot-legal">
-              © {year} {site.company}. {en.footer.mit}. {en.footer.operated} {site.company}. {en.footer.notAffiliated}
+              © {year} {site.company}. {en.footer.mit}. {en.footer.operated} {site.company}.
             </p>
-            {/* Bottom of this pane, well clear of the wings. The words sit
-                beside the mark and never touch it. */}
-            <a
-              className="foot-grok"
-              href={site.grokHome}
-              rel="nofollow noopener noreferrer"
-              target="_blank"
-            >
-              <GrokLogomark className="foot-mark-grok" />
-              <span className="foot-mark-text">{en.footer.createdWithGrok}</span>
-            </a>
           </div>
 
           <div className="foot-cols">
@@ -125,6 +114,19 @@ export function SiteFooter() {
               </ul>
             </div>
           </div>
+        </div>
+        <div className="foot-meta">
+          <p className="foot-meta-note">{en.footer.notAffiliated}</p>
+          {/* Credit at the bottom of the footer, well clear of the wings. */}
+          <a
+            className="foot-grok"
+            href={site.grokHome}
+            rel="nofollow noopener noreferrer"
+            target="_blank"
+          >
+            <GrokLogomark className="foot-mark-grok" />
+            <span className="foot-mark-text">{en.footer.createdWithGrok}</span>
+          </a>
         </div>
       </div>
     </footer>
