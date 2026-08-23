@@ -22,9 +22,9 @@ export type RailPlan = {
 };
 
 export const RAIL_PLANS: readonly RailPlan[] = [
-  { interval: "1m", label: "1 month", amount: 2900, display: "$29", envKey: "STRIPE_PRICE_RAIL_1M" },
-  { interval: "3m", label: "3 months", amount: 6900, display: "$69", envKey: "STRIPE_PRICE_RAIL_3M" },
-  { interval: "6m", label: "6 months", amount: 9900, display: "$99", envKey: "STRIPE_PRICE_RAIL_6M" },
+  { interval: "1m", label: "1 month", amount: 150000, display: "$1,500", envKey: "STRIPE_PRICE_RAIL_1M" },
+  { interval: "3m", label: "3 months", amount: 400000, display: "$4,000", envKey: "STRIPE_PRICE_RAIL_3M" },
+  { interval: "6m", label: "6 months", amount: 750000, display: "$7,500", envKey: "STRIPE_PRICE_RAIL_6M" },
 ] as const;
 
 export function isRailInterval(value: unknown): value is RailInterval {

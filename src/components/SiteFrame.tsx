@@ -19,9 +19,9 @@ export function SiteFrame({ children }: { children: ReactNode }) {
             </div>
             {children}
           </main>
-          <SiteFooter />
         </div>
       </PageWithRails>
+      <SiteFooter />
     </div>
   );
 }

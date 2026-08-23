@@ -30,7 +30,7 @@ export const REJECT_COPY: Record<RejectKey, string> = {
   title_too_long: "Title must be 28 characters or fewer.",
   line_too_long: "The short description must be 52 characters or fewer.",
   image_not_a_mark: "Upload a simple mark, not a screenshot, a photo, or a stock ad.",
-  copy_not_plain: "Keep the wording as plain as the rest of the shelf.",
+  copy_not_plain: "Keep the wording as plain as the rest of the directory.",
   missing_field: "Title, short description, destination URL, and a mark are all required.",
 };
 

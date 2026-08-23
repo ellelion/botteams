@@ -1,20 +1,26 @@
 import { en } from "@/lib/messages/en";
 
+/** Exact `OfficialSeal` from prism `apps/web/components/listings/OfficialBadge.tsx`. */
 function OfficialSeal() {
   return (
-    <svg className="chip-featured-mark" viewBox="0 0 16 16" width="12" height="12" fill="none" aria-hidden>
+    <svg className="chip-featured-mark" viewBox="0 0 24 24" aria-hidden="true">
       <path
+        fill="none"
         stroke="currentColor"
-        strokeWidth="1.15"
-        d="M8 1.35 9.2 2.2l1.55-.35.75 1.4 1.5.55-.05 1.55 1.15 1.1-1.15 1.1.05 1.55-1.5.55-.75 1.4-1.55-.35L8 14.65l-1.2-.85-1.55.35-.75-1.4-1.5-.55.05-1.55-1.15-1.1 1.15-1.1-.05-1.55 1.5-.55.75-1.4 1.55.35L8 1.35z"
-      />
-      <path
-        stroke="currentColor"
-        strokeWidth="1.35"
-        strokeLinecap="round"
+        strokeWidth="1.7"
         strokeLinejoin="round"
-        d="M5.15 8.2 7 10.05l3.85-3.85"
+        d="M12 2.6l2.2 1.7 2.7-.2.9 2.6 2.5 1.2-.6 2.7 1.7 2.1-1.7 2.1.6 2.7-2.5 1.2-.9 2.6-2.7-.2-2.2 1.7-2.2-1.7-2.7.2-.9-2.6-2.5-1.2.6-2.7L2.6 12l1.7-2.1-.6-2.7 2.5-1.2.9-2.6 2.7.2L12 2.6z"
       />
+      <g transform="translate(12 12) scale(1.22) translate(-12 -12)">
+        <path
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M8.6 12.2l2.3 2.3 4.5-5"
+        />
+      </g>
     </svg>
   );
 }

@@ -10,6 +10,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  /* The default Next.js N sits bottom-left and covers the mobile
+     sponsored rail label. Hide it; errors still overlay. */
+  devIndicators: false,
 };
 
 export default nextConfig;
