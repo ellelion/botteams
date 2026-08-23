@@ -271,6 +271,43 @@ export const en = {
     fieldMark: "Mark",
     emptyPlacements:
       "The connect-first slot and the promoted team stay empty until there is a buyer, and a promoted team has to be a recipe that actually ships. We will not list an ad as a team.",
+    pageH1: "Reach people standing up a Grok Bot team",
+    answer: (
+      teams: number,
+      bots: number,
+      slots: number,
+      house: number,
+      open: number,
+      asOf: string,
+    ) =>
+      `botteams.ai is a live directory of ${teams} named teams and ${bots} one-job Bots you paste into Grok Bot. Each team names the connectors to connect first, so a listing sits next to the tools an operator is about to pick. ${slots} rail slots. ${house} house listings. ${open} open. Checked ${asOf}.`,
+    factsTitle: "The directory today",
+    factTeams: (n: number) =>
+      `${n} named teams. Two to six Bots, one group chat, standing routines.`,
+    factBots: (n: number, fromXai: number) =>
+      `${n} one-job Bots. ${fromXai} written up from jobs xAI publishes in its use-case gallery.`,
+    factSlots: (open: number, total: number) =>
+      `${open} of ${total} rail slots open.`,
+    factConnectors: (n: number, asOf: string) =>
+      `${n} connectors on the catalog page, snapshot checked ${asOf}.`,
+    placementPrice: "$1,500 / 1 month. $4,000 / 3 months. $7,500 / 6 months. One-time, card on Stripe.",
+    faqTitle: "Before you ask",
+    faqPriceQ: "How is a slot priced?",
+    faqPriceA:
+      "$1,500 for one month, $4,000 for three months, $7,500 for six months. One-time. Stripe takes the card. Then a form and an automated review. A pass goes live on the rail the same day.",
+    faqMonthQ: "Can I test one month?",
+    faqMonthA:
+      "Yes. The shortest term is one month at $1,500, prepaid. Three months is $4,000 and six months is $7,500. These are not subscriptions. The term runs from the day you pay. There is no mid-term cancel.",
+    faqShownQ: "Why twelve slots if house listings already sit on the rail?",
+    faqShownA:
+      "Twelve is the cap, and house listings count. Skillselion and Agent Plugins Directory take two of those twelve. Every live listing, house or paid, is on the rail. There is no off-screen rotation of extras.",
+    faqRefuseQ: "What do you not accept?",
+    faqRefuseA:
+      "No competing directories of Grok Bot teams or Bots. No crypto, no trading signals, no lead-generation. Digital products only, with a public URL, not a shortener. The listing has to be a tool a Bot could use. This is not general display advertising.",
+    faqCopyQ: "Who writes the copy?",
+    faqCopyA:
+      "You do. After you pay, a form asks for the title, the one line, the URL, and a mark. An automated review checks a closed list, up to three times. A pass goes live the same day. After three fails, our team reviews it. We may edit the one-liner after it is live so it reads like the rest of the directory.",
+    updated: (asOf: string) => `Last updated ${asOf}.`,
   },
   docs: {
     title: "Team spec",

@@ -59,20 +59,22 @@ export async function SponsorRail({
       className={side === "stack" ? "side-rail side-rail--stack" : `side-rail side-rail--${side}`}
       aria-label={en.sponsor.railTitle}
     >
-      <p className="side-rail-label" style={{ color: ledger.accentText }}>
-        {en.sponsor.railTitle}
-      </p>
-      <ul className="side-rail-list">
-        {slots.map((slot) => (
-          <SlotRow key={slot.id} slot={slot} campaign={campaign} />
-        ))}
-      </ul>
-      <AddYours open={open} total={SPONSOR_SLOTS_TOTAL} />
-      {side === "stack" ? (
-        <p className="mt-3 text-[0.72rem]" style={{ color: ledger.inkFaint }}>
-          {en.sponsor.railCta(filled, SPONSOR_SLOTS_TOTAL)}
+      <div className="side-rail-stick">
+        <p className="side-rail-label" style={{ color: ledger.accentText }}>
+          {en.sponsor.railTitle}
         </p>
-      ) : null}
+        <ul className="side-rail-list">
+          {slots.map((slot) => (
+            <SlotRow key={slot.id} slot={slot} campaign={campaign} />
+          ))}
+        </ul>
+        <AddYours open={open} total={SPONSOR_SLOTS_TOTAL} />
+        {side === "stack" ? (
+          <p className="mt-3 text-[0.72rem]" style={{ color: ledger.inkFaint }}>
+            {en.sponsor.railCta(filled, SPONSOR_SLOTS_TOTAL)}
+          </p>
+        ) : null}
+      </div>
     </aside>
   );
 }

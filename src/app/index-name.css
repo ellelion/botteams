@@ -1,0 +1,12 @@
+/* Overrides .index-name in globals.css (that file is locked by a hook). */
+.index-name {
+  font-weight: 500;
+}
+
+/* Prism .sw-official svg, one step up from Skillselion’s 12px. */
+.chip-featured-mark {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  display: block;
+}
