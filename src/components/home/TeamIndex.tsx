@@ -502,7 +502,7 @@ function TeamExpandable({
               </li>
             ))}
           </ul>
-          <div className="mt-3">
+          <div className="index-copy">
             <CopyInstallerButton text={prompt} />
           </div>
         </div>

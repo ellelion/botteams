@@ -6,7 +6,9 @@ export const en = {
   h1: "Grok Bot teams directory",
   eyebrow: "Grok Bot teams",
   answer:
-    "botteams.ai is a directory of teams and Bots you paste into Grok Bot. Each team is named Bots, a group chat, and routines. Use them at work, in a business, or for everyday life. Copy one installer prompt. Nothing is installed on this site.",
+    "botteams.ai is a directory of teams and Bots you paste into Grok Bot. Each team is named Bots, a group chat, and routines.",
+  answerUse:
+    "Use them at work, in a business, or for everyday life. Copy one installer prompt. Nothing is installed on this site.",
   onRamp: "Or start with one Bot.",
   notAffiliated: "Not affiliated with xAI.",
   share: {
@@ -264,6 +266,7 @@ export const en = {
     offerRow: "Listing row",
     offerRowHint: "The sponsored row in the directory.",
     getStarted: "Get started",
+    mailCta: "Mail us",
     termMonth: {
       "1m": "$1,500 / month",
       "3m": "$1,333 / month",

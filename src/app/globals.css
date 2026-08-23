@@ -442,20 +442,10 @@ body {
   }
 }
 
-/* Phones read the homepage as one idea per screen: each beat is a viewport
-   panel with a gentle snap stop. `proximity`, not `mandatory`. Mandatory
-   fights the user on long pages and traps flick-scrolls. Phones only; the
-   desktop split-screen wants a continuous column beside the pinned index. */
-@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-snap-type: y proximity;
-  }
-
-  .story-beat {
-    scroll-snap-align: start;
-    scroll-margin-top: var(--masthead-h);
-  }
-}
+/* Do not scroll-snap the document on phones. Proximity snap on `.story-beat`
+   (the hero, and the same class on every team page) pulls a short flick
+   back to the top of that block. On a real device that reads as the page
+   jumping instead of sliding. Native momentum scrolling is the point. */
 
 /* Wings emblem: blurred at rest, HD crossfades in on hover. */
 .wings-emblem .wings-hd,
@@ -899,9 +889,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 /* The index search matches the connector search: a filled pill field,
    not a hairline underline sitting on top of a row of pills. */
-.search-wrap { display: block; margin-bottom: 14px; }
+.search-wrap { display: block; margin-top: 16px; margin-bottom: 14px; }
 @media (max-width: 639px) {
-  .search-wrap { margin-bottom: 8px; }
+  .search-wrap { margin-top: 32px; margin-bottom: 8px; }
   .index-header .section-title { display: none; }
   .cat-rail { margin-bottom: 10px; }
   .hero-stats { margin-top: 0.5rem; }
@@ -1193,6 +1183,11 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   flex: none;
 }
 .index-body { padding: 4px 0 16px 0; }
+.index-copy {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
 @media (max-width: 640px) {
   .index-body { padding-left: 0; }
   .index-row { grid-template-columns: minmax(0, 1fr); }
@@ -1200,11 +1195,19 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .row-arrow-link {
     grid-column: 1;
     grid-row: auto;
-    justify-self: start;
+    position: static;
+    top: auto;
+    width: 100%;
+    justify-content: flex-end;
+    justify-self: stretch;
     align-self: start;
+    color: var(--accent-text);
     box-shadow: none;
     background: transparent;
     padding: 8px 0 0;
+  }
+  .row-arrow-link .row-arrow-text {
+    color: var(--accent-text);
   }
   .index-titleline { padding-right: 0; }
 }
@@ -1855,6 +1858,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 10px 12px;
 }
 .cz-panel {
@@ -2212,6 +2216,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 .spon-hero-cta {
   margin-top: 22px;
+}
+.spon-ask-cta {
+  margin-top: 28px;
+  min-height: 44px;
 }
 
 .spon-stage-sec {
@@ -3278,21 +3286,28 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   bottom: 0;
   border-top-width: 1px;
 }
+.spon-mq-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 10px;
+  gap: 8px;
+}
 .spon-mq-label {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
+  position: static;
+  flex: none;
   z-index: 2;
   display: flex;
   align-items: center;
-  padding: 0 10px 0 12px;
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
+  padding: 0;
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
-  background: var(--page);
-  box-shadow: 10px 0 12px var(--page);
+  background: transparent;
+  box-shadow: none;
 }
 .spon-mq-viewport {
   min-width: 0;
@@ -3303,7 +3318,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   justify-content: center;
   width: 100%;
   gap: 8px;
-  padding-left: 92px;
+  padding-left: 16px;
   padding-right: 16px;
   animation: none;
 }
@@ -3364,6 +3379,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
+  justify-content: center;
+  text-align: center;
   gap: 8px 12px;
   padding: 12px 0;
   margin: 0;
@@ -3376,7 +3393,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .idx-card.idx-ad {
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 4px;
   padding: 14px;
   border: 1px dashed var(--line);
