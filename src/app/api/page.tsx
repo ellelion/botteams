@@ -9,7 +9,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "API",
   description:
-    "Public read-only JSON API for the Grok Bot Teams shelf. No key, no auth, CORS open. Filter, paginate, or sync the whole catalog.",
+    "Public read-only JSON API for the Grok Bot Teams directory. No key, no auth, CORS open. Filter, paginate, or sync the whole catalog.",
   alternates: { canonical: `${site.url}/api` },
 };
 
@@ -29,7 +29,7 @@ export default function ApiDocsPage() {
       hero={
         <WingsHero title="API">
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-            Every team on this shelf is readable as JSON. No key, no account, no rate limit worth mentioning. CORS is open,
+            Every team on this directory is readable as JSON. No key, no account, no rate limit worth mentioning. CORS is open,
             so a browser or an agent can call it directly. {teamCount} teams and {botCount} bots today.
           </p>
         </WingsHero>

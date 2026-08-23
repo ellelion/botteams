@@ -2,7 +2,7 @@
 
 Install a Grok Bot team, not a bot.
 
-A public shelf of company teams for Grok Bot. Pick a team, copy one installer
+A public directory of company teams for Grok Bot. Pick a team, copy one installer
 prompt, paste it into Grok Bot. It creates the named Bots, the group chat, and
 proposes the routines for you to confirm.
 
@@ -11,7 +11,7 @@ be on your Grok Bot account already.
 
 Ellelion LLC · info@ellelion.com · MIT · **Not affiliated with xAI.**
 
-## The shelf is a repo
+## The directory is a repo
 
 A team is one markdown file in [`teams/`](./teams). Front matter names the Bots,
 the group chat, the routines, and the connectors. The installer prompt is
@@ -76,13 +76,13 @@ Per team, in the team file: `connector_modes` and `suggest`. See
 No key, no auth, CORS open.
 
 ```bash
-curl "https://grokbotteams.ai/api/teams?integration=Stripe&limit=5"
-curl "https://grokbotteams.ai/api/bots?category=Sales"
-curl "https://grokbotteams.ai/api/teams?limit=100"
-curl "https://grokbotteams.ai/api/teams?cursor=start&limit=100"
+curl "https://botteams.ai/api/teams?integration=Stripe&limit=5"
+curl "https://botteams.ai/api/bots?category=Sales"
+curl "https://botteams.ai/api/teams?limit=100"
+curl "https://botteams.ai/api/teams?cursor=start&limit=100"
 ```
 
-Full contract at [`/api`](https://grokbotteams.ai/api). There is no per-team
+Full contract at [`/api`](https://botteams.ai/api). There is no per-team
 endpoint by design; filter the collection instead.
 
 ## Develop
@@ -105,7 +105,7 @@ The folder, the route, the type, and the copy all say team. There is no
 older spelling kept alive as an alias: nothing had shipped to anyone, so a
 second name would only have been a second thing to maintain.
 
-Canonical domain: grokbotteams.ai. `grokbotteam.ai` (no s) is a type-in that
+Canonical domain: botteams.ai. `grokbotteam.ai` (no s) is a type-in that
 should 301 when DNS exists. This repo does not buy or configure DNS.
 
 ## Stack

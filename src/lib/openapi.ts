@@ -26,7 +26,7 @@ const TEAM_PROPERTIES: Record<keyof ApiTeam, Schema> = {
   category: str("Section the team files under, and the value the category filter matches."),
   kind: { type: "string", enum: ["bot", "team"], description: "bot is one Bot doing one job with no group chat. team is two to six Bots in one group chat. The two never appear in the same collection." },
   status: { type: "string", enum: ["installable", "example"], description: "installable is a recipe to use. example is a format demonstration." },
-  fromXai: { type: "boolean", description: "True when the recipe is our write-up of a job published in xAI's own Grok Bot use-case gallery. Sourcing, not endorsement: xAI does not review or certify anything on this shelf." },
+  fromXai: { type: "boolean", description: "True when the recipe is our write-up of a job published in xAI's own Grok Bot use-case gallery. Sourcing, not endorsement: xAI does not review or certify anything on this directory." },
   featured: { type: "boolean", description: "True when this team is pinned first on the public index." },
   bots: { type: "integer", minimum: 1, description: "Number of Bots. Always equal to agents.length, and always 1 on a bot." },
   addedAt: { type: ["string", "null"], format: "date-time", description: "Date stated in the team file. Never inferred. Null when the file does not state one, and those sort last." },
@@ -76,7 +76,7 @@ const TEAM_PROPERTIES: Record<keyof ApiTeam, Schema> = {
   scoutedBy: nullableStr("Who found the team, when that is not the contributor."),
   sourceUrl: nullableStr("The post the team was based on."),
   url: nullableStr("Canonical homepage for the team, when it has one."),
-  detailUrl: str("Page for this team on the shelf."),
+  detailUrl: str("Page for this team on the directory."),
 };
 
 /* Every filter the route echoes back, keyed so a new filter cannot be
@@ -93,7 +93,7 @@ export type ApiParam = { name: string; description: string; schema: Schema };
 /* One list, read by the spec and by the human page at /api. */
 export const PARAMS: ApiParam[] = [
   { name: "q", description: "Free text. Matches name, tagline, category, slug, connector, Bot name, contributor, and the installer prompt.", schema: { type: "string" } },
-  { name: "category", description: "Exact category, case-insensitive. One of the sections listed on the shelf.", schema: { type: "string" } },
+  { name: "category", description: "Exact category, case-insensitive. One of the sections listed on the directory.", schema: { type: "string" } },
   { name: "integration", description: "Exact connector, case-insensitive and alias-aware. Calendar and Google Calendar match the same teams.", schema: { type: "string" } },
   { name: "page", description: "Page number, 1-based. Ignored in cursor mode.", schema: { type: "integer", minimum: 1, default: 1 } },
   { name: "limit", description: `Teams per page. Values outside the range clamp rather than error.`, schema: { type: "integer", minimum: 1, maximum: MAX_LIMIT, default: DEFAULT_LIMIT } },
@@ -212,7 +212,7 @@ export function buildOpenApiDocument(): Record<string, unknown> {
     info: {
       title: `${site.name} API`,
       version: "1.0.0",
-      summary: "Read the public shelf of Grok Bot teams as JSON.",
+      summary: "Read the public directory of Grok Bot teams as JSON.",
       description: [
         "A team is a recipe, not a bot: named Bots, one group chat where the recipe has one, standing routines, and the connectors the account needs first.",
         "",

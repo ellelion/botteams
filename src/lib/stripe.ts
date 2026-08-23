@@ -22,7 +22,7 @@ export function stripe(): Stripe {
   if (!client) {
     client = new Stripe(key, {
       apiVersion: STRIPE_API_VERSION,
-      appInfo: { name: "grokbotteams", url: "https://grokbotteams.ai" },
+      appInfo: { name: "grokbotteams", url: "https://botteams.ai" },
     });
   }
   return client;

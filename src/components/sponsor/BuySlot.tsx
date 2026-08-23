@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { RAIL_PLANS, type RailInterval } from "@/lib/rail";
 import { en } from "@/lib/messages/en";
 
@@ -58,7 +59,13 @@ export function BuySlot({ soldOut }: { soldOut: boolean }) {
           </button>
         ))}
       </div>
-      <p className="spon-fine">{en.sponsor.buyFine}</p>
+      <p className="spon-fine">
+        By paying you confirm you are 18 or older and agree to the{" "}
+        <Link className="underline" href="/terms">Terms</Link>
+        {" "}and the{" "}
+        <Link className="underline" href="/privacy">Privacy policy</Link>
+        . Stripe takes the card on their page. A paid row is a paid placement. It is not Verified, it is not a team, and it is not an endorsement.
+      </p>
       {error ? <p className="spon-error" role="alert">{error}</p> : null}
     </div>
   );

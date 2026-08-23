@@ -42,7 +42,7 @@ suggest:
 Vendor Portal Operator is one Bot, not a company team. It does the job above and stops at every point where a human has to decide.
 
 This recipe is our write-up of a job xAI publishes in its [Grok Bot use-case gallery](https://x.ai/bot/use-cases).
-The title and the category are theirs. The Bot, the connectors, the modes and the standing instructions are ours, and xAI does not review, certify, or endorse anything on this shelf.
+The title and the category are theirs. The Bot, the connectors, the modes and the standing instructions are ours, and xAI does not review, certify, or endorse anything on this directory.
 
 ## Connectors
 

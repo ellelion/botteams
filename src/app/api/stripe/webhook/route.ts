@@ -1,6 +1,7 @@
 import type Stripe from "stripe";
 import { databaseUrl } from "@/lib/db";
 import { upsertPaidSession } from "@/lib/rail-db";
+import { isRailSessionMeta } from "@/lib/rail";
 import { stripe } from "@/lib/stripe";
 import { site } from "@/lib/site";
 
@@ -67,7 +68,7 @@ export async function POST(request: Request) {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    if (session.metadata?.brand === "grokbotteams" && session.metadata?.placement === "side-rail") {
+    if (isRailSessionMeta(session.metadata)) {
       if (!databaseUrl()) {
         console.error("[stripe-webhook] DATABASE_URL missing; cannot store payment", session.id);
         return Response.json({ error: "Database is not configured." }, { status: 503 });

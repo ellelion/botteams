@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Grok Bot Teams is a public shelf of teams and Bots for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
+    "Grok Bot Teams is a public directory of teams and Bots for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
   alternates: { canonical: `${site.url}/about` },
 };
 
@@ -14,7 +14,7 @@ export default function AboutPage() {
   return (
     <PageShell
       title="About"
-      lead={`${site.company} operates ${site.name}, a public shelf of teams and Bots for Grok Bot. Not affiliated with xAI.`}
+      lead={`${site.company} operates ${site.name}, a public directory of teams and Bots for Grok Bot. Not affiliated with xAI.`}
     >
       <Block title="What this is">
         <p>
