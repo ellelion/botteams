@@ -1,7 +1,7 @@
 import { SPONSOR_SLOTS_TOTAL } from "@/data/sponsors";
 import { databaseUrl } from "@/lib/db";
 import { getRailInventory } from "@/lib/rail-inventory";
-import { RAIL_PLANS, isRailInterval, railPlan } from "@/lib/rail";
+import { RAIL_BRAND, RAIL_PLACEMENT, RAIL_PLANS, isRailInterval, railPlan } from "@/lib/rail";
 import { railIntegrationIdentifier, railPriceId, stripe } from "@/lib/stripe";
 import { site } from "@/lib/site";
 
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
       line_items: [{ price, quantity: 1 }],
       success_url: `${origin}/sponsor/setup?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/sponsor`,
-      metadata: { brand: "grokbotteams", placement: "side-rail", interval },
+      metadata: { brand: RAIL_BRAND, placement: RAIL_PLACEMENT, interval },
       integration_identifier: railIntegrationIdentifier(),
       ...(email ? { customer_email: email } : {}),
     });

@@ -11,7 +11,18 @@ export function organizationJsonLd() {
     url: site.url,
     email: site.email,
     description: site.entity,
-    foundingLocation: { "@type": "Place", name: "Wyoming, USA", address: { "@type": "PostalAddress", addressRegion: "WY", addressCountry: "US" } },
+    foundingLocation: {
+      "@type": "Place",
+      name: "Wyoming, USA",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "30 N Gould St Ste R",
+        addressLocality: "Sheridan",
+        addressRegion: "WY",
+        postalCode: "82801",
+        addressCountry: "US",
+      },
+    },
     logo: { "@type": "ImageObject", url: `${site.url}/brand/wings.webp`, width: 640, height: 640 },
     sameAs: [site.github],
     parentOrganization: { "@type": "Organization", name: site.company, url: "https://ellelion.com" },
@@ -49,7 +60,7 @@ export function teamListJsonLd(teams: Team[]) {
   };
 }
 
-/* One shape, two paths. The kind decides which shelf the item lives on,
+/* One shape, two paths. The kind decides which directory the item lives on,
    so the canonical URL follows it rather than being passed in. */
 function itemJsonLd(team: Team) {
   return {

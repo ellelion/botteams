@@ -17,7 +17,7 @@ Before you open a pull request:
 - **It is a team, not a bot.** Two to six Bots with distinct jobs and one
   group chat. A single Bot is not a team.
 - **It is not an ad.** A team that exists to sell one product will be closed.
-  Sponsorship is a separate thing: see [/sponsor](https://grokbotteams.ai/sponsor).
+  Sponsorship is a separate thing: see [/sponsor](https://botteams.ai/sponsor).
 - **Guardrails are explicit.** If a Bot touches money, mail, or production,
   the persona says what it will not do. "Drafts only, never sends" is the
   house style for a reason.
@@ -66,7 +66,7 @@ Body prose is optional. It renders under the roster.
 | `contributor_url` | Your profile. Defaults to `github.com/<handle>`. |
 | `scouted_by` | Whoever found it, when that is not you. |
 | `added_via` | URL of the post the team came from. Shows as "Based on this post by". |
-| `url` | Canonical homepage for the team. Must be unique across the shelf. |
+| `url` | Canonical homepage for the team. Must be unique across the directory. |
 | `integration_urls` | Map of connector name to URL. Names must be connectors on this team. |
 
 ### Customize inputs
@@ -126,7 +126,7 @@ documented cap on a team as a whole, so do not invent one.
 
 `from_xai: true` marks a recipe as our write-up of a job xAI publishes in
 its [use-case gallery](https://x.ai/bot/use-cases). It shows a **From xAI**
-chip that links to the source. It is a badge on a card, not a shelf: a bot
+chip that links to the source. It is a badge on a card, not a directory claim: a bot
 is a bot whether or not we sourced it. Never write copy that implies xAI
 reviewed, certified, or endorsed anything here.
 
@@ -165,6 +165,6 @@ not on the team.
 
 ## Contributing by post
 
-Not live yet. There is no shelf handle to tag, so a pull request is the only
+Not live yet. There is no directory handle to tag, so a pull request is the only
 way in today. The intended flow is written up in
 [`docs/x-mention-bot.md`](./docs/x-mention-bot.md).

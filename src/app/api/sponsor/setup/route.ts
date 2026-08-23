@@ -13,6 +13,7 @@ import {
 import { getRailInventory } from "@/lib/rail-inventory";
 import { buyerReasons, deterministicRejects, normalizeHref, publicUrlReject, reviewListing } from "@/lib/rail-review";
 import { storeRailMark } from "@/lib/rail-upload";
+import { isRailSessionMeta } from "@/lib/rail";
 import { site } from "@/lib/site";
 import { stripe } from "@/lib/stripe";
 
@@ -38,7 +39,7 @@ async function loadPaidPayment(sessionId: string) {
   if (existing) return existing;
   const session = await stripe().checkout.sessions.retrieve(sessionId);
   if (session.payment_status !== "paid") return null;
-  if (session.metadata?.brand !== "grokbotteams" || session.metadata?.placement !== "side-rail") {
+  if (!isRailSessionMeta(session.metadata)) {
     return null;
   }
   return upsertPaidSession(session);

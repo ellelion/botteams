@@ -401,7 +401,7 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     : [];
 
   const exampleBanner = team.status === "example"
-    ? ["NOTE: This is an EXAMPLE team from the public shelf. Use it to learn the format.", "Do not treat it as a production company recipe.", ""]
+    ? ["NOTE: This is an EXAMPLE team from the public directory. Use it to learn the format.", "Do not treat it as a production company recipe.", ""]
     : [];
 
   return [

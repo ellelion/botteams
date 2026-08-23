@@ -2,14 +2,14 @@
 
 **Status: not implemented. There is no handle yet.**
 
-The shelf has no X account, so nothing on the site tells anyone to tag one.
+The directory has no X account, so nothing on the site tells anyone to tag one.
 This note is the design, kept so the work is a build rather than a decision
 when a handle exists.
 
 ## Flow
 
 1. Someone posts a description of a Grok Bot setup that reads like a team.
-2. They reply, tagging the shelf handle.
+2. They reply, tagging the directory handle.
 3. A worker reads the thread and drafts a team file:
    - `added_via` is the post URL.
    - `scouted_by` is whoever tagged, when that is not the author.
@@ -26,7 +26,7 @@ when a handle exists.
 - A draft is a pull request, never a direct commit. A mention is a
   suggestion, not authorisation to publish.
 - A post is not a run. Anything scouted lands as `status: example` until a
-  human confirms it works, because the shelf's claim is that these recipes
+  human confirms it works, because the directory's claim is that these recipes
   were run.
 - Never invent `integration_urls` or a connector the post did not name.
 - Reply once. No follow-ups, no unsolicited mentions.

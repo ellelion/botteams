@@ -13,6 +13,23 @@
 export const RAIL_INTERVALS = ["1m", "3m", "6m"] as const;
 export type RailInterval = (typeof RAIL_INTERVALS)[number];
 
+/* Checkout, webhook, and setup must agree on these or a paid session
+   is silently dropped. */
+export const RAIL_BRAND = "grokbotteams";
+export const RAIL_PLACEMENT = "side-rail";
+
+export type RailSessionMeta = {
+  brand: typeof RAIL_BRAND;
+  placement: typeof RAIL_PLACEMENT;
+  interval?: string;
+};
+
+export function isRailSessionMeta(
+  metadata: { brand?: string; placement?: string; interval?: string } | null | undefined,
+): metadata is RailSessionMeta {
+  return metadata?.brand === RAIL_BRAND && metadata?.placement === RAIL_PLACEMENT;
+}
+
 export type RailPlan = {
   interval: RailInterval;
   label: string;

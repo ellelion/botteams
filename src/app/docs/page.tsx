@@ -26,7 +26,7 @@ export default function DocsPage() {
         <h2 className="mt-2 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Fields</h2>
         <table className="spec-table mt-4">
           <tbody>
-            <tr><th><code>name</code></th><td>Team title on the shelf.</td></tr>
+            <tr><th><code>name</code></th><td>Team title on the directory.</td></tr>
             <tr><th><code>tagline</code></th><td>One line for the job of the team.</td></tr>
             <tr><th><code>bots</code></th><td>Count of Bots in the team. Must match the bots list length.</td></tr>
             <tr><th><code>section</code></th><td>Sidebar section name the human creates in Grok Bot.</td></tr>
@@ -60,14 +60,14 @@ export default function DocsPage() {
             A{" "}
             <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.routines} rel="nofollow noopener noreferrer">routine</a>
             {" "}tells one Bot when to run a workflow. One Bot can own <strong>up to 50 routines</strong>, and Grok Bot keeps the
-            20 most recent runs of each. There is no documented cap on a team as a whole, so this shelf does not invent one.
+            20 most recent runs of each. There is no documented cap on a team as a whole, so this directory does not invent one.
           </li>
         </ul>
 
         <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Two shapes</h2>
         <p className="measure mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           A <strong>bot</strong> is one Bot doing one job. A <strong>team</strong> is two to six Bots in one group chat. They
-          are different files in different folders, and the shelf never adds them up into a single count, because a recipe
+          are different files in different folders, and the directory never adds them up into a single count, because a recipe
           with no group chat is not a team.
         </p>
         <table className="spec-table mt-5">
@@ -88,7 +88,7 @@ export default function DocsPage() {
           A <strong>From xAI</strong> chip means the job is our write-up of one xAI publishes in its{" "}
           <a className="accent-hover underline underline-offset-2" href={XAI_USE_CASE_GALLERY} rel="nofollow noopener noreferrer">Grok Bot use-case gallery</a>.
           It is sourcing and nothing more. It is not a certification, it is not Verified, and xAI does not review, endorse, or
-          endorse anything on this shelf. The title and the category are theirs. The Bot, the connectors, the modes and the
+          endorse anything on this directory. The title and the category are theirs. The Bot, the connectors, the modes and the
           standing instructions are ours.
         </p>
 
@@ -109,7 +109,7 @@ export default function DocsPage() {
           <p>A bot installer creates one Bot and its routines. It never asks for a group chat or a sidebar section, because neither means anything for a single Bot.</p>
           <p>Sidebar sections are a human action. In Grok Bot, use Move to, then New section, and name the section exactly as the team lists it.</p>
           <p>Skills cannot be attached at Bot create time. A team may point at references such as the <a className="accent-hover underline underline-offset-2" href={STRIPE_BEST_PRACTICES} rel="nofollow noopener">stripe-best-practices skill on Skillselion</a> or a plugin in the <a className="accent-hover underline underline-offset-2" href={APD_HOME} rel="nofollow noopener">Agent Plugins Directory</a>. Those are named destinations the team expects, not installs this site performs.</p>
-          <p>Uninstall is sidebar delete. Remove the Bots and group chats in Grok Bot. There is no remote uninstall from grokbotteams.ai.</p>
+          <p>Uninstall is sidebar delete. Remove the Bots and group chats in Grok Bot. There is no remote uninstall from botteams.ai.</p>
         </div>
     </WingsSplit>
   );

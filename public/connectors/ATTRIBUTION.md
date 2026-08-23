@@ -1,6 +1,6 @@
 # Connector marks
 
-Brand marks used to identify Grok Bot connectors on this shelf. Each mark is
+Brand marks used to identify Grok Bot connectors on this directory. Each mark is
 the property of its respective owner and is used here for identification only.
 Grok Bot Teams is operated by Ellelion LLC and is not affiliated with xAI or
 with any connector vendor.

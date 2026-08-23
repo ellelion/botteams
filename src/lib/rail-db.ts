@@ -1,6 +1,6 @@
 import type Stripe from "stripe";
 import { db } from "@/lib/db";
-import { isRailInterval, type RailInterval } from "@/lib/rail";
+import { isRailInterval, isRailSessionMeta, type RailInterval } from "@/lib/rail";
 
 export const RAIL_PAYMENT_STATUSES = [
   "paid",
@@ -160,13 +160,14 @@ export async function getPaymentBySessionId(sessionId: string): Promise<RailPaym
  * needs_human, hidden, rejected) are not rolled back.
  */
 export async function upsertPaidSession(session: Stripe.Checkout.Session): Promise<RailPayment> {
-  if (session.metadata?.brand !== "grokbotteams" || session.metadata?.placement !== "side-rail") {
+  const meta = session.metadata;
+  if (!isRailSessionMeta(meta)) {
     throw new Error("session is not a grokbotteams rail payment");
   }
   if (session.payment_status !== "paid") {
     throw new Error("session is not paid");
   }
-  const interval = session.metadata.interval;
+  const interval = meta.interval;
   if (!isRailInterval(interval)) throw new Error("session is missing a rail interval");
 
   const paidAt = session.created ? new Date(session.created * 1000) : new Date();

@@ -9,6 +9,7 @@ import {
   isSetupOpen,
   upsertPaidSession,
 } from "@/lib/rail-db";
+import { isRailSessionMeta } from "@/lib/rail";
 import { stripe } from "@/lib/stripe";
 import { en } from "@/lib/messages/en";
 import Link from "next/link";
@@ -42,7 +43,7 @@ async function loadSession(sessionId: string) {
   if (!payment) {
     try {
       const session = await stripe().checkout.sessions.retrieve(sessionId);
-      if (session.payment_status === "paid" && session.metadata?.brand === "grokbotteams" && session.metadata?.placement === "side-rail") {
+      if (session.payment_status === "paid" && isRailSessionMeta(session.metadata)) {
         payment = await upsertPaidSession(session);
       }
     } catch (error) {

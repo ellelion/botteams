@@ -1,17 +1,18 @@
 export const site = {
   name: "botteams.ai",
-  updatedAt: "2026-08-21",
-  verifiedOn: "2026-08-21",
+  updatedAt: "2026-08-23",
+  verifiedOn: "2026-08-23",
   title: "Grok Bot teams directory · botteams.ai",
   description:
-    "Public shelf of company teams for Grok Bot. Copy one installer prompt, paste it into Grok Bot, and stand up a named team. Operated by Ellelion LLC. Not affiliated with xAI.",
+    "Public directory of company teams for Grok Bot. Copy one installer prompt, paste it into Grok Bot, and stand up a named team. Operated by Ellelion LLC. Not affiliated with xAI.",
   url: "https://botteams.ai",
   company: "Ellelion LLC",
   email: "info@ellelion.com",
+  address: "30 N Gould St Ste R, Sheridan, WY 82801, United States",
   github: "https://github.com/ellelion/botteams",
   typeInDomain: "grokbotteam.ai",
   entity:
-    "botteams.ai is a public shelf of company teams for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
+    "botteams.ai is a public directory of company teams for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
   /* The other Ellelion products. They are not "sisters", they are the
      rest of what this company ships. */
   ellelionSites: [
@@ -37,6 +38,6 @@ export const XAI_DOCS = {
 } as const;
 
 /* xAI's public gallery of Grok Bot use cases. Cited on every recipe we
-   shelf from it. Sourcing, never endorsement: nothing on this site is
+   directory from it. Sourcing, never endorsement: nothing on this site is
    certified by xAI. */
 export const XAI_USE_CASE_GALLERY = "https://x.ai/bot/use-cases";

@@ -54,6 +54,9 @@ export function HomePage({ teams }: { teams: Team[] }) {
               <p className="mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed lg:mt-6 lg:text-[0.95rem]" style={{ color: ledger.inkSoft }}>
                 {en.answer}
               </p>
+              <p className="mx-auto mt-2 max-w-md text-[0.75rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+                {en.home.lastUpdated("23 August 2026")} {teamCount} teams and {botCount} Bots in the repo that day. {en.notAffiliated}
+              </p>
               <p className="mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
                 <Link href="/?kind=bot" className="accent-hover underline">{en.onRamp}</Link>
               </p>
@@ -67,11 +70,11 @@ export function HomePage({ teams }: { teams: Team[] }) {
             </a>
           </section>
           <section className="wings-hero-extra relative z-10 mx-auto max-w-xl pb-[var(--sec-y)] pt-[var(--sec-y)] text-center hidden lg:block">
-            <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.home.howTitle}</h2>
+            <h2 className="text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>{en.home.howTitle}</h2>
             <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.howBody}</p>
             <p className="mt-4 text-[0.78rem] leading-relaxed" style={{ color: ledger.inkFaint }}>{en.home.typeIn}</p>
 
-            <h2 id="contribute" className="mt-[var(--sec-y)] text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
+            <h2 id="contribute" className="mt-[var(--sec-y)] text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>
               {en.home.contributeTitle}
             </h2>
             <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.contributeBody}</p>
@@ -88,7 +91,37 @@ export function HomePage({ teams }: { teams: Team[] }) {
               <Link className="accent-hover underline" href="/docs">{en.home.contributeSpec}</Link>
               <Link className="accent-hover underline" href="/api">{en.nav.api}</Link>
             </p>
+
+            <h2 className="mt-[var(--sec-y)] text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>
+              {en.home.faqTitle}
+            </h2>
+            <dl className="mt-5 space-y-5 text-left">
+              {[
+                [en.home.faqWhatQ, en.home.faqWhatA],
+                [en.home.faqInstallQ, en.home.faqInstallA],
+                [en.home.faqXaiQ, en.home.faqXaiA],
+              ].map(([q, a]) => (
+                <div key={q}>
+                  <dt className="text-[0.92rem] font-medium" style={{ color: ledger.ink }}>{q}</dt>
+                  <dd className="mt-1.5 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{a}</dd>
+                </div>
+              ))}
+            </dl>
           </section>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: [
+                  { "@type": "Question", name: en.home.faqWhatQ, acceptedAnswer: { "@type": "Answer", text: en.home.faqWhatA } },
+                  { "@type": "Question", name: en.home.faqInstallQ, acceptedAnswer: { "@type": "Answer", text: en.home.faqInstallA } },
+                  { "@type": "Question", name: en.home.faqXaiQ, acceptedAnswer: { "@type": "Answer", text: en.home.faqXaiA } },
+                ],
+              }),
+            }}
+          />
         </>
       }
     >

@@ -245,7 +245,7 @@ conversation_bots:
       text: left it. read only.
 ---
 
-Six Bots in one group chat. This is the featured team on the shelf. SEO, AEO, and GEO stay one Bot (Findability). The SEO desk and the GEO / AEO desk stay on the shelf for people who only want that job.
+Six Bots in one group chat. This is the featured team on the directory. SEO, AEO, and GEO stay one Bot (Findability). The SEO desk and the GEO / AEO desk stay on the directory for people who only want that job.
 
 ## Why this desk
 

@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Terms",
   description:
-    "Terms of use for Grok Bot Teams. Recipes are MIT. You paste them into Grok Bot at your own risk. Operated by Ellelion LLC. Not affiliated with xAI.",
+    "Terms of use for Grok Bot Teams. Recipes are MIT. You paste them into Grok Bot at your own risk. Rail slots are paid placements. Operated by Ellelion LLC. Not affiliated with xAI.",
   alternates: { canonical: `${site.url}/terms` },
 };
 
@@ -14,8 +14,25 @@ export default function TermsPage() {
   return (
     <PageShell
       title="Terms"
-      lead={`Short, and in the same voice as the rest of the site. ${site.company} operates ${site.name}. Using the site means these terms apply to you.`}
+      lead={`Short, and in the same voice as the rest of the site. ${site.company} operates ${site.name}. Using the site means these terms apply to you. Paying for a rail slot is agreement to these terms and to the Privacy policy.`}
     >
+      <Block title="Who you are dealing with">
+        <p>
+          {site.company}, {site.address}. Email{" "}
+          <a className="accent-hover underline" href={`mailto:${site.email}`}>
+            {site.email}
+          </a>
+          . Wyoming law governs these terms. Courts in Sheridan County, Wyoming hear disputes, except where consumer law
+          in your country says you may sue at home.
+        </p>
+      </Block>
+
+      <Block title="You must be 18">
+        <p>
+          The site is for people 18 or older. Do not use it, and do not buy a placement, if you are under 18.
+        </p>
+      </Block>
+
       <Block title="The recipes are MIT">
         <p>
           Every team and bot file in{" "}
@@ -39,15 +56,35 @@ export default function TermsPage() {
         </p>
         <p>
           The site is provided as is, with no warranty of any kind. To the extent the law allows it, {site.company} is not
-          liable for what a Bot does after you paste a prompt, including anything a routine sends, drafts, or changes.
+          liable for what a Bot does after you paste a prompt, including anything a routine sends, drafts, or changes, and
+          not for lost profits or indirect loss. Where liability cannot be excluded, it is limited to the amount you paid
+          us for a placement in the twelve months before the claim, or fifty US dollars if you paid nothing.
+        </p>
+      </Block>
+
+      <Block title="Paid rail slots">
+        <p>
+          Buying a{" "}
+          <Link className="accent-hover underline" href="/sponsor">
+            placement
+          </Link>{" "}
+          buys a marked listing on the side rail for the term you pay: $1,500 for one month, $4,000 for three months,
+          $7,500 for six months, one-time, card on Stripe. It is advertising. It is not Verified, it is not a team, and it
+          is not an endorsement. House listings count toward the twelve slots. We may edit the one-liner after it is live
+          so it reads like the rest of the directory. We may refuse or remove a listing that breaks the rules on the
+          sponsor page. Prepaid terms are not subscriptions. The term runs from the day you pay. There is no mid-term
+          cancel. Clicking pay on /sponsor is acceptance of these terms and of the{" "}
+          <Link className="accent-hover underline" href="/privacy">
+            Privacy
+          </Link>{" "}
+          policy.
         </p>
       </Block>
 
       <Block title="We do not sell labor">
         <p>
-          Nothing here is a service contract. We do not run your Bots, we do not monitor them, and buying a{" "}
-          <Link className="accent-hover underline" href="/sponsor">placement</Link> buys a placement and nothing else. No
-          support hours are implied by anything on this site.
+          Nothing here is a service contract. We do not run your Bots, we do not monitor them, and a placement buys a
+          placement and nothing else. No support hours are implied by anything on this site.
         </p>
       </Block>
 
@@ -59,7 +96,12 @@ export default function TermsPage() {
         </p>
         <p>
           Grok artwork on this site is used under xAI&apos;s{" "}
-          <a className="accent-hover underline" href={site.brandGuidelines} rel="nofollow noopener noreferrer" target="_blank">
+          <a
+            className="accent-hover underline"
+            href={site.brandGuidelines}
+            rel="nofollow noopener noreferrer"
+            target="_blank"
+          >
             brand guidelines
           </a>
           , unaltered. Your use of Grok Bot itself is governed by xAI&apos;s terms, not ours.
@@ -69,18 +111,31 @@ export default function TermsPage() {
       <Block title="Contributions and outbound links">
         <p>
           Send a recipe as a pull request and you licence it under MIT along with everything else in the repository. Only
-          send work you have the right to send.
+          send work you have the right to send. We may take down material we are told is unlawful. Repeat that notice to{" "}
+          {site.email} with the URL and why it should come down. We have not registered a US DMCA agent.
         </p>
         <p>
-          Links off this site are other people&apos;s sites, under their terms. Anywhere we would earn on a click is
-          marked, and today nothing on the rail earns us anything.
+          Links off this site are other people&apos;s sites, under their terms. Paid rail listings and marked affiliate
+          links are how a click can earn us money. They are labelled.
+        </p>
+      </Block>
+
+      <Block title="Acceptable use">
+        <p>
+          Do not use the site to break the law, to probe it, or to submit a listing that is not a digital tool a Bot
+          could use. No crypto, no trading signals, no lead-generation, no competing Grok Bot team or bot directory on
+          the rail.
         </p>
       </Block>
 
       <Block title="Changes and contact">
         <p>
           We will change these terms as the site changes, and the date at the top is the honest record of when. Questions
-          go to <a className="accent-hover underline" href={`mailto:${site.email}`}>{site.email}</a>.
+          go to{" "}
+          <a className="accent-hover underline" href={`mailto:${site.email}`}>
+            {site.email}
+          </a>
+          .
         </p>
       </Block>
     </PageShell>

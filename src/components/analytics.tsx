@@ -1,12 +1,11 @@
-import { OpenPanelComponent } from "@openpanel/nextjs";
+import { AnalyticsClient } from "@/components/AnalyticsClient";
 
 /*
- * Cookieless OpenPanel. Renders nothing without NEXT_PUBLIC_OPENPANEL_CLIENT_ID
- * so local forks stay silent. Do not add a cookie-writing tracker here.
+ * Cookieless OpenPanel, gated on Global Privacy Control. Renders nothing
+ * without NEXT_PUBLIC_OPENPANEL_CLIENT_ID so local forks stay silent.
  */
 export function Analytics() {
   const clientId = process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID;
   if (!clientId) return null;
-
-  return <OpenPanelComponent clientId={clientId} trackScreenViews trackOutgoingLinks />;
+  return <AnalyticsClient clientId={clientId} />;
 }

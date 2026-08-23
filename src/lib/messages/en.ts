@@ -48,16 +48,27 @@ export const en = {
       rooms > 0
         ? `${bots} ${bots === 1 ? "Bot" : "Bots"} · ${rooms === 1 ? "1 group chat" : `${rooms} group chats`}`
         : `${bots} ${bots === 1 ? "Bot" : "Bots"}`,
-    howTitle: "How it works",
+    howTitle: "How do I install a Grok Bot team?",
     howBody:
       "Pick a team. Copy the installer prompt. Paste it into Grok Bot. The prompt creates named Bots and a group chat (two to six Bots), tells you to make a sidebar section, and pings each Bot so you can confirm routines. Connectors must already be on the account.",
     typeIn:
-      "Canonical domain grokbotteams.ai. grokbotteam.ai (no s) is a type-in that should 301 when DNS exists. This repo does not buy or configure DNS.",
+      "Canonical domain botteams.ai. grokbotteam.ai (no s) is a type-in that should 301 when DNS exists. This repo does not buy or configure DNS.",
+    lastUpdated: (day: string) => `Last updated ${day}.`,
+    faqTitle: "Questions",
+    faqWhatQ: "What is a Grok Bot team?",
+    faqWhatA:
+      "A named set of two to six Bots plus one group chat and standing routines. You paste one installer prompt into Grok Bot. Nothing is installed on this site.",
+    faqInstallQ: "How do I install one?",
+    faqInstallA:
+      "Open a team. Copy the installer prompt. Paste it into Grok Bot. Connect the connectors the team lists first. The prompt creates the Bots and the group chat on your account.",
+    faqXaiQ: "Is botteams.ai affiliated with xAI?",
+    faqXaiA:
+      "No. Ellelion LLC operates this directory. From xAI on a Bot is sourcing from xAI's published use cases, not a certification.",
     sponsorsTitle: "Sponsor slots",
     sponsorsNote: "Twelve slots. Skillselion and Agent Plugins Directory are the first two.",
     available: "Available",
     scrollCue: "Browse teams",
-    contributeTitle: "A team is markdown in a repo",
+    contributeTitle: "How do I add a team?",
     contributeBody:
       "Every team here is one file. Front matter names the Bots, the group chat, the routines, and the connectors the account needs first. The installer prompt is generated from it, so the file is the product.",
     contributePr: "Open a pull request",
@@ -247,7 +258,7 @@ export const en = {
     buyLead:
       "Prepaid advertising on the rail. Pick a term and pay on Stripe. Then you submit the listing.",
     buyFine:
-      "Stripe takes the card on their page. A paid row is a paid placement. It is not Verified, it is not a team, and it is not an endorsement.",
+      "By paying you confirm you are 18 or older and agree to the Terms and the Privacy policy. Stripe takes the card on their page. A paid row is a paid placement. It is not Verified, it is not a team, and it is not an endorsement.",
     buyError: "Could not start checkout. Try again, or mail us.",
     opening: "Opening Stripe",
     soldOut: "Every paying slot is taken. Mail us and we will tell you when one frees up.",
