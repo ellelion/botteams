@@ -49,7 +49,6 @@ export function ThemeToggle() {
       className="theme-control"
       aria-label={label}
       title={label}
-      aria-pressed={theme === "dark"}
       onClick={() => {
         applyThemePreference(next);
         for (const listener of listeners) listener();

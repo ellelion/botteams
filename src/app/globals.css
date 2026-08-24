@@ -167,6 +167,9 @@ body {
   outline-offset: 3px;
   transform: none;
 }
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
+}
 
 .site-masthead {
   position: sticky;
@@ -2351,8 +2354,13 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-weight: 500;
   letter-spacing: -0.01em;
 }
+.idx-card-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 .idx-card-tag {
-  color: var(--muted);
+  color: var(--ink-soft);
   font-size: 0.76rem;
   line-height: 1.5;
 }
