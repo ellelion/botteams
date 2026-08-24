@@ -251,7 +251,7 @@ body {
   z-index: 28;
   border: 0;
   padding: 0;
-  background: color-mix(in srgb, var(--page) 55%, transparent);
+  background: color-mix(in oklab, var(--ink) 26%, transparent);
   cursor: pointer;
 }
 
@@ -2768,7 +2768,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   inset: 0;
   border: 0;
   padding: 0;
-  background: color-mix(in srgb, var(--page) 55%, transparent);
+  background: color-mix(in oklab, var(--ink) 26%, transparent);
   cursor: pointer;
 }
 .cz-overwrite-card {
@@ -3759,6 +3759,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .rp-head-act .theme-control,
   .rp-head-act .rp-secondary,
   .rp-head-act .share-btn { min-height: 44px; }
+  .rp-sheet { width: 100%; border-left: 0; animation-name: rp-sheet-up; }
+  .rp-sheet-head { padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 14px; }
+  .rp-sheet-body { padding: 4px 16px calc(28px + env(safe-area-inset-bottom, 0px)); }
+  .rp-sheet-act .theme-control,
+  .rp-sheet-act .rp-secondary { min-height: 44px; }
+  .rp-chip { min-height: 44px; }
 }
 @media (max-width: 640px) {
   .rp-head { padding: 8px 0; }
@@ -3790,14 +3796,6 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   /* The header is taller once the action wraps, so the section titles
      stop being sticky rather than stacking two bars deep. */
   .rp-sum { position: static; min-height: 56px; }
-  .rp-sheet { width: 100%; border-left: 0; animation-name: rp-sheet-up; }
-  .rp-sheet-head { padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 14px; }
-  .rp-sheet-body { padding: 4px 16px calc(28px + env(safe-area-inset-bottom, 0px)); }
-  .rp-sheet-act .theme-control,
-  .rp-sheet-act .rp-secondary { min-height: 44px; }
-  /* The chips take inline actions later, so they get a thumb-sized box
-     now rather than after someone tries to tap one. */
-  .rp-chip { min-height: 44px; }
 }
 
 
