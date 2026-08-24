@@ -11,7 +11,8 @@ function focusables(root: HTMLElement) {
     if (
       el.classList.contains("rp-scrim") ||
       el.classList.contains("site-menu-scrim") ||
-      el.classList.contains("talk-overlay-scrim")
+      el.classList.contains("talk-overlay-scrim") ||
+      el.classList.contains("cz-overwrite-scrim")
     ) {
       return false;
     }

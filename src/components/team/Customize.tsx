@@ -79,6 +79,7 @@ export function Customize({
   /* A recipe change while a hand-edited prompt exists parks here until the
      human says which one wins. */
   const [pending, setPending] = useState<(() => void) | null>(null);
+  const closeOverwrite = useCallback(() => setPending(null), []);
   const hydrated = useRef(false);
 
   /* A shared link carries its edits in the hash, so it never reaches the
@@ -103,13 +104,9 @@ export function Customize({
     hydrated.current = true;
   }, [team]);
 
-  useDialogChrome({ open: sheet !== null && mounted, rootRef: sheetRef, onClose: closeSheet });
-  const actionsRef = useScrollEdges<HTMLDivElement>();
-
-  useEffect(() => {
-    if (!pending) return;
-    overwriteRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
-  }, [pending]);
+  useDialogChrome({ open: sheet !== null && mounted && !pending, rootRef: sheetRef, onClose: closeSheet });
+  useDialogChrome({ open: Boolean(pending) && mounted, rootRef: overwriteRef, onClose: closeOverwrite });
+  const { ref: actionsRef, edges: actionEdges } = useScrollEdges<HTMLDivElement>();
 
   const askedHits = useRef<Set<string>>(new Set());
   useEffect(() => {
@@ -264,35 +261,40 @@ export function Customize({
     </div>
   );
 
-  const overwritePart = pending ? (
+  const overwritePart = pending && mounted ? createPortal(
       <div
         ref={overwriteRef}
-        className="cz-alert cz-alert-stop"
+        className="cz-overwrite"
         role="alertdialog"
+        aria-modal="true"
         aria-labelledby={overwriteTitleId}
         aria-describedby={overwriteBodyId}
       >
-        <h3 id={overwriteTitleId} className="cz-alert-title">{en.customize.overwriteTitle}</h3>
-        <p id={overwriteBodyId}>{en.customize.overwriteBody}</p>
-        <div className="cz-alert-actions">
-          <button
-            type="button"
-            className="cz-btn"
-            onClick={() => {
-              const run = pending;
-              setPending(null);
-              setState((prev) => ({ ...prev, override: null }));
-              run();
-            }}
-          >
-            {en.customize.overwriteGo}
-          </button>
-          <button type="button" className="cz-btn cz-btn-quiet" onClick={() => setPending(null)}>
-            {en.customize.overwriteKeep}
-          </button>
+        <button type="button" className="cz-overwrite-scrim" aria-label={en.customize.overwriteKeep} onClick={closeOverwrite} />
+        <div className="cz-overwrite-card cz-alert cz-alert-stop">
+          <h3 id={overwriteTitleId} className="cz-alert-title">{en.customize.overwriteTitle}</h3>
+          <p id={overwriteBodyId}>{en.customize.overwriteBody}</p>
+          <div className="cz-alert-actions">
+            <button type="button" className="cz-btn cz-btn-quiet" onClick={closeOverwrite}>
+              {en.customize.overwriteKeep}
+            </button>
+            <button
+              type="button"
+              className="cz-btn"
+              onClick={() => {
+                const run = pending;
+                setPending(null);
+                setState((prev) => ({ ...prev, override: null }));
+                run();
+              }}
+            >
+              {en.customize.overwriteGo}
+            </button>
+          </div>
         </div>
-      </div>
-  ) : null;
+      </div>,
+      document.body,
+    ) : null;
 
   const panelPart = editing ? (
       <div className="cz-panel mt-8">
@@ -602,8 +604,8 @@ export function Customize({
             <p className="rp-job">{team.tagline}</p>
           </div>
           <div
-            ref={actionsRef.ref}
-            className={`rp-head-act scroll-fade${actionsRef.edges.start ? " has-start" : ""}${actionsRef.edges.end ? " has-end" : ""}`}
+            ref={actionsRef}
+            className={`rp-head-act scroll-fade${actionEdges.start ? " has-start" : ""}${actionEdges.end ? " has-end" : ""}`}
           >
             <CopyInstallerButton
               text={verdict.canCopy ? prompt : ""}
@@ -632,7 +634,6 @@ export function Customize({
       </header>
 
       {verdictPart}
-      {overwritePart}
 
       {/* The roster, visible without a click. Inline actions land on these
           chips later; today they are honest labels. */}
@@ -753,6 +754,8 @@ export function Customize({
 
       {/* Customize: a mode over the page, not a different page. Closing it
           leaves the URL exactly as it was. */}
+      {overwritePart}
+
       {sheet !== null && mounted
         ? createPortal(
         <div id={sheetId} ref={sheetRef} className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-labelledby={`${sheetId}-title`}>
