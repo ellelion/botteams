@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useEffect, useId, useMemo, useOptimistic, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useOptimistic, useRef, useState, useSyncExternalStore, useTransition, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
@@ -21,6 +21,7 @@ import { type Team } from "@/lib/types";
 import { houseSlots, sponsorHref, type SponsorSlot } from "@/data/sponsors";
 import { SponsorTicker } from "@/components/SponsorTicker";
 import { resolveConnector, resolveConnectors } from "@/lib/connectors";
+import { useScrollEdges } from "@/lib/use-scroll-edges";
 
 /*
  * Two index layouts, one filter model.
@@ -248,6 +249,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
     }
   }
   const [open, setOpen] = useState<string | null>(null);
+  const [isPending, startFilter] = useTransition();
   const searchRef = useRef<HTMLInputElement>(null);
 
   function currentQuery(patch: Partial<IndexQuery> = {}): IndexQuery {
@@ -264,7 +266,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
   function commit(next: IndexQuery) {
     const normalized = { ...next, q: next.q.trim() };
     setPushedQ(normalized.q);
-    startTransition(() => {
+    startFilter(() => {
       setFilters({
         kind: normalized.kind,
         category: normalized.category,
@@ -348,6 +350,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
     ],
     [categories, inSource.length],
   );
+  const categoriesRef = useScrollEdges<HTMLElement>(categoryOptions.length);
 
   const connectorSelectOptions: SelectOption[] = useMemo(
     () => [
@@ -418,7 +421,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
   }
 
   const listing = sorted.length === 0 ? (
-    <div className="idx-empty">
+    <div className={`idx-empty${isPending ? " is-pending" : ""}`}>
       <p className="idx-empty-title">{en.home.emptyTitle(query.trim())}</p>
       <p className="idx-empty-body">{en.home.emptyBody}</p>
       <button type="button" className="cf-browse" onClick={clearFilters}>
@@ -426,7 +429,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
       </button>
     </div>
   ) : view === "cards" ? (
-    <div className="idx-cards">
+    <div className={`idx-cards${isPending ? " is-pending" : ""}`}>
       {interleaveAds(sorted, houseSlots).map((row) =>
         row.kind === "ad" ? (
           <ListingAd key={row.key} slot={row.slot} as="card" />
@@ -449,7 +452,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
       )}
     </div>
   ) : (
-    <div className="team-table">
+    <div className={`team-table${isPending ? " is-pending" : ""}`}>
       {interleaveAds(sorted, houseSlots).map((row) =>
         row.kind === "ad" ? (
           <ListingAd key={row.key} slot={row.slot} as="row" />
@@ -563,23 +566,45 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
           ))}
         </div>
 
-        <nav className="cat-rail" aria-label={en.home.categoriesAria}>
-          <ul className="cat-rail-track">
+        <nav
+          ref={categoriesRef.ref}
+          className={`cat-rail scroll-fade${categoriesRef.edges.start ? " has-start" : ""}${categoriesRef.edges.end ? " has-end" : ""}`}
+          role="radiogroup"
+          aria-label={en.home.categoriesAria}
+          onKeyDown={(event) => {
+            const ids = categoryOptions.map((option) => option.value);
+            const index = Math.max(0, ids.indexOf(sectionParam));
+            let next = index;
+            if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % ids.length;
+            else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + ids.length) % ids.length;
+            else if (event.key === "Home") next = 0;
+            else if (event.key === "End") next = ids.length - 1;
+            else return;
+            event.preventDefault();
+            setSection(ids[next]);
+            const node = event.currentTarget.querySelector<HTMLElement>(`[data-category="${ids[next]}"]`);
+            node?.focus();
+            node?.scrollIntoView({ inline: "nearest", block: "nearest" });
+          }}
+        >
+          <div className="cat-rail-track">
             {categoryOptions.map((option) => (
-              <li key={option.value}>
-                <button
-                  type="button"
-                  className={`cat-pill${sectionParam === option.value ? " is-on" : ""}`}
-                  aria-pressed={sectionParam === option.value}
-                  onClick={() => setSection(option.value)}
-                >
-                  <span className="cat-pill-icon" aria-hidden>{option.icon}</span>
-                  <span className="cat-pill-name">{option.label}</span>
-                  <span className="cat-pill-count">{option.count}</span>
-                </button>
-              </li>
+              <button
+                key={option.value}
+                type="button"
+                role="radio"
+                data-category={option.value}
+                tabIndex={sectionParam === option.value ? 0 : -1}
+                aria-checked={sectionParam === option.value}
+                className={`cat-pill${sectionParam === option.value ? " is-on" : ""}`}
+                onClick={() => setSection(option.value)}
+              >
+                <span className="cat-pill-icon" aria-hidden>{option.icon}</span>
+                <span className="cat-pill-name">{option.label}</span>
+                <span className="cat-pill-count">{option.count}</span>
+              </button>
             ))}
-          </ul>
+          </div>
         </nav>
 
         <div className="index-header">
@@ -591,6 +616,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
               <Select
                 id="index-integration"
                 label={en.home.filterConnector}
+                caption={en.home.filterConnectorShort}
                 value={integrationParam}
                 options={connectorSelectOptions}
                 onChange={(next) => setParam("integration", next)}
@@ -598,6 +624,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
               <Select
                 id="index-sort"
                 label={en.home.sortLabel}
+                caption={en.home.sortShort}
                 value={sortParam}
                 options={sortOptions}
                 onChange={(next) => setParam("sort", next)}
@@ -642,8 +669,8 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
           </div>
         </div>
 
-        <div className="idx-status">
-          <p className="idx-count" id={resultsId} role="status" aria-live="polite">
+        <div className={`idx-status${isPending ? " is-pending" : ""}`}>
+          <p className="idx-count" id={resultsId} role="status" aria-live="polite" aria-busy={isPending}>
             {en.home.results(sorted.length, inSource.length)}
           </p>
           {hasFilters ? (
