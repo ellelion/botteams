@@ -178,10 +178,10 @@ npm run build      # types and a full production build
 npm test           # every local merge check
 ```
 
-CI runs these checks, a dependency review, and CodeQL. `validate` fails on an unknown category, a slug that does not
-match the filename, a duplicate slug or `url`, a room outside 2 to 6 members,
-a `bots` count that disagrees with the roster, and a per-Bot connector that is
-not on the team.
+CI runs these checks, a dependency review, and CodeQL. `validate` fails on an
+unknown category, a slug that does not match the filename, a duplicate slug or
+`url`, a room outside 2 to 6 members, a `bots` count that disagrees with the
+roster, and a per-Bot connector that is not on the team.
 
 ## Language
 
