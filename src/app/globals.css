@@ -167,6 +167,7 @@ body {
   outline: 2px solid var(--accent-text);
   outline-offset: 3px;
   transform: none;
+  transition: none;
 }
 @media (prefers-reduced-motion: reduce) {
   .skip-link { transition: none; }
