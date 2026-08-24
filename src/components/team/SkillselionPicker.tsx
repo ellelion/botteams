@@ -32,6 +32,7 @@ export function SkillselionPicker({
   onChange: (next: SkillPick[]) => void;
 }) {
   const listId = useId();
+  const searchRef = useRef<HTMLInputElement>(null);
   const [q, setQ] = useState("");
   const [fetched, setFetched] = useState<SkillselionHit[]>([]);
   const [open, setOpen] = useState(false);
@@ -140,6 +141,7 @@ export function SkillselionPicker({
       <label className="cz-field">
         <span className="cz-field-label">{en.customize.skillsSearch}</span>
         <input
+          ref={searchRef}
           type="search"
           className="cz-input"
           placeholder={en.customize.skillsPlaceholder}
@@ -178,13 +180,28 @@ export function SkillselionPicker({
               {en.customize.skillsRetry}
             </button>
           </div>
+        ) : hits.length === 0 && !busy ? (
+          <div className="cz-skill-status">
+            <p id={statusId} className="cz-hint" role="status" aria-live="polite">
+              {en.customize.skillsEmpty}
+            </p>
+            <button
+              type="button"
+              className="cz-btn cz-btn-quiet"
+              onClick={() => {
+                setQ("");
+                setFetched([]);
+                setFailed(false);
+                setOpen(false);
+                searchRef.current?.focus();
+              }}
+            >
+              {en.customize.skillsClear}
+            </button>
+          </div>
         ) : (
           <p id={statusId} className={hits.length ? "sr-only" : "cz-hint mt-2"} role="status" aria-live="polite">
-            {busy
-              ? en.customize.skillsSearching
-              : hits.length === 0
-                ? en.customize.skillsEmpty
-                : en.customize.skillsFound(hits.length)}
+            {busy ? en.customize.skillsSearching : en.customize.skillsFound(hits.length)}
           </p>
         )}
         <ul id={listId} className="cz-list cz-skill-hits mt-2" role="listbox" aria-label={en.customize.skillsSearch} hidden={hits.length === 0}>

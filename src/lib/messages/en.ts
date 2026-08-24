@@ -205,6 +205,7 @@ export const en = {
     skillsPlaceholder: "frontend design, tdd, …",
     skillsSearching: "Searching Skillselion…",
     skillsEmpty: "Nothing matched. Try a shorter name.",
+    skillsClear: "Clear search",
     skillsError: "Skillselion did not answer.",
     skillsRetry: "Try again",
     skillsCountsLoading: "Looking up counts on Skillselion.",

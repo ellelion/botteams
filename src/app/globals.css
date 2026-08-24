@@ -3169,6 +3169,7 @@ html[data-theme="light"] .cz-check input:checked {
   font-size: 0.88rem;
 }
 .cz-input::placeholder { color: var(--muted); }
+.cz-input::-webkit-search-cancel-button { appearance: none; }
 .cz-input:focus,
 .cz-input:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 /* Off-roster Bot names live in this field. Opacity faded the name into
