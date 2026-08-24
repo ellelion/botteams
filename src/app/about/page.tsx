@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Block, PageShell } from "@/components/PageShell";
+import { Block, PageJump, PageShell } from "@/components/PageShell";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -16,11 +16,12 @@ export default function AboutPage() {
       title="About"
       lead={`${site.company} operates ${site.name}, a public directory of teams and Bots for Grok Bot. Not affiliated with xAI.`}
     >
+      <PageJump items={["What this is", "What it is not", "Who runs it", "Other Ellelion products"]} />
       <Block title="What this is">
         <p>
           A team here is one markdown file. It names the Bots, the group chat they share, the routines each Bot owns, and
           the connectors your account needs first. The site turns that file into one installer prompt you paste into Grok
-          Bot. A bot is the same thing with a single Bot and no group chat.
+          Bot. A one-Bot file is the same thing with a single Bot and no group chat.
         </p>
         <p>
           Every recipe is in the open at{" "}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Block, PageShell } from "@/components/PageShell";
+import { Block, PageJump, PageShell } from "@/components/PageShell";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -16,6 +16,16 @@ export default function PrivacyPage() {
       title="Privacy"
       lead={`What this site does with data today, not what a template says it might. ${site.company} is the operator. If any of this changes, this page changes with it.`}
     >
+      <PageJump
+        items={[
+          "Who is responsible",
+          "No account, no cookies, first-party analytics",
+          "If you buy a rail slot",
+          "Who else processes data",
+          "Your rights",
+          "Contact",
+        ]}
+      />
       <Block title="Who is responsible">
         <p>
           {site.company}, {site.address}. Email{" "}

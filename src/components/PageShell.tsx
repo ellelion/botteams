@@ -1,7 +1,23 @@
 import type { ReactNode } from "react";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
+import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
+
+export function slugTitle(title: string) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export function PageJump({ items }: { items: string[] }) {
+  return (
+    <nav className="doc-jump" aria-label={en.nav.onThisPage}>
+      {items.map((label) => (
+        <a key={label} href={`#${slugTitle(label)}`} className="accent-hover">{label}</a>
+      ))}
+    </nav>
+  );
+}
 
 export function PageTitle({ children }: { children: ReactNode }) {
   return (
@@ -26,7 +42,10 @@ export function PageShell({
   return (
     <WingsSplit
       hero={
-        <WingsHero title={title}>
+        <WingsHero
+          title={title}
+          kicker={<Breadcrumb parentHref="/" parentLabel={en.nav.directory} current={title} />}
+        >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{lead}</p>
           <p className="meta mt-3">
             Updated <time dateTime={site.updatedAt}>{site.updatedAt}</time>
@@ -41,7 +60,7 @@ export function PageShell({
 
 export function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="mt-8">
+    <section className="mt-8" id={slugTitle(title)}>
       <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{title}</h2>
       <div className="mt-4 space-y-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
         {children}

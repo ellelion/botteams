@@ -1,7 +1,7 @@
 "use client";
 
 import { grokBotName, grokDisplayBotName, grokMemberName, grokRecipeTitle } from "@/lib/grok-names";
-import { Children, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Children, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
@@ -61,6 +61,7 @@ export function Customize({
   children?: ReactNode;
 }) {
   const [sheet, setSheet] = useState<"customize" | null>(null);
+  const sheetId = useId();
   const sheetRef = useRef<HTMLDivElement>(null);
   const closeSheet = useCallback(() => setSheet(null), []);
   /* Portals need a document, so nothing renders one until after hydration. */
@@ -580,7 +581,14 @@ export function Customize({
           <div className="rp-head-act">
             <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
             {/* Secondary on purpose. Copy is the transaction. */}
-            <button type="button" className="rp-secondary" aria-expanded={sheet !== null} aria-haspopup="dialog" onClick={openCustomize}>
+            <button
+              type="button"
+              className="rp-secondary"
+              aria-expanded={sheet !== null}
+              aria-haspopup="dialog"
+              aria-controls={sheet !== null ? sheetId : undefined}
+              onClick={openCustomize}
+            >
               {en.customize.open}
             </button>
             <ShareBar name={grokRecipeTitle(team.kind, team.name)} />
@@ -697,7 +705,7 @@ export function Customize({
           leaves the URL exactly as it was. */}
       {sheet !== null && mounted
         ? createPortal(
-        <div ref={sheetRef} className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-label={en.customize.title}>
+        <div id={sheetId} ref={sheetRef} className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-label={en.customize.title}>
           <button type="button" className="rp-scrim" aria-label={en.recipe.close} onClick={closeSheet} />
           <div className="rp-sheet">
             <div className="rp-sheet-head">

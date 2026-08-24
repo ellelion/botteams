@@ -1032,7 +1032,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .cat-pill,
   .sel-button,
   .filter-views .filter-chip--icon,
-  .row-arrow-link {
+  .row-arrow-link,
+  .rp-secondary {
     min-height: 44px;
   }
   .filter-views .filter-chip--icon { width: 44px; }
