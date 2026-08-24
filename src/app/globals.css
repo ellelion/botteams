@@ -4579,7 +4579,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   line-height: 1.4;
   color: var(--ink-soft);
 }
-.rp-run-owner { min-width: 0; }
+.rp-run-owner { min-width: 0; overflow-wrap: anywhere; }
 .rp-run-k { margin-right: 0.25em; }
 .rp-run-cadence { flex: none; text-align: right; white-space: nowrap; }
 
@@ -4778,6 +4778,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   /* 3vw follows the 1280 layout viewport, so the title stayed 2.25rem
      in a 177px column and "Reproduction" blew the pane by 30px. */
   .rp-name { font-size: 1.4rem; }
+  /* Cadence is nowrap + flex:none, so the owner was crushed to 18px. */
+  .rp-run-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+  .rp-run-cadence { text-align: left; }
 }
 @media (max-width: 1023px) {
   .rp-name { font-size: 1.4rem; }
