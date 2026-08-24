@@ -14,6 +14,7 @@ import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { RecipeSecIcon } from "@/components/icons/LineIcons";
 import { botMarkStyle } from "@/lib/bot-icon";
 import { resolveConnector } from "@/lib/connectors";
+import { botBringsLine } from "@/lib/bot-line";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
@@ -743,9 +744,15 @@ export function Customize({
             <span className="rp-room-label">{en.recipe.secRoom}</span>
             <p className="rp-room-name">{resolved.roomName}</p>
             <ul className="rp-room-grid">
-              {resolved.members.map((m) => (
-                <li key={m}>{grokDisplayBotName(m)}</li>
-              ))}
+              {state.members
+                .map((sourceName) => resolved.agents.find((a) => a.source.name === sourceName))
+                .filter((row): row is (typeof resolved.agents)[number] => row != null)
+                .map((row) => (
+                  <li key={row.source.name}>
+                    <span className="rp-room-bot-name">{grokDisplayBotName(row.name)}</span>
+                    <span className="rp-room-bot-line">{botBringsLine(row.source.persona, row.source.brings)}</span>
+                  </li>
+                ))}
             </ul>
           </div>
         )}

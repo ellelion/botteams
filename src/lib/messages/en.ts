@@ -10,6 +10,8 @@ export const en = {
   answerUse:
     "Use them at work, in a business, or for everyday life. Copy one installer prompt. Nothing is installed on this site.",
   onRamp: "Or start with one Bot.",
+  guideLink: "What is Grok Bot?",
+  guidesLink: "Guides",
   notAffiliated: "Not affiliated with xAI.",
   share: {
     copyLink: "Copy link",
@@ -24,6 +26,8 @@ export const en = {
     teams: "Grok Bot Teams",
     bots: "Grok Bots",
     docs: "Spec",
+    guide: "What is Grok Bot?",
+    guides: "Guides",
     connectorsNav: "Connectors",
     api: "API",
     sponsor: "Sponsor",
@@ -63,8 +67,6 @@ export const en = {
     howTitle: "How do I install a Grok Bot team?",
     howBody:
       "Pick a team. Copy the installer prompt. Paste it into Grok Bot. The prompt creates named Bots and a group chat (two to six Bots), tells you to make a sidebar section, and pings each Bot so you can confirm routines. Connectors must already be on the account.",
-    typeIn:
-      "Canonical domain botteams.ai. grokbotteam.ai (no s) is a type-in that should 301 when DNS exists. This repo does not buy or configure DNS.",
     lastUpdated: (day: string) => `Last updated ${day}.`,
     faqTitle: "Questions",
     faqWhatQ: "What is a Grok Bot team?",
@@ -506,6 +508,8 @@ export const en = {
     connectors: "Connectors",
     sponsor: "Sponsor",
     spec: "Spec",
+    guide: "What is Grok Bot?",
+    guides: "Guides",
     api: "API",
     apiBots: "Bots API",
     openapi: "OpenAPI",
@@ -569,11 +573,12 @@ export const en = {
   notFound: {
     kicker: "Not found",
     title: "This page is not here.",
-    body: "Teams live under /teams, Bots under /bots. Pick a shelf below, or start from the directory.",
+    body: "Teams live under /teams, Bots under /bots, guides under /guides. Pick a shelf below, or start from the directory.",
     nav: "Other pages",
     back: "Browse teams",
     backBots: "Browse Bots",
     connectors: "Browse connectors",
+    guides: "Browse guides",
     spec: "Read the spec",
   },
   error: {

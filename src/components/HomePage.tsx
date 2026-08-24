@@ -13,18 +13,22 @@ import { site } from "@/lib/site";
 const CONTRIBUTE_SAMPLE = `---
 slug: founder-os
 name: Founder OS
-tagline: Money, inbox, and a chief of staff in one founder room.
-bots: 3
+tagline: Money and inbox in one founder room.
+bots: 2
 section: Founder OS
-status: team
-connectors: [Stripe, Gmail, Calendar, Ramp, Notion]
+kind: team
+status: installable
+connectors: [Stripe, Gmail]
 agents:
-  - name: Chief of Staff
-    persona: Coordinates the founder week. Keeps Founder HQ honest.
-    connectors: [Calendar, Notion]
+  - name: Founder · Money
+    persona: Reads Stripe. Drafts the brief. Never moves funds.
+    connectors: [Stripe]
+  - name: Founder · Inbox
+    persona: Drafts mail. Never sends.
+    connectors: [Gmail]
 rooms:
   - name: Founder HQ
-    members: [Chief of Staff, Founder · Money, Founder · Inbox]
+    members: [Founder · Money, Founder · Inbox]
 routines:
   - name: Monday money brief
     owner: Founder · Money
@@ -58,7 +62,11 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
                 <br />
                 {en.answerUse}
               </p>
-              <p className="home-hero-manifesto mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+              <p className="home-hero-links mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+                <Link href="/grok-bot" className="accent-hover underline">{en.guideLink}</Link>
+                {" · "}
+                <Link href="/guides" className="accent-hover underline">{en.guidesLink}</Link>
+                {" · "}
                 <Link href="/?kind=bot" className="accent-hover underline">{en.onRamp}</Link>
               </p>
               <HeroStats teams={teamCount} bots={botCount} verifiedOn={site.verifiedOn} />
@@ -73,7 +81,6 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
           <section className="wings-hero-extra relative z-10 mx-auto max-w-xl pb-[var(--sec-y)] pt-[var(--sec-y)] text-center hidden lg:block">
             <h2 className="text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>{en.home.howTitle}</h2>
             <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.howBody}</p>
-            <p className="mt-4 text-[0.78rem] leading-relaxed" style={{ color: ledger.inkFaint }}>{en.home.typeIn}</p>
 
             <h2 id="contribute" className="mt-[var(--sec-y)] text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>
               {en.home.contributeTitle}

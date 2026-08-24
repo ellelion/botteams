@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { PageJump } from "@/components/PageShell";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
@@ -26,6 +27,21 @@ export default function DocsPage() {
           <p className="meta mt-3">
             {en.docs.limitsCheckedOn}{" "}
             <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
+          </p>
+          <p className="mt-3 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+            For Grok Bot setup, skills, and limits, see{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/grok-bot">
+              Grok Bot setup, skills, and limits
+            </Link>
+            . For the click path and the installer, see{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/create-a-grok-bot">
+              create a Bot
+            </Link>{" "}
+            and{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/install-a-grok-bot-team">
+              install a team
+            </Link>
+            .
           </p>
         </WingsHero>
       }

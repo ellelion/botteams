@@ -1,6 +1,8 @@
 export type TeamAgent = {
   name: string;
   persona: string;
+  /** One line for the group-chat roster. Falls back to the first sentence of persona. */
+  brings?: string;
   reuse?: boolean;
   icon?: string;
   connectors: string[];

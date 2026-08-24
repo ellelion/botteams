@@ -34,12 +34,12 @@ export default function PrivacyPage() {
       />
       <Block title="Who is responsible">
         <p>
-          {site.company}, {site.address}. Email{" "}
+          {site.company} is the controller for the processing described here. Email{" "}
           <a className="accent-hover underline" href={`mailto:${site.email}`}>
             {site.email}
           </a>
-          . We are the controller for the processing described here. We have not appointed an EU or UK representative.
-          That is an operator task, not something this page pretends is done.
+          . We have not appointed an EU or UK representative. That is an operator task, not something this page pretends
+          is done.
         </p>
       </Block>
 
@@ -179,7 +179,7 @@ export default function PrivacyPage() {
 
       <Block title="Contact">
         <p>
-          {site.company}, {site.address}.{" "}
+          {site.company}.{" "}
           <a className="accent-hover underline" href={`mailto:${site.email}`}>
             {site.email}
           </a>
