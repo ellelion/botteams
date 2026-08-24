@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { PageJump } from "@/components/PageShell";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
@@ -40,6 +41,7 @@ export default function ApiDocsPage() {
         </WingsHero>
       }
     >
+        <PageJump items={["Endpoints", "Machine contract", "Parameters", "Examples", "Sync", "Team shape"]} />
         <p className="measure mt-2 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
           Two shapes, two collections. A <strong>team</strong> is a recipe with a group chat: two to six named Bots, standing
           routines, and the connectors the account needs first. A <strong>bot</strong> is a recipe with one Bot and no group
@@ -48,7 +50,7 @@ export default function ApiDocsPage() {
         </p>
 
         <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Endpoints</h2>
+          <h2 id="endpoints" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Endpoints</h2>
           <dl className="mt-4">
             {[
               ["/api/teams", "GET /api/teams", "Teams only: two to six Bots in one group chat. Items arrive under a teams key."],
@@ -71,7 +73,7 @@ export default function ApiDocsPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Machine contract</h2>
+          <h2 id="machine-contract" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Machine contract</h2>
           <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             OpenAPI 3.1, generated from the same types this endpoint returns rather than written alongside them, so it
             cannot drift from the response. Defaults on this page and in the document come from one list.
@@ -86,7 +88,7 @@ export default function ApiDocsPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Parameters</h2>
+          <h2 id="parameters" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Parameters</h2>
           <table className="spec-table mt-4">
             <caption className="sr-only">Query parameters</caption>
             <tbody>
@@ -104,7 +106,7 @@ export default function ApiDocsPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Examples</h2>
+          <h2 id="examples" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Examples</h2>
           <pre className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
             <code>{[
               `# five teams that expect Stripe`,
@@ -126,7 +128,7 @@ export default function ApiDocsPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Sync</h2>
+          <h2 id="sync" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Sync</h2>
           <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             Cursor mode walks oldest first, so a team added after your last sync always lands after your cursor. A page
             never shifts underneath you. Start at <code style={{ fontFamily: ledger.mono }}>cursor=start</code>, store{" "}
@@ -148,7 +150,7 @@ export default function ApiDocsPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Team shape</h2>
+          <h2 id="team-shape" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Team shape</h2>
           <pre className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
             <code>{[
               `{`,

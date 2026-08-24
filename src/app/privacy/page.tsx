@@ -20,9 +20,14 @@ export default function PrivacyPage() {
         items={[
           "Who is responsible",
           "No account, no cookies, first-party analytics",
+          "What your browser keeps",
+          "What the server sees",
           "If you buy a rail slot",
           "Who else processes data",
+          "How long we keep it",
           "Your rights",
+          "Links off this site",
+          "Children",
           "Contact",
         ]}
       />
