@@ -131,6 +131,7 @@ export const en = {
     emptyBodyFilters: "Try another word, or clear the filters.",
     emptyNav: "Empty results",
     emptySeeAll: "See teams and Bots",
+    emptyGuides: "Browse guides",
     clearFilters: "Clear filters",
     loading: "Loading teams",
     updating: "Updating",
