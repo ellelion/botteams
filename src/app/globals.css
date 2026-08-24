@@ -4586,6 +4586,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   justify-content: flex-start;
   text-align: left;
 }
+.index-ad:hover .idx-ad-name,
+.idx-card.idx-ad:hover .idx-ad-name { color: var(--accent-text); }
 .index-ad-open { border-bottom-style: dashed; }
 .idx-ad-kicker {
   display: block;
@@ -4598,18 +4600,19 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .idx-ad-body {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 2px;
   width: 100%;
   min-width: 0;
-  text-align: center;
+  text-align: left;
 }
 .idx-ad-name {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
   font-size: 0.95rem;
+  transition: color var(--dur) var(--ease);
 }
 .idx-ad-line {
   font-size: 0.78rem;
