@@ -767,6 +767,22 @@ export function Customize({
           window.requestAnimationFrame(() => {
             window.requestAnimationFrame(() => {
               const head = document.querySelector(".rp-head");
+              const col = section.closest(".wings-main-col");
+              const bar = head?.getBoundingClientRect().height ?? 0;
+              const scroller =
+                col instanceof HTMLElement && getComputedStyle(col).overflowY !== "visible"
+                  ? col
+                  : null;
+              if (scroller) {
+                const next =
+                  section.getBoundingClientRect().top -
+                  scroller.getBoundingClientRect().top +
+                  scroller.scrollTop -
+                  bar -
+                  8;
+                scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
+                return;
+              }
               const offset = (head?.getBoundingClientRect().bottom ?? 0) + 8;
               const top = section.getBoundingClientRect().top + window.scrollY - offset;
               window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
