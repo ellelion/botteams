@@ -197,8 +197,9 @@
 .guide-prose .guide-toc {
   margin: 1.25rem 0 0;
 }
-/* min-height is ignored on inline links. Same box as the spec jump list. */
-.guide-prose .guide-toc a {
+/* min-height is ignored on inline links. Same box as the spec jump list.
+   Keep this selector as plain .guide-toc a so the 44px restatements win. */
+.guide-toc a {
   display: inline-flex;
   align-items: center;
   min-height: 32px;
