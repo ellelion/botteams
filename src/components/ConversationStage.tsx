@@ -120,7 +120,7 @@ function WatchOverlay({ team }: { team: Team }) {
               aria-modal="true"
               aria-labelledby={titleId}
             >
-              <button type="button" className="talk-overlay-scrim" aria-label={en.recipe.close} onClick={closeWatch} />
+              <button type="button" className="talk-overlay-scrim" tabIndex={-1} aria-label={en.recipe.close} onClick={closeWatch} />
               <div className="talk-overlay-canvas">
                 <h2 id={titleId} className="sr-only">{dialogTitle}</h2>
                 <button type="button" className="talk-overlay-close" onClick={closeWatch}>
