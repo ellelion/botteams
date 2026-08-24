@@ -329,7 +329,13 @@ function ConversationStageLive({ team }: { team: Team }) {
           ))}
         </div>
 
-        <div className="talk-thread talk-thread-swap" key={view === null ? "group" : `bot-${view}`} ref={threadRef}>
+        <div
+          className="talk-thread talk-thread-swap"
+          key={view === null ? "group" : `bot-${view}`}
+          ref={threadRef}
+          tabIndex={0}
+          aria-label={en.team.watchThread}
+        >
           {visible.map((turn, i) => {
             const agentIdx = Math.max(
               0,

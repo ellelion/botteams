@@ -225,6 +225,7 @@ export const en = {
     watchLabelBot: "Bot conversation replay",
     watchReplay: "Replay",
     watchReplayHint: "Replay only. This is not a live chat.",
+    watchThread: "Conversation replay",
     watchTyping: "A Bot is typing",
     watchTeammates: "Teammates",
     watchDock: "Open a Bot or the group chat",
