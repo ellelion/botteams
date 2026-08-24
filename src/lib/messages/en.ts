@@ -57,8 +57,6 @@ export const en = {
     howTitle: "How do I install a Grok Bot team?",
     howBody:
       "Pick a team. Copy the installer prompt. Paste it into Grok Bot. The prompt creates named Bots and a group chat (two to six Bots), tells you to make a sidebar section, and pings each Bot so you can confirm routines. Connectors must already be on the account.",
-    typeIn:
-      "Canonical domain botteams.ai. grokbotteam.ai (no s) is a type-in that should 301 when DNS exists. This repo does not buy or configure DNS.",
     lastUpdated: (day: string) => `Last updated ${day}.`,
     faqTitle: "Questions",
     faqWhatQ: "What is a Grok Bot team?",

@@ -48,7 +48,12 @@ function listDir(dir, kind) {
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir).filter((f) => f.endsWith(".md")).sort().map((f) => ({ file: f, dir, kind }));
 }
-const entries = [...listDir(teamsDir, "team"), ...listDir(botsDir, "bot")];
+const samples = [
+  { file: "sample-team.md", dir: path.join(root, "docs/examples"), kind: "team", sample: true },
+  { file: "sample-bot.md", dir: path.join(root, "docs/examples"), kind: "bot", sample: true },
+].filter((row) => fs.existsSync(path.join(row.dir, row.file)));
+
+const entries = [...listDir(teamsDir, "team"), ...listDir(botsDir, "bot"), ...samples];
 if (entries.length === 0) fail("no team or bot markdown files");
 
 for (const { file, dir, kind: folderKind } of entries) {
@@ -89,6 +94,7 @@ for (const { file, dir, kind: folderKind } of entries) {
     if (data.agents.length !== bots) fail(file + ": bots count must equal agents length");
     data.agents.forEach((agent, i) => {
       if (!isNonEmptyString(agent?.name) || !isNonEmptyString(agent?.persona)) fail(file + ": agents[" + i + "] needs name and persona");
+      if (agent.brings !== undefined && !isNonEmptyString(agent.brings)) fail(file + ": agents[" + i + "].brings must be a short sentence when set");
       if (agent.connectors !== undefined) {
         if (!Array.isArray(agent.connectors)) fail(file + ": agents[" + i + "].connectors must be an array");
         else agent.connectors.forEach((name) => {
@@ -223,6 +229,6 @@ for (const [name, team, expected] of [
 }
 
 if (process.exitCode) process.exit(process.exitCode);
-const teamCount = entries.filter((e) => e.kind === "team").length;
-const botCount = entries.filter((e) => e.kind === "bot").length;
+const teamCount = entries.filter((e) => e.kind === "team" && !e.sample).length;
+const botCount = entries.filter((e) => e.kind === "bot" && !e.sample).length;
 console.log(`validate-teams: ${teamCount} teams and ${botCount} bots ok`);

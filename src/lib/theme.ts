@@ -4,8 +4,8 @@ export type Theme = "light" | "dark";
    light default that no longer exists, so a stored "light" from then
    meant "not that dark", not "this white". A first visit and a stale
    visit both land on the new dark default. */
-export const THEME_STORAGE_KEY = "grokbotteams-theme-v3";
-export const ACCENT_STORAGE_KEY = "grokbotteams-accent";
+export const THEME_STORAGE_KEY = "botteams-theme-v4";
+export const ACCENT_STORAGE_KEY = "botteams-accent";
 /* Dark is the site now. Light is the same system inverted, opt-in. */
 export const DEFAULT_THEME: Theme = "dark";
 export const DEFAULT_ACCENT = "#54b9a6";

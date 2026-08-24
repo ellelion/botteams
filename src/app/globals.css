@@ -2750,7 +2750,6 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 /* Everything on a recipe page that is a sentence rather than a row. */
 .rp-job,
 .rp-note,
-.rp-room,
 .rc-empty,
 .rp-disclaimer,
 .team-prose,
@@ -2916,19 +2915,29 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 
 .rp-roster { margin-top: 22px; }
-.rp-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.rp-chips,
+.rp-room-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px 20px;
+  margin-top: 12px;
+  padding: 0;
+  list-style: none;
+}
 .rp-chip {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  justify-self: start;
   min-height: 40px;
+  min-width: 0;
   padding: 0 15px;
   border: 0;
   border-radius: var(--r-pill);
   background: var(--card);
   font-size: 0.88rem;
 }
-.rp-chip-name { white-space: nowrap; }
+.rp-chip-name { min-width: 0; white-space: nowrap; }
 .rp-chip-note {
   font-size: 13px;
   font-weight: 500;
@@ -2939,15 +2948,26 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .rp-room { margin-top: 14px; color: var(--ink-soft); font-size: 0.86rem; line-height: 1.5; }
 .rp-room-name { margin: 4px 0 8px; color: var(--ink); font-size: 0.92rem; }
-.rp-room-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 16px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.rp-room-grid { margin-top: 8px; }
+.rp-room-grid li {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
 }
-.rp-room-grid li { min-width: 0; }
+.rp-room-bot-name {
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+.rp-room-bot-line {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  max-width: 28ch;
+}
 
 .rp-room-label {
   display: block;
@@ -3120,6 +3140,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 720px) {
   /* Hero already has the H1 + full tagline on the stacked mobile column. */
   .rp-head-id { display: none; }
+  .rp-chips,
+  .rp-room-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rp-chip-name { white-space: normal; }
+}
+@media (max-width: 520px) {
+  .rp-chips,
+  .rp-room-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 640px) {
   .rp-head { padding-top: 10px; }
@@ -3486,6 +3513,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
+}
+@media (min-width: 1024px) {
+  .index-ad > .idx-ad-kicker {
+    margin-inline-start: 12px;
+  }
 }
 .idx-ad-body {
   display: flex;
