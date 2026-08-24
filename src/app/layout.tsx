@@ -25,6 +25,8 @@ export const metadata: Metadata = {
   publisher: site.company,
   openGraph: { title: site.title, description: site.description, url: site.url, siteName: site.name, locale: "en_US", type: "website" },
   twitter: { card: "summary_large_image", title: site.title, description: site.description },
+  // Icons: src/app/icon.svg (B letter mark) and apple-icon.tsx.
+  // public/favicon.svg is the same mark. /favicon.ico rewrites to it.
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "IgAzFR5IFY00bPLdcKWNI_8_zaOiefyE_C3LAx_MJL8",
     yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || "38e78504e4477fab",
