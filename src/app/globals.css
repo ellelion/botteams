@@ -1472,6 +1472,37 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .home-more dt { color: var(--ink); font-weight: 500; }
 .home-more dd { margin: 6px 0 14px; }
 
+.doc-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 4px 0 22px;
+  font-size: 0.78rem;
+}
+.doc-jump a { color: var(--ink-soft); }
+.wings-main-col :is(h2, h3, section)[id] {
+  scroll-margin-top: calc(var(--masthead-h, 56px) + 12px);
+}
+
+.spon-faq { margin-top: 8px; }
+.spon-faq details { border-bottom: 1px solid var(--line); }
+.spon-faq summary {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+.spon-faq summary::-webkit-details-marker { display: none; }
+.spon-faq details p {
+  padding: 0 0 16px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
 .crumb-list {
   display: flex;
   flex-wrap: wrap;

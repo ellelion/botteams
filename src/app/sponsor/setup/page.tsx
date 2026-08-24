@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { SetupForm } from "@/components/sponsor/SetupForm";
 import { ledger } from "@/lib/ledger-theme";
@@ -73,7 +74,10 @@ export default async function SponsorSetupPage({
   return (
     <WingsSplit
       hero={
-        <WingsHero title={en.sponsor.setupTitle}>
+        <WingsHero
+          title={en.sponsor.setupTitle}
+          kicker={<Breadcrumb parentHref="/sponsor" parentLabel={en.nav.sponsor} current={en.sponsor.setupTitle} />}
+        >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             {en.sponsor.setupLead}
           </p>

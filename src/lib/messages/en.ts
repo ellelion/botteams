@@ -31,6 +31,8 @@ export const en = {
     skip: "Skip to content",
     openMenu: "Open menu",
     closeMenu: "Close menu",
+    onThisPage: "On this page",
+    directory: "Directory",
   },
   home: {
     indexTitle: "Grok Bot Teams",

@@ -92,7 +92,7 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
           {team.kind === "team" ? (
             <div className="mt-4 flex flex-col items-center gap-3">
               <VerifiedChip on={isVerified(team)} />
-              <RosterShape bots={team.bots} rooms={0} routines={team.routines} />
+              <RosterShape bots={team.bots} rooms={team.rooms.length} routines={team.routines} />
               <WatchControl team={team} />
             </div>
           ) : (

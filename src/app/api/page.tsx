@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
+import { en } from "@/lib/messages/en";
 import { DEFAULT_LIMIT, MAX_LIMIT } from "@/lib/api-teams";
 import { PARAMS } from "@/lib/openapi";
 import { listBots, listTeams } from "@/lib/teams";
@@ -27,10 +29,13 @@ export default function ApiDocsPage() {
   return (
     <WingsSplit
       hero={
-        <WingsHero title="API">
+        <WingsHero
+          title="API"
+          kicker={<Breadcrumb parentHref="/" parentLabel={en.nav.directory} current={en.nav.api} />}
+        >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             Every team on this directory is readable as JSON. No key, no account, no rate limit worth mentioning. CORS is open,
-            so a browser or an agent can call it directly. {teamCount} teams and {botCount} bots today.
+            so a browser or an agent can call it directly. {teamCount} teams and {botCount} Bots today.
           </p>
         </WingsHero>
       }
@@ -46,12 +51,14 @@ export default function ApiDocsPage() {
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Endpoints</h2>
           <dl className="mt-4">
             {[
-              ["GET /api/teams", "Teams only: two to six Bots in one group chat. Items arrive under a teams key."],
-              ["GET /api/bots", "Bots only: one Bot, no group chat. Same filters and cursor contract. Items arrive under a bots key."],
-              ["GET /openapi.json", "The same contract as OpenAPI 3.1, built from the types the routes return."],
-            ].map(([route, note]) => (
+              ["/api/teams", "GET /api/teams", "Teams only: two to six Bots in one group chat. Items arrive under a teams key."],
+              ["/api/bots", "GET /api/bots", "Bots only: one Bot, no group chat. Same filters and cursor contract. Items arrive under a bots key."],
+              ["/openapi.json", "GET /openapi.json", "The same contract as OpenAPI 3.1, built from the types the routes return."],
+            ].map(([href, route, note]) => (
               <div key={route} className="hairline-row py-3">
-                <dt className="text-[0.82rem]" style={{ fontFamily: ledger.mono, color: ledger.ink }}>{route}</dt>
+                <dt className="text-[0.82rem]" style={{ fontFamily: ledger.mono, color: ledger.ink }}>
+                  <a className="accent-hover" href={href}>{route}</a>
+                </dt>
                 <dd className="mt-1 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{note}</dd>
               </div>
             ))}
@@ -81,13 +88,14 @@ export default function ApiDocsPage() {
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Parameters</h2>
           <table className="spec-table mt-4">
+            <caption className="sr-only">Query parameters</caption>
             <tbody>
               {/* Read from the same list the OpenAPI document is built
                   from, so this table cannot describe a parameter the spec
                   does not, or miss one it does. */}
               {PARAMS.map((p) => (
                 <tr key={p.name}>
-                  <th><code>{p.name}</code></th>
+                  <th scope="row"><code>{p.name}</code></th>
                   <td>{p.description}</td>
                 </tr>
               ))}
