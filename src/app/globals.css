@@ -3253,7 +3253,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.3fr);
   gap: 40px 48px;
+  min-width: 0;
 }
+.foot-col { min-width: 0; }
 .foot-col-title {
   /* x.ai mobile: sentence-case group titles, not tracked caps. */
   color: color-mix(in srgb, var(--ink) 70%, transparent);
@@ -3273,9 +3275,12 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   line-height: 1.5;
   transition: color var(--dur) var(--ease);
 }
-/* A domain reads as one word. It may run to the edge of its column, but
-   it never breaks in the middle. */
-.foot-col li > .foot-link { white-space: nowrap; }
+/* Wrap when the column is too narrow (200% text, a long label). A
+   nowrap domain used to push the page 172px past the viewport. */
+.foot-col li > .foot-link {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 .foot-link:hover { color: var(--accent-text); }
 .foot-link[aria-current="page"] { color: var(--ink); font-weight: 500; }
 .foot-link:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
@@ -3296,6 +3301,15 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
   gap: 40px 64px;
   align-items: start;
+  container-type: inline-size;
+}
+@container (max-width: 50rem) {
+  /* Text zoom does not shrink the viewport. Four nowrap columns do not
+     fit once 17rem of identity has taken half the pane. */
+  .foot-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px 24px;
+  }
 }
 .foot-identity {
   display: flex;
