@@ -16,7 +16,7 @@ Human-voice / write-content applied.
 | 2.5 voice match | waived | No `*-voice.md` in this repo. |
 | 3 slop pass | done | grep hit one em dash inside an xAI quote (kept). Curly quotes in running prose rewritten. "not a vault" / "not a certification" / "not a fantasy bake-off" rewritten. |
 | 4 scorecard | done | See below. Rendered HTML checked at localhost:3000/grok-bot (200). |
-| 5 blind review | pending | Separate agent after this revision. |
+| 5 blind review | done | Separate agent 2026-08-24. Verdict: keep URL, cut overlap. Must-fix items applied: FAQ #1 removed, shared-computer lecture cut, §3 gutted, §6/§7 merged, answer-first on setup/skills/access, one href per xAI URL (source footer). |
 
 ## Source freshness
 
@@ -67,3 +67,4 @@ Human-voice / write-content applied.
 
 - 2026-08-24: em dash in skills/routines quote kept (source punctuation).
 - 2026-08-24: FAQ questions promoted from dt to h3 so schema names match headings.
+- 2026-08-24 blind review: chatbot FAQ cloned H1/§1 (cut). Shared-computer restated six times (cut lecture, keep quote + FAQ). Recipe CTA moved out of §3. Comparison namedropped ChatGPT/Claude without verification (merged into wrong-tool table). Date-as-anchor on launch URL (body links removed; source footer keeps the three primary hrefs).
