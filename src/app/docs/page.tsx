@@ -28,7 +28,7 @@ export default function DocsPage() {
             {en.docs.limitsCheckedOn}{" "}
             <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
           </p>
-          <p className="mt-3 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+          <p className="mt-3 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             For Grok Bot setup, skills, and limits, see{" "}
             <Link className="accent-hover underline underline-offset-2" href="/grok-bot">
               Grok Bot setup, skills, and limits
