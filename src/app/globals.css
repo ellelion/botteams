@@ -5522,7 +5522,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     top: var(--masthead-h);
     height: calc(100dvh - var(--masthead-h));
     max-height: calc(100dvh - var(--masthead-h));
-    overflow: hidden;
+    /* How, contribute, and the FAQ sit below the first screen in this
+       column. Hidden overflow left those links in tab order and off
+       the glass. The catalog column already scrolls; this one must too. */
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scroll-padding-top: 1.25rem;
     align-self: start;
   }
 }
