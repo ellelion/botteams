@@ -16,7 +16,7 @@ export function PageJump({ items }: { items: string[] }) {
         <summary className="doc-toc-sum">{en.nav.onThisPage}</summary>
         <div className="doc-jump">
           {items.map((label) => (
-            <a key={label} href={`#${slugTitle(label)}`} className="accent-hover">{label}</a>
+            <a key={label} href={`#${slugTitle(label)}`} className="accent-hover underline underline-offset-2">{label}</a>
           ))}
         </div>
       </details>
