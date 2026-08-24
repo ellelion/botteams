@@ -2125,6 +2125,12 @@ a.chip-unverified:hover {
 /* Browse all puts a bordered scroll box directly under the bar, and the
    two edges stacked into a double rule. */
 .cf-bar.is-bare { border-bottom: 0; }
+/* A windowed catalog has its own scroller. Sticking the bar on the
+   page then lets Tab land a row under the search field. */
+.cf:has(.cf-scroll) .cf-bar {
+  position: static;
+  top: auto;
+}
 .cf-search {
   position: relative;
   display: flex;
