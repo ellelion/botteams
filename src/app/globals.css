@@ -4658,7 +4658,19 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .site-menu-button,
   .site-menu-link,
   .sel-option,
-  .cz-skill-opt {
+  .cz-skill-opt,
+  .cf-browse,
+  .cf-clear,
+  .idx-chip-clear,
+  .search-clear,
+  .cf-search-clear,
+  .add-yours,
+  .cz-chip,
+  .filter-chip,
+  .spon-cta-ghost,
+  .idx-card,
+  .index-ad,
+  .skip-link {
     border: 1px solid ButtonText;
   }
   .browse-pick-btn.is-on,
