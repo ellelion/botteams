@@ -88,8 +88,22 @@ export function AccentPicker() {
     }
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft" && event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
     event.preventDefault();
-    const delta = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : -1;
-    const next = (index + delta + ACCENT_PALETTE.length) % ACCENT_PALETTE.length;
+    const cols = window.matchMedia("(max-width: 640px), (pointer: coarse)").matches ? 4 : 6;
+    const len = ACCENT_PALETTE.length;
+    let next = index;
+    if (event.key === "ArrowRight") next = (index + 1) % len;
+    else if (event.key === "ArrowLeft") next = (index - 1 + len) % len;
+    else if (event.key === "ArrowDown") {
+      next = index + cols;
+      if (next >= len) next = index % cols;
+    } else {
+      next = index - cols;
+      if (next < 0) {
+        const col = index % cols;
+        const last = Math.floor((len - 1) / cols) * cols + col;
+        next = last >= len ? last - cols : last;
+      }
+    }
     swatchRefs.current[next]?.focus();
   }
 
