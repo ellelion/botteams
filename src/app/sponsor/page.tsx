@@ -79,8 +79,8 @@ export default async function SponsorPage() {
             {en.sponsor.answer(teamCount, botCount, SPONSOR_SLOTS_TOTAL, HOUSE_COUNT, open, STATS_AS_OF)}
           </p>
           <p className="home-disclaimer mt-5">{en.notAffiliated}</p>
-          <a className="theme-control theme-control-label spon-hero-cta" href="#buy">
-            {en.sponsor.buyHeroCta}
+          <a className="theme-control theme-control-label spon-hero-cta" href={canBuy ? "#buy" : mail}>
+            {canBuy ? en.sponsor.buyHeroCta : en.sponsor.mailCta}
           </a>
         </WingsHero>
       }
@@ -257,11 +257,12 @@ export default async function SponsorPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Enquire</h2>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.sponsor.enquireTitle}</h2>
           <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-            The listing is bought above. Mail {site.company} at{" "}
-            <a className="accent-hover underline" href={mail}>{site.email}</a> if you have a question first. We will tell
-            you what the traffic actually is.
+            {canBuy ? `${en.sponsor.enquireBought} ` : null}
+            Mail {site.company} at{" "}
+            <a className="accent-hover underline" href={mail}>{site.email}</a>
+            {canBuy ? en.sponsor.enquireAskAfter : en.sponsor.enquireAskSlotAfter}
           </p>
           <p className="mt-6 text-[0.72rem]" style={{ color: ledger.inkFaint }}>
             <time dateTime={STATS_AS_OF_ISO}>{en.sponsor.updated(STATS_AS_OF)}</time>

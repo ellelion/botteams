@@ -318,6 +318,10 @@ export const en = {
     charsUsed: (used: number, max: number) => `${used} of ${max}`,
     fieldMarkHint: "PNG, SVG, WebP, or JPG. A simple mark, not a screenshot.",
     mailCta: "Mail us",
+    enquireTitle: "Enquire",
+    enquireBought: "The listing is bought above.",
+    enquireAskAfter: " if you have a question first. We will tell you what the traffic actually is.",
+    enquireAskSlotAfter: " if you want a slot or have a question first. We will tell you what the traffic actually is.",
     termMonth: {
       "1m": "$1,500 / month",
       "3m": "$1,333 / month",
