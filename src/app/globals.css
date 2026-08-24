@@ -1142,9 +1142,10 @@ a.chip-unverified:hover {
   transition: background var(--dur) var(--ease);
 }
 .search-input::placeholder { color: var(--muted); }
-.search-input:focus {
-  outline: 1px solid var(--accent);
-  outline-offset: -1px;
+.search-input:focus,
+.search-input:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
   background: var(--surface-elevated);
 }
 .search-input::-webkit-search-cancel-button { appearance: none; }
@@ -1210,7 +1211,8 @@ a.chip-unverified:hover {
   .crumb-list a,
   .home-hero-manifesto a,
   .api-link,
-  .hairline-row > a {
+  .hairline-row > a,
+  .index-name {
     min-height: 44px;
   }
   .theme-control {
@@ -1278,7 +1280,8 @@ a.chip-unverified:hover {
   .crumb-list a,
   .home-hero-manifesto a,
   .api-link,
-  .hairline-row > a {
+  .hairline-row > a,
+  .index-name {
     min-height: 44px;
   }
   .filter-views .filter-chip--icon { width: auto; min-width: 44px; }
@@ -1527,6 +1530,9 @@ a.chip-unverified:hover {
 }
 .index-body { grid-column: 1; position: relative; z-index: 1; }
 .index-name {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1.02rem;
   font-weight: 500;
@@ -2083,9 +2089,10 @@ a.chip-unverified:hover {
 }
 .cf-input:not(:placeholder-shown) { padding-right: 88px; }
 .cf-input::placeholder { color: var(--ink-soft); }
-.cf-input:focus {
-  outline: 1px solid var(--accent);
-  outline-offset: -1px;
+.cf-input:focus,
+.cf-input:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
   background: var(--surface-elevated);
 }
 .cf-input::-webkit-search-cancel-button { appearance: none; }
@@ -5646,7 +5653,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .crumb-list a,
   .home-hero-manifesto a,
   .api-link,
-  .hairline-row > a {
+  .hairline-row > a,
+  .index-name {
     min-height: 44px;
   }
   .theme-control,
