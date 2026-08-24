@@ -303,6 +303,7 @@ export const en = {
     summary: (shown: number, total: number) =>
       shown === total ? `Showing all ${total} connectors.` : `Showing ${shown} of ${total} connectors.`,
     emptyTitle: (q: string) => (q ? `Nothing matches "${q}".` : "Nothing matches those filters."),
+    emptyNav: "Empty results",
     emptyBody:
       "Grok Bot can also reach anything that speaks MCP, so a connector missing here may still work. Try a shorter word, or a category.",
     teamCount: (n: number) => (n === 1 ? "1 team" : `${n} teams`),
