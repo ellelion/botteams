@@ -5211,7 +5211,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .idx-ad-line {
   font-size: 0.78rem;
-  color: var(--muted);
+  /* Same token as the side-rail pitch. --muted made the commercial
+     line quieter than the Sponsored kicker. */
+  color: var(--ink-soft);
   line-height: 1.35;
 }
 @media (max-width: 1023px) {
