@@ -80,17 +80,17 @@ export function Select({
   useEffect(() => {
     if (!open) return;
     const listEl = listRef.current;
-    const buttonEl = buttonRef.current;
-    if (!listEl || !buttonEl) return;
+    const rootEl = rootRef.current;
+    if (!listEl || !rootEl) return;
     const list = listEl;
-    const button = buttonEl;
+    const root = rootEl;
     function place() {
-      const btn = button.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - btn.bottom - 12;
-      const spaceAbove = btn.top - 12;
+      const box = root.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - box.bottom - 8;
+      const spaceAbove = box.top - 8;
       const height = list.offsetHeight;
       list.classList.toggle("is-up", spaceBelow < height && spaceAbove > spaceBelow);
-      list.style.maxHeight = `${Math.max(160, Math.max(spaceBelow, spaceAbove))}px`;
+      list.style.maxHeight = `${Math.max(120, Math.floor(Math.max(spaceBelow, spaceAbove)))}px`;
     }
     place();
     window.addEventListener("resize", place);
