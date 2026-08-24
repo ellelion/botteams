@@ -242,19 +242,12 @@ function ConversationStageLive({ team }: { team: Team }) {
     <section id="watch" ref={rootRef} className="talk-stage" aria-label={`${roomLabel} conversation`}>
       <div className="talk-body">
       <aside className="talk-rail" aria-label="Teammates">
-        <div className="talk-rail-head">
-          <div className="talk-chrome" aria-hidden>
+        <div className="talk-rail-head" aria-hidden>
+          <div className="talk-chrome">
             <span className="talk-dot" />
             <span className="talk-dot" />
             <span className="talk-dot" />
           </div>
-          <span className="talk-new-agent" aria-hidden>
-            <span className="talk-new-plus">+</span>
-          </span>
-        </div>
-        <div className="talk-rail-search" aria-hidden>
-          <span className="talk-search-ico">⌕</span>
-          Search
         </div>
         <div className="talk-rail-list">
           {agents.map((agent, i) => {
