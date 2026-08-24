@@ -1490,7 +1490,7 @@ a.chip-unverified:focus-visible {
   }
   .cz-input { min-height: 44px; }
   .sel-option { min-height: 44px; }
-  .sel-list { max-height: min(19rem, 50dvh); }
+  .sel-list { max-height: min(19rem, var(--menu-max-h, 50dvh)); }
   /* An iPad with a trackpad reports pointer: fine. The stacked layout
      still needs a thumb-sized control. Keep this list in step with the
      late (pointer: coarse) restatement at the bottom of the file. */
