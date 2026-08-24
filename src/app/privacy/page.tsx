@@ -163,7 +163,7 @@ export default function PrivacyPage() {
           Connector marks, sponsor rows, and every link to xAI&apos;s docs point at other people&apos;s sites. Once you
           click, you are on their infrastructure and under their privacy policy, not this one. Outbound{" "}
           <Link className="accent-hover underline" href="/sponsor">
-            rail
+            sponsor rail
           </Link>{" "}
           links carry a plain campaign tag in the URL so we can tell where a click came from. That tag identifies the
           placement, not you.
