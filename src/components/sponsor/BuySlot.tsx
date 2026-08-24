@@ -52,9 +52,9 @@ export function BuySlot({ soldOut }: { soldOut: boolean }) {
       </div>
       <p className="spon-fine">
         By paying you confirm you are 18 or older and agree to the{" "}
-        <Link className="underline" href="/terms">Terms</Link>
+        <Link className="accent-hover underline" href="/terms">Terms</Link>
         {" "}and the{" "}
-        <Link className="underline" href="/privacy">Privacy policy</Link>
+        <Link className="accent-hover underline" href="/privacy">Privacy policy</Link>
         . Stripe takes the card on their page. A paid row is a paid placement. It is not Verified, it is not a team, and it is not an endorsement.
       </p>
     </div>
