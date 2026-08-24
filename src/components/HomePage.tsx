@@ -66,7 +66,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
                 {en.notAffiliated}
               </p>
             </div>
-            <Link href="/?kind=team" className="meta accent-hover absolute bottom-5 left-1/2 z-10 hidden lg:inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap transition-colors lg:bottom-4">
+            <Link href="/?kind=team" className="home-scroll-cue meta accent-hover absolute bottom-5 left-1/2 z-10 hidden lg:inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap transition-colors lg:bottom-4">
               {en.home.scrollCue} <span className="cue-bob" aria-hidden>↓</span>
             </Link>
           </section>
