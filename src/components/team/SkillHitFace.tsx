@@ -13,12 +13,16 @@ export function SkillHitFace({
   extra,
   pending = false,
   failed = false,
+  compact = false,
 }: {
   hit: SkillselionHit;
   live?: SkillselionHit;
   extra?: string;
   pending?: boolean;
   failed?: boolean;
+  /* Search hits live inside a listbox option. Links there both nest
+     interactives and add the skill on the way out. The picked row keeps them. */
+  compact?: boolean;
 }) {
   const face = live ?? hit;
   const who = authorHref(face);
@@ -41,9 +45,13 @@ export function SkillHitFace({
             <span className="cz-hint">
               {" "}
               {en.customize.skillsBy}{" "}
-              <a className="cz-link" href={who} target="_blank" rel="noopener noreferrer" aria-label={`${face.author}. ${en.nav.opensNew}`}>
-                {face.author}
-              </a>
+              {compact ? (
+                face.author
+              ) : (
+                <a className="cz-link" href={who} target="_blank" rel="noopener noreferrer" aria-label={`${face.author}. ${en.nav.opensNew}`}>
+                  {face.author}
+                </a>
+              )}
             </span>
           ) : null}
         </span>
@@ -51,10 +59,14 @@ export function SkillHitFace({
         <p className="cz-hint">
           {counts}
           {extra ? ` · ${extra}` : null}
-          {" · "}
-          <a className="cz-link" href={face.url} target="_blank" rel="noopener noreferrer" aria-label={`${en.customize.skillsView}. ${en.nav.opensNew}`}>
-            {en.customize.skillsView}
-          </a>
+          {compact ? null : (
+            <>
+              {" · "}
+              <a className="cz-link" href={face.url} target="_blank" rel="noopener noreferrer" aria-label={`${en.customize.skillsView}. ${en.nav.opensNew}`}>
+                {en.customize.skillsView}
+              </a>
+            </>
+          )}
         </p>
       </span>
     </span>
