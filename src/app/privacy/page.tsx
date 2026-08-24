@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Block, PageJump, PageShell } from "@/components/PageShell";
+import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -59,6 +60,7 @@ export default function PrivacyPage() {
             href="https://openpanel.dev"
             rel="nofollow noopener noreferrer"
             target="_blank"
+            aria-label={`OpenPanel. ${en.nav.opensNew}`}
           >
             OpenPanel
           </a>
@@ -102,6 +104,7 @@ export default function PrivacyPage() {
             href="https://stripe.com/privacy"
             rel="nofollow noopener noreferrer"
             target="_blank"
+            aria-label={`Stripe privacy policy. ${en.nav.opensNew}`}
           >
             Stripe&apos;s privacy policy
           </a>

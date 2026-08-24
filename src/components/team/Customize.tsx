@@ -661,15 +661,17 @@ export function Customize({
         </div>
       </section>
 
+      {/* Native exclusive accordion. Opening one section closes the
+          others so sticky titles cannot stack into a wall on a phone. */}
       <div className="rp-acc">
-        <details className="rp-sec" open>
+        <details className="rp-sec" name="recipe" open>
           <summary className="rp-sum"><RecipeSecIcon name="job" /><span className="rp-sum-lab">{en.recipe.secJob}</span></summary>
           <div className="rp-secbody">
             {rosterPart}
           </div>
         </details>
 
-        <details className="rp-sec">
+        <details className="rp-sec" name="recipe">
           <summary className="rp-sum">
             <RecipeSecIcon name="routines" />
             <span className="rp-sum-lab">{en.recipe.secRoutines}</span>
@@ -680,7 +682,7 @@ export function Customize({
           </div>
         </details>
 
-        <details className="rp-sec">
+        <details className="rp-sec" name="recipe">
           <summary className="rp-sum">
             <RecipeSecIcon name="skills" />
             <span className="rp-sum-lab">{en.customize.skills}</span>
@@ -707,7 +709,7 @@ export function Customize({
           </div>
         </details>
 
-        <details className="rp-sec">
+        <details className="rp-sec" name="recipe">
           <summary className="rp-sum">
             <RecipeSecIcon name="notes" />
             <span className="rp-sum-lab">{en.recipe.secNotes}</span>
@@ -716,7 +718,7 @@ export function Customize({
           <div className="rp-secbody">{notes.length > 0 ? notes : <p className="rc-empty">{en.recipe.noNotes}</p>}</div>
         </details>
 
-        <details className="rp-sec">
+        <details className="rp-sec" name="recipe">
           <summary className="rp-sum"><RecipeSecIcon name="installer" /><span className="rp-sum-lab">{en.recipe.secInstaller}</span></summary>
           <div className="rp-secbody">
             <p className="rp-note">{en.team.installNote}</p>

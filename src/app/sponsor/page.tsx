@@ -248,7 +248,7 @@ export default async function SponsorPage() {
           </h2>
           <div className="spon-faq">
             {faqs.map((item) => (
-              <details key={item.q}>
+              <details key={item.q} name="sponsor-faq">
                 <summary>{item.q}</summary>
                 <p>{item.a}</p>
               </details>

@@ -3824,6 +3824,38 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   }
 }
 
+/* Windows High Contrast / forced-colors: selected pills and icon-only
+   controls must keep a visible edge when background color is ignored. */
+@media (forced-colors: active) {
+  .theme-control,
+  .browse-pick-btn,
+  .cat-pill,
+  .sel-button,
+  .filter-views,
+  .share-btn,
+  .rp-secondary,
+  .spon-chip,
+  .spon-cta,
+  .cf-chip,
+  .idx-chip,
+  .search-input,
+  .cf-input {
+    border: 1px solid ButtonText;
+  }
+  .browse-pick-btn.is-on,
+  .cat-pill.is-on,
+  .filter-views .filter-chip--icon.is-on,
+  .cf-chip.is-on,
+  .theme-accent-swatch.is-selected {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+  .theme-accent-mark i,
+  .theme-accent-swatch {
+    border: 1px solid ButtonText;
+  }
+}
+
 
 /* Side sponsor rails. Live on the outer edges, not under the page. */
 .page-rails {
