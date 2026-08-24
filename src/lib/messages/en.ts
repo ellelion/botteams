@@ -202,7 +202,7 @@ export const en = {
     skillsScopeLead:
       "Team-scoped skills apply to every Bot. Bot-scoped skills apply only to that Bot (enable under Plugins → Yours for that Bot only).",
     skillsSearch: "Search Skillselion",
-    skillsPlaceholder: "frontend design, tdd, …",
+    skillsPlaceholder: "frontend, tdd",
     skillsSearching: "Searching Skillselion…",
     skillsEmpty: "Nothing matched. Try a shorter name.",
     skillsClear: "Clear search",
