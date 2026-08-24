@@ -140,7 +140,7 @@
    moving between the two does not slide the heading sideways. */
 .wrap-prose { max-width: var(--w-prose); margin-inline: 0; }
 /* Paragraph inside a data page. Never the page, only the sentence. */
-.measure { max-width: var(--w-measure); }
+.measure { max-width: var(--w-measure); overflow-wrap: anywhere; }
 
 html { background: var(--page); scroll-padding-top: calc(var(--masthead-h) + 10px); }
 body {
@@ -298,7 +298,8 @@ body {
   }
 
   .site-masthead {
-    height: calc(56px + env(safe-area-inset-top));
+    flex-wrap: wrap;
+    height: auto;
     min-height: calc(56px + env(safe-area-inset-top));
     gap: 12px;
     padding-top: env(safe-area-inset-top);
@@ -713,6 +714,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .team-prose p + p {
   margin-top: 1rem;
 }
+.team-prose a,
+a.accent-hover {
+  overflow-wrap: anywhere;
+}
 .team-prose a {
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -1065,6 +1070,12 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   background: var(--page);
   padding-bottom: 8px;
   box-shadow: 0 1px 0 var(--line);
+  container-type: inline-size;
+}
+@container (max-width: 21rem) {
+  /* 200% text on a phone. rem follows the root, so Connector / Sort
+     wrap instead of letting Newly added widen the page. */
+  .filter-selects { flex-wrap: wrap; width: 100%; }
 }
 @media (max-width: 1023px) {
   .index-tools { top: var(--masthead-h); }
@@ -1592,8 +1603,14 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+  /* Pin to the containing block. Left:auto uses the static position,
+     which inside a nowrap share row sat at 520px and widened the page
+     when text was at 200 percent. */
+  left: 0;
+  top: 0;
 }
 
 .idx-status {
@@ -2263,7 +2280,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   color: var(--ink-soft);
   font: 500 0.68rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
 }
-.sel.has-caption .sel-button { max-width: none; width: 100%; }
+.sel.has-caption .sel-button { max-width: 100%; width: 100%; }
 .sel-button {
   display: inline-flex;
   align-items: center;
@@ -3602,6 +3619,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  max-width: 100%;
   min-height: 40px;
   padding: 0 15px;
   border: 0;
@@ -3609,7 +3627,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   background: var(--card);
   font-size: 0.88rem;
 }
-.rp-chip-name { white-space: nowrap; }
+.rp-chip-name {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .rp-chip-note {
   font-size: 13px;
   font-weight: 500;
@@ -3733,7 +3756,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .rp-sum:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .rp-sum .line-icon { width: 16px; height: 16px; flex: none; color: var(--muted); }
 .rp-sum:hover .line-icon { color: inherit; }
-.rp-sum-lab { flex: 0 1 auto; white-space: nowrap; }
+.rp-sum-lab {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 .rp-sum:has(.rp-count) { display: grid; grid-template-columns: 16px 5.5rem 1.15rem minmax(0,1fr) auto; column-gap: 8px; align-items: center; }
 .rp-sum:has(.rp-count) > .line-icon { grid-column: 1; }
 .rp-sum:has(.rp-count) > .rp-sum-lab { grid-column: 2; overflow: hidden; text-overflow: ellipsis; }
@@ -3882,6 +3910,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   border: 0;
 }
 .share-bar {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
