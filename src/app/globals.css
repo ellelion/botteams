@@ -3176,8 +3176,10 @@ html[data-theme="light"] .cz-check input:checked {
 .cz-search-clear {
   position: absolute;
   right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  bottom: 0;
+  margin-block: auto;
+  height: fit-content;
   min-height: 32px;
   padding: 0 12px;
   border: 0;
