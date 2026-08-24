@@ -3679,9 +3679,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   flex-direction: column;
   width: min(40rem, 100%);
   height: 100%;
-  border-left: 0;
-  background: var(--surface-elevated);
-  box-shadow: var(--shadow-float);
+  border-left: 1px solid var(--line);
+  background: var(--page);
   animation: rp-sheet-in var(--dur) var(--ease);
 }
 @keyframes rp-sheet-in {
@@ -3702,6 +3701,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   gap: 10px 14px;
   padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 16px;
   border-bottom: 1px solid var(--line);
+  background: var(--page);
 }
 .rp-sheet-act { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
 .rp-sheet-body {
