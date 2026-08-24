@@ -1793,15 +1793,12 @@ a.chip-unverified:hover {
   }
 }
 @media (min-width: 1024px) {
-  /* Tools stick at the top of this column, not under the masthead. */
+  /* Tools stick at the top of this column, not under the masthead.
+     Put the offset on the column scroller. A matching scroll-margin
+     on the name also moves the document and yanks the sticky column
+     off the viewport. */
   .wings-main-col:has(.index-tools) {
     scroll-padding-top: 280px;
-  }
-  .index-row,
-  .idx-card,
-  .idx-empty,
-  .index-name {
-    scroll-margin-top: 280px;
   }
 }
 
