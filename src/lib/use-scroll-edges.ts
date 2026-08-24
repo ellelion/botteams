@@ -50,10 +50,11 @@ export function scrollIntoRail(pane: HTMLElement, el: HTMLElement) {
   else if (row.left < box.left) pane.scrollLeft -= (box.left - row.left) / scale;
 }
 
-/* Chrome still scrolls the page under CSS zoom even with preventScroll.
-   Restore vertical window / overflow panes, then the caller can move a
-   rail or dialog on purpose. Horizontal pane offsets stay put so a
-   follow-up scrollIntoRail is not undone. */
+/* Chrome still scrolls the page under CSS zoom even with preventScroll,
+   and a category change re-renders the catalog ~90ms later which scrolls
+   again. Hold vertical window / overflow panes long enough to cover that
+   second pass. Horizontal pane offsets stay put so a follow-up
+   scrollIntoRail is not undone. */
 export function focusWithoutPageScroll(node: HTMLElement) {
   const x = window.scrollX;
   const y = window.scrollY;
@@ -69,5 +70,14 @@ export function focusWithoutPageScroll(node: HTMLElement) {
     for (const pane of panes) pane.el.scrollTop = pane.top;
   };
   restore();
-  requestAnimationFrame(restore);
+  window.addEventListener("scroll", restore);
+  const start = performance.now();
+  const stop = () => window.removeEventListener("scroll", restore);
+  const tick = () => {
+    restore();
+    if (performance.now() - start < 220) requestAnimationFrame(tick);
+    else stop();
+  };
+  requestAnimationFrame(tick);
+  window.setTimeout(stop, 240);
 }
