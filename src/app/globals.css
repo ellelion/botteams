@@ -1792,12 +1792,17 @@ a.chip-unverified:hover {
   .index-row,
   .idx-card,
   .idx-empty,
-  .index-name {
+  .index-name,
+  .index-ad,
+  .index-row .chevron,
+  .roster-shape-routines summary,
+  .index-row a.chip {
     scroll-margin-top: calc(var(--masthead-h) + 5.5rem);
     scroll-margin-bottom: 72px;
   }
   /* Filters and query chips are not sticky. Tab after a long list
      used to park them under the search field. */
+  .browse-pick-btn,
   .cat-pill,
   .filter-views .filter-chip--icon,
   .index-tools .sel-button,
