@@ -4316,7 +4316,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   line-height: 1.4;
   color: var(--ink-soft);
 }
-.hero-stat:hover strong { color: var(--accent); }
+.hero-stat:hover strong,
+.hero-stat:focus-visible strong { color: var(--ink); }
+.hero-stat:hover span,
+.hero-stat:focus-visible span { color: var(--ink); }
 .hero-stats,
 .hero-stat {
   animation: hero-stat-in 700ms var(--ease) both;
