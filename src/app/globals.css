@@ -506,7 +506,7 @@ body {
 .theme-accent-popover {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 80;
   display: grid; grid-template-columns: repeat(6, 28px); gap: 6px;
-  padding: 10px; border: 1px solid var(--line);
+  padding: 10px; border: 1px solid var(--pill-line);
   border-radius: var(--r-inner);
   background: var(--page);
   animation: sel-in var(--dur) var(--ease);
@@ -2831,7 +2831,9 @@ a.chip-unverified:focus-visible {
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 6px;
-  border: 1px solid var(--line);
+  /* Page on page. --line is ~1.1:1 on paper, so the menu used to
+     vanish except for the options. Same 3:1 hairline as the pills. */
+  border: 1px solid var(--pill-line);
   border-radius: var(--r-inner);
   background: var(--page);
   animation: sel-in var(--dur) var(--ease);
@@ -4952,6 +4954,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cat-pill,
   .sel-button,
   .filter-views,
+  .cz-modes,
   .share-btn,
   .rp-secondary,
   .spon-chip,
