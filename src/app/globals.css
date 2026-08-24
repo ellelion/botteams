@@ -197,6 +197,12 @@
 .guide-prose .guide-toc {
   margin: 1.25rem 0 0;
 }
+/* min-height is ignored on inline links. Same box as the spec jump list. */
+.guide-prose .guide-toc a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+}
 .guide-quote {
   margin: 1.35rem 0 0;
   padding: 0.15rem 0 0.15rem 1rem;
