@@ -2797,6 +2797,9 @@ a.chip-unverified:hover {
 }
 .cz-skill-hits .cz-skill-opt.is-active {
   background: color-mix(in oklab, var(--accent-text) 8%, var(--surface));
+  /* Same job as the select cursor: an 8% mint wash on charcoal is not a
+     mark you can follow with the arrow keys. */
+  box-shadow: inset 0 0 0 2px var(--accent-text);
 }
 .cz-skill-hits .cz-skill-opt .cz-btn { pointer-events: none; }
 
@@ -4354,7 +4357,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .talk-dock-item,
   .site-menu-button,
   .site-menu-link,
-  .sel-option {
+  .sel-option,
+  .cz-skill-opt {
     border: 1px solid ButtonText;
   }
   .browse-pick-btn.is-on,
@@ -4366,7 +4370,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .talk-dock-item.is-on,
   .cz-mode.is-on,
   .site-menu-link.is-current,
-  .sel-option[data-active="true"] {
+  .sel-option[data-active="true"],
+  .cz-skill-hits .cz-skill-opt.is-active {
     outline: 2px solid Highlight;
     outline-offset: 2px;
   }
