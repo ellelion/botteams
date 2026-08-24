@@ -22,7 +22,7 @@ export function stripe(): Stripe {
   if (!client) {
     client = new Stripe(key, {
       apiVersion: STRIPE_API_VERSION,
-      appInfo: { name: "grokbotteams", url: "https://botteams.ai" },
+      appInfo: { name: "botteams.ai", url: "https://botteams.ai" },
     });
   }
   return client;
@@ -50,5 +50,5 @@ export function railIntegrationIdentifier(): string {
   const bytes = randomBytes(8);
   let suffix = "";
   for (const byte of bytes) suffix += alphabet[byte % alphabet.length];
-  return `grokbotteams_rail_${suffix}`;
+  return `botteams_rail_${suffix}`;
 }

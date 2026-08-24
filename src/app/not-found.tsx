@@ -19,6 +19,7 @@ export default function NotFound() {
           <Link href="/" className="theme-control theme-control-label">{en.notFound.back}</Link>
           <Link href="/?kind=bot" className="theme-control theme-control-label">{en.notFound.backBots}</Link>
           <Link href="/connectors" className="theme-control theme-control-label">{en.notFound.connectors}</Link>
+          <Link href="/guides" className="theme-control theme-control-label">{en.notFound.guides}</Link>
           <Link href="/docs" className="theme-control theme-control-label">{en.notFound.spec}</Link>
         </nav>
       </div>

@@ -79,3 +79,77 @@ function itemJsonLd(team: Team) {
 
 export const teamJsonLd = itemJsonLd;
 export const botJsonLd = itemJsonLd;
+
+export function articleJsonLd(input: {
+  url: string;
+  headline: string;
+  description: string;
+  datePublished: string;
+  dateModified: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: input.headline,
+    description: input.description,
+    url: input.url,
+    mainEntityOfPage: input.url,
+    datePublished: input.datePublished,
+    dateModified: input.dateModified,
+    author: { "@id": `${site.url}/#organization` },
+    publisher: { "@id": `${site.url}/#organization` },
+    isPartOf: { "@id": `${site.url}/#website` },
+    about: {
+      "@type": "SoftwareApplication",
+      name: "Grok Bot",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "macOS, Windows, iOS",
+    },
+  };
+}
+
+export function faqJsonLd(items: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
+export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+export function itemListJsonLd(input: {
+  name: string;
+  description: string;
+  items: { name: string; url: string; description: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: input.name,
+    description: input.description,
+    numberOfItems: input.items.length,
+    itemListElement: input.items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      url: item.url,
+      description: item.description,
+    })),
+  };
+}

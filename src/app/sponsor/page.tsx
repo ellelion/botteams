@@ -58,7 +58,7 @@ export default async function SponsorPage() {
   const connectors = CONNECTOR_CATALOG.length;
   const { open, slots } = await getRailInventory();
   const canBuy = open > 0 && railCheckoutReady(RAIL_PLANS);
-  const mail = `mailto:${site.email}?subject=${encodeURIComponent("Sponsoring Grok Bot Teams")}`;
+  const mail = `mailto:${site.email}?subject=${encodeURIComponent("Sponsoring botteams.ai")}`;
 
   const faqs = [
     { q: en.sponsor.faqPriceQ, a: en.sponsor.faqPriceA },

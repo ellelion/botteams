@@ -34,6 +34,9 @@ function asAgents(value: unknown, teamConnectors: string[]): TeamAgent[] {
       }
     }
     const agent: TeamAgent = { name: row.name, persona: row.persona, connectors };
+    if (typeof row.brings === "string" && row.brings.trim()) {
+      agent.brings = row.brings.replace(/\s+/g, " ").trim();
+    }
     if (row.reuse === true) agent.reuse = true;
     if (typeof row.icon === "string" && row.icon.trim()) agent.icon = row.icon.trim();
     if (row.skills !== undefined) agent.skills = asStringArray(row.skills, `agents[${i}].skills`);

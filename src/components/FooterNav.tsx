@@ -63,6 +63,8 @@ function FooterNavInner({
     { label: en.footer.sponsor, href: "/sponsor" },
   ];
   const docs: Item[] = [
+    { label: en.footer.guide, href: "/grok-bot" },
+    { label: en.footer.guides, href: "/guides" },
     { label: en.footer.spec, href: "/docs" },
     { label: en.footer.api, href: "/api" },
     { label: en.footer.apiBots, href: "/api/bots" },

@@ -22,7 +22,16 @@ export default function AboutPage() {
         <p>
           A team here is one markdown file. It names the Bots, the group chat they share, the routines each Bot owns, and
           the connectors your account needs first. The site turns that file into one installer prompt you paste into Grok
-          Bot. A one-Bot file is the same thing with a single Bot and no group chat.
+          Bot. A one-Bot file is the same thing with a single Bot and no group chat. The product those recipes run on is
+          explained in{" "}
+          <Link className="accent-hover underline" href="/grok-bot">
+            the Grok Bot guide
+          </Link>
+          . Comparisons, how-to pages, and job write-ups live under{" "}
+          <Link className="accent-hover underline" href="/guides">
+            Guides
+          </Link>
+          .
         </p>
         <p>
           Every recipe is in the open at{" "}

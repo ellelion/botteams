@@ -1,6 +1,7 @@
+/* Public name is botteams.ai. Never grokbotteams.ai in user-facing copy. */
 export const site = {
   name: "botteams.ai",
-  updatedAt: "2026-08-23",
+  updatedAt: "2026-08-24",
   verifiedOn: "2026-08-23",
   title: "Grok Bot teams directory · botteams.ai",
   description:
@@ -10,7 +11,6 @@ export const site = {
   email: "info@ellelion.com",
   address: "30 N Gould St Ste R, Sheridan, WY 82801, United States",
   github: "https://github.com/ellelion/botteams",
-  typeInDomain: "grokbotteam.ai",
   entity:
     "botteams.ai is a public directory of company teams for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
   /* The other Ellelion products. They are not "sisters", they are the
@@ -31,10 +31,31 @@ export const STRIPE_BEST_PRACTICES =
 
 export const XAI_DOCS = {
   overview: "https://docs.x.ai/grok-bot/overview",
+  getStarted: "https://docs.x.ai/grok-bot/get-started",
   bots: "https://docs.x.ai/grok-bot/bots",
   chat: "https://docs.x.ai/grok-bot/chat-and-collaboration",
   routines: "https://docs.x.ai/grok-bot/skills-routines-and-automations",
+  computer: "https://docs.x.ai/grok-bot/computer-and-apps",
+  approvals: "https://docs.x.ai/grok-bot/approvals-security-and-privacy",
   useCases: "https://docs.x.ai/grok-bot/use-cases",
+  launch: "https://x.ai/news/introducing-grok-bot",
+} as const;
+
+/* Date this directory last read the Grok Bot docs end to end. */
+export const GROK_BOT_GUIDE_UPDATED = "2026-08-24";
+
+/* Date the /guides cluster was verified against live vendor docs. */
+export const GUIDES_UPDATED = "2026-08-24";
+
+export const COMPARE_DOCS = {
+  coworkOverview: "https://claude.com/docs/cowork/overview",
+  coworkGetStarted: "https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork",
+  chatgptWorkHelp: "https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex",
+  chatgptWorkLaunch: "https://openai.com/index/chatgpt-for-your-most-ambitious-work/",
+  cursorCloudAgent: "https://cursor.com/docs/cloud-agent",
+  devinIntro: "https://docs.devin.ai/get-started/devin-intro",
+  manusWelcome: "https://manus.im/docs/introduction/welcome",
+  manusBlog: "https://manus.im/blog/best-ai-agents-customer-service",
 } as const;
 
 /* xAI's public gallery of Grok Bot use cases. Cited on every recipe we

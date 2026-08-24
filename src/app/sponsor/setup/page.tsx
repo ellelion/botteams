@@ -20,7 +20,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Finish your listing",
-  description: "Submit the tool for the Grok Bot Teams side rail.",
+  description: "Submit the tool for the botteams.ai side rail.",
   robots: { index: false, follow: false },
 };
 

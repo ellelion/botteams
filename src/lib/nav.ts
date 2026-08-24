@@ -1,7 +1,7 @@
 import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 
-export type NavId = "teams" | "bots" | "connectors" | "docs" | "api" | "sponsor" | "github";
+export type NavId = "teams" | "bots" | "connectors" | "guide" | "guides" | "docs" | "api" | "sponsor" | "github";
 
 export type NavItem = {
   href: string;
@@ -14,6 +14,8 @@ export const MAIN_NAV: NavItem[] = [
   { href: "/", label: en.nav.teams, id: "teams" },
   { href: "/?kind=bot", label: en.nav.bots, id: "bots" },
   { href: "/connectors", label: en.nav.connectorsNav, id: "connectors" },
+  { href: "/grok-bot", label: en.nav.guide, id: "guide" },
+  { href: "/guides", label: en.nav.guides, id: "guides" },
   { href: "/docs", label: en.nav.docs, id: "docs" },
   { href: "/api", label: en.nav.api, id: "api" },
   { href: "/sponsor", label: en.nav.sponsor, id: "sponsor" },
@@ -30,6 +32,10 @@ export function isNavCurrent(id: NavId, pathname: string, kind: string | null): 
       return pathname === "/" && kind === "bot";
     case "connectors":
       return pathname === "/connectors" || pathname.startsWith("/connectors/");
+    case "guide":
+      return pathname === "/grok-bot" || pathname.startsWith("/grok-bot/");
+    case "guides":
+      return pathname === "/guides" || pathname.startsWith("/guides/");
     case "docs":
       return pathname === "/docs" || pathname.startsWith("/docs/");
     case "api":
@@ -47,6 +53,8 @@ export function isFooterCurrent(href: string, pathname: string, kind: string | n
   if (href === "/connectors") return isNavCurrent("connectors", pathname, kind);
   if (href === "/sponsor") return isNavCurrent("sponsor", pathname, kind);
   if (href === "/docs") return isNavCurrent("docs", pathname, kind);
+  if (href === "/grok-bot") return isNavCurrent("guide", pathname, kind);
+  if (href === "/guides") return isNavCurrent("guides", pathname, kind);
   if (href === "/api") return isNavCurrent("api", pathname, kind);
   if (href.startsWith("http:") || href.startsWith("https:") || href.startsWith("mailto:")) return false;
   const path = href.split("?")[0];
