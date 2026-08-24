@@ -4559,9 +4559,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .rp-chip-name {
   min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* nowrap + ellipsis hid “Findability Grok Bot” under WCAG 1.4.12
+     (165px needed, 127px track). Phone already wrapped; desktop
+     must too, or bookmarklet spacing clips the roster. */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
 }
 .rp-chip-note {
   font-size: 13px;
