@@ -388,7 +388,16 @@ export const en = {
     fieldTitle: "Title",
     fieldLine: "Short description",
     fieldUrl: "Destination URL",
+    fieldUrlPlaceholder: "https://",
     fieldMark: "Mark",
+    guidelines: [
+      "Digital products only.",
+      "Public URL, not a shortener, not a competing Grok Bot team or bot directory.",
+      "No crypto, no trading signals, no lead-generation.",
+      "Title 28 characters or fewer. Short description 52 or fewer. Plain, like the directory.",
+      "A simple mark (png, svg, webp, or jpg). Not a landing screenshot, not a person photo, not a watermarked stock ad.",
+      "An automated review checks that list, up to three times. After that, our team will review your listing and get back to you shortly.",
+    ],
     whatYouBuyTitle: "What you buy",
     whatYouBuyName: "Sponsorship",
     whatYouBuyBody:

@@ -2650,7 +2650,7 @@ a.chip-unverified:hover {
   border-radius: 50%;
   flex: none;
   object-fit: cover;
-  background: var(--paper-2, #eee);
+  background: var(--surface);
 }
 .cz-skill-face .cz-field-grow {
   display: flex;
@@ -3113,7 +3113,7 @@ a.chip-unverified:hover {
 }
 .spon-error {
   margin-top: 10px;
-  color: var(--accent-text);
+  color: var(--beta);
   font-size: 0.8rem;
 }
 
@@ -3286,9 +3286,20 @@ a.chip-unverified:hover {
   outline-offset: 2px;
   background: var(--surface-elevated);
 }
+.spon-input[aria-invalid="true"],
+.spon-file[aria-invalid="true"] {
+  box-shadow: inset 0 0 0 1px var(--beta);
+}
+.spon-field-error {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--beta);
+}
 .spon-reasons {
   margin-top: 12px;
-  color: var(--accent-text);
+  color: var(--beta);
   font-size: 0.85rem;
   line-height: 1.55;
 }

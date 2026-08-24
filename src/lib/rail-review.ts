@@ -62,6 +62,45 @@ export function buyerReasons(reasons: RejectKey[]): string[] {
   return reasons.map((key) => REJECT_COPY[key]);
 }
 
+export type SetupField = "title" | "line" | "href" | "image";
+
+const COPY_TO_KEY = new Map<string, RejectKey>(
+  (Object.entries(REJECT_COPY) as [RejectKey, string][]).map(([key, copy]) => [copy, key]),
+);
+
+const FIELD_FOR_REASON: Record<RejectKey, SetupField[]> = {
+  title_too_long: ["title"],
+  line_too_long: ["line"],
+  bad_url: ["href"],
+  image_not_a_mark: ["image"],
+  missing_field: ["title", "line", "href", "image"],
+  copy_not_plain: ["title", "line"],
+  not_a_tool: [],
+  competing_directory: [],
+  crypto_or_signals: [],
+  lead_gen: [],
+};
+
+export function fieldsForBuyerReasons(reasons: string[]): Set<SetupField> {
+  const fields = new Set<SetupField>();
+  for (const text of reasons) {
+    const key = COPY_TO_KEY.get(text);
+    if (!key) continue;
+    for (const field of FIELD_FOR_REASON[key]) fields.add(field);
+  }
+  return fields;
+}
+
+export function buyerReasonForField(reasons: string[], field: SetupField): string | undefined {
+  for (const text of reasons) {
+    const key = COPY_TO_KEY.get(text);
+    if (!key) continue;
+    const mapped = FIELD_FOR_REASON[key];
+    if (mapped.length === 1 && mapped[0] === field) return text;
+  }
+  return undefined;
+}
+
 export function filterRejectKeys(values: unknown): RejectKey[] {
   if (!Array.isArray(values)) return [];
   const allowed = new Set<string>(REJECT_KEYS);
