@@ -5354,4 +5354,20 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
     align-items: center;
     padding-inline: 6px;
   }
+  /* Fields. The 16px / 44px rule near the top of this file loses to
+     later .cz-input { 0.88rem / 38px } and .cz-prompt-edit { 0.72rem }.
+     iOS Safari zooms the page when a focused field is under 16px. */
+  .search-input,
+  .cf-input,
+  .spon-input,
+  .cz-input,
+  .cz-prompt-edit,
+  .cz-skill-scope .cz-input {
+    font-size: 1rem;
+  }
+  .cz-input,
+  .cz-skill-scope .cz-input {
+    min-height: 44px;
+    padding: 8px 14px;
+  }
 }
