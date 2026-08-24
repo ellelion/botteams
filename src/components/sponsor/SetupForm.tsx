@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useId, useRef, useState } from "react";
 import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
@@ -63,8 +64,25 @@ export function SetupForm({ sessionId, remaining: initialRemaining }: { sessionI
     if (first) refs[first].current?.focus();
   }
 
+  const setupMail = `mailto:${site.email}?subject=${encodeURIComponent("Listing setup")}`;
+  const setupNext = (
+    <nav className="notfound-nav" aria-label={en.sponsor.setupNext}>
+      {human ? (
+        <a className="theme-control theme-control-label" href={setupMail}>{en.sponsor.mailCta}</a>
+      ) : (
+        <Link href="/" className="theme-control theme-control-label">{en.sponsor.setupSeeDir}</Link>
+      )}
+      <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+    </nav>
+  );
+
   if (live) {
-    return <p className="spon-paid" role="status">{en.sponsor.setupLive}</p>;
+    return (
+      <div>
+        <p className="spon-paid" role="status">{en.sponsor.setupLive}</p>
+        {setupNext}
+      </div>
+    );
   }
   if (human) {
     return (
@@ -77,6 +95,7 @@ export function SetupForm({ sessionId, remaining: initialRemaining }: { sessionI
           </ul>
         ) : null}
         <p className="spon-paid" role="status">{en.sponsor.setupHuman}</p>
+        {setupNext}
       </div>
     );
   }

@@ -68,6 +68,7 @@ export const en = {
     howTitle: "How do I install a Grok Bot team?",
     howBody:
       "Pick a team. Copy the installer prompt. Paste it into Grok Bot. The prompt creates named Bots and a group chat (two to six Bots), tells you to make a sidebar section, and pings each Bot so you can confirm routines. Connectors must already be on the account.",
+    howGuide: "Read the install guide",
     lastUpdated: (day: string) => `Last updated ${day}.`,
     faqTitle: "Questions",
     faqWhatQ: "What is a Grok Bot team?",
@@ -400,6 +401,8 @@ export const en = {
     checkoutOffBody: "Mail us and we will invoice you.",
     setupLive: "You are live on the side rail and the listing row.",
     setupHuman: "This is with us now. Our team will review your listing and get back to you shortly. You are not on the rail yet.",
+    setupSeeDir: "See the directory",
+    setupNext: "What you can do",
     setupSubmit: "Submit for review",
     setupReviewing: "Reviewing",
     setupError: "Could not submit. Try again, or",

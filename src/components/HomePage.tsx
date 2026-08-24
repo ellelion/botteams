@@ -81,6 +81,9 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
           <section className="wings-hero-extra relative z-10 mx-auto max-w-xl pb-[var(--sec-y)] pt-[var(--sec-y)] text-center hidden lg:block">
             <h2 className="text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>{en.home.howTitle}</h2>
             <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.howBody}</p>
+            <p className="home-contribute-links mt-4 text-[0.72rem]">
+              <Link className="accent-hover underline" href="/guides/install-a-grok-bot-team">{en.home.howGuide}</Link>
+            </p>
 
             <h2 id="contribute" className="mt-[var(--sec-y)] text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>
               {en.home.contributeTitle}
@@ -141,6 +144,9 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
         <details name="home-more">
           <summary>{en.home.howSummary}</summary>
           <p>{en.home.howBody}</p>
+          <p className="home-contribute-links">
+            <Link className="accent-hover underline" href="/guides/install-a-grok-bot-team">{en.home.howGuide}</Link>
+          </p>
         </details>
         <details name="home-more">
           <summary>{en.home.faqSummary}</summary>
