@@ -96,7 +96,7 @@
   --accent-text: #336a60;
   --on-accent: #0a0a0a;
   --status-live: #166534;
-  --beta: #c2410c;
+  --beta: #9a3412;
   --pill-fill: #0a0a0a;
   --pill-fill-ink: #ffffff;
   --pill-line: rgba(10, 10, 10, 0.28);
@@ -1387,8 +1387,8 @@ a.chip-unverified:hover {
 .cat-pill-icon { display: inline-flex; width: 15px; height: 15px; flex: none; opacity: .85; }
 .cat-pill-icon .line-icon { width: 15px; height: 15px; color: currentColor; }
 .cat-pill-count {
-  color: var(--muted);
-  font-size: 0.66rem;
+  color: var(--ink-soft);
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 .cat-pill.is-on .cat-pill-count { color: var(--page); opacity: .7; }
@@ -2519,7 +2519,11 @@ a.chip-unverified:hover {
   margin-top: auto;
   padding-top: 4px;
 }
-.idx-card-bots { color: var(--muted); font-size: 0.66rem; font-variant-numeric: tabular-nums; }
+.idx-card-bots {
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
 
 @media (max-width: 720px) {
   /* Category and count drop out before the connectors do: at this width
@@ -2714,7 +2718,7 @@ a.chip-unverified:hover {
   padding: 0 11px;
   border: 0;
   background: transparent;
-  color: var(--muted);
+  color: var(--ink-soft);
   font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
