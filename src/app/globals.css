@@ -1167,6 +1167,7 @@ a.chip-unverified:focus-visible {
 }
 @media (max-width: 639px) {
   .spec-table,
+  .spec-table thead,
   .spec-table tbody {
     display: block;
     width: 100%;
