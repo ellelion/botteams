@@ -1871,6 +1871,7 @@ a.chip-unverified:hover {
 .crumb-list a {
   display: inline-flex;
   align-items: center;
+  min-height: 24px;
 }
 .crumb-list [aria-current="page"] { color: var(--ink-soft); }
 
