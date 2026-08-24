@@ -669,7 +669,12 @@ export function Customize({
           const section = event.target;
           if (!(section instanceof HTMLDetailsElement) || !section.open) return;
           window.requestAnimationFrame(() => {
-            section.scrollIntoView({ block: "start", behavior: "auto" });
+            window.requestAnimationFrame(() => {
+              const head = document.querySelector(".rp-head");
+              const offset = (head?.getBoundingClientRect().bottom ?? 0) + 8;
+              const top = section.getBoundingClientRect().top + window.scrollY - offset;
+              window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+            });
           });
         }}
       >
