@@ -19,9 +19,13 @@ export default function TermsPage() {
       <PageJump
         items={[
           "Who you are dealing with",
+          "You must be 18",
           "The recipes are MIT",
           "You paste them at your own risk",
           "Paid rail slots",
+          "We do not sell labor",
+          "We are not xAI",
+          "Contributions and outbound links",
           "Acceptable use",
           "Changes and contact",
         ]}

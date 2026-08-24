@@ -1048,7 +1048,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .talk-watch-btn,
   .talk-overlay-close,
   .spon-cta,
-  .foot-link {
+  .foot-link,
+  .doc-jump a,
+  .chip-xai {
     min-height: 44px;
   }
   .filter-views .filter-chip--icon { width: 44px; }
@@ -1495,7 +1497,12 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   margin: 4px 0 22px;
   font-size: 0.78rem;
 }
-.doc-jump a { color: var(--ink-soft); }
+.doc-jump a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--ink-soft);
+}
 .wings-main-col :is(h2, h3, section)[id] {
   scroll-margin-top: calc(var(--masthead-h, 56px) + 12px);
 }
@@ -2889,9 +2896,11 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .spon-file { padding-block: 12px; }
 .spon-input::placeholder { color: var(--ink-soft); }
 .spon-input:focus,
-.spon-file:focus {
-  outline: 1px solid var(--accent);
-  outline-offset: -1px;
+.spon-file:focus,
+.spon-input:focus-visible,
+.spon-file:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
   background: var(--surface-elevated);
 }
 .spon-reasons {
