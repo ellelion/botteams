@@ -18,6 +18,8 @@ export const en = {
   },
   entity: site.entity,
   verified: "Verified",
+  notVerified: "Not verified",
+  verifiedHint: "A group chat holds two to six Bots.",
   nav: {
     teams: "Grok Bot Teams",
     bots: "Grok Bots",
