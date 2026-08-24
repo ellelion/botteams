@@ -2135,6 +2135,13 @@ a.chip-unverified:hover {
   position: static;
   top: auto;
 }
+@media (min-width: 1024px) {
+  /* The listing column is already under the masthead. top: 56px plus
+     24px column padding parked the bar 86px down and left a strip of
+     chips in the gap. */
+  .wings-main-col:has(.cf-bar) { padding-top: 0; }
+  .wings-main-col .cf-bar { top: 0; }
+}
 .cf-search {
   position: relative;
   display: flex;
