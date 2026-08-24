@@ -2,21 +2,22 @@
 
 import { useLayoutEffect } from "react";
 
-/* Text zoom grows the bar (74px at 200%) while the CSS token stays 62px.
-   The menu sheet, scrim, and sticky column all read --masthead-h, so the
-   token has to follow the painted header. */
+/* Text zoom grows the bar. Sticky top, scroll-margin, and 100dvh caps
+   all read --masthead-h as pre-zoom CSS, so write painted height / zoom.
+   --menu-max-h is the remaining viewport in the same CSS pixels. */
 export function MastheadHeightSync() {
   useLayoutEffect(() => {
     const el = document.querySelector("header.site-masthead");
     if (!(el instanceof HTMLElement)) return;
 
     const sync = () => {
-      const height = Math.round(el.getBoundingClientRect().height);
+      const painted = el.getBoundingClientRect().height;
       const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom);
       const scale = Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
-      /* CSS zoom scales the painted sheet but not 100dvh the same way.
-         The phone menu cap has to be in pre-zoom px or Sponsor / GitHub
-         stay below the glass at 200%. */
+      /* getBoundingClientRect is painted. Sticky top and scroll-margin
+         are pre-zoom CSS. Writing the painted height made search sit
+         200px below the bar at zoom 2 and hid focused catalog names. */
+      const height = Math.round(painted / scale);
       const menuMax = Math.max(0, Math.round(window.innerHeight / scale - height));
       if (height > 0) {
         document.documentElement.style.setProperty("--masthead-h", `${height}px`);
