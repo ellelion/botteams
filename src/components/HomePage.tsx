@@ -57,6 +57,8 @@ export function HomePage({ teams }: { teams: Team[] }) {
                 {en.answerUse}
               </p>
               <p className="mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+                <Link href="/grok-bot" className="accent-hover underline">{en.guideLink}</Link>
+                {" · "}
                 <Link href="/?kind=bot" className="accent-hover underline">{en.onRamp}</Link>
               </p>
               <HeroStats teams={teamCount} bots={botCount} verifiedOn={site.verifiedOn} />

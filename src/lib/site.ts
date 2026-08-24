@@ -31,11 +31,18 @@ export const STRIPE_BEST_PRACTICES =
 
 export const XAI_DOCS = {
   overview: "https://docs.x.ai/grok-bot/overview",
+  getStarted: "https://docs.x.ai/grok-bot/get-started",
   bots: "https://docs.x.ai/grok-bot/bots",
   chat: "https://docs.x.ai/grok-bot/chat-and-collaboration",
   routines: "https://docs.x.ai/grok-bot/skills-routines-and-automations",
+  computer: "https://docs.x.ai/grok-bot/computer-and-apps",
+  approvals: "https://docs.x.ai/grok-bot/approvals-security-and-privacy",
   useCases: "https://docs.x.ai/grok-bot/use-cases",
+  launch: "https://x.ai/news/introducing-grok-bot",
 } as const;
+
+/* Date this directory last read the Grok Bot docs end to end. */
+export const GROK_BOT_GUIDE_UPDATED = "2026-08-24";
 
 /* xAI's public gallery of Grok Bot use cases. Cited on every recipe we
    directory from it. Sourcing, never endorsement: nothing on this site is

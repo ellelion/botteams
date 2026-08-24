@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
 import { APD_HOME, STRIPE_BEST_PRACTICES, XAI_DOCS, XAI_USE_CASE_GALLERY, site } from "@/lib/site";
@@ -19,6 +20,13 @@ export default function DocsPage() {
           </p>
           <p className="meta mt-3">
             Verified on <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
+          </p>
+          <p className="mt-3 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+            For Grok Bot setup, skills, and limits, see{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/grok-bot">
+              Grok Bot setup, skills, and limits
+            </Link>
+            .
           </p>
         </WingsHero>
       }
