@@ -4993,7 +4993,7 @@ html[data-theme="dark"] .talk-stage {
   letter-spacing: -0.15px;
 }
 .talk-entry.is-focus .talk-bubble { box-shadow: none; }
-.talk-bubble-who { margin: 0 0 4px; padding: 0 4px; font-size: 12px; font-weight: 500; color: var(--talk-mute); }
+.talk-bubble-who { margin: 0 0 4px; padding: 0 4px; font-size: 12px; font-weight: 500; color: var(--talk-soft); }
 .talk-bubble-text { margin: 0; color: var(--talk-text); }
 .talk-avatar { display: none; }
 .talk-typing { display: flex; gap: 5px; padding: 8px 4px; }
