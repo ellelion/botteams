@@ -63,14 +63,26 @@ export function Select({
 
   const current = useMemo(() => options[selectedIndex], [options, selectedIndex]);
 
-  /* Close on anything that is not us: outside pointer, or Escape anywhere. */
+  /* Close on anything that is not us: outside pointer, or Escape anywhere.
+     Capture Escape so a parent dialog (Customize, menu) does not close too. */
   useEffect(() => {
     if (!open) return;
     function onPointer(e: PointerEvent) {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     }
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(false);
+      buttonRef.current?.focus();
+    }
     document.addEventListener("pointerdown", onPointer);
-    return () => document.removeEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey, true);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey, true);
+    };
   }, [open]);
 
   /* Keep the active option in view, including when type-ahead jumps far. */
@@ -151,6 +163,7 @@ export function Select({
     switch (e.key) {
       case "Escape":
         e.preventDefault();
+        e.stopPropagation();
         setOpen(false);
         buttonRef.current?.focus();
         break;
