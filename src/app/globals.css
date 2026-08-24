@@ -1796,6 +1796,17 @@ a.chip-unverified:hover {
     scroll-margin-top: calc(var(--masthead-h) + 5.5rem);
     scroll-margin-bottom: 72px;
   }
+  /* Filters and query chips are not sticky. Tab after a long list
+     used to park them under the search field. */
+  .cat-pill,
+  .filter-views .filter-chip--icon,
+  .index-tools .sel-button,
+  .idx-chip,
+  .idx-chip-clear,
+  .cf-chip,
+  .cf-clear {
+    scroll-margin-top: calc(var(--masthead-h) + 5rem);
+  }
 }
 @media (min-width: 1024px) {
   /* Tools stick at the top of this column, not under the masthead.
