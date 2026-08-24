@@ -5323,7 +5323,6 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 }
 
 .talk-you {
-  color: #ffffff;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -5335,8 +5334,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   width: 28px;
   height: 28px;
   border-radius: 99px;
-  background: rgba(10, 10, 10, 0.06);
-  color: #141414;
+  background: var(--talk-agent);
+  color: var(--talk-text);
   display: grid;
   place-items: center;
   font-size: 11px;

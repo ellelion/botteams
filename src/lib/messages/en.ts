@@ -206,6 +206,11 @@ export const en = {
     watchReplay: "Replay",
     watchReplayHint: "Replay only. This is not a live chat.",
     watchTyping: "A Bot is typing",
+    /* Visible rail identity for every visitor. Transcript matching still
+       accepts the founder's name as a you-turn, but the chrome never
+       prints it: this is a public replay, not their account. */
+    watchYou: "You",
+    watchYouMark: "Y",
     bots: "bots",
     botCount: (n: number) => (n === 1 ? "1 Bot" : `${n} Bots`),
     section: "Sidebar section",
