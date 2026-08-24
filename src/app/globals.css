@@ -3113,6 +3113,13 @@ html[data-theme="light"] .cz-check input:checked {
   margin-top: 28px;
   min-height: 44px;
 }
+.spon-ask-cta.theme-control-label,
+.spon-off .theme-control-label,
+.idx-empty .theme-control-label,
+.notfound-nav .theme-control-label {
+  font-size: 0.88rem;
+  letter-spacing: -0.01em;
+}
 
 .spon-stage-sec {
   scroll-margin-top: calc(var(--masthead-h) + 12px);
