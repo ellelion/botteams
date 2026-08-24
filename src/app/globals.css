@@ -1253,6 +1253,11 @@ a.chip-unverified:focus-visible {
 .wings-main-col { container-type: inline-size; }
 @container (max-width: 24rem) {
   .idx-cards { grid-template-columns: minmax(0, 1fr); }
+  .rp-chips,
+  .rp-room-grid,
+  .rp-connectors .connector-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .spec-table,
   .spec-table thead,
   .spec-table tbody {
@@ -4498,10 +4503,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   gap: 4px;
 }
 .rp-room-bot-name {
+  min-width: 0;
   color: var(--ink);
   font-size: 0.88rem;
   font-weight: 500;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 .rp-room-bot-line {
   color: var(--ink-soft);
