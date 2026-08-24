@@ -774,12 +774,13 @@ export function Customize({
                   ? col
                   : null;
               if (scroller) {
+                const sum = section.querySelector(".rp-sum") ?? section;
                 const next =
-                  section.getBoundingClientRect().top -
+                  sum.getBoundingClientRect().top -
                   scroller.getBoundingClientRect().top +
                   scroller.scrollTop -
                   bar -
-                  8;
+                  16;
                 scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
                 return;
               }
