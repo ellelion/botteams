@@ -1191,7 +1191,9 @@ a.chip-unverified:focus-visible {
   border-radius: var(--r-pill);
   background: var(--card);
   color: var(--ink);
-  font: 400 0.85rem/1 var(--font-geist-sans), system-ui, sans-serif;
+  /* Same type as connector search. This is the catalog's primary field,
+     not quiet chrome, so it should not sit smaller than /connectors. */
+  font: 400 0.95rem/1 var(--font-geist-sans), system-ui, sans-serif;
   transition: background var(--dur) var(--ease);
 }
 /* The only visible name of the field (the <label> is sr-only).
@@ -1236,7 +1238,9 @@ a.chip-unverified:focus-visible {
 .search-clear:focus-visible { color: var(--ink); }
 @media (pointer: coarse) {
   .search-kbd { display: none; }
-  .search-input { padding-right: 16px; }
+  /* 12px, not 16: under WCAG 1.4.12 the hint is already the width of
+     the 320 field, and the slash key is hidden on coarse pointers. */
+  .search-input { padding-right: 12px; }
   .search-input:not(:placeholder-shown) { padding-right: 88px; }
   .search-clear,
   .browse-pick-btn,
