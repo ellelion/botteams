@@ -2322,6 +2322,10 @@ a.chip-unverified:focus-visible {
 .cf-search:focus-within .cf-kbd { display: none; }
 @media (pointer: coarse) {
   .cf-kbd { display: none; }
+  /* Same as catalog search: the slash key is gone, so do not keep
+     52px of empty right padding. A 200% hint needs that room. */
+  .cf-input { padding-right: 12px; }
+  .cf-input:not(:placeholder-shown) { padding-right: 88px; }
   .cf-search-clear { min-height: 44px; }
 }
 .cf-kbd {

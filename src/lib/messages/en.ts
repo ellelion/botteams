@@ -288,7 +288,7 @@ export const en = {
     sourceTail: (asOf: string) => `, read as of ${asOf}. Treat it as a checkable snapshot, not as an xAI inventory.`,
     checked: "Checked on",
     searchLabel: "Search connectors",
-    searchPlaceholder: "Search connectors",
+    searchPlaceholder: "Connectors",
     clearSearch: "Clear search",
     featuredTitle: "Featured",
     builtInTitle: "Built in",
