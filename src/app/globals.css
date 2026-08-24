@@ -3331,17 +3331,25 @@ button.cz-link:focus-visible { color: var(--ink); }
   overflow: hidden;
 }
 .cz-mode {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 0;
   min-height: 30px;
   padding: 0 11px;
   border: 0;
   background: transparent;
   color: var(--ink-soft);
-  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  font: 500 11px/1.25 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
   cursor: pointer;
-  white-space: nowrap;
+  /* Phone equal-flex (≤430) plus nowrap clipped “Ask before send”
+     by 18px at 320 under 1.4.12. The group’s overflow:hidden hid it
+     from pageOff. Same wrap as roster chips. */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 .cz-mode + .cz-mode { border-left: 1px solid var(--pill-line); }
 .cz-mode:hover,
