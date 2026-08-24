@@ -75,7 +75,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
               </p>
             </div>
             <Link href="/?kind=team" className="home-scroll-cue meta accent-hover absolute bottom-5 left-1/2 z-10 hidden lg:inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap transition-colors lg:bottom-4">
-              {en.home.scrollCue} <span className="cue-bob" aria-hidden>↓</span>
+              {en.home.scrollCue} <span aria-hidden>↓</span>
             </Link>
           </section>
           <section className="wings-hero-extra relative z-10 mx-auto max-w-xl pb-[var(--sec-y)] pt-[var(--sec-y)] text-center hidden lg:block">

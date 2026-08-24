@@ -391,7 +391,8 @@ body {
   flex-direction: column;
   padding: 6px 16px 14px;
   background: var(--page);
-  border-bottom: 1px solid var(--pill-line);
+  /* Adjacent to the 26% ink scrim, not bare paper. --pill-line sinks. */
+  border-bottom: 1px solid var(--ink);
 }
 
 .site-menu-link {
@@ -696,22 +697,7 @@ body {
   }
 }
 
-@keyframes cue-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(5px);
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
-  .cue-bob {
-    display: inline-block;
-    animation: cue-bob 1.7s ease-in-out infinite;
-  }
-
   @supports (animation-timeline: view()) {
     .story-reveal {
       animation: ledger-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -3525,6 +3511,12 @@ html[data-theme="light"] .cz-check input:checked {
   margin: 0;
   animation: cz-overwrite-in var(--dur) var(--ease);
 }
+/* The 26% ink scrim lifts dark paper and sinks light paper toward
+   mid-grey. --pill-line holds 3:1 on the page, not on that wash.
+   A stop dialog has to read as a panel, so the edge is ink. */
+.cz-overwrite-card.cz-alert-stop {
+  border-color: var(--ink);
+}
 .cz-overwrite .cz-btn {
   font-size: 0.88rem;
   letter-spacing: -0.01em;
@@ -4618,7 +4610,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   flex-direction: column;
   width: min(40rem, 100%);
   height: 100%;
-  border-left: 1px solid var(--pill-line);
+  /* Adjacent to the 26% ink scrim, not bare paper. --pill-line sinks. */
+  border-left: 1px solid var(--ink);
   background: var(--page);
   animation: rp-sheet-in var(--dur) var(--ease);
 }
