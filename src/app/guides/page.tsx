@@ -83,14 +83,6 @@ export default function GuidesIndexPage() {
         }
       >
         <article className="guide-prose">
-          <p>
-            We run the{" "}
-            <Link className="accent-hover underline underline-offset-2" href="/">
-              Grok Bot teams directory
-            </Link>
-            . Paste an installer when you already know the product. Use a guide when you still need the click path, the
-            plan list, or a sourced 1:1. Ellelion LLC is not affiliated with xAI.
-          </p>
           {GUIDE_CLUSTERS.map((cluster) => {
             const items = guides.filter((guide) => guide.cluster === cluster.id);
             return (
