@@ -205,8 +205,10 @@
   list-style: none;
 }
 /* min-height is ignored on inline links. Same box as the spec jump list.
-   Keep this selector as plain .guide-toc a so the 44px restatements win. */
-.guide-toc a {
+   Keep these selectors plain so the 44px restatements win. /guides
+   titles are the articles, not words in a sentence. */
+.guide-toc a,
+.guide-index a {
   display: inline-flex;
   align-items: center;
   min-height: 32px;
@@ -1369,6 +1371,7 @@ a.chip-unverified:focus-visible {
   .foot-link,
   .doc-jump a,
   .guide-toc a,
+  .guide-index a,
   a.chip,
   .cf-chip,
   .cf-browse,
@@ -1433,6 +1436,7 @@ a.chip-unverified:focus-visible {
   .filter-views .filter-chip--icon,
   .doc-jump a,
   .guide-toc a,
+  .guide-index a,
   .doc-toc-sum,
   a.chip,
   .row-arrow-link,
@@ -6318,6 +6322,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .foot-link,
   .doc-jump a,
   .guide-toc a,
+  .guide-index a,
   .doc-toc-sum,
   a.chip,
   .cf-chip,
