@@ -5306,9 +5306,11 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 .talk-stack-sm .grok-bot-mark:nth-child(2) { left: 0; top: 9px; }
 .talk-stack-sm .grok-bot-mark:nth-child(3) { left: 10px; top: 9px; }
 
-/* Thumb-sized controls, restated last. An earlier (pointer: coarse) list
-   loses to a later min-height: 36px on the same class. */
-@media (pointer: coarse) {
+/* Thumb-sized controls, restated last. An earlier (pointer: coarse) or
+   (max-width: 1023px) list loses to a later min-height: 36px on the
+   same class. iPad + trackpad is pointer: fine, so width has to be
+   in this query too. */
+@media (pointer: coarse), (max-width: 1023px) {
   .search-clear,
   .browse-pick-btn,
   .idx-chip,
