@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { SkillHitFace } from "@/components/team/SkillHitFace";
 import { en } from "@/lib/messages/en";
 import type { SkillPick, SkillselionHit, SkillUse } from "@/lib/skillselion";
@@ -31,30 +31,43 @@ export function SkillselionPicker({
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
   const [active, setActive] = useState(0);
+  const [nonce, setNonce] = useState(0);
+  const skipDelay = useRef(false);
   const query = q.trim();
   const hits = query.length < 2 ? [] : fetched;
   const listOpen = open && (hits.length > 0 || busy || failed || query.length >= 2);
   const safeActive = hits.length === 0 ? -1 : Math.min(Math.max(active, 0), hits.length - 1);
   const activeId = safeActive >= 0 ? `${listId}-opt-${hits[safeActive].id}` : undefined;
+  const statusId = `${listId}-status`;
 
   useEffect(() => {
     if (query.length < 2) return;
+    let cancelled = false;
+    const wait = skipDelay.current ? 0 : 250;
+    skipDelay.current = false;
     const t = window.setTimeout(() => {
       setBusy(true);
       setFailed(false);
       searchSkills(query)
         .then((rows) => {
+          if (cancelled) return;
           setFetched(rows);
           setActive(0);
         })
         .catch(() => {
+          if (cancelled) return;
           setFetched([]);
           setFailed(true);
         })
-        .finally(() => setBusy(false));
-    }, 250);
-    return () => window.clearTimeout(t);
-  }, [query]);
+        .finally(() => {
+          if (!cancelled) setBusy(false);
+        });
+    }, wait);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(t);
+    };
+  }, [query, nonce]);
 
   function add(hit: SkillselionHit) {
     if (picks.some((p) => p.id === hit.id && p.scope === "team")) return;
@@ -138,19 +151,35 @@ export function SkillselionPicker({
           aria-autocomplete="list"
           aria-activedescendant={listOpen ? activeId : undefined}
           aria-busy={busy}
+          aria-invalid={failed || undefined}
+          aria-describedby={listOpen ? statusId : undefined}
         />
       </label>
       {listOpen ? (
         <>
-        <p className={hits.length ? "sr-only" : "cz-hint mt-2"} role="status" aria-live="polite">
-          {busy
-            ? en.customize.skillsSearching
-            : failed
-              ? en.customize.skillsError
+        {failed && !busy ? (
+          <div className="cz-skill-status" role="alert">
+            <p id={statusId} className="cz-hint">{en.customize.skillsError}</p>
+            <button
+              type="button"
+              className="cz-btn cz-btn-quiet"
+              onClick={() => {
+                skipDelay.current = true;
+                setNonce((n) => n + 1);
+              }}
+            >
+              {en.customize.skillsRetry}
+            </button>
+          </div>
+        ) : (
+          <p id={statusId} className={hits.length ? "sr-only" : "cz-hint mt-2"} role="status" aria-live="polite">
+            {busy
+              ? en.customize.skillsSearching
               : hits.length === 0
                 ? en.customize.skillsEmpty
                 : en.customize.skillsFound(hits.length)}
-        </p>
+          </p>
+        )}
         <ul id={listId} className="cz-list cz-skill-hits mt-2" role="listbox" aria-label={en.customize.skillsSearch} hidden={hits.length === 0}>
           {hits.map((hit, i) => (
             <li

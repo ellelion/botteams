@@ -2543,6 +2543,14 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-size: 0.74rem;
   line-height: 1.5;
 }
+.cz-skill-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 10px;
+}
+.cz-skill-status .cz-hint { margin-top: 0; }
 .cz-list { margin-top: 12px; }
 
 .cz-btn {
