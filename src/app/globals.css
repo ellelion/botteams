@@ -5774,6 +5774,18 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     box-shadow: 0 1px 0 var(--pill-line);
   }
   .rp-head { top: var(--masthead-h); }
+  /* 900px / 860px viewport media still sees 1280. Four 114px fact
+     columns left 227px-tall notes. Two-up and a stacked stage fit 576. */
+  .spon-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 24px;
+  }
+  .spon-fact + .spon-fact {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .spon-surfaces,
+  .spon-stage { grid-template-columns: minmax(0, 1fr); }
   .rp-sum,
   .rp-sec,
   .rp-related,
