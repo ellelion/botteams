@@ -2813,6 +2813,10 @@ a.chip-unverified:hover {
 .cz-mode + .cz-mode { border-left: 1px solid var(--line-strong); }
 .cz-mode:hover { color: var(--ink); }
 .cz-mode.is-on { background: var(--ink); color: var(--page); }
+.cz-mode-hint {
+  flex: 1 1 100%;
+  margin-top: 0;
+}
 .cz-skill-hits .cz-skill-opt {
   cursor: pointer;
   border-radius: var(--r-inner);
