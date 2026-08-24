@@ -5440,10 +5440,26 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 }
 .talk-computer { width: 420px; max-width: 100%; }
 .talk-card-title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--talk-text); }
-.talk-card-badge { height: 19px; border-radius: 999px; padding: 0 7px; font-size: 12px; }
-.talk-card.is-done .talk-card-badge { background: rgba(31, 138, 101, 0.14); color: rgb(31, 138, 101); }
+.talk-card-badge {
+  height: auto;
+  min-height: 22px;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--talk-badge);
+}
+.talk-card.is-work .talk-card-badge { color: var(--talk-badge-work); }
+.talk-card.is-done .talk-card-badge {
+  background: color-mix(in srgb, var(--talk-badge-done) 18%, transparent);
+  color: var(--talk-badge-done);
+}
 .talk-computer .talk-card-copy { margin: 8px 0 6px; }
 .talk-computer .talk-check-compact { margin-top: 4px; }
+.talk-check-compact li {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--talk-soft);
+}
 
 
 @media (prefers-reduced-motion: reduce) {
