@@ -458,4 +458,11 @@ export const en = {
     connectors: "Browse connectors",
     spec: "Read the spec",
   },
+  error: {
+    kicker: "Error",
+    title: "This page failed to load.",
+    body: "Try again, or go back to the directory.",
+    retry: "Try again",
+    back: "Browse teams",
+  },
 } as const;
