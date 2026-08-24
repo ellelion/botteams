@@ -3780,10 +3780,16 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   box-shadow: 0 -32px 0 0 var(--page);
 }
 @media (min-width: 1024px) {
-  /* The listing column is already under the masthead. */
+  /* The listing column is already under the masthead. Its 24px
+     padding left a strip of scrolling Routines between the nav and
+     Copy. Drop the padding so the bar sits flush. */
   .rp-head { top: 0; }
   .wings-main-col:has(.rp-head) {
+    padding-top: 0;
     scroll-padding-top: 96px;
+  }
+  .wings-main-col:has(.rp-head) .rp-head-id {
+    padding-top: 1.5rem;
   }
 }
 .rp-head-id {
