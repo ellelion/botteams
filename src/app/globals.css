@@ -2907,6 +2907,13 @@ html[data-theme="light"] .cz-check input:checked {
   gap: 8px;
   margin-top: 11px;
 }
+.cz-alert-actions .cz-btn:focus,
+.rp-sheet-act .theme-control:focus,
+.rp-sheet-act .rp-secondary:focus,
+.site-menu [role="dialog"] a:focus {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
 
 /* Overwrite sits above Customize. Keep is first so focus lands on the
    action that does not throw the rewrite away. */
@@ -4841,6 +4848,10 @@ html[data-theme="dark"] .talk-stage {
 }
 .talk-rail-row:hover::before { opacity: 0.7; }
 .talk-rail-row.is-on::before { opacity: 1; background: color-mix(in srgb, var(--talk-text) 12%, transparent); }
+.talk-rail-row:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: -3px;
+}
 .talk-rail-row .talk-rail-name { color: var(--talk-text); }
 .talk-rail-row.is-on .talk-rail-name { color: var(--talk-text); }
 .talk-rail-meta { min-width: 0; display: grid; gap: 2px; }
@@ -4934,6 +4945,10 @@ html[data-theme="dark"] .talk-stage {
 }
 .talk-dock-item.is-on span { color: var(--talk-text); font-weight: 560; }
 .talk-dock-item.is-on .grok-bot-mark { transform: translateY(-2px); }
+.talk-dock-item:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: -3px;
+}
 .talk-thread {
   flex: 1;
   min-height: 16rem;
@@ -5256,6 +5271,7 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   text-transform: none;
   cursor: pointer;
 }
+.talk-overlay-close:focus,
 .talk-overlay-close:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: 2px;
