@@ -1771,7 +1771,7 @@ a.chip-unverified:focus-visible {
   color: var(--ink-soft);
 }
 .filter-views .filter-chip--icon + .filter-chip--icon {
-  border-left: 1px solid var(--line, rgba(10, 10, 10, 0.16));
+  border-left: 1px solid var(--pill-line);
 }
 .filter-views .filter-chip--icon.is-on {
   background: var(--ink);
@@ -3249,7 +3249,7 @@ button.cz-link:focus-visible { color: var(--ink); }
   cursor: pointer;
   white-space: nowrap;
 }
-.cz-mode + .cz-mode { border-left: 1px solid var(--line-strong); }
+.cz-mode + .cz-mode { border-left: 1px solid var(--pill-line); }
 .cz-mode:hover,
 .cz-mode:focus-visible { color: var(--ink); }
 .cz-mode.is-on { background: var(--ink); color: var(--page); }
@@ -5096,6 +5096,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     border-top: 1px solid ButtonText;
   }
   .rp-sheet {
+    border-left: 1px solid ButtonText;
+  }
+  .filter-views .filter-chip--icon + .filter-chip--icon,
+  .cz-mode + .cz-mode {
     border-left: 1px solid ButtonText;
   }
 }
