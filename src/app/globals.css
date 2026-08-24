@@ -5077,7 +5077,15 @@ html[data-theme="dark"] .talk-stage {
 .talk-check-compact li {
   font-size: 12px;
   line-height: 16px;
-  color: var(--talk-mute);
+  color: var(--talk-soft);
+}
+.talk-check-compact li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 99px;
+  background: currentColor;
+  flex: none;
 }
 .talk-frombots {
   align-self: stretch;
