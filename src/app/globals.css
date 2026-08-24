@@ -328,6 +328,28 @@ body {
 }
 .theme-control:hover { border-color: var(--ink); background: var(--surface-elevated); }
 .theme-accent-dot { width: 13px; height: 13px; border-radius: var(--r-pill); background: var(--accent); }
+.theme-accent-mark {
+  display: grid;
+  grid-template-columns: 6px 6px;
+  gap: 2px;
+  width: 14px;
+  height: 14px;
+}
+.theme-accent-mark i {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--accent);
+}
+.theme-accent-mark i:nth-child(2) { opacity: 0.72; }
+.theme-accent-mark i:nth-child(3) { opacity: 0.48; }
+.theme-accent-mark i:nth-child(4) { opacity: 0.28; }
+.theme-accent-popover [role="radiogroup"] {
+  display: grid;
+  grid-template-columns: inherit;
+  gap: inherit;
+}
 .theme-accent-popover {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 80;
   display: grid; grid-template-columns: repeat(6, 22px); gap: 6px;
