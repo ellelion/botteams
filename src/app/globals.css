@@ -5067,7 +5067,7 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   margin: 0;
 }
 .talk-composer-ph {
-  color: var(--talk-soft);
+  color: var(--talk-text);
   font-size: 13px;
   line-height: 20px;
   text-align: center;
@@ -5269,7 +5269,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   gap: 8px;
   padding: 0 14px;
   font-size: 13px;
-  color: var(--talk-soft);
+  color: var(--talk-text);
 }
 .talk-you-av {
   width: 28px;
