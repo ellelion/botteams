@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { en } from "@/lib/messages/en";
 
 export function HeroStats({
   teams,
@@ -10,21 +11,21 @@ export function HeroStats({
   verifiedOn: string;
 }) {
   return (
-    <div className="hero-stats" aria-label={`${teams} teams, ${bots} Bots, verified ${verifiedOn}`}>
+    <div className="hero-stats" aria-label={en.home.statsAria(teams, bots, verifiedOn)}>
       <Link className="hero-stat" href="/?kind=team">
         <strong>{teams}</strong>
-        <span>Teams</span>
+        <span>{en.home.statsTeams}</span>
       </Link>
       <Link className="hero-stat" href="/?kind=bot">
         <strong>{bots}</strong>
-        <span>Bots</span>
+        <span>{en.home.statsBots}</span>
       </Link>
-      <p className="hero-stat">
+      <Link className="hero-stat" href="/docs#published-limits">
         <strong>
           <time dateTime={verifiedOn}>{verifiedOn}</time>
         </strong>
-        <span>Verified</span>
-      </p>
+        <span>{en.home.limitsChecked}</span>
+      </Link>
     </div>
   );
 }
