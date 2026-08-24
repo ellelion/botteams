@@ -3782,6 +3782,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (min-width: 1024px) {
   /* The listing column is already under the masthead. */
   .rp-head { top: 0; }
+  .wings-main-col:has(.rp-head) {
+    scroll-padding-top: 96px;
+  }
 }
 .rp-head-id {
   min-width: 0;
