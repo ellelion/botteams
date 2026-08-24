@@ -13,6 +13,7 @@ import {
 import { isRailSessionMeta } from "@/lib/rail";
 import { stripe } from "@/lib/stripe";
 import { en } from "@/lib/messages/en";
+import { site } from "@/lib/site";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -61,6 +62,7 @@ export default async function SponsorSetupPage({
 }) {
   const { session_id: sessionId = "" } = await searchParams;
   const state = await loadSession(sessionId.trim());
+  const mail = `mailto:${site.email}?subject=${encodeURIComponent("Listing setup")}`;
 
   return (
     <WingsSplit
@@ -101,7 +103,8 @@ export default async function SponsorSetupPage({
           <div className="idx-empty">
             <p className="idx-empty-title">{en.sponsor.setupExpiredTitle}</p>
             <p className="idx-empty-body">{en.sponsor.setupExpired}</p>
-            <nav className="notfound-nav" aria-label={en.sponsor.setupBack}>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupExpiredTitle}>
+              <a className="theme-control theme-control-label" href={mail}>{en.sponsor.mailCta}</a>
               <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
             </nav>
           </div>

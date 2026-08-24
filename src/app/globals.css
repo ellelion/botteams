@@ -2664,6 +2664,7 @@ a.chip-unverified:hover {
   font-size: 0.8rem;
   line-height: 1.6;
 }
+.cz-truth a { color: inherit; }
 .cz-hint {
   display: block;
   margin-top: 6px;
@@ -3416,6 +3417,7 @@ html[data-theme="light"] .cz-check input:checked {
   font-size: 0.82rem;
   line-height: 1.6;
 }
+.spon-paid a { color: inherit; }
 .spon-paid-link {
   display: inline-flex;
   align-items: center;

@@ -2,6 +2,7 @@
 
 import { useId, useRef, useState } from "react";
 import { en } from "@/lib/messages/en";
+import { site } from "@/lib/site";
 import {
   buyerReasonForField,
   fieldsForBuyerReasons,
@@ -202,7 +203,18 @@ export function SetupForm({ sessionId, remaining: initialRemaining }: { sessionI
           ))}
         </ul>
       ) : null}
-      {error ? <p className="spon-error" role="alert">{error}</p> : null}
+      {error ? (
+        <p className="spon-error" role="alert">
+          {error === en.sponsor.setupError ? (
+            <>
+              {en.sponsor.setupError}{" "}
+              <a className="accent-hover underline" href={`mailto:${site.email}`}>{en.sponsor.buyErrorMail}</a>.
+            </>
+          ) : (
+            error
+          )}
+        </p>
+      ) : null}
     </form>
   );
 }
