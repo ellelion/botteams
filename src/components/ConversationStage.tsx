@@ -1,11 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { botMarkStyle, botUiKind } from "@/lib/bot-icon";
 import { grokDisplayBotName, grokRecipeTitle, grokRoomName } from "@/lib/grok-names";
+import { en } from "@/lib/messages/en";
 import type { ConversationTurn, Team } from "@/lib/types";
+import { useDialogChrome } from "@/lib/use-dialog-chrome";
 
 const YOU_KEYS = new Set(["you", "itzik", "itzik dabush", "founder"]);
 
@@ -73,7 +75,10 @@ export function WatchControl({ team }: { team: Team }) {
 
 function WatchOverlay({ team }: { team: Team }) {
   const [open, setOpen] = useState(false);
-  const label = team.kind === "bot" ? "Watch this Bot" : "Watch this team";
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+  const label = team.kind === "bot" ? en.team.watchBot : en.team.watchTeam;
+  const dialogTitle = team.kind === "bot" ? en.team.watchLabelBot : en.team.watchLabel;
 
   const openWatch = useCallback(() => {
     setOpen(true);
@@ -89,28 +94,16 @@ function WatchOverlay({ team }: { team: Team }) {
   }, []);
 
   useEffect(() => {
-    if (window.location.hash === "#watch") setOpen(true);
-    const onHash = () => {
-      if (window.location.hash === "#watch") setOpen(true);
-      else setOpen(false);
-    };
+    const onHash = () => setOpen(window.location.hash === "#watch");
     window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
+    const boot = window.setTimeout(onHash, 0);
+    return () => {
+      window.clearTimeout(boot);
+      window.removeEventListener("hashchange", onHash);
+    };
   }, []);
 
-  useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeWatch();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open, closeWatch]);
+  useDialogChrome({ open, rootRef: overlayRef, onClose: closeWatch });
 
   return (
     <>
@@ -127,13 +120,18 @@ function WatchOverlay({ team }: { team: Team }) {
       {open && typeof document !== "undefined"
         ? createPortal(
             <div
+              ref={overlayRef}
               className="talk-overlay"
               role="dialog"
               aria-modal="true"
-              aria-label={`${team.kind === "bot" ? "Bot" : "Team"} conversation`}
-              onClick={closeWatch}
+              aria-labelledby={titleId}
             >
-              <div className="talk-overlay-canvas" onClick={(e) => e.stopPropagation()}>
+              <button type="button" className="talk-overlay-scrim" aria-label={en.recipe.close} onClick={closeWatch} />
+              <div className="talk-overlay-canvas">
+                <h2 id={titleId} className="sr-only">{dialogTitle}</h2>
+                <button type="button" className="talk-overlay-close" onClick={closeWatch}>
+                  {en.recipe.close}
+                </button>
                 <ConversationStage team={team} />
               </div>
             </div>,

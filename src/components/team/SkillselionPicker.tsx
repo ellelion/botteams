@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { SkillHitFace } from "@/components/team/SkillHitFace";
 import { en } from "@/lib/messages/en";
 import type { SkillPick, SkillselionHit, SkillUse } from "@/lib/skillselion";
@@ -8,7 +8,7 @@ import type { TeamAgent } from "@/lib/types";
 
 async function searchSkills(q: string): Promise<SkillselionHit[]> {
   const res = await fetch(`/api/skillselion/search?q=${encodeURIComponent(q)}`);
-  if (!res.ok) return [];
+  if (!res.ok) throw new Error("search failed");
   const body = (await res.json()) as { skills?: SkillselionHit[] };
   return Array.isArray(body.skills) ? body.skills : [];
 }
@@ -24,32 +24,80 @@ export function SkillselionPicker({
   liveHits?: Record<string, SkillselionHit>;
   onChange: (next: SkillPick[]) => void;
 }) {
+  const listId = useId();
   const [q, setQ] = useState("");
-  const [hits, setHits] = useState<SkillselionHit[]>([]);
+  const [fetched, setFetched] = useState<SkillselionHit[]>([]);
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [active, setActive] = useState(0);
+  const query = q.trim();
+  const hits = query.length < 2 ? [] : fetched;
+  const listOpen = open && (hits.length > 0 || busy || failed || query.length >= 2);
+  const safeActive = hits.length === 0 ? -1 : Math.min(Math.max(active, 0), hits.length - 1);
+  const activeId = safeActive >= 0 ? `${listId}-opt-${hits[safeActive].id}` : undefined;
 
   useEffect(() => {
-    const query = q.trim();
-    if (query.length < 2) {
-      setHits([]);
-      return;
-    }
+    if (query.length < 2) return;
     const t = window.setTimeout(() => {
       setBusy(true);
+      setFailed(false);
       searchSkills(query)
-        .then((rows) => setHits(rows))
+        .then((rows) => {
+          setFetched(rows);
+          setActive(0);
+        })
+        .catch(() => {
+          setFetched([]);
+          setFailed(true);
+        })
         .finally(() => setBusy(false));
     }, 250);
     return () => window.clearTimeout(t);
-  }, [q]);
+  }, [query]);
 
   function add(hit: SkillselionHit) {
     if (picks.some((p) => p.id === hit.id && p.scope === "team")) return;
     onChange([...picks, { ...hit, use: "fetch", scope: "team" }]);
     setQ("");
-    setHits([]);
+    setFetched([]);
+    setFailed(false);
     setOpen(false);
+    setActive(0);
+  }
+
+  function onSearchKey(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setOpen(false);
+      return;
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setOpen(true);
+      if (hits.length) setActive((i) => (i + 1) % hits.length);
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setOpen(true);
+      if (hits.length) setActive((i) => (i - 1 + hits.length) % hits.length);
+      return;
+    }
+    if (event.key === "Home" && hits.length) {
+      event.preventDefault();
+      setActive(0);
+      return;
+    }
+    if (event.key === "End" && hits.length) {
+      event.preventDefault();
+      setActive(hits.length - 1);
+      return;
+    }
+    if (event.key === "Enter" && listOpen && safeActive >= 0 && hits[safeActive]) {
+      event.preventDefault();
+      add(hits[safeActive]);
+    }
   }
 
   function setUse(id: string, scope: string, use: SkillUse) {
@@ -79,21 +127,36 @@ export function SkillselionPicker({
           onChange={(e) => {
             setQ(e.target.value);
             setOpen(true);
+            setActive(0);
           }}
           onFocus={() => setOpen(true)}
+          onKeyDown={onSearchKey}
           autoComplete="off"
+          role="combobox"
+          aria-expanded={listOpen}
+          aria-controls={listId}
+          aria-autocomplete="list"
+          aria-activedescendant={listOpen ? activeId : undefined}
+          aria-busy={busy}
         />
       </label>
-      {open && (hits.length > 0 || busy || q.trim().length >= 2) ? (
-        <ul className="cz-list mt-2" role="listbox" aria-label={en.customize.skillsSearch}>
-          {busy ? <li className="cz-hint">{en.customize.skillsSearching}</li> : null}
-          {!busy && hits.length === 0 ? <li className="cz-hint">{en.customize.skillsEmpty}</li> : null}
-          {hits.map((hit) => (
-            <li key={hit.id} className="cz-bot">
+      {listOpen ? (
+        <ul id={listId} className="cz-list cz-skill-hits mt-2" role="listbox" aria-label={en.customize.skillsSearch}>
+          {busy ? <li className="cz-hint" role="status">{en.customize.skillsSearching}</li> : null}
+          {!busy && failed ? <li className="cz-hint" role="status">{en.customize.skillsError}</li> : null}
+          {!busy && !failed && hits.length === 0 ? <li className="cz-hint" role="status">{en.customize.skillsEmpty}</li> : null}
+          {hits.map((hit, i) => (
+            <li
+              key={hit.id}
+              id={`${listId}-opt-${hit.id}`}
+              className={`cz-bot cz-skill-opt${i === safeActive ? " is-active" : ""}`}
+              role="option"
+              aria-selected={i === safeActive}
+              onMouseEnter={() => setActive(i)}
+              onClick={() => add(hit)}
+            >
               <div className="cz-bot-top">
-                <button type="button" className="cz-btn" onClick={() => add(hit)}>
-                  {en.customize.skillsAdd}
-                </button>
+                <span className="cz-btn" aria-hidden="true">{en.customize.skillsAdd}</span>
                 <SkillHitFace hit={hit} />
               </div>
             </li>
