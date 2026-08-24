@@ -3345,6 +3345,7 @@ html[data-theme="light"] .cz-check input:checked {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-height: 24px;
 }
 .spon-mark {
   width: 18px;
@@ -4136,6 +4137,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   min-height: 24px;
   min-width: 24px;
 }
+.home-scroll-cue {
+  min-height: 24px;
+  min-width: 24px;
+}
 .home-contribute-links {
   display: flex;
   flex-wrap: wrap;
@@ -4210,8 +4215,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .hero-stat {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.35em;
+  min-height: 24px;
   padding: 0;
   text-decoration: none;
   color: inherit;
@@ -4593,9 +4599,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .side-rail-item .spon-paid-link {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   min-width: 0;
+  min-height: 24px;
 }
 .side-rail-item .spon-paid-link .spon-name {
   flex: 1 1 0;
@@ -5689,7 +5696,9 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .api-link,
   .hairline-row > a,
   .index-name,
-  .home-contribute-links a {
+  .home-contribute-links a,
+  .home-scroll-cue,
+  .spon-paid-link {
     min-height: 44px;
   }
   .theme-control,
