@@ -4318,7 +4318,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   width: max-content;
   max-width: min(20rem, calc(100vw - 2rem));
   padding: 10px 12px;
-  border: 1px solid var(--line);
+  /* Desktop: a page-coloured popover. --line is ~1.1:1 on paper. */
+  border: 1px solid var(--pill-line);
   border-radius: var(--r-inner);
   background: var(--page);
   text-transform: none;
@@ -4953,6 +4954,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .browse-pick-btn,
   .cat-pill,
   .sel-button,
+  .sel-list,
+  .theme-accent-popover,
+  .roster-shape-tip,
   .filter-views,
   .cz-modes,
   .share-btn,
