@@ -4972,6 +4972,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cz-mode,
   .talk-watch-btn,
   .talk-overlay-close,
+  .talk-stage,
+  .talk-overlay-canvas .talk-stage,
   .talk-replay,
   .talk-rail-row,
   .talk-dock-item,
@@ -5627,7 +5629,10 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   border-radius: var(--talk-r);
   background: var(--talk-editor);
   color: var(--talk-text);
-  box-shadow: 0 0 0 1px color(srgb 0.145 0.145 0.145 / 0.1);
+  /* In-flow preview on paper. The old 10% ring was ~1.1:1; --pill-line
+     holds 3:1 on the page. Overlay restates ink against the dimmer. */
+  border: 1px solid var(--pill-line);
+  box-shadow: none;
   backdrop-filter: none;
   overflow: hidden;
   scroll-margin-top: calc(var(--masthead-h) + 12px);
@@ -6235,6 +6240,10 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   margin: 0;
   isolation: isolate;
   background-color: #141414;
+  /* 45% ink dimmer. --pill-line holds 3:1 on the page, not on that
+     wash (light scrim measured ~1.1). Same ink edge as overwrite,
+     Customize, and the phone menu. */
+  border-color: var(--ink);
 }
 html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   background-color: #fcfcfc;
@@ -6278,6 +6287,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
     max-width: none;
     border-radius: 0;
     margin: 0;
+    /* Full-bleed phone Watch. No adjacent dimmer, so no frame. */
+    border: 0;
   }
   .talk-overlay-canvas .talk-head { order: 1; }
   .talk-overlay-canvas .talk-thread {
@@ -6304,6 +6315,15 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
     min-height: 44px;
   }
   .talk-dock-item { min-height: 44px; }
+}
+@media (forced-colors: active) {
+  /* Restated after the phone Watch `border: 0`. Backgrounds are ignored
+     here, so the window still needs a ButtonText edge. */
+  .talk-stage,
+  .talk-overlay-canvas .talk-stage {
+    border: 1px solid ButtonText;
+    box-shadow: none;
+  }
 }
 
 .talk-watch-btn {
