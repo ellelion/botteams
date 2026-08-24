@@ -195,7 +195,8 @@ body {
   container-type: inline-size;
 }
 
-.site-masthead a:hover { color: var(--ink); }
+.site-masthead a:hover,
+.site-masthead a:focus-visible { color: var(--ink); }
 .site-masthead-nav a {
   display: inline-flex;
   align-items: center;
@@ -257,7 +258,8 @@ body {
   cursor: pointer;
 }
 
-.site-menu-button:hover { border-color: var(--ink); background: var(--surface-elevated); }
+.site-menu-button:hover,
+.site-menu-button:focus-visible { border-color: var(--ink); background: var(--surface-elevated); }
 
 .site-menu-scrim {
   position: fixed;
@@ -368,7 +370,8 @@ body {
   border-radius: var(--r-pill);
   transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.theme-control:hover { border-color: var(--ink); background: var(--surface-elevated); }
+.theme-control:hover,
+.theme-control:focus-visible { border-color: var(--ink); background: var(--surface-elevated); }
 .theme-accent-dot { width: 13px; height: 13px; border-radius: var(--r-pill); background: var(--accent); }
 .theme-accent-mark {
   display: grid;
@@ -405,7 +408,8 @@ body {
   border-radius: var(--r-pill);
   cursor: pointer; transition: border-color var(--dur) var(--ease);
 }
-.theme-accent-swatch:hover { border-color: var(--ink); }
+.theme-accent-swatch:hover,
+.theme-accent-swatch:focus-visible { border-color: var(--ink); }
 
 /* Text CTA variant: same chrome as .theme-control, auto width so labels
    like "Copy installer prompt" are a real button, not a 34px square. */
@@ -425,7 +429,9 @@ body {
   white-space: nowrap;
 }
 .theme-control.theme-control-label:hover,
-.theme-control-label:hover {
+.theme-control.theme-control-label:focus-visible,
+.theme-control-label:hover,
+.theme-control-label:focus-visible {
   /* No colour change on hover. Orange is a rare moment of emphasis,
      not the state of every button under a cursor. */
   filter: brightness(0.88);
@@ -881,11 +887,13 @@ a.chip-unverified:focus-visible {
   color: var(--page);
   background: var(--ink);
 }
-.filter-chip:hover {
+.filter-chip:hover,
+.filter-chip:focus-visible {
   color: var(--ink);
   background: var(--surface-elevated);
 }
-.filter-chip.is-on:hover { color: var(--page); background: var(--ink); opacity: 0.88; }
+.filter-chip.is-on:hover,
+.filter-chip.is-on:focus-visible { color: var(--page); background: var(--ink); opacity: 0.88; }
 
 .team-grid {
   display: grid;
@@ -1221,7 +1229,8 @@ a.chip-unverified:focus-visible {
   font: 500 0.72rem/1 var(--font-geist-sans), system-ui, sans-serif;
   cursor: pointer;
 }
-.search-clear:hover { color: var(--ink); }
+.search-clear:hover,
+.search-clear:focus-visible { color: var(--ink); }
 @media (pointer: coarse) {
   .search-kbd { display: none; }
   .search-input { padding-right: 16px; }
@@ -1399,8 +1408,11 @@ a.chip-unverified:focus-visible {
   cursor: pointer;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
-.browse-pick-btn:hover { color: var(--ink); background: var(--surface-elevated); }
+.browse-pick-btn:hover,
+.browse-pick-btn:focus-visible { color: var(--ink); background: var(--surface-elevated); }
 .browse-pick-btn.is-on { color: var(--page); background: var(--ink); }
+.browse-pick-btn.is-on:hover,
+.browse-pick-btn.is-on:focus-visible { color: var(--page); background: var(--ink); }
 .browse-pick-count {
   margin-left: 3px;
   font-variant-numeric: tabular-nums;
@@ -1455,13 +1467,15 @@ a.chip-unverified:focus-visible {
   cursor: pointer;
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.cat-pill:hover { color: var(--ink); background: var(--surface-elevated); }
+.cat-pill:hover,
+.cat-pill:focus-visible { color: var(--ink); background: var(--surface-elevated); }
 .cat-pill:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .cat-pill.is-on {
   color: var(--page);
   background: var(--ink);
 }
-.cat-pill.is-on:hover { color: var(--page); background: var(--ink); opacity: 0.88; }
+.cat-pill.is-on:hover,
+.cat-pill.is-on:focus-visible { color: var(--page); background: var(--ink); opacity: 0.88; }
 .cat-pill-icon { display: inline-flex; width: 15px; height: 15px; flex: none; opacity: .85; }
 .cat-pill-icon .line-icon { width: 15px; height: 15px; color: currentColor; }
 .cat-pill-count {
@@ -1493,7 +1507,8 @@ a.chip-unverified:focus-visible {
   cursor: pointer;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
-.cat-tile:hover { background: var(--surface-elevated); color: var(--ink); }
+.cat-tile:hover,
+.cat-tile:focus-visible { background: var(--surface-elevated); color: var(--ink); }
 .cat-tile:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .cat-tile.is-on { background: var(--ink); color: var(--page); }
 .cat-tile.is-on .cat-tile-icon,
@@ -1552,7 +1567,8 @@ a.chip-unverified:focus-visible {
   background: var(--ink);
   color: var(--page);
 }
-.filter-views .filter-chip--icon:hover:not(.is-on) {
+.filter-views .filter-chip--icon:hover:not(.is-on),
+.filter-views .filter-chip--icon:focus-visible:not(.is-on) {
   background: var(--surface);
   color: var(--ink);
 }
@@ -1776,8 +1792,10 @@ a.chip-unverified:focus-visible {
   color: var(--accent-text);
   text-decoration: underline;
 }
-.idx-chip:hover { background: var(--surface-elevated); }
-.idx-chip-clear:hover { color: var(--ink); }
+.idx-chip:hover,
+.idx-chip:focus-visible { background: var(--surface-elevated); }
+.idx-chip-clear:hover,
+.idx-chip-clear:focus-visible { color: var(--ink); }
 .idx-empty {
   margin-top: 18px;
   padding: 36px 24px;
@@ -2113,7 +2131,9 @@ a.chip-unverified:focus-visible {
   font-weight: 500;
 }
 .copy-btn:hover,
-.pill-btn:hover {
+.copy-btn:focus-visible,
+.pill-btn:hover,
+.pill-btn:focus-visible {
   background: var(--accent);
   color: var(--on-accent);
 }
@@ -2273,7 +2293,8 @@ a.chip-unverified:focus-visible {
   font: 500 0.72rem/1 var(--font-geist-sans), system-ui, sans-serif;
   cursor: pointer;
 }
-.cf-search-clear:hover { color: var(--ink); }
+.cf-search-clear:hover,
+.cf-search-clear:focus-visible { color: var(--ink); }
 .cf-search:focus-within .cf-kbd { display: none; }
 @media (pointer: coarse) {
   .cf-kbd { display: none; }
@@ -2318,14 +2339,16 @@ a.chip-unverified:focus-visible {
   cursor: pointer;
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.cf-chip:hover:not(:disabled) { color: var(--ink); background: var(--surface-elevated); }
+.cf-chip:hover:not(:disabled),
+.cf-chip:focus-visible:not(:disabled) { color: var(--ink); background: var(--surface-elevated); }
 .cf-chip:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .cf-chip:disabled { opacity: .4; cursor: default; }
 .cf-chip.is-on {
   background: var(--ink);
   color: var(--page);
 }
-.cf-chip.is-on:hover:not(:disabled) { background: var(--ink); color: var(--page); opacity: 0.88; }
+.cf-chip.is-on:hover:not(:disabled),
+.cf-chip.is-on:focus-visible:not(:disabled) { background: var(--ink); color: var(--page); opacity: 0.88; }
 .cf-chip-icon { width: 14px; height: 14px; flex: none; opacity: .82; }
 .cf-chip { flex: none; white-space: nowrap; }
 .cf-chip.is-on .cf-chip-icon { opacity: 1; }
@@ -2354,6 +2377,8 @@ a.chip-unverified:focus-visible {
   text-decoration: underline;
   cursor: pointer;
 }
+.cf-clear:hover,
+.cf-clear:focus-visible { color: var(--ink); }
 
 .cf-shelf { margin-top: 18px; }
 .cf-shelf-title {
@@ -2474,7 +2499,8 @@ a.chip-unverified:focus-visible {
   text-transform: none;
   cursor: pointer;
 }
-.cf-browse:hover { opacity: 0.88; }
+.cf-browse:hover,
+.cf-browse:focus-visible { opacity: 0.88; }
 .cf-browse:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 
 .cf-results.is-pending { opacity: 0.62; }
@@ -2539,7 +2565,8 @@ a.chip-unverified:focus-visible {
   cursor: pointer;
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-.sel-button:hover { color: var(--ink); background: var(--surface-elevated); }
+.sel-button:hover,
+.sel-button:focus-visible { color: var(--ink); background: var(--surface-elevated); }
 .sel-button.is-open { color: var(--ink); background: var(--surface-elevated); }
 .sel-button:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .sel-value {
@@ -2653,7 +2680,8 @@ a.chip-unverified:focus-visible {
   min-height: 44px;
   transition: background var(--dur) var(--ease);
 }
-.idx-colrow:hover { background: var(--surface); }
+.idx-colrow:hover,
+.idx-colrow:focus-visible { background: var(--surface); }
 .idx-colcell {
   display: flex;
   flex-direction: column;
@@ -2711,7 +2739,8 @@ a.chip-unverified:focus-visible {
   color: inherit;
   transition: background var(--dur) var(--ease);
 }
-.idx-card:hover { background: var(--surface-elevated); }
+.idx-card:hover,
+.idx-card:focus-visible { background: var(--surface-elevated); }
 .idx-card:hover .idx-card-name,
 .idx-card:focus-visible .idx-card-name {
   color: var(--accent-text);
@@ -2856,7 +2885,8 @@ a.chip-unverified:focus-visible {
   text-transform: none;
   cursor: pointer;
 }
-.cz-btn:hover { opacity: 0.88; }
+.cz-btn:hover,
+.cz-btn:focus-visible { opacity: 0.88; }
 /* Ghost: a hairline until it is wanted, then it fills. */
 .cz-btn-quiet {
   background: transparent;
@@ -2864,7 +2894,8 @@ a.chip-unverified:focus-visible {
   color: var(--ink-soft);
   opacity: 1;
 }
-.cz-btn-quiet:hover {
+.cz-btn-quiet:hover,
+.cz-btn-quiet:focus-visible {
   opacity: 1;
   color: var(--ink);
   border-color: var(--ink);
@@ -2971,8 +3002,11 @@ a.chip-unverified:focus-visible {
   white-space: nowrap;
 }
 .cz-mode + .cz-mode { border-left: 1px solid var(--line-strong); }
-.cz-mode:hover { color: var(--ink); }
+.cz-mode:hover,
+.cz-mode:focus-visible { color: var(--ink); }
 .cz-mode.is-on { background: var(--ink); color: var(--page); }
+.cz-mode.is-on:hover,
+.cz-mode.is-on:focus-visible { background: var(--ink); color: var(--page); }
 .cz-mode-hint {
   flex: 1 1 100%;
   margin-top: 0;
@@ -3134,12 +3168,14 @@ html[data-theme="light"] .cz-check input:checked {
   cursor: pointer;
   transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.cz-chip:hover { color: var(--ink); background: var(--surface-elevated); }
+.cz-chip:hover,
+.cz-chip:focus-visible { color: var(--ink); background: var(--surface-elevated); }
 .cz-chip.is-on {
   background: var(--ink);
   color: var(--page);
 }
-.cz-chip.is-on:hover { color: var(--page); opacity: 0.88; }
+.cz-chip.is-on:hover,
+.cz-chip.is-on:focus-visible { color: var(--page); opacity: 0.88; }
 
 .cz-alert {
   margin-top: 14px;
@@ -3305,7 +3341,8 @@ html[data-theme="light"] .cz-check input:checked {
   cursor: pointer;
   transition: opacity var(--dur) var(--ease);
 }
-.spon-cta:hover { opacity: 0.88; }
+.spon-cta:hover,
+.spon-cta:focus-visible { opacity: 0.88; }
 .spon-cta:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .spon-cta:disabled { opacity: 0.55; cursor: default; }
 .spon-cta-ghost {
@@ -3313,7 +3350,8 @@ html[data-theme="light"] .cz-check input:checked {
   color: var(--ink);
   box-shadow: inset 0 0 0 1px var(--pill-line);
 }
-.spon-cta-ghost:hover { opacity: 1; background: var(--surface-elevated); }
+.spon-cta-ghost:hover,
+.spon-cta-ghost:focus-visible { opacity: 1; background: var(--surface-elevated); }
 .spon-cta-out { flex: none; }
 
 .spon-off {
@@ -3942,7 +3980,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   cursor: pointer;
 }
 .rp-secondary { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), transform 80ms cubic-bezier(0.2, 0, 0, 1); }
-.rp-secondary:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
+.rp-secondary:hover,
+.rp-secondary:focus-visible { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
 .rp-secondary:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .rp-head-chips {
   display: flex;
@@ -4389,7 +4428,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   cursor: pointer;
 }
 .share-btn { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
-.share-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
+.share-btn:hover,
+.share-btn:focus-visible { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
 .share-btn.is-copy-fail:hover,
 .share-btn.is-copy-fail:focus-visible {
   /* The click that fails leaves the pointer on the control. Hover
@@ -4461,7 +4501,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   text-decoration: none;
   color: inherit;
 }
-.os-badge:hover { border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.os-badge:hover,
+.os-badge:focus-visible { border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
 .os-badge-tag {
   display: inline-flex;
   align-items: center;
@@ -4782,6 +4823,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   color: var(--accent-text);
   border-style: dashed;
 }
+.spon-chip:hover,
+.spon-chip:focus-visible { border-color: var(--ink); }
 .page-rails-main { padding-bottom: 0; }
 .index-ad,
 .idx-card.idx-ad {
@@ -4957,7 +5000,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   text-decoration: none;
   color: inherit;
 }
-.side-rail-item:hover { border-color: var(--ink); }
+.side-rail-item:hover,
+.side-rail-item:focus-within { border-color: var(--ink); }
 .add-yours:hover,
 .add-yours:focus-visible { border-color: var(--accent-text); }
 .add-yours-kicker {
@@ -5276,7 +5320,9 @@ html[data-theme="dark"] .talk-stage {
   transition: opacity 0.18s ease;
   z-index: -1;
 }
-.talk-rail-row:hover::before { opacity: 0.7; }
+.talk-rail-row:hover::before,
+.talk-rail-row:focus::before,
+.talk-rail-row:focus-visible::before { opacity: 0.7; }
 .talk-rail-row.is-on::before { opacity: 1; background: color-mix(in srgb, var(--talk-text) 12%, transparent); }
 .talk-rail-row:focus,
 .talk-rail-row:focus-visible {
@@ -5348,7 +5394,9 @@ html[data-theme="dark"] .talk-stage {
   padding: 5px 12px;
   cursor: pointer;
 }
-.talk-replay:hover {
+.talk-replay:hover,
+.talk-replay:focus,
+.talk-replay:focus-visible {
   color: var(--talk-text);
   border-color: color-mix(in srgb, var(--talk-text) 55%, var(--talk-border));
 }
@@ -5855,7 +5903,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   color: var(--accent-text);
   text-decoration: none;
 }
-.talk-watch-inline:hover { text-decoration: underline; }
+.talk-watch-inline:hover,
+.talk-watch-inline:focus-visible { text-decoration: underline; }
 
 @media (min-width: 1024px) {
   .talk-stage { height: 660px; }
