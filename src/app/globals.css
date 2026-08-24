@@ -4247,7 +4247,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
      opening Routines cannot slide a heading under Copy link / Post on X. */
   .rp-sum { min-height: 56px; }
   .rp-sec,
-  .rp-sum { scroll-margin-top: calc(var(--masthead-h) + 72px); }
+  .rp-sum,
+  .rp-related,
+  .rp-related-name,
+  .rp-secbody a,
+  .rp-secbody button,
+  .run-bar a { scroll-margin-top: calc(var(--masthead-h) + 72px); }
   .rp-head { padding: 8px 0; }
   .rp-name { font-size: 1.4rem; }
   .rp-head-act {
