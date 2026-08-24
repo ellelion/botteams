@@ -913,12 +913,16 @@ a.chip-unverified:hover {
   gap: 5px 15px;
   margin: 0;
   padding: 0;
+  min-width: 0;
+  max-width: 100%;
   list-style: none;
 }
 .connector-item {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
+  max-width: 100%;
 }
 /* Logos ship at mixed aspect ratios, so every mark gets the same square
    box and is contained inside it. That keeps the left edges aligned when
@@ -949,7 +953,9 @@ a.chip-unverified:hover {
   font-size: 0.78rem;
   line-height: 1.25;
   color: var(--ink-soft);
-  white-space: nowrap;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .meta {
