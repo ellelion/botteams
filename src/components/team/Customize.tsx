@@ -118,7 +118,8 @@ export function Customize({
     const ids = [...new Set(state.skillPicks.map((p) => p.id).filter(Boolean))];
     const missing = ids.filter((id) => !liveHits[id] && !resolvedHits[id] && !askedHits.current.has(id));
     if (missing.length === 0) return;
-    for (const id of missing) askedHits.current.add(id);
+    const asked = askedHits.current;
+    for (const id of missing) asked.add(id);
     let cancelled = false;
     fetch(`/api/skillselion/listings?ids=${missing.map(encodeURIComponent).join(",")}`)
       .then((res) => {
@@ -140,15 +141,16 @@ export function Customize({
       })
       .catch(() => {
         if (cancelled) return;
-        for (const id of missing) askedHits.current.delete(id);
+        for (const id of missing) asked.delete(id);
         setListingsFailed(true);
       });
     return () => {
       cancelled = true;
       /* React remounts this effect in development. Keep the ids askable
          or a cancelled first flight leaves every row pending forever. */
-      for (const id of missing) askedHits.current.delete(id);
+      for (const id of missing) asked.delete(id);
     };
+  }, [mounted, state.skillPicks, liveHits, resolvedHits, listingsNonce]);
 
   function retryListings() {
     askedHits.current.clear();
