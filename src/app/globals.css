@@ -1118,6 +1118,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .foot-link,
   .doc-jump a,
   .chip-xai,
+  .cf-chip,
+  .cf-browse,
+  .cf-clear,
   .theme-control-label {
     min-height: 44px;
   }
@@ -1995,7 +1998,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
     scrollbar-width: none;
   }
   .cf-chips::-webkit-scrollbar { display: none; }
-  .cf-chip { flex: none; white-space: nowrap; min-height: 32px; }
+  .cf-chip { flex: none; white-space: nowrap; }
 }
 .cf-chip.is-on .cf-chip-icon { opacity: 1; }
 .cf-count {
@@ -5079,6 +5082,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
     padding: 0;
     align-items: stretch;
     background: #141414;
+    animation: none;
   }
   html:not([data-theme="dark"]) .talk-overlay { background: #fcfcfc; }
   .talk-overlay-canvas {
@@ -5087,6 +5091,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
     max-width: none;
     max-height: none;
     border-radius: 0;
+    background: inherit;
   }
   .talk-overlay-canvas .talk-stage {
     width: 100%;
