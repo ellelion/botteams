@@ -7,6 +7,7 @@ import { ConnectorRow } from "@/components/ConnectorRow";
 import { CategoryIcon } from "@/components/icons/LineIcons";
 import { connectorQuerySearch, type ConnectorFinderQuery } from "@/lib/catalog-query";
 import { en } from "@/lib/messages/en";
+import { useScrollEdges } from "@/lib/use-scroll-edges";
 
 /*
  * Finding one connector in 306.
@@ -191,6 +192,7 @@ export function ConnectorFinder({
     }
   }
   const searchRef = useRef<HTMLInputElement>(null);
+  const chipsRef = useScrollEdges<HTMLDivElement>(categories.length);
 
   function commit(next: ConnectorFinderQuery) {
     const normalized = next.q.trim()
@@ -341,7 +343,10 @@ export function ConnectorFinder({
           )}
         </form>
 
-        <div className="cf-chips">
+        <div
+          ref={chipsRef.ref}
+          className={`cf-chips scroll-fade${chipsRef.edges.start ? " has-start" : ""}${chipsRef.edges.end ? " has-end" : ""}`}
+        >
           <button
             type="button"
             className={`cf-chip${builtInOnly ? " is-on" : ""}`}

@@ -37,9 +37,12 @@ export function ShareBar({ name, className = "" }: { name: string; className?: s
 
   return (
     <div className={`share-bar share-bar--inline ${className}`.trim()}>
-      <button type="button" className="share-btn" onClick={copyLink} aria-live="polite">
+      <button type="button" className="share-btn" onClick={copyLink}>
         {copyLabel}
       </button>
+      <span className="sr-only" role="status" aria-live="polite">
+        {copied || failed ? copyLabel : ""}
+      </span>
       <a className="share-btn" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener noreferrer" onClick={postOnX}>
         {en.share.postOnX}
       </a>

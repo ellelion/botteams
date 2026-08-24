@@ -29,6 +29,7 @@ export type SelectOption = {
 export function Select({
   id,
   label,
+  caption,
   value,
   options,
   onChange,
@@ -38,6 +39,7 @@ export function Select({
   id?: string;
   /* Read to screen readers, and used as the fallback button text. */
   label: string;
+  caption?: string;
   value: string;
   options: SelectOption[];
   onChange: (next: string) => void;
@@ -46,6 +48,8 @@ export function Select({
 }) {
   const auto = useId();
   const listId = `${id ?? auto}-list`;
+  const captionId = `${id ?? auto}-caption`;
+  const shownCaption = caption ?? label;
   const [open, setOpen] = useState(false);
   const selectedIndex = Math.max(0, options.findIndex((o) => o.value === value));
   const [active, setActive] = useState(selectedIndex);
@@ -142,7 +146,8 @@ export function Select({
   }
 
   return (
-    <div className={`sel ${className}`.trim()} ref={rootRef}>
+    <div className={`sel has-caption ${className}`.trim()} ref={rootRef}>
+      <span className="sel-caption" id={captionId}>{shownCaption}</span>
       <button
         ref={buttonRef}
         id={id}
