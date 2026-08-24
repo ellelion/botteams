@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://botteams.ai">
-    <img src="docs/readme-hero.png" alt="botteams.ai: company teams for Grok Bot" width="800" />
+    <img src="docs/readme-hero.jpg" alt="botteams.ai: Grok Bot teams directory" width="800" />
   </a>
 </p>
 
