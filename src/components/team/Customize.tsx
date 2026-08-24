@@ -53,6 +53,41 @@ import {
 const HASH_KEY = "c=";
 
 
+function pinOpenRecipe(section: HTMLDetailsElement) {
+  if (!section.open) return;
+  const pin = () => {
+    const head = document.querySelector(".rp-head");
+    const col = section.closest(".wings-main-col");
+    const scale = cssZoom();
+    const bar = (head?.getBoundingClientRect().height ?? 0) / scale;
+    const sum = section.querySelector(".rp-sum") ?? section;
+    const scroller =
+      col instanceof HTMLElement && getComputedStyle(col).overflowY !== "visible"
+        ? col
+        : null;
+    if (scroller) {
+      const next =
+        (sum.getBoundingClientRect().top - scroller.getBoundingClientRect().top) / scale +
+        scroller.scrollTop -
+        bar -
+        32;
+      scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
+      return;
+    }
+    const offset = (head?.getBoundingClientRect().bottom ?? 0) / scale + 8;
+    const top = sum.getBoundingClientRect().top / scale + window.scrollY - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+  };
+  /* Exclusive close settles in 2 frames at 100% and several more
+     at CSS zoom 200%. Pin each frame until the page height stops
+     moving the summary. */
+  const chase = (left: number) => {
+    pin();
+    if (left > 1) window.requestAnimationFrame(() => chase(left - 1));
+  };
+  window.requestAnimationFrame(() => chase(16));
+}
+
 export function Customize({
   team,
   related,
@@ -785,52 +820,15 @@ export function Customize({
 
       {/* Native exclusive accordion. Opening one section closes the
           others so sticky titles cannot stack into a wall on a phone. */}
-      <div
-        className="rp-acc"
-        onToggleCapture={(event) => {
-          const section = event.target;
-          if (!(section instanceof HTMLDetailsElement) || !section.open) return;
-          const pin = () => {
-            const head = document.querySelector(".rp-head");
-            const col = section.closest(".wings-main-col");
-            const scale = cssZoom();
-            const bar = (head?.getBoundingClientRect().height ?? 0) / scale;
-            const sum = section.querySelector(".rp-sum") ?? section;
-            const scroller =
-              col instanceof HTMLElement && getComputedStyle(col).overflowY !== "visible"
-                ? col
-                : null;
-            if (scroller) {
-              const next =
-                (sum.getBoundingClientRect().top - scroller.getBoundingClientRect().top) / scale +
-                scroller.scrollTop -
-                bar -
-                32;
-              scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
-              return;
-            }
-            const offset = (head?.getBoundingClientRect().bottom ?? 0) / scale + 8;
-            const top = sum.getBoundingClientRect().top / scale + window.scrollY - offset;
-            window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
-          };
-          /* Exclusive close settles in 2 frames at 100% and several more
-             at CSS zoom 200%. Pin each frame until the page height stops
-             moving the summary. */
-          const chase = (left: number) => {
-            pin();
-            if (left > 1) window.requestAnimationFrame(() => chase(left - 1));
-          };
-          window.requestAnimationFrame(() => chase(16));
-        }}
-      >
-        <details className="rp-sec" name="recipe" open>
+      <div className="rp-acc">
+        <details className="rp-sec" name="recipe" open onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
           <summary className="rp-sum"><RecipeSecIcon name="job" /><span className="rp-sum-lab">{en.recipe.secJob}</span></summary>
           <div className="rp-secbody">
             {rosterPart}
           </div>
         </details>
 
-        <details className="rp-sec" name="recipe">
+        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
           <summary className="rp-sum">
             <RecipeSecIcon name="routines" />
             <span className="rp-sum-lab">{en.recipe.secRoutines}</span>
@@ -852,7 +850,7 @@ export function Customize({
           </div>
         </details>
 
-        <details className="rp-sec" name="recipe">
+        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
           <summary className="rp-sum">
             <RecipeSecIcon name="skills" />
             <span className="rp-sum-lab">{en.customize.skills}</span>
@@ -900,7 +898,7 @@ export function Customize({
           </div>
         </details>
 
-        <details className="rp-sec" name="recipe">
+        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
           <summary className="rp-sum">
             <RecipeSecIcon name="notes" />
             <span className="rp-sum-lab">{en.recipe.secNotes}</span>
@@ -909,7 +907,7 @@ export function Customize({
           <div className="rp-secbody">{notes.length > 0 ? notes : <p className="rc-empty">{en.recipe.noNotes}</p>}</div>
         </details>
 
-        <details className="rp-sec" name="recipe">
+        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
           <summary className="rp-sum"><RecipeSecIcon name="installer" /><span className="rp-sum-lab">{en.recipe.secInstaller}</span></summary>
           <div className="rp-secbody">
             <p className="rp-note">{en.team.installNote}</p>
