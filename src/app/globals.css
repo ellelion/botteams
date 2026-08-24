@@ -196,6 +196,13 @@ body {
 }
 
 .site-masthead a:hover { color: var(--ink); }
+.site-masthead-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  min-width: 24px;
+}
 .site-masthead-nav a.is-current {
   color: var(--ink);
 }
@@ -208,6 +215,9 @@ body {
 }
 
 .site-wordmark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   flex: none;
   white-space: nowrap;
   color: var(--ink);
@@ -1197,7 +1207,10 @@ a.chip-unverified:hover {
   .cz-advanced summary,
   button.cz-link,
   p.cz-hint a.cz-link,
-  .crumb-list a {
+  .crumb-list a,
+  .home-hero-manifesto a,
+  .api-link,
+  .hairline-row > a {
     min-height: 44px;
   }
   .theme-control {
@@ -1262,7 +1275,10 @@ a.chip-unverified:hover {
   .cz-advanced summary,
   button.cz-link,
   p.cz-hint a.cz-link,
-  .crumb-list a {
+  .crumb-list a,
+  .home-hero-manifesto a,
+  .api-link,
+  .hairline-row > a {
     min-height: 44px;
   }
   .filter-views .filter-chip--icon { width: auto; min-width: 44px; }
@@ -3512,6 +3528,7 @@ html[data-theme="light"] .cz-check input:checked {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-height: 24px;
   color: var(--ink);
   font-size: 0.95rem;
 }
@@ -4095,6 +4112,15 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   font: 500 11px/1.5 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
+}
+/* Standalone CTAs, not prose in a sentence. 2.5.8 is 24px; thumb
+   restatement at the bottom of this file raises them to 44. */
+.home-hero-manifesto a,
+.api-link,
+.hairline-row > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
 }
 
 
@@ -5617,7 +5643,10 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .cz-advanced summary,
   button.cz-link,
   p.cz-hint a.cz-link,
-  .crumb-list a {
+  .crumb-list a,
+  .home-hero-manifesto a,
+  .api-link,
+  .hairline-row > a {
     min-height: 44px;
   }
   .theme-control,
