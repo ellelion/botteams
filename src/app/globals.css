@@ -1597,8 +1597,11 @@ a.chip-unverified:focus-visible {
 .index-body { grid-column: 1; position: relative; z-index: 1; }
 .index-name {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
+  max-width: 100%;
   min-height: 24px;
+  overflow-wrap: anywhere;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1.02rem;
   font-weight: 500;
@@ -2935,6 +2938,8 @@ a.chip-unverified:focus-visible {
   text-decoration: underline;
   cursor: pointer;
 }
+.cz-link:hover,
+.cz-link:focus-visible { color: var(--ink); }
 
 /* Connector modes. A segmented control rather than a select: three fixed
    choices that are worth reading side by side. */
@@ -4289,8 +4294,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .rp-related-row + .rp-related-row { border-top: 1px solid var(--line); }
 .rp-related-name {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
+  max-width: 100%;
   min-height: 44px;
+  overflow-wrap: anywhere;
   font-weight: 500;
   letter-spacing: -0.01em;
 }
