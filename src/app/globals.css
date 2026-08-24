@@ -4963,10 +4963,20 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .talk-dock-item.is-on,
   .cz-mode.is-on,
   .site-menu-link.is-current,
+  .site-masthead-nav a.is-current,
+  .foot-link[aria-current="page"],
   .sel-option[data-active="true"],
   .cz-skill-hits .cz-skill-opt.is-active {
     outline: 2px solid Highlight;
     outline-offset: 2px;
+  }
+  /* Guide compare stacks and quotes use --line, which vanishes when
+     backgrounds are ignored. Masthead current is colour-only. */
+  .spec-table th,
+  .spec-table td,
+  .spec-table tr,
+  .guide-quote {
+    border-color: ButtonText;
   }
   .theme-accent-mark i,
   .theme-accent-swatch {
