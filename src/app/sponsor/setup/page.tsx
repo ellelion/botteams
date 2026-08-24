@@ -87,24 +87,33 @@ export default async function SponsorSetupPage({
     >
 
         {state.kind === "unconfigured" ? (
-          <p className="measure mt-8 text-[0.9rem]" style={{ color: ledger.inkMuted }}>
-            Setup is not configured on this host.
-          </p>
+          <div className="idx-empty">
+            <p className="idx-empty-title">{en.sponsor.setupOffTitle}</p>
+            <p className="idx-empty-body">{en.sponsor.setupOffBody}</p>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupBack}>
+              <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+            </nav>
+          </div>
         ) : null}
 
         {state.kind === "missing" || state.kind === "unpaid" ? (
-          <p className="measure mt-8 text-[0.9rem]" style={{ color: ledger.inkMuted }}>
-            {en.sponsor.setupMissing}{" "}
-            <Link className="accent-hover underline" href="/sponsor">
-              {en.sponsor.setupBack}
-            </Link>
-          </p>
+          <div className="idx-empty">
+            <p className="idx-empty-title">{en.sponsor.setupMissingTitle}</p>
+            <p className="idx-empty-body">{en.sponsor.setupMissing}</p>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupBack}>
+              <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+            </nav>
+          </div>
         ) : null}
 
         {state.kind === "expired" ? (
-          <p className="measure mt-8 text-[0.9rem]" style={{ color: ledger.inkMuted }}>
-            {en.sponsor.setupExpired}
-          </p>
+          <div className="idx-empty">
+            <p className="idx-empty-title">{en.sponsor.setupExpiredTitle}</p>
+            <p className="idx-empty-body">{en.sponsor.setupExpired}</p>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupBack}>
+              <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+            </nav>
+          </div>
         ) : null}
 
         {state.kind === "live" ? (

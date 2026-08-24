@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { ACCENT_PALETTE, DEFAULT_ACCENT } from "@/lib/theme";
 import { applyAccentPreference, readCurrentAccent } from "@/lib/theme-client";
 
@@ -18,6 +18,7 @@ function getServerSnapshot(): string {
 }
 
 export function AccentPicker() {
+  const popoverId = useId();
   const [open, setOpen] = useState(false);
   const accent = useSyncExternalStore(
     subscribe,
@@ -82,6 +83,7 @@ export function AccentPicker() {
         className="theme-control"
         aria-expanded={open}
         aria-haspopup="dialog"
+        aria-controls={open ? popoverId : undefined}
         aria-label="Choose accent color"
         title="Choose accent color"
         onClick={() => setOpen((value) => !value)}
@@ -89,7 +91,7 @@ export function AccentPicker() {
         <span className="theme-accent-dot" aria-hidden="true" />
       </button>
       {open && (
-        <div className="theme-accent-popover" role="radiogroup" aria-label="Choose accent color">
+        <div id={popoverId} className="theme-accent-popover" role="radiogroup" aria-label="Choose accent color">
           {ACCENT_PALETTE.map((value, index) => (
             <button
               key={value}

@@ -156,10 +156,11 @@ export default async function SponsorPage() {
               ) : open <= 0 ? (
                 <BuySlot soldOut />
               ) : (
-                <p className="spon-fine">
-                  Card checkout is not switched on yet. Mail{" "}
-                  <a className="accent-hover underline" href={mail}>{site.email}</a> and we will invoice you.
-                </p>
+                <div className="spon-off">
+                  <p className="spon-off-title">{en.sponsor.checkoutOffTitle}</p>
+                  <p className="spon-off-body">{en.sponsor.checkoutOffBody}</p>
+                  <a className="theme-control theme-control-label" href={mail}>{en.sponsor.mailCta}</a>
+                </div>
               )}
             </div>
             <div className="spon-stage-offer">
