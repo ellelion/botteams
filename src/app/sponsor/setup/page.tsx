@@ -111,15 +111,27 @@ export default async function SponsorSetupPage({
         ) : null}
 
         {state.kind === "live" ? (
-          <p className="spon-paid mt-8" role="status">
-            {en.sponsor.setupLive}
-          </p>
+          <div>
+            <p className="spon-paid mt-8" role="status">
+              {en.sponsor.setupLive}
+            </p>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupNext}>
+              <Link href="/" className="theme-control theme-control-label">{en.sponsor.setupSeeDir}</Link>
+              <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+            </nav>
+          </div>
         ) : null}
 
         {state.kind === "human" ? (
-          <p className="spon-paid mt-8" role="status">
-            {en.sponsor.setupHuman}
-          </p>
+          <div>
+            <p className="spon-paid mt-8" role="status">
+              {en.sponsor.setupHuman}
+            </p>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupNext}>
+              <a className="theme-control theme-control-label" href={mail}>{en.sponsor.mailCta}</a>
+              <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+            </nav>
+          </div>
         ) : null}
 
         {state.kind === "open" ? (
