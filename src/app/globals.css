@@ -3244,7 +3244,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .rp-head {
   position: sticky;
-  top: 0;
+  top: var(--masthead-h);
   z-index: 26;
   padding: 12px 0 12px;
   background: var(--page);
@@ -3599,25 +3599,32 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   /* One sticky on a phone: the copy row. Section titles stay in flow so
      opening Routines cannot slide a heading under Copy link / Post on X. */
   .rp-sum { position: static; }
-  .rp-sec { scroll-margin-top: calc(var(--masthead-h) + 88px); }
+  .rp-sec,
+  .rp-sum { scroll-margin-top: calc(var(--masthead-h) + 64px); }
 }
 @media (max-width: 640px) {
-  .rp-head { padding-top: 10px; }
+  .rp-head { padding: 8px 0; }
   .rp-name { font-size: 1.4rem; }
-  .rp-head-act { width: 100%; flex-wrap: wrap; }
+  .rp-head-act {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .rp-head-act::-webkit-scrollbar { display: none; }
   .rp-head-act .theme-control,
   .rp-head-act .rp-secondary {
-    flex: 1 1 calc(50% - 4px);
+    flex: 0 0 auto;
     min-height: 44px;
     min-width: 0;
     justify-content: center;
   }
   .rp-head-act .share-bar {
-    flex: 1 1 100%;
-    width: 100%;
+    flex: 0 0 auto;
+    width: auto;
   }
   .rp-head-act .share-btn {
-    flex: 1 1 0;
     min-height: 44px;
     min-width: 0;
     justify-content: center;
