@@ -787,7 +787,7 @@ export function Customize({
           others so sticky titles cannot stack into a wall on a phone. */}
       <div
         className="rp-acc"
-        onToggle={(event) => {
+        onToggleCapture={(event) => {
           const section = event.target;
           if (!(section instanceof HTMLDetailsElement) || !section.open) return;
           window.requestAnimationFrame(() => {
