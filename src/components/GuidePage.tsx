@@ -166,14 +166,6 @@ export function GuidePage({ guide }: { guide: Guide }) {
         }
       >
         <article className="guide-prose">
-          <p>
-            We run the{" "}
-            <Link className="accent-hover underline underline-offset-2" href="/">
-              Grok Bot teams directory
-            </Link>
-            . The product facts below are from vendor docs we read on {updated}. The recipes and the installer prompts
-            are ours. Ellelion LLC is not affiliated with xAI.
-          </p>
           <ol className="guide-toc">
             {guide.sections.map((section, i) => (
               <li key={section.id}>

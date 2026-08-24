@@ -133,14 +133,6 @@ export default function GrokBotGuidePage() {
         }
       >
         <article className="guide-prose">
-          <p>
-            We run the{" "}
-            <Link className="accent-hover underline underline-offset-2" href="/">
-              Grok Bot teams directory
-            </Link>
-            . The product below is xAI&apos;s. The recipes, the installer prompts, and the counts are ours. Ellelion LLC
-            is not affiliated with xAI.
-          </p>
           <ol className="guide-toc">
             {SECTIONS.map((section, i) => (
               <li key={section.id}>
