@@ -308,8 +308,8 @@ function ConversationStageLive({ team }: { team: Team }) {
           ) : null}
         </div>
         <div className="talk-you" aria-hidden>
-          <span className="talk-you-av">ID</span>
-          <span>Itzik Dabush</span>
+          <span className="talk-you-av">{en.team.watchYouMark}</span>
+          <span>{en.team.watchYou}</span>
         </div>
       </aside>
 
