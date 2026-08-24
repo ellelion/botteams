@@ -4854,9 +4854,10 @@ html[data-theme="dark"] .talk-stage {
 .talk-rail-row.is-on::before { opacity: 1; background: color-mix(in srgb, var(--talk-text) 12%, transparent); }
 .talk-rail-row:focus,
 .talk-rail-row:focus-visible {
-  outline: 2px solid var(--accent-text);
-  outline-offset: -3px;
-  box-shadow: inset 0 0 0 2px var(--accent-text);
+  /* Tab paints a 3px currentColor ring that wins the cascade. */
+  outline: 2px solid var(--accent-text) !important;
+  outline-offset: -3px !important;
+  box-shadow: inset 0 0 0 2px var(--accent-text) !important;
 }
 .talk-rail-row .talk-rail-name { color: var(--talk-text); }
 .talk-rail-row.is-on .talk-rail-name { color: var(--talk-text); }
@@ -4953,9 +4954,9 @@ html[data-theme="dark"] .talk-stage {
 .talk-dock-item.is-on .grok-bot-mark { transform: translateY(-2px); }
 .talk-dock-item:focus,
 .talk-dock-item:focus-visible {
-  outline: 2px solid var(--accent-text);
-  outline-offset: -3px;
-  box-shadow: inset 0 0 0 2px var(--accent-text);
+  outline: 2px solid var(--accent-text) !important;
+  outline-offset: -3px !important;
+  box-shadow: inset 0 0 0 2px var(--accent-text) !important;
 }
 .talk-thread {
   flex: 1;
