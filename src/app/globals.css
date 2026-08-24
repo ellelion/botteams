@@ -365,10 +365,9 @@ body {
 .theme-accent-popover {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 80;
   display: grid; grid-template-columns: repeat(6, 22px); gap: 6px;
-  padding: 10px; border: 0;
+  padding: 10px; border: 1px solid var(--line);
   border-radius: var(--r-inner);
-  background: var(--surface-elevated);
-  box-shadow: var(--shadow-float);
+  background: var(--page);
   animation: sel-in var(--dur) var(--ease);
 }
 .theme-accent-swatch {
@@ -1118,8 +1117,23 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .spon-cta,
   .foot-link,
   .doc-jump a,
-  .chip-xai {
+  .chip-xai,
+  .theme-control-label {
     min-height: 44px;
+  }
+  .theme-control {
+    width: 44px;
+    height: 44px;
+  }
+  .theme-control.theme-control-label,
+  .theme-control-label {
+    width: auto;
+    height: auto;
+    min-height: 44px;
+  }
+  .site-menu-button {
+    width: 44px;
+    height: 44px;
   }
   .filter-views .filter-chip--icon { width: 44px; }
 }
@@ -2340,13 +2354,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-radius: var(--r-card);
   background: var(--card);
   color: inherit;
-  transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
+  transition: background var(--dur) var(--ease);
 }
-.idx-card:hover { background: var(--surface-elevated); transform: translateY(-2px); }
+.idx-card:hover { background: var(--surface-elevated); }
 .idx-card:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) {
-  .idx-card:hover { transform: none; }
-}
 .idx-card-cat {
   color: var(--accent-text);
   font: 500 0.52rem/1 var(--font-geist-mono), ui-monospace, monospace;

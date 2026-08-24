@@ -34,13 +34,14 @@ export function CopyInstallerButton({
     }
   }
 
-  const label = disabled
-    ? en.customize.blocked
-    : failed
-      ? en.team.copyFail
-      : copied
-        ? en.team.copied
-        : en.team.copy;
+  /* Keep the action name when copy is blocked. The alert already says
+     why. Replacing the label with that sentence duplicates it and, on a
+     phone, overflows the sticky row. */
+  const label = failed
+    ? en.team.copyFail
+    : copied
+      ? en.team.copied
+      : en.team.copy;
 
   return (
     <button
