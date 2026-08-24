@@ -1798,7 +1798,11 @@ a.chip-unverified:hover {
      on the name also moves the document and yanks the sticky column
      off the viewport. */
   .wings-main-col:has(.index-tools) {
+    padding-top: 0;
     scroll-padding-top: 280px;
+  }
+  .wings-main-col:has(.index-tools) #teams {
+    padding-top: 1.5rem;
   }
 }
 
