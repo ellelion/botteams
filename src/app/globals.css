@@ -4774,6 +4774,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .rp-connectors .connector-row {
     grid-template-columns: minmax(0, 1fr);
   }
+  .rp-chip-name { white-space: normal; overflow-wrap: anywhere; }
   /* 3vw follows the 1280 layout viewport, so the title stayed 2.25rem
      in a 177px column and "Reproduction" blew the pane by 30px. */
   .rp-name { font-size: 1.4rem; }
