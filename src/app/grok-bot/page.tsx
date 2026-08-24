@@ -200,8 +200,8 @@ export default function GrokBotGuidePage() {
           <h2 id={SECTIONS[2].id}>{SECTIONS[2].title}</h2>
           <p>
             On this directory a Grok Bot team is two to six named Bots in one group chat, with standing routines. A
-            bot is one Bot and no group chat. On 24 August 2026 this repo listed{" "}
-            <strong>{teamCount} teams</strong> and <strong>{botCount} bots</strong>. {fromXaiCount} of those bots are
+            one-Bot recipe is one Bot and no group chat. On 24 August 2026 this repo listed{" "}
+            <strong>{teamCount} teams</strong> and <strong>{botCount} Bots</strong>. {fromXaiCount} of those Bots are
             write-ups of jobs xAI publishes. The{" "}
             <Link className="accent-hover underline underline-offset-2" href="/docs">
               team spec
