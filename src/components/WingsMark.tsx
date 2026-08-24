@@ -35,7 +35,7 @@ export function WingsMark({
       aria-hidden
     >
       <Image
-        src="/brand/bt-mark.png"
+        src="/brand/bt-mark.svg"
         alt=""
         fill
         sizes={`${size}px`}
