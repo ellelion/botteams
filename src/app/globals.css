@@ -935,6 +935,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   z-index: 8;
   background: var(--page);
   padding-bottom: 8px;
+  box-shadow: 0 1px 0 var(--line);
 }
 @media (max-width: 1023px) {
   .index-tools { top: var(--masthead-h); }
@@ -2046,6 +2047,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 .idx-card:hover { background: var(--surface-elevated); transform: translateY(-2px); }
+.idx-card:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .idx-card:hover { transform: none; }
+}
 .idx-card-cat {
   color: var(--accent-text);
   font: 500 0.52rem/1 var(--font-geist-mono), ui-monospace, monospace;
@@ -2768,7 +2773,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .foot-inner {
   max-width: none;
   margin: 0;
-  padding: 72px 0 56px;
+  padding: 72px 0 calc(56px + env(safe-area-inset-bottom));
 }
 .foot-cols {
   display: grid;
