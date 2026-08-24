@@ -234,6 +234,7 @@ export const en = {
     watchComputer: "Computer",
     watchWorking: "Working",
     watchDone: "Done",
+    watchReceipts: "What the Bot looked up",
     /* Visible rail identity for every visitor. Transcript matching still
        accepts the founder's name as a you-turn, but the chrome never
        prints it: this is a public replay, not their account. */
