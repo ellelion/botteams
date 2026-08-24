@@ -3688,7 +3688,7 @@ html[data-theme="light"] .cz-check input:checked {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 38px;
+  min-height: 44px;
   padding: 0 18px;
   border: 0;
   border-radius: var(--r-pill);
