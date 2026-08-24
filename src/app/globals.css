@@ -3397,7 +3397,11 @@ button.cz-link:focus-visible { color: var(--ink); }
 .cz-check {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  /* Icon-only roster toggles were a 16px box. 2.5.8 is 24. */
+  min-width: 24px;
+  min-height: 24px;
   cursor: pointer;
 }
 .cz-check input {
@@ -3427,6 +3431,7 @@ html[data-theme="light"] .cz-check input:checked {
 }
 .cz-check-row {
   min-height: 32px;
+  justify-content: flex-start;
   font-size: 0.85rem;
 }
 @media (pointer: coarse), (max-width: 1023px) {
