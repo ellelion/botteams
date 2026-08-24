@@ -9,16 +9,15 @@
 import type { Metadata } from "next";
 import { grokRecipeTitle } from "@/lib/grok-names";
 import { notFound } from "next/navigation";
-import { ConnectorRow } from "@/components/ConnectorRow";
 import { WatchControl } from "@/components/ConversationStage";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { Customize } from "@/components/team/Customize";
+import { RelatedRecipes } from "@/components/team/RelatedRecipes";
 import { ledger } from "@/lib/ledger-theme";
 import { renderMarkdown } from "@/lib/markdown";
 import { en } from "@/lib/messages/en";
 import { getBot, listBots } from "@/lib/teams";
-import Link from "next/link";
 import { resolveConnector } from "@/lib/connectors";
 import { botJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
@@ -65,26 +64,13 @@ export default async function BotPage({ params }: { params: Promise<{ slug: stri
       .map((x) => x.team),
   ].slice(0, 3);
 
-  const relatedNode = related.length > 0 ? (
-    <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-      <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-        {en.bot.relatedTitle}
-      </h2>
-      <ul className="mt-4">
-        {related.map((other) => (
-          <li key={other.slug} className="hairline-row py-3">
-            <Link href={`/bots/${other.slug}`} className="accent-hover" style={{ fontFamily: ledger.serif }}>
-              {grokRecipeTitle(other.kind, other.name)}
-            </Link>
-            <p className="mt-1 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{other.tagline}</p>
-            <div className="mt-2">
-              <ConnectorRow names={other.connectors} labeled size={15} />
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ) : null;
+  const relatedNode = (
+    <RelatedRecipes
+      title={en.bot.relatedTitle}
+      items={related}
+      hrefFor={(other) => `/bots/${other.slug}`}
+    />
+  );
 
   return (
     <WingsSplit

@@ -1110,6 +1110,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .rp-secondary,
   .cz-btn,
   .cz-mode,
+  .cz-check,
   .cz-chip,
   .share-btn,
   .talk-watch-btn,
@@ -2603,6 +2604,17 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   min-height: 32px;
   font-size: 0.85rem;
 }
+@media (pointer: coarse) {
+  .cz-check {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .cz-check input {
+    width: 20px;
+    height: 20px;
+  }
+  .cz-check-row { min-height: 44px; }
+}
 .cz-members {
   display: flex;
   flex-wrap: wrap;
@@ -2701,6 +2713,39 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 11px;
+}
+
+/* Overwrite sits above Customize. Keep is first so focus lands on the
+   action that does not throw the rewrite away. */
+.cz-overwrite {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(24px + env(safe-area-inset-top, 0px)) 20px calc(24px + env(safe-area-inset-bottom, 0px));
+}
+.cz-overwrite-scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: color-mix(in srgb, var(--page) 55%, transparent);
+  cursor: pointer;
+}
+.cz-overwrite-card {
+  position: relative;
+  width: min(28rem, 100%);
+  margin: 0;
+  animation: cz-overwrite-in var(--dur) var(--ease);
+}
+@keyframes cz-overwrite-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cz-overwrite-card { animation: none; }
 }
 
 .cz-advanced summary {
@@ -3151,6 +3196,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
    it never breaks in the middle. */
 .foot-col li > .foot-link { white-space: nowrap; }
 .foot-link:hover { color: var(--accent-text); }
+.foot-link[aria-current="page"] { color: var(--ink); font-weight: 500; }
 .foot-link:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .foot-legal {
   margin-top: 18px;
@@ -3578,6 +3624,35 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   font: 500 0.7rem/1 var(--font-geist-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
 }
+.rp-related {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+.rp-related .rc-h2 { margin-bottom: 4px; }
+.rp-related-row { padding: 12px 0; }
+.rp-related-row + .rp-related-row { border-top: 1px solid var(--line); }
+.rp-related-name {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.rp-related-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+.rp-related-tag {
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+.rp-related-row .connector-row { margin-top: 8px; }
+
 .rp-secbody { padding: 4px 2px 22px; }
 .rp-secbody .cz-list { margin: 0; padding: 0; list-style: none; }
 .rp-secbody .hairline-row { padding: 14px 0; }

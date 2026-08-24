@@ -131,11 +131,11 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
     >
       <TeamIndex teams={teams} query={query} />
       <div className="home-more lg:hidden">
-        <details>
+        <details name="home-more">
           <summary>{en.home.howSummary}</summary>
           <p>{en.home.howBody}</p>
         </details>
-        <details>
+        <details name="home-more">
           <summary>{en.home.faqSummary}</summary>
           <dl>
             {[
@@ -150,7 +150,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
             ))}
           </dl>
         </details>
-        <details>
+        <details name="home-more">
           <summary>{en.home.contributeSummary}</summary>
           <p>{en.home.contributeBody}</p>
           <p>

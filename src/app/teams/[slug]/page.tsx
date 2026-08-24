@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { grokRecipeTitle } from "@/lib/grok-names";
 import { notFound } from "next/navigation";
-import { ConnectorRow } from "@/components/ConnectorRow";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { Customize } from "@/components/team/Customize";
+import { RelatedRecipes } from "@/components/team/RelatedRecipes";
 import { WatchControl } from "@/components/ConversationStage";
 import { VerifiedChip } from "@/components/VerifiedChip";
 import { RosterShape } from "@/components/RosterShape";
@@ -13,7 +13,6 @@ import { renderMarkdown } from "@/lib/markdown";
 import { en } from "@/lib/messages/en";
 import { getTeam, listTeams } from "@/lib/teams";
 import { isVerified } from "@/lib/types";
-import Link from "next/link";
 import { resolveConnector } from "@/lib/connectors";
 import { teamJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
@@ -60,26 +59,13 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
       .map((x) => x.team),
   ].slice(0, 3);
 
-  const relatedNode = related.length > 0 ? (
-    <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-      <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-        {en.team.relatedTitle()}
-      </h2>
-      <ul className="mt-4">
-        {related.map((other) => (
-          <li key={other.slug} className="hairline-row py-3">
-            <Link href={`/teams/${other.slug}`} className="accent-hover" style={{ fontFamily: ledger.serif }}>
-              {grokRecipeTitle(other.kind, other.name)}
-            </Link>
-            <p className="mt-1 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{other.tagline}</p>
-            <div className="mt-2">
-              <ConnectorRow names={other.connectors} labeled size={15} />
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ) : null;
+  const relatedNode = (
+    <RelatedRecipes
+      title={en.team.relatedTitle()}
+      items={related}
+      hrefFor={(other) => `/teams/${other.slug}`}
+    />
+  );
 
   return (
     <WingsSplit

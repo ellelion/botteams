@@ -40,3 +40,16 @@ export function isNavCurrent(id: NavId, pathname: string, kind: string | null): 
       return false;
   }
 }
+
+export function isFooterCurrent(href: string, pathname: string, kind: string | null): boolean {
+  if (href === "/") return isNavCurrent("teams", pathname, kind);
+  if (href === "/?kind=bot") return isNavCurrent("bots", pathname, kind);
+  if (href === "/connectors") return isNavCurrent("connectors", pathname, kind);
+  if (href === "/sponsor") return isNavCurrent("sponsor", pathname, kind);
+  if (href === "/docs") return isNavCurrent("docs", pathname, kind);
+  if (href === "/api") return isNavCurrent("api", pathname, kind);
+  if (href.startsWith("http:") || href.startsWith("https:") || href.startsWith("mailto:")) return false;
+  const path = href.split("?")[0];
+  if (!path || path === "/") return false;
+  return pathname === path || pathname.startsWith(`${path}/`);
+}
