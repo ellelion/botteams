@@ -40,7 +40,7 @@ export function SkillHitFace({
           {face.author ? (
             <span className="cz-hint">
               {" "}
-              by{" "}
+              {en.customize.skillsBy}{" "}
               <a className="cz-link" href={who} target="_blank" rel="noopener noreferrer" aria-label={`${face.author}. ${en.nav.opensNew}`}>
                 {face.author}
               </a>

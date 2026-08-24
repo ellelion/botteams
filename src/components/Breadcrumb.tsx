@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { en } from "@/lib/messages/en";
 
 export function Breadcrumb({
   parentHref,
@@ -10,7 +11,7 @@ export function Breadcrumb({
   current: string;
 }) {
   return (
-    <nav aria-label="Breadcrumb">
+    <nav aria-label={en.nav.breadcrumb}>
       <ol className="crumb-list">
         <li>
           <Link href={parentHref} className="accent-hover">
