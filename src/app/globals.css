@@ -1195,7 +1195,8 @@ a.chip-unverified:hover {
   .cf-clear,
   .theme-control-label,
   .cz-advanced summary,
-  .cz-link {
+  button.cz-link,
+  p.cz-hint a.cz-link {
     min-height: 44px;
   }
   .theme-control {
@@ -1258,7 +1259,8 @@ a.chip-unverified:hover {
   .theme-control-label,
   .cz-skill-scope .sel-button,
   .cz-advanced summary,
-  .cz-link {
+  button.cz-link,
+  p.cz-hint a.cz-link {
     min-height: 44px;
   }
   .filter-views .filter-chip--icon { width: auto; min-width: 44px; }
@@ -5606,7 +5608,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .foot-grok,
   .cz-skill-scope .sel-button,
   .cz-advanced summary,
-  .cz-link {
+  button.cz-link,
+  p.cz-hint a.cz-link {
     min-height: 44px;
   }
   .theme-control,
