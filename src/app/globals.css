@@ -3951,8 +3951,8 @@ html[data-theme="light"] .cz-check input:checked {
     padding-left: 2rem;
   }
   .spon-fact:first-child { padding-right: 0.5rem; }
-}
-@media (min-width: 860px) {
+  /* Same 860px window query split the buy stage in that 586px
+     column (231px offer, 106px surface cells). */
   .spon-stage {
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     gap: 8px 32px;
