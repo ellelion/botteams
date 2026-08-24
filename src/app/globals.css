@@ -391,7 +391,7 @@ body {
   flex-direction: column;
   /* Nine 44px rows overflow a landscape phone and 200% zoom. Cap to
      the remaining viewport so Sponsor and GitHub stay reachable. */
-  max-height: calc(100dvh - var(--masthead-h, 56px));
+  max-height: var(--menu-max-h, calc(100dvh - var(--masthead-h, 56px)));
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
