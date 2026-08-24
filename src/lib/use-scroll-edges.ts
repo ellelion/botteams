@@ -32,3 +32,14 @@ export function useScrollEdges<T extends HTMLElement>(watch?: unknown) {
 
   return { ref, edges, measure };
 }
+
+/* Horizontal overflow only. scrollIntoView also moves the page, and at
+   CSS zoom that yanked the catalog hundreds of pixels. */
+export function scrollIntoRail(pane: HTMLElement, el: HTMLElement) {
+  const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom);
+  const scale = Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
+  const box = pane.getBoundingClientRect();
+  const row = el.getBoundingClientRect();
+  if (row.right > box.right) pane.scrollLeft += (row.right - box.right) / scale;
+  else if (row.left < box.left) pane.scrollLeft -= (box.left - row.left) / scale;
+}

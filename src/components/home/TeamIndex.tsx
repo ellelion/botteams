@@ -17,6 +17,7 @@ import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { grokDisplayBotName, grokRecipeTitle } from "@/lib/grok-names";
 import { indexQuerySearch, type IndexKind, type IndexQuery } from "@/lib/catalog-query";
+import { scrollIntoRail } from "@/lib/use-scroll-edges";
 import { type Team } from "@/lib/types";
 import { houseSlots, sponsorHref, type SponsorSlot } from "@/data/sponsors";
 import { SponsorTicker } from "@/components/SponsorTicker";
@@ -565,7 +566,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
             setKind(ids[next]);
             const node = event.currentTarget.querySelector<HTMLElement>(`[data-kind="${ids[next]}"]`);
             node?.focus();
-            node?.scrollIntoView({ inline: "nearest", block: "nearest" });
+            if (node) scrollIntoRail(event.currentTarget, node);
           }}
         >
           {([
@@ -606,7 +607,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
             setSection(ids[next]);
             const node = event.currentTarget.querySelector<HTMLElement>(`[data-category="${ids[next]}"]`);
             node?.focus();
-            node?.scrollIntoView({ inline: "nearest", block: "nearest" });
+            if (node) scrollIntoRail(event.currentTarget, node);
           }}
         >
           <div className="cat-rail-track">
