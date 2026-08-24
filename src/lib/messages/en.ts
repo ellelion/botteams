@@ -143,6 +143,8 @@ export const en = {
     botNoteHint: "Wording only. It cannot stop another Bot reaching the connector.",
     room: "Group chat",
     roomName: "Group chat name",
+    roomNameNeeded: "The group chat needs a name.",
+    roomSizeNeeded: "A group chat holds two to six Bots.",
     roomMembers: "Who sits in it",
     roomRule: "Two to six Bots.",
     roomCount: (n: number) => `${n} of 2 to 6`,
