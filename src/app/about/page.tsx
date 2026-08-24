@@ -25,6 +25,10 @@ export default function AboutPage() {
           <Link className="accent-hover underline" href="/grok-bot">
             the Grok Bot guide
           </Link>
+          . Comparisons, how-to pages, and job write-ups live under{" "}
+          <Link className="accent-hover underline" href="/guides">
+            Guides
+          </Link>
           .
         </p>
         <p>

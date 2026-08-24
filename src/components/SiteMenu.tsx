@@ -49,6 +49,7 @@ export function SiteMenu() {
             <Link href="/?kind=bot" scroll={false} className="site-menu-link" onClick={close}>{en.nav.bots}</Link>
             <Link href="/connectors" className="site-menu-link" onClick={close}>{en.nav.connectorsNav}</Link>
             <Link href="/grok-bot" className="site-menu-link" onClick={close}>{en.nav.guide}</Link>
+            <Link href="/guides" className="site-menu-link" onClick={close}>{en.nav.guides}</Link>
             <Link href="/docs" className="site-menu-link" onClick={close}>{en.nav.docs}</Link>
             <Link href="/api" className="site-menu-link" onClick={close}>{en.nav.api}</Link>
             <Link href="/sponsor" className="site-menu-link" onClick={close}>{en.nav.sponsor}</Link>
