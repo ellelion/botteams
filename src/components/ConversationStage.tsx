@@ -274,6 +274,7 @@ function ConversationStageLive({ team }: { team: Team }) {
                 type="button"
                 className={`talk-rail-row talk-var-${botUiKind(agent.name, agent.persona)}${selected ? " is-on" : ""}`}
                 style={botMarkStyle(i, agent.name, agent.persona)}
+                aria-pressed={selected}
                 onClick={() => setView(i)}
               >
                 <GrokBotMark size={32} animate={typingHere} style={botMarkStyle(i, agent.name, agent.persona)} />
@@ -291,6 +292,7 @@ function ConversationStageLive({ team }: { team: Team }) {
             <button
               type="button"
               className={`talk-rail-row talk-rail-room${view === null ? " is-on" : ""}`}
+              aria-pressed={view === null}
               onClick={() => setView(null)}
             >
               <span className="talk-stack" aria-hidden>
@@ -324,6 +326,7 @@ function ConversationStageLive({ team }: { team: Team }) {
             <button
               type="button"
               className={`talk-dock-item${view === null ? " is-on" : ""}`}
+              aria-pressed={view === null}
               onClick={() => setView(null)}
               title={roomLabel}
             >
@@ -341,6 +344,7 @@ function ConversationStageLive({ team }: { team: Team }) {
               type="button"
               className={`talk-dock-item talk-var-${botUiKind(agent.name, agent.persona)}${view === i ? " is-on" : ""}`}
               style={botMarkStyle(i, agent.name, agent.persona)}
+              aria-pressed={view === i}
               onClick={() => setView(i)}
               title={grokDisplayBotName(agent.name)}
             >
@@ -458,8 +462,9 @@ function ConversationStageLive({ team }: { team: Team }) {
           })}
 
           {typing ? (
-            <div className="talk-typing" aria-hidden>
-              <span /><span /><span />
+            <div className="talk-typing" role="status" aria-live="polite">
+              <span className="sr-only">{en.team.watchTyping}</span>
+              <span aria-hidden /><span aria-hidden /><span aria-hidden />
             </div>
           ) : null}
         </div>
