@@ -680,6 +680,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
         <div className={`idx-status${isPending ? " is-pending" : ""}`}>
           <p className="idx-count" id={resultsId} role="status" aria-live="polite" aria-busy={isPending}>
             {en.home.results(sorted.length, inSource.length)}
+            {isPending ? <span className="idx-updating"> · {en.home.updating}</span> : null}
           </p>
           {hasFilters ? (
             <div className="idx-chips">

@@ -1,29 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { en } from "@/lib/messages/en";
+import { useCopyFeedback } from "@/lib/use-copy-feedback";
 
 export function ShareBar({ name, className = "" }: { name: string; className?: string }) {
-  const [copied, setCopied] = useState(false);
-  const [failed, setFailed] = useState(false);
-  const timer = useRef(0);
-
-  useEffect(() => () => window.clearTimeout(timer.current), []);
+  const { copied, failed, copyText } = useCopyFeedback();
 
   function currentHref() {
     return window.location.href;
   }
 
   async function copyLink() {
-    try {
-      await navigator.clipboard.writeText(currentHref());
-      setFailed(false);
-      setCopied(true);
-      window.clearTimeout(timer.current);
-      timer.current = window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setFailed(true);
-    }
+    await copyText(currentHref());
   }
 
   function postOnX(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -37,7 +25,7 @@ export function ShareBar({ name, className = "" }: { name: string; className?: s
 
   return (
     <div className={`share-bar share-bar--inline ${className}`.trim()}>
-      <button type="button" className="share-btn" onClick={copyLink}>
+      <button type="button" className={`share-btn${failed ? " is-copy-fail" : ""}`} onClick={copyLink}>
         {copyLabel}
       </button>
       <span className="sr-only" role="status" aria-live="polite">

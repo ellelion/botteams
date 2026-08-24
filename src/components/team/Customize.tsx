@@ -18,6 +18,7 @@ import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 import type { Team } from "@/lib/types";
+import { useCopyFeedback } from "@/lib/use-copy-feedback";
 import { useDialogChrome } from "@/lib/use-dialog-chrome";
 import { useScrollEdges } from "@/lib/use-scroll-edges";
 import {
@@ -73,7 +74,7 @@ export function Customize({
   const [mounted, setMounted] = useState(false);
   const [editing, setEditing] = useState(false);
   const [state, setState] = useState<CustomState>(() => defaultState(team));
-  const [shared, setShared] = useState(false);
+  const { copied: shared, failed: shareFail, copyText } = useCopyFeedback();
   const [liveHits, setLiveHits] = useState<Record<string, SkillselionHit>>({});
 
   /* A recipe change while a hand-edited prompt exists parks here until the
@@ -200,13 +201,7 @@ export function Customize({
   }
 
   async function copyShareLink() {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setShared(true);
-      window.setTimeout(() => setShared(false), 2000);
-    } catch {
-      setShared(false);
-    }
+    await copyText(window.location.href);
   }
 
   function download() {
@@ -485,9 +480,12 @@ export function Customize({
           </label>
           <p className="cz-hint">{en.customize.installedHint}</p>
           <div className="cz-actions mt-4">
-            <button type="button" className="cz-btn cz-btn-quiet" onClick={copyShareLink}>
-              {shared ? en.customize.shared : en.customize.share}
+            <button type="button" className={`cz-btn cz-btn-quiet${shareFail ? " is-copy-fail" : ""}`} onClick={copyShareLink}>
+              {shareFail ? en.customize.shareFail : shared ? en.customize.shared : en.customize.share}
             </button>
+            <span className="sr-only" role="status" aria-live="polite">
+              {shareFail ? en.customize.shareFail : shared ? en.customize.shared : ""}
+            </span>
             <button type="button" className="cz-btn cz-btn-quiet" onClick={download}>
               {en.customize.download}
             </button>
