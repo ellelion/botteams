@@ -69,6 +69,7 @@ function WatchOverlay({ team }: { team: Team }) {
   const [open, setOpen] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  const overlayId = useId();
   const label = team.kind === "bot" ? en.team.watchBot : en.team.watchTeam;
   const dialogTitle = team.kind === "bot" ? en.team.watchLabelBot : en.team.watchLabel;
 
@@ -102,6 +103,9 @@ function WatchOverlay({ team }: { team: Team }) {
       <button
         type="button"
         className="talk-watch-btn"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls={open ? overlayId : undefined}
         onClick={openWatch}
       >
         {label}
@@ -109,6 +113,7 @@ function WatchOverlay({ team }: { team: Team }) {
       {open && typeof document !== "undefined"
         ? createPortal(
             <div
+              id={overlayId}
               ref={overlayRef}
               className="talk-overlay"
               role="dialog"
@@ -430,6 +435,7 @@ function ConversationStageLive({ team }: { team: Team }) {
                 key={`${turn.speaker}-${i}`}
                 className={`talk-entry talk-row talk-var-${kind}${you ? " is-you" : ""}${mine ? " is-focus" : ""}${stack ? " is-stack" : ""}`}
                 style={you ? undefined : botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)}
+                aria-label={you ? en.team.watchYou : undefined}
               >
                 <div className="talk-avatar" aria-hidden>
                   {stack || you ? null : <GrokBotMark size={26} style={botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)} />}
