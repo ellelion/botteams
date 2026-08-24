@@ -4710,7 +4710,6 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
 .talk-rail-row .talk-rail-name { color: var(--talk-mute); }
 .talk-rail-row.is-on .talk-rail-name { color: var(--talk-text); }
 .talk-rail-meta { min-width: 0; display: grid; gap: 2px; }
-.talk-rail-topline { display: flex; justify-content: space-between; gap: 8px; }
 .talk-rail-name {
   font-size: 14px;
   line-height: 20px;
@@ -4728,7 +4727,6 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.talk-rail-time { font-size: 12px; color: var(--talk-mute); flex: none; }
 .talk-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100%; background: transparent; }
 .talk-head {
   display: flex;

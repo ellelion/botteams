@@ -23,14 +23,6 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function relTime(stepsAgo: number): string {
-  if (stepsAgo <= 0) return "now";
-  if (stepsAgo === 1) return "12s";
-  if (stepsAgo === 2) return "36s";
-  if (stepsAgo < 8) return `${stepsAgo}m`;
-  return `${stepsAgo + 3}m`;
-}
-
 function shortBot(name: string): string {
   return grokDisplayBotName(name).replace(/ Grok Bot$/i, "").trim();
 }
@@ -241,7 +233,7 @@ function ConversationStageLive({ team }: { team: Team }) {
   return (
     <section id="watch" ref={rootRef} className="talk-stage" aria-label={`${roomLabel} conversation`}>
       <div className="talk-body">
-      <aside className="talk-rail" aria-label="Teammates">
+      <aside className="talk-rail" aria-label={en.team.watchTeammates}>
         <div className="talk-rail-head" aria-hidden>
           <div className="talk-chrome">
             <span className="talk-dot" />
@@ -254,8 +246,6 @@ function ConversationStageLive({ team }: { team: Team }) {
             const name = grokDisplayBotName(agent.name);
             const own = byBot[agent.name] ?? [];
             const snippet = lastSnippet(own, own.length, agent.name, name);
-            const lastIdx = [...visible].reverse().findIndex((t) => t.speakerKey === agent.name || t.speaker === name);
-            const ago = lastIdx === -1 ? 0 : lastIdx;
             const selected = view === i;
             const typingHere = selected && typing;
             return (
@@ -269,11 +259,8 @@ function ConversationStageLive({ team }: { team: Team }) {
               >
                 <GrokBotMark size={32} animate={typingHere} style={botMarkStyle(i, agent.name, agent.persona)} />
                 <span className="talk-rail-meta">
-                  <span className="talk-rail-topline">
-                    <span className="talk-rail-name">{name}</span>
-                    <span className="talk-rail-time">{snippet ? relTime(ago) : ""}</span>
-                  </span>
-                  <span className="talk-rail-snip">{typingHere ? "Typing…" : snippet || agent.persona}</span>
+                  <span className="talk-rail-name">{name}</span>
+                  <span className="talk-rail-snip">{typingHere ? en.team.watchTyping : snippet || agent.persona}</span>
                 </span>
               </button>
             );
@@ -291,11 +278,8 @@ function ConversationStageLive({ team }: { team: Team }) {
                 ))}
               </span>
               <span className="talk-rail-meta">
-                <span className="talk-rail-topline">
-                  <span className="talk-rail-name">{roomLabel}</span>
-                  <span className="talk-rail-time">{visible.length ? "now" : ""}</span>
-                </span>
-                <span className="talk-rail-snip">{view === null && typing ? "Typing…" : (turns.filter((t) => !isYouTurn(t)).at(-1)?.text ?? "group chat")}</span>
+                <span className="talk-rail-name">{roomLabel}</span>
+                <span className="talk-rail-snip">{view === null && typing ? en.team.watchTyping : (turns.filter((t) => !isYouTurn(t)).at(-1)?.text ?? en.team.watchGroup)}</span>
               </span>
             </button>
           ) : null}
@@ -312,7 +296,7 @@ function ConversationStageLive({ team }: { team: Team }) {
           <p className="talk-replay">{en.team.watchReplay}</p>
         </header>
 
-        <div className="talk-dock" aria-label="Open a Bot or the group chat">
+        <div className="talk-dock" aria-label={en.team.watchDock}>
           {hasGroup ? (
             <button
               type="button"
@@ -326,7 +310,7 @@ function ConversationStageLive({ team }: { team: Team }) {
                   <GrokBotMark key={agent.name} size={12} style={botMarkStyle(i, agent.name, agent.persona)} />
                 ))}
               </span>
-              <span>group chat</span>
+              <span>{en.team.watchGroup}</span>
             </button>
           ) : null}
           {agents.map((agent, i) => (
@@ -388,10 +372,10 @@ function ConversationStageLive({ team }: { team: Team }) {
               return (
                 <article key={`frombots-${i}`} className="talk-frombots">
                   <p className="talk-frombots-kicker">
-                    Messages from{" "}
+                    {en.team.watchFrom}{" "}
                     {faces.map((agent, fi) => (
                       <span key={agent.name}>
-                        {fi > 0 ? " and " : ""}
+                        {fi > 0 ? ` ${en.team.watchAnd} ` : ""}
                         <TalkMention name={agent.name} persona={agent.persona} index={fi} />
                       </span>
                     ))}
@@ -420,8 +404,8 @@ function ConversationStageLive({ team }: { team: Team }) {
                   </div>
                   <div className={`talk-card talk-computer ${done ? "is-done" : "is-work"}`}>
                     <div className="talk-card-top">
-                      <span className="talk-card-title">Computer</span>
-                      <span className="talk-card-badge"><i />{done ? "Done" : "Working"}</span>
+                      <span className="talk-card-title">{en.team.watchComputer}</span>
+                      <span className="talk-card-badge"><i />{done ? en.team.watchDone : en.team.watchWorking}</span>
                     </div>
                     <p className="talk-card-copy">{turn.working.detail}</p>
                     {checks.length ? (
