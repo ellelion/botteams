@@ -400,12 +400,9 @@ body {
 .theme-accent-swatch {
   width: 28px; height: 28px; padding: 0; border: 1px solid var(--line-strong);
   border-radius: var(--r-pill);
-  cursor: pointer; transition: transform var(--dur) var(--ease);
+  cursor: pointer; transition: border-color var(--dur) var(--ease);
 }
-.theme-accent-swatch:hover { transform: scale(1.12); }
-@media (prefers-reduced-motion: reduce) {
-  .theme-accent-swatch:hover { transform: none; }
-}
+.theme-accent-swatch:hover { border-color: var(--ink); }
 
 /* Text CTA variant: same chrome as .theme-control, auto width so labels
    like "Copy installer prompt" are a real button, not a 34px square. */
@@ -3790,25 +3787,6 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   transform-origin: 50% 80%;
 }
 .roster-shape-stack .grok-bot-mark:first-child { margin-left: 0; }
-.roster-shape-stack:hover .grok-bot-mark,
-.roster-shape-stack:focus-within .grok-bot-mark {
-  animation: roster-face-jump 420ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
-}
-.roster-shape-stack:hover .grok-bot-mark:nth-child(2),
-.roster-shape-stack:focus-within .grok-bot-mark:nth-child(2) { animation-delay: 45ms; }
-.roster-shape-stack:hover .grok-bot-mark:nth-child(3),
-.roster-shape-stack:focus-within .grok-bot-mark:nth-child(3) { animation-delay: 90ms; }
-.roster-shape-stack:hover .grok-bot-mark:nth-child(4),
-.roster-shape-stack:focus-within .grok-bot-mark:nth-child(4) { animation-delay: 135ms; }
-@keyframes roster-face-jump {
-  0% { transform: translateY(0); }
-  45% { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .roster-shape-stack:hover .grok-bot-mark,
-  .roster-shape-stack:focus-within .grok-bot-mark { animation: none; }
-}
 .roster-shape-n { font-variant-numeric: tabular-nums; }
 .roster-shape-routines {
   position: relative;
@@ -5477,7 +5455,7 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   background: rgba(10, 10, 10, 0.45);
   isolation: isolate;
   box-sizing: border-box;
-  animation: talk-overlay-dim 220ms ease both;
+  animation: talk-overlay-dim var(--dur) var(--ease) both;
 }
 .talk-overlay-scrim {
   position: absolute;
@@ -5521,7 +5499,7 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   padding: 0;
   border-radius: 24px;
   background: transparent;
-  animation: talk-overlay-fade 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: talk-overlay-fade var(--dur) var(--ease) both;
 }
 .talk-overlay-canvas .talk-stage {
   width: 976px;
@@ -5881,8 +5859,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 @media (prefers-reduced-motion: reduce) {
   .theme-control-label:active,
   .rp-secondary:active,
-  .theme-accent-swatch:active,
-  .theme-accent-swatch:hover {
+  .theme-accent-swatch:active {
     transform: none;
   }
 }
