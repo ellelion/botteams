@@ -2291,8 +2291,8 @@ a.chip-unverified:hover {
   transition: opacity var(--dur) var(--ease);
   background: var(--ink);
   color: var(--page);
-  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
-  letter-spacing: 0;
+  font: 500 0.88rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.01em;
   text-transform: none;
   cursor: pointer;
 }
