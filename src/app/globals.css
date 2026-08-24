@@ -2355,7 +2355,12 @@ a.chip-unverified:focus-visible {
 .cf-chip:hover:not(:disabled),
 .cf-chip:focus-visible:not(:disabled) { color: var(--ink); background: var(--surface-elevated); }
 .cf-chip:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-.cf-chip:disabled { opacity: .4; cursor: default; }
+.cf-chip:disabled,
+.cf-chip:disabled .cf-count {
+  color: var(--muted);
+  opacity: 1;
+  cursor: default;
+}
 .cf-chip.is-on {
   background: var(--ink);
   color: var(--page);
@@ -3156,7 +3161,13 @@ html[data-theme="light"] .cz-check input:checked {
 .cz-input::placeholder { color: var(--muted); }
 .cz-input:focus,
 .cz-input:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-.cz-input:disabled { opacity: 0.55; cursor: not-allowed; }
+/* Off-roster Bot names live in this field. Opacity faded the name into
+   the sheet; muted type stays AA and still reads as not editable. */
+.cz-input:disabled {
+  color: var(--muted);
+  opacity: 1;
+  cursor: not-allowed;
+}
 .cz-textarea { min-height: 82px; line-height: 1.55; resize: vertical; }
 .cz-prompt-edit {
   font-family: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, monospace;
