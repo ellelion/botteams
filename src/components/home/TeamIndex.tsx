@@ -422,7 +422,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
   }
 
   const listing = sorted.length === 0 ? (
-    <div className={`idx-empty${isPending ? " is-pending" : ""}`}>
+    <div className={`idx-empty${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
       <p className="idx-empty-title">{en.home.emptyTitle(query.trim())}</p>
       <p className="idx-empty-body">{en.home.emptyBody}</p>
       <button type="button" className="cf-browse" onClick={clearFilters}>
@@ -430,7 +430,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
       </button>
     </div>
   ) : view === "cards" ? (
-    <div className={`idx-cards${isPending ? " is-pending" : ""}`}>
+    <div className={`idx-cards${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
       {interleaveAds(sorted, houseSlots).map((row) =>
         row.kind === "ad" ? (
           <ListingAd key={row.key} slot={row.slot} as="card" />
@@ -459,7 +459,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
       )}
     </div>
   ) : (
-    <div className={`team-table${isPending ? " is-pending" : ""}`}>
+    <div className={`team-table${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
       {interleaveAds(sorted, houseSlots).map((row) =>
         row.kind === "ad" ? (
           <ListingAd key={row.key} slot={row.slot} as="row" />

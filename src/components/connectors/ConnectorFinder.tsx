@@ -399,7 +399,7 @@ export function ConnectorFinder({
         ) : null}
       </p>
 
-      <div className={`cf-results${isPending ? " is-pending" : ""}`}>
+      <div className={`cf-results${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
       {mode === "shelf" ? (
         <>
           <section className="cf-shelf">
