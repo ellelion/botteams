@@ -273,8 +273,17 @@ body {
   letter-spacing: -0.012em;
 }
 
+.site-menu-link::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  flex: none;
+}
 .site-menu-link:hover { color: var(--accent-text); }
-.site-menu-link.is-current { color: var(--ink); }
+.site-menu-link.is-current { color: var(--ink); font-weight: 500; }
+.site-menu-link.is-current::before { background: var(--accent-text); }
 
 @media (max-width: 720px) {
   :root {
@@ -3872,6 +3881,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .theme-accent-swatch {
     border: 1px solid ButtonText;
   }
+  .chevron {
+    border: 1px solid ButtonText;
+  }
 }
 
 
@@ -4982,6 +4994,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 .talk-overlay-canvas .talk-main { background: inherit; }
 .talk-overlay-canvas .talk-thread { background: inherit; }
 .talk-overlay-canvas .talk-dock { display: none; }
+.talk-overlay-canvas .talk-head { padding-right: 92px; }
 @keyframes talk-overlay-dim {
   from { background: rgba(10, 10, 10, 0); }
   to { background: rgba(10, 10, 10, 0.45); }
@@ -4992,6 +5005,39 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 }
 @media (prefers-reduced-motion: reduce) {
   .talk-overlay, .talk-overlay-canvas { animation: none; }
+}
+@media (max-width: 720px) {
+  .talk-overlay {
+    padding: 0;
+    align-items: stretch;
+    background: #141414;
+  }
+  html:not([data-theme="dark"]) .talk-overlay { background: #fcfcfc; }
+  .talk-overlay-canvas {
+    width: 100%;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+  }
+  .talk-overlay-canvas .talk-stage {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-width: none;
+    border-radius: 0;
+    margin: 0;
+  }
+  .talk-overlay-canvas .talk-dock {
+    display: flex;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+  .talk-overlay-close {
+    top: calc(8px + env(safe-area-inset-top, 0px));
+    right: calc(8px + env(safe-area-inset-right, 0px));
+    min-height: 44px;
+  }
+  .talk-dock-item { min-height: 44px; }
 }
 
 .talk-watch-btn {

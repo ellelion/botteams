@@ -15,15 +15,13 @@ export default function ErrorPage({
     <WingsSplit
       hero={
         <WingsHero title={en.error.kicker}>
-          <p className="mt-4 text-[0.62rem] uppercase tracking-[0.3em]" style={{ color: ledger.accentText }}>{en.error.kicker}</p>
           <p className="mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.error.body}</p>
         </WingsHero>
       }
     >
       <div className="idx-empty">
         <p className="idx-empty-title">{en.error.title}</p>
-        <p className="idx-empty-body">{en.error.body}</p>
-        <nav className="notfound-nav" aria-label={en.error.kicker}>
+        <nav className="notfound-nav" aria-label={en.error.nav}>
           <button type="button" className="theme-control theme-control-label" onClick={reset}>
             {en.error.retry}
           </button>
