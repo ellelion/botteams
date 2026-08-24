@@ -4132,7 +4132,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .home-contribute-links a {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 24px;
+  min-width: 24px;
 }
 .home-contribute-links {
   display: flex;
