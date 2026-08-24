@@ -551,7 +551,9 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
             else return;
             event.preventDefault();
             setKind(ids[next]);
-            event.currentTarget.querySelector<HTMLElement>(`[data-kind="${ids[next]}"]`)?.focus();
+            const node = event.currentTarget.querySelector<HTMLElement>(`[data-kind="${ids[next]}"]`);
+            node?.focus();
+            node?.scrollIntoView({ inline: "nearest", block: "nearest" });
           }}
         >
           {([
