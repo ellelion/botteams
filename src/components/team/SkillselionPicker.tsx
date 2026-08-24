@@ -200,7 +200,7 @@ export function SkillselionPicker({
             >
               <div className="cz-bot-top">
                 <span className="cz-btn" aria-hidden="true">{en.customize.skillsAdd}</span>
-                <SkillHitFace hit={hit} />
+                <SkillHitFace hit={hit} compact />
               </div>
             </li>
           ))}
