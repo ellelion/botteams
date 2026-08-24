@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { PageJump } from "@/components/PageShell";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
@@ -28,18 +29,7 @@ export default function DocsPage() {
         </WingsHero>
       }
     >
-        <nav className="doc-jump" aria-label={en.nav.onThisPage}>
-          {[
-            ["#fields", "Fields"],
-            ["#limits", "Published limits"],
-            ["#shapes", "Two shapes"],
-            ["#from-xai", "From xAI"],
-            ["#verified", "Verified"],
-            ["#install", "Install notes"],
-          ].map(([href, label]) => (
-            <a key={href} href={href} className="accent-hover">{label}</a>
-          ))}
-        </nav>
+        <PageJump items={["Fields", "Published limits", "Two shapes", "From xAI", "Verified", "Install notes"]} />
         <h2 id="fields" className="mt-2 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Fields</h2>
         <table className="spec-table mt-4">
           <caption className="sr-only">Recipe fields</caption>
@@ -57,7 +47,7 @@ export default function DocsPage() {
           </tbody>
         </table>
 
-        <h2 id="limits" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Published limits we map to</h2>
+        <h2 id="published-limits" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Published limits we map to</h2>
         <ul className="measure mt-4 space-y-3 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           <li>
             <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.overview} rel="nofollow noopener noreferrer">Bot definition</a>: In the Docs and in the Grok Bot app, a Bot = a single persistent, named agent or one AI teammate.
@@ -82,7 +72,7 @@ export default function DocsPage() {
           </li>
         </ul>
 
-        <h2 id="shapes" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Two shapes</h2>
+        <h2 id="two-shapes" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Two shapes</h2>
         <p className="measure mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           A <strong>bot</strong> is one Bot doing one job. A <strong>team</strong> is two to six Bots in one group chat. They
           are different files in different folders, and the directory never adds them up into a single count, because a recipe
@@ -122,7 +112,7 @@ export default function DocsPage() {
           counted as teams.
         </p>
 
-        <h2 id="install" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Install notes</h2>
+        <h2 id="install-notes" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Install notes</h2>
         <div className="measure mt-4 space-y-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           <p>A team is one markdown file under teams/, and a bot is one under bots/, both with YAML frontmatter. GitHub is the CMS. There are no accounts and no connector API on this site.</p>
           <p>A bot installer creates one Bot and its routines. It never asks for a group chat or a sidebar section, because neither means anything for a single Bot.</p>

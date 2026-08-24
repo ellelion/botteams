@@ -11,10 +11,15 @@ export function slugTitle(title: string) {
 
 export function PageJump({ items }: { items: string[] }) {
   return (
-    <nav className="doc-jump" aria-label={en.nav.onThisPage}>
-      {items.map((label) => (
-        <a key={label} href={`#${slugTitle(label)}`} className="accent-hover">{label}</a>
-      ))}
+    <nav className="doc-toc" aria-label={en.nav.onThisPage}>
+      <details className="doc-toc-fold">
+        <summary className="doc-toc-sum">{en.nav.onThisPage}</summary>
+        <div className="doc-jump">
+          {items.map((label) => (
+            <a key={label} href={`#${slugTitle(label)}`} className="accent-hover">{label}</a>
+          ))}
+        </div>
+      </details>
     </nav>
   );
 }
