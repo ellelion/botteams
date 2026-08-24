@@ -72,9 +72,9 @@ export function HomePage({ teams }: { teams: Team[] }) {
                 {en.notAffiliated}
               </p>
             </div>
-            <a href="/?kind=team" className="meta accent-hover absolute bottom-5 left-1/2 z-10 hidden lg:inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap transition-colors lg:bottom-4">
+            <Link href="/?kind=team" className="meta accent-hover absolute bottom-5 left-1/2 z-10 hidden lg:inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap transition-colors lg:bottom-4">
               {en.home.scrollCue} <span className="cue-bob" aria-hidden>↓</span>
-            </a>
+            </Link>
           </section>
           <section className="wings-hero-extra relative z-10 mx-auto max-w-xl pb-[var(--sec-y)] pt-[var(--sec-y)] text-center hidden lg:block">
             <h2 className="text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>{en.home.howTitle}</h2>

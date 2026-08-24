@@ -6,6 +6,10 @@
 
 # Grok Bot Teams
 
+[![CI](https://github.com/ellelion/botteams/actions/workflows/ci.yml/badge.svg)](https://github.com/ellelion/botteams/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/ellelion/botteams/actions/workflows/codeql.yml/badge.svg)](https://github.com/ellelion/botteams/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-14b8a6.svg)](./LICENSE)
+
 Install a Grok Bot team, not a bot.
 
 A public directory of company teams for Grok Bot. Pick a team, copy one installer
@@ -19,6 +23,11 @@ proposes the routines for you to confirm.
 A team is one markdown file in [`teams/`](./teams). Front matter names the Bots,
 the group chat, the routines, and the connectors. The installer prompt is
 generated from it, so the file is the product and GitHub is the CMS.
+
+Every team and bot must pass the public
+[JSON Schema](https://botteams.ai/schema/team.schema.json) plus the repository's
+semantic checks. `kind: team` or `kind: bot` defines the shape.
+`status: installable` or `status: example` defines whether it is ready to run.
 
 To add one, copy [`docs/examples/sample-team.md`](./docs/examples/sample-team.md)
 or [`docs/examples/sample-bot.md`](./docs/examples/sample-bot.md) and read
@@ -97,7 +106,9 @@ endpoint by design; filter the collection instead.
 npm install
 npm run dev        # localhost:3000
 npm run validate   # team schema and category checks
+npm run lint       # code quality
 npm run build      # types plus production build
+npm test           # all local merge checks
 ```
 
 Node 22.12.0 (see `.nvmrc`).
@@ -107,10 +118,20 @@ Node 22.12.0 (see `.nvmrc`).
 A row is a **team**. The unit is a **Bot**, capital B. Group chats hold two to six Bots. No em-dashes.
 
 `kind: team` or `kind: bot` is the shape. `status: installable` is a recipe
-you can run. `status: example` is a format demo. Do not write `status: team`.
+you can run. `status: example` is a format demo. No other status values are valid.
 
 Canonical domain: botteams.ai.
 
+## Open source
+
+Contributions are welcome through pull requests. Read
+[CONTRIBUTING.md](./CONTRIBUTING.md), the [Code of Conduct](./CODE_OF_CONDUCT.md),
+and [GOVERNANCE.md](./GOVERNANCE.md) before you start. Report security issues
+privately as described in [SECURITY.md](./SECURITY.md).
+
+`main` is protected. Every change needs passing checks and approval from
+`@icidab`. Repository administrators cannot bypass these rules.
+
 ## Stack
 
-Next.js 16.2.10, React 19.2.4, TypeScript, Tailwind 4, gray-matter.
+Next.js 16.3.2, React 19.2.4, TypeScript, Tailwind 4, gray-matter.
