@@ -1192,7 +1192,9 @@ a.chip-unverified:focus-visible {
 }
 .search-input {
   width: 100%;
-  min-height: 44px;
+  /* Same height as connector search. This is the catalog's primary
+     field; 44px is the AA floor, 48px is the recommended touch size. */
+  min-height: 48px;
   padding: 0 88px 0 40px;
   border: 0;
   border-radius: var(--r-pill);
