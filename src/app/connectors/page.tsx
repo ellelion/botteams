@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ConnectorFinder, type FinderEntry } from "@/components/connectors/ConnectorFinder";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
 import {
@@ -60,7 +61,10 @@ export default async function ConnectorsPage({
   return (
     <WingsSplit
       hero={
-        <WingsHero title={en.connectors.h1}>
+        <WingsHero
+          title={en.connectors.h1}
+          kicker={<Breadcrumb parentHref="/" parentLabel={en.nav.directory} current={en.nav.connectorsNav} />}
+        >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             {en.connectors.lede(CONNECTOR_CATALOG.length)}
           </p>

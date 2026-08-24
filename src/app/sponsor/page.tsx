@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { BuySlot } from "@/components/sponsor/BuySlot";
 import { PaidNotice } from "@/components/sponsor/PaidNotice";
 import { RAIL_PLANS } from "@/lib/rail";
 import { railCheckoutReady } from "@/lib/stripe";
 import { getRailInventory } from "@/lib/rail-inventory";
-import { ledger, ledgerOg } from "@/lib/ledger-theme";
+import { ledger } from "@/lib/ledger-theme";
 import { SPONSOR_SLOTS_TOTAL, houseSlots, sponsorHref } from "@/data/sponsors";
 import { CATALOG_CHECKED_ON, CONNECTOR_CATALOG } from "@/lib/connectors";
 import { en } from "@/lib/messages/en";
@@ -70,7 +71,10 @@ export default async function SponsorPage() {
   return (
     <WingsSplit
       hero={
-        <WingsHero title={en.sponsor.pageH1}>
+        <WingsHero
+          title={en.sponsor.pageH1}
+          kicker={<Breadcrumb parentHref="/" parentLabel={en.nav.directory} current={en.nav.sponsor} />}
+        >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             {en.sponsor.answer(teamCount, botCount, SPONSOR_SLOTS_TOTAL, HOUSE_COUNT, open, STATS_AS_OF)}
           </p>
@@ -240,32 +244,14 @@ export default async function SponsorPage() {
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
             {en.sponsor.faqTitle}
           </h2>
-          <ul className="mt-5 flex flex-col gap-3">
+          <div className="spon-faq">
             {faqs.map((item) => (
-              <li
-                key={item.q}
-                className="px-6 py-6 sm:px-7 sm:py-7"
-                style={{
-                  background: ledgerOg.paperDeep,
-                  borderRadius: "var(--r-card)",
-                  boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.06)",
-                }}
-              >
-                <p
-                  className="text-[1.05rem] font-semibold leading-snug tracking-[-0.02em]"
-                  style={{ color: ledgerOg.ink }}
-                >
-                  {item.q}
-                </p>
-                <p
-                  className="mt-2.5 text-[0.92rem] leading-relaxed"
-                  style={{ color: ledgerOg.inkSoft }}
-                >
-                  {item.a}
-                </p>
-              </li>
+              <details key={item.q}>
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
             ))}
-          </ul>
+          </div>
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
