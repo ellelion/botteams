@@ -88,28 +88,32 @@ export function AccentPicker() {
         title="Choose accent color"
         onClick={() => setOpen((value) => !value)}
       >
-        <span className="theme-accent-dot" aria-hidden="true" />
+        <span className="theme-accent-mark" aria-hidden="true">
+          <i /><i /><i /><i />
+        </span>
       </button>
       {open && (
-        <div id={popoverId} className="theme-accent-popover" role="radiogroup" aria-label="Choose accent color">
-          {ACCENT_PALETTE.map((value, index) => (
-            <button
-              key={value}
-              ref={(node) => {
-                swatchRefs.current[index] = node;
-              }}
-              type="button"
-              role="radio"
-              aria-checked={accent === value}
-              aria-label={`Set accent ${value}`}
-              title={value}
-              className={`theme-accent-swatch${accent === value ? " is-selected" : ""}`}
-              style={{ background: value }}
-              tabIndex={accent === value ? 0 : -1}
-              onClick={() => pick(value)}
-              onKeyDown={(event) => onSwatchKey(event, index)}
-            />
-          ))}
+        <div id={popoverId} className="theme-accent-popover" role="dialog" aria-label="Choose accent color">
+          <div role="radiogroup" aria-label="Choose accent color">
+            {ACCENT_PALETTE.map((value, index) => (
+              <button
+                key={value}
+                ref={(node) => {
+                  swatchRefs.current[index] = node;
+                }}
+                type="button"
+                role="radio"
+                aria-checked={accent === value}
+                aria-label={`Set accent ${value}`}
+                title={value}
+                className={`theme-accent-swatch${accent === value ? " is-selected" : ""}`}
+                style={{ background: value }}
+                tabIndex={accent === value ? 0 : -1}
+                onClick={() => pick(value)}
+                onKeyDown={(event) => onSwatchKey(event, index)}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
