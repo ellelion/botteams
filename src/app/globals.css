@@ -5456,6 +5456,9 @@ html[data-theme="dark"] .talk-stage {
 }
 .talk-dock-item.is-on span { color: var(--talk-text); font-weight: 560; }
 .talk-dock-item.is-on .grok-bot-mark { transform: translateY(-2px); }
+.talk-dock-item:hover span,
+.talk-dock-item:focus span,
+.talk-dock-item:focus-visible span { color: var(--talk-text); }
 .talk-dock-item:focus,
 .talk-dock-item:focus-visible {
   outline: 2px solid var(--accent-text) !important;
@@ -5790,6 +5793,11 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   letter-spacing: 0;
   text-transform: none;
   cursor: pointer;
+}
+.talk-overlay-close:hover,
+.talk-overlay-close:focus,
+.talk-overlay-close:focus-visible {
+  border-color: var(--ink);
 }
 .talk-overlay-close:focus,
 .talk-overlay-close:focus-visible {
