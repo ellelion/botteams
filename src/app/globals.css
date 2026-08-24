@@ -1235,6 +1235,46 @@ a.chip-unverified:focus-visible {
     font-weight: 500;
   }
 }
+/* 639px is the layout viewport. CSS zoom leaves that at 1280 while
+   the docs column shrinks to ~177px, so the same stack has to follow
+   the column. rem in @container tracks the root. */
+.wings-main-col { container-type: inline-size; }
+@container (max-width: 24rem) {
+  .spec-table,
+  .spec-table thead,
+  .spec-table tbody {
+    display: block;
+    width: 100%;
+  }
+  .spec-table tr {
+    display: grid;
+    gap: 6px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .spec-table tr:has(> th[scope="col"]) { display: none; }
+  .spec-table th,
+  .spec-table td {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+  .spec-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    color: var(--ink-soft);
+    font: 500 11px/1.3 var(--font-geist-sans), system-ui, sans-serif;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .spec-table th[scope="row"] {
+    color: var(--ink);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+}
 /* Guide compare tables live in the half-width wings column (~586px
    on a 1280 screen, never wider than --w-measure). Three prose
    columns stay cramped there, so they always use the labeled stack.
