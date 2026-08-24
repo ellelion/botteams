@@ -435,6 +435,9 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
             {en.home.emptySeeAll}
           </Link>
         ) : null}
+        <Link href="/guides" className="theme-control theme-control-label">
+          {en.home.emptyGuides}
+        </Link>
       </nav>
     </div>
   ) : view === "cards" ? (
