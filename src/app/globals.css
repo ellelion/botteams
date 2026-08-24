@@ -3168,6 +3168,7 @@ a.chip-unverified:focus-visible {
 .cz-hint.is-fail,
 .cz-skill-status[role="alert"] .cz-hint {
   color: var(--beta);
+  font-size: 0.84rem;
 }
 .cz-skill-status {
   display: flex;
@@ -4095,7 +4096,7 @@ html[data-theme="light"] .cz-check input:checked {
 .spon-field-error {
   letter-spacing: 0;
   text-transform: none;
-  font-size: 0.8rem;
+  font-size: 0.84rem;
   line-height: 1.45;
   color: var(--beta);
 }
