@@ -6,15 +6,21 @@ import { GitHubIcon } from "@/components/icons/GitHubIcon";
 import { en } from "@/lib/messages/en";
 import { MAIN_NAV, isNavCurrent } from "@/lib/nav";
 
-export function SiteNav({ className = "site-masthead-nav" }: { className?: string }) {
-  const pathname = usePathname();
-  const params = useSearchParams();
-  const kind = params.get("kind");
-
+export function SiteNavLinks({
+  className = "site-masthead-nav",
+  pathname,
+  kind,
+  onNavigate,
+}: {
+  className?: string;
+  pathname?: string;
+  kind?: string | null;
+  onNavigate?: () => void;
+}) {
   return (
     <nav className={className} aria-label={en.nav.mainAria}>
       {MAIN_NAV.map((item) => {
-        const current = isNavCurrent(item.id, pathname, kind);
+        const current = pathname ? isNavCurrent(item.id, pathname, kind ?? null) : false;
         if (item.external) {
           return (
             <a
@@ -22,11 +28,17 @@ export function SiteNav({ className = "site-masthead-nav" }: { className?: strin
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="accent-hover site-nav-icon"
-              aria-label={item.label}
+              className={className === "site-masthead-nav" ? "accent-hover site-nav-icon" : "site-menu-link"}
+              aria-label={className === "site-masthead-nav" ? item.label : undefined}
               title={item.label}
+              onClick={onNavigate}
             >
-              <GitHubIcon className="h-4 w-4" />
+              {className === "site-masthead-nav" ? <GitHubIcon className="h-4 w-4" /> : (
+                <>
+                  <GitHubIcon className="h-[14px] w-[14px]" />
+                  {item.label}
+                </>
+              )}
             </a>
           );
         }
@@ -35,8 +47,13 @@ export function SiteNav({ className = "site-masthead-nav" }: { className?: strin
             key={item.id}
             href={item.href}
             scroll={false}
-            className={`accent-hover${current ? " is-current" : ""}`}
+            className={
+              className === "site-masthead-nav"
+                ? `accent-hover${current ? " is-current" : ""}`
+                : `site-menu-link${current ? " is-current" : ""}`
+            }
             aria-current={current ? "page" : undefined}
+            onClick={onNavigate}
           >
             {item.label}
           </Link>
@@ -44,4 +61,14 @@ export function SiteNav({ className = "site-masthead-nav" }: { className?: strin
       })}
     </nav>
   );
+}
+
+export function SiteNavFallback() {
+  return <SiteNavLinks />;
+}
+
+export function SiteNav() {
+  const pathname = usePathname();
+  const kind = useSearchParams().get("kind");
+  return <SiteNavLinks pathname={pathname} kind={kind} />;
 }
