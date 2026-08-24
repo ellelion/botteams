@@ -1163,7 +1163,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .cf-clear,
   .sel-button,
   .doc-jump a,
-  .doc-toc-sum {
+  .doc-toc-sum,
+  .chip-xai {
     min-height: 44px;
   }
   .hero-stat {
