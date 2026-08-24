@@ -1945,9 +1945,11 @@ a.chip-unverified:focus-visible {
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
 }
+/* 0.62 dropped ink-soft taglines to 3.5:1 on paper. 0.78 keeps
+   the stale-list signal and holds a 4.5:1 floor on both themes. */
 .idx-empty.is-pending,
 .idx-cards.is-pending,
-.team-table.is-pending { opacity: 0.62; }
+.team-table.is-pending { opacity: 0.78; }
 @media (prefers-reduced-motion: reduce) {
   .idx-empty.is-pending,
   .idx-cards.is-pending,
@@ -2703,7 +2705,7 @@ a.chip-unverified:focus-visible {
 .cf-browse:focus-visible { opacity: 0.88; }
 .cf-browse:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 
-.cf-results.is-pending { opacity: 0.62; }
+.cf-results.is-pending { opacity: 0.78; }
 @media (prefers-reduced-motion: reduce) {
   .cf-results.is-pending { opacity: 1; }
 }
