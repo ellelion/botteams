@@ -23,7 +23,7 @@ export type RejectKey = (typeof REJECT_KEYS)[number];
 
 export const REJECT_COPY: Record<RejectKey, string> = {
   not_a_tool: "This has to be a real tool a Grok Bot could use, not a general ad.",
-  competing_directory: "We do not take competing Grok Bot team or bot directories.",
+  competing_directory: "We do not take competing Grok Bot team or Bot directories.",
   crypto_or_signals: "No crypto, and no trading signals.",
   lead_gen: "No lead-generation.",
   bad_url: "Use a public URL, not a shortener.",
@@ -209,7 +209,7 @@ function buildPrompt(input: ReviewInput): string {
     "Do not invent keys.",
     "",
     "A catalog of skills, MCP, APIs, or agent products counts as a tool. Only reject not_a_tool for unrelated consumer ads (shoes, food, generic SaaS with no agent use). Skillselion, Agent Plugins Directory, and similar operator tools pass.",
-    "Reject competing Grok Bot team or bot directories (competing_directory).",
+    "Reject competing Grok Bot team or Bot directories (competing_directory).",
     "Reject crypto, trading signals (crypto_or_signals), and lead-generation (lead_gen).",
     "Destination must be a public http or https URL, not a shortener (bad_url). A host without a scheme is fine.",
     "Title max 28. Line max 52. Use copy_not_plain only for spam, all-caps shouting, or emoji stuffing. Normal product names and one-liners pass.",

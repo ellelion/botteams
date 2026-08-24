@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
 const ACCEPT = [
   "Digital products only.",
-  "Public URL, not a shortener, not a competing Grok Bot team or bot directory.",
+  "Public URL, not a shortener, not a competing Grok Bot team or Bot directory.",
   "No crypto, no trading signals, no lead-generation for either.",
 ];
 
@@ -41,7 +41,7 @@ const NEED = [
 ];
 
 const RULES = [
-  "No competing directories of Grok Bot teams or bots.",
+  "No competing directories of Grok Bot teams or Bots.",
   "No crypto, no trading signals, no lead-generation for either.",
   "The tool has to be something a Bot could use. This is not general display advertising.",
   "We may edit the one-liner after it is live, so it reads like the rest of the directory.",

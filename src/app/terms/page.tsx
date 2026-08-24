@@ -139,7 +139,7 @@ export default function TermsPage() {
       <Block title="Acceptable use">
         <p>
           Do not use the site to break the law, to probe it, or to submit a listing that is not a digital tool a Bot
-          could use. No crypto, no trading signals, no lead-generation, no competing Grok Bot team or bot directory on
+          could use. No crypto, no trading signals, no lead-generation, no competing Grok Bot team or Bot directory on
           the rail.
         </p>
       </Block>
