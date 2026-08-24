@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { grokRecipeTitle } from "@/lib/grok-names";
 import { notFound } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { Customize } from "@/components/team/Customize";
 import { WatchControl } from "@/components/ConversationStage";
@@ -85,13 +86,7 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
       hero={
         <WingsHero
           title={grokRecipeTitle(team.kind, team.name)}
-          kicker={(
-            <nav className="meta flex flex-wrap items-center justify-center gap-2" aria-label="Breadcrumb">
-              <span>{team.name}</span>
-              <span aria-hidden>/</span>
-              <Link href="/" className="accent-hover">{en.team.allTeams}</Link>
-            </nav>
-          )}
+          kicker={<Breadcrumb parentHref="/" parentLabel={en.team.allTeams} current={team.name} />}
         >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{team.tagline}</p>
           {team.kind === "team" ? (

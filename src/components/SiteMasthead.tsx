@@ -1,10 +1,10 @@
-import Link from "next/link";
-import { GitHubIcon } from "@/components/icons/GitHubIcon";
+import { Suspense } from "react";
 import { SiteMenu } from "@/components/SiteMenu";
+import { SiteNav } from "@/components/SiteNav";
 import { ThemeControls } from "@/components/theme/ThemeControls";
 import { WingsMark } from "@/components/WingsMark";
 import { en } from "@/lib/messages/en";
-import { site } from "@/lib/site";
+import Link from "next/link";
 
 export function SiteMasthead() {
   return (
@@ -14,19 +14,13 @@ export function SiteMasthead() {
         <span className="site-wordmark-text">{en.wordmark}</span>
       </Link>
       <div className="site-masthead-actions">
-        <nav className="site-masthead-nav" aria-label={en.nav.mainAria}>
-          <Link href="/" scroll={false} className="accent-hover">{en.nav.teams}</Link>
-          <Link href="/?kind=bot" scroll={false} className="accent-hover">{en.nav.bots}</Link>
-          <Link href="/connectors" className="accent-hover">{en.nav.connectorsNav}</Link>
-          <Link href="/docs" className="accent-hover">{en.nav.docs}</Link>
-          <Link href="/api" className="accent-hover">{en.nav.api}</Link>
-          <Link href="/sponsor" className="accent-hover">{en.nav.sponsor}</Link>
-          <a href={site.github} target="_blank" rel="noopener noreferrer" className="accent-hover inline-flex items-center" aria-label={en.nav.github} title={en.nav.github}>
-            <GitHubIcon className="h-[13px] w-[13px]" />
-          </a>
-        </nav>
+        <Suspense fallback={<nav className="site-masthead-nav" aria-label={en.nav.mainAria} />}>
+          <SiteNav />
+        </Suspense>
         <ThemeControls />
-        <SiteMenu />
+        <Suspense fallback={null}>
+          <SiteMenu />
+        </Suspense>
       </div>
     </header>
   );

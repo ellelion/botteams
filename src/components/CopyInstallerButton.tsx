@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { en } from "@/lib/messages/en";
 
 /* Clipboard only. The shelf does not count copies: a number nobody can
@@ -8,6 +8,9 @@ import { en } from "@/lib/messages/en";
 export function CopyInstallerButton({ text, disabled = false }: { text: string; disabled?: boolean }) {
   const [copied, setCopied] = useState(false);
   const [failed, setFailed] = useState(false);
+  const timer = useRef<number>(0);
+
+  useEffect(() => () => window.clearTimeout(timer.current), []);
 
   async function onCopy() {
     if (disabled) return;
@@ -15,11 +18,14 @@ export function CopyInstallerButton({ text, disabled = false }: { text: string; 
       await navigator.clipboard.writeText(text);
       setFailed(false);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
+      window.clearTimeout(timer.current);
+      timer.current = window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setFailed(true);
     }
   }
+
+  const label = failed ? en.team.copyFail : copied ? en.team.copied : en.team.copy;
 
   return (
     <button
@@ -28,8 +34,9 @@ export function CopyInstallerButton({ text, disabled = false }: { text: string; 
       onClick={onCopy}
       disabled={disabled}
       aria-disabled={disabled}
+      aria-live="polite"
     >
-      {failed ? en.team.copyFail : copied ? en.team.copied : en.team.copy}
+      {label}
     </button>
   );
 }
