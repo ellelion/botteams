@@ -104,7 +104,7 @@ export default async function SponsorPage() {
           <h2 id="spon-facts" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
             {en.sponsor.factsTitle}
           </h2>
-          <dl className="mt-5 grid grid-cols-2 gap-x-8 gap-y-8 min-[900px]:grid-cols-4 min-[900px]:gap-x-10">
+          <dl className="spon-facts">
             {[
               { label: "Teams", value: String(teamCount), note: en.sponsor.factTeams(teamCount) },
               { label: "Bots", value: String(botCount), note: en.sponsor.factBots(botCount, fromXai) },
@@ -118,21 +118,14 @@ export default async function SponsorPage() {
                 value: String(connectors),
                 note: en.sponsor.factConnectors(connectors, CATALOG_CHECKED_ON),
               },
-            ].map((fact, i) => (
-              <div
-                key={fact.label}
-                className={`min-w-0${i > 0 ? " min-[900px]:border-l min-[900px]:border-solid min-[900px]:pl-8" : " min-[900px]:pr-2"}`}
-                style={i > 0 ? { borderColor: ledger.hairline } : undefined}
-              >
+            ].map((fact) => (
+              <div key={fact.label} className="spon-fact">
                 <dt className="sr-only">{fact.label}</dt>
                 <dd className="m-0 min-w-0">
-                  <strong
-                    className="block text-[clamp(1.55rem,3.2vw,2.15rem)] font-medium leading-none tracking-[-0.04em]"
-                    style={{ fontFamily: ledger.serif, color: ledger.ink }}
-                  >
+                  <strong className="spon-fact-value" style={{ fontFamily: ledger.serif, color: ledger.ink }}>
                     {fact.value}
                   </strong>
-                  <span className="mt-2 block text-[0.75rem] leading-snug pr-1" style={{ color: ledger.inkSoft }}>
+                  <span className="spon-fact-note" style={{ color: ledger.inkSoft }}>
                     {fact.note}
                   </span>
                 </dd>
