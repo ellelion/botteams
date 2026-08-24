@@ -443,6 +443,9 @@ export const en = {
     secNotes: "Notes",
     noRoutines: "No routines in this recipe.",
     noNotes: "No notes on this one.",
+    noSkills: "No skills in this recipe.",
+    noSkillsHint:
+      "Open Customize to search Skillselion. What you add is wording in the paste, not an install on this site.",
   },
   bot: {
     allBots: "All Bots",
