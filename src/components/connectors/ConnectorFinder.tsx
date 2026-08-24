@@ -387,6 +387,7 @@ export function ConnectorFinder({
         {mode === "shelf"
           ? en.connectors.shelfSummary(entries.length)
           : en.connectors.summary(list.length, entries.length)}
+        {isPending ? <span className="cf-updating"> {en.connectors.updating}</span> : null}
         {mode !== "shelf" ? (
           <button type="button" className="cf-clear" onClick={reset}>{en.connectors.backToShelf}</button>
         ) : null}

@@ -120,6 +120,7 @@ export const en = {
     emptyBody: "Try another word, or clear the filters to see the whole shelf.",
     clearFilters: "Clear filters",
     loading: "Loading teams",
+    updating: "Updating",
     howSummary: "How it works",
     faqSummary: "Questions",
     contributeSummary: "Add a team",
@@ -168,6 +169,7 @@ export const en = {
     installedHint: "The paste becomes add or rename only what changed, instead of standing the team up again.",
     share: "Copy share link",
     shared: "Link copied",
+    shareFail: "Could not copy link",
     download: "Download markdown",
     blocked: "Fix this before you copy",
     warn: "Worth a look",
@@ -257,6 +259,7 @@ export const en = {
     backToShelf: "Back to the short list",
     allLabel: "All connectors",
     noTeams: "No team yet",
+    updating: "Updating",
     summary: (shown: number, total: number) =>
       shown === total ? `Showing all ${total} connectors.` : `Showing ${shown} of ${total} connectors.`,
     emptyTitle: (q: string) => (q ? `Nothing matches "${q}".` : "Nothing matches those filters."),

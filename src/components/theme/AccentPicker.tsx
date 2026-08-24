@@ -88,7 +88,7 @@ export function AccentPicker() {
     }
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft" && event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
     event.preventDefault();
-    const cols = window.matchMedia("(max-width: 640px), (pointer: coarse)").matches ? 4 : 6;
+    const cols = window.matchMedia("(max-width: 1023px), (pointer: coarse)").matches ? 4 : 6;
     const len = ACCENT_PALETTE.length;
     let next = index;
     if (event.key === "ArrowRight") next = (index + 1) % len;
