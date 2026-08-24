@@ -364,7 +364,8 @@ export const en = {
       "Prepaid advertising. One purchase puts you on the side rail and the listing row. Pick a term and pay on Stripe. Then you submit the listing.",
     buyFine:
       "By paying you confirm you are 18 or older and agree to the Terms and the Privacy policy. Stripe takes the card on their page. A paid row is a paid placement. It is not Verified, it is not a team, and it is not an endorsement.",
-    buyError: "Could not start checkout. Try again, or mail us.",
+    buyError: "Could not start checkout. Try again, or",
+    buyErrorMail: "mail us",
     opening: "Get started",
     soldOut: "Every paying slot is taken. Mail us and we will tell you when one frees up.",
     paid:

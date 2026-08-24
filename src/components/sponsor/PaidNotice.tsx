@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { en } from "@/lib/messages/en";
+import { site } from "@/lib/site";
 
 /*
  * Fallback for the old /sponsor?paid=1 return. Checkout now opens
@@ -12,7 +13,10 @@ export function PaidNotice() {
   const params = useSearchParams();
   if (params.get("checkout") === "error") {
     return (
-      <p className="spon-error" role="alert">{en.sponsor.buyError}</p>
+      <p className="spon-error" role="alert">
+        {en.sponsor.buyError}{" "}
+        <a className="accent-hover underline" href={`mailto:${site.email}`}>{en.sponsor.buyErrorMail}</a>.
+      </p>
     );
   }
   const paid = params.get("paid") === "1";

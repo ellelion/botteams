@@ -3243,9 +3243,14 @@ html[data-theme="light"] .cz-check input:checked {
 }
 .spon-error {
   margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: var(--r-inner);
+  background: color-mix(in srgb, var(--beta) 12%, transparent);
   color: var(--beta);
-  font-size: 0.8rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
+.spon-error a { color: inherit; }
 
 .spon-steps {
   display: grid;
