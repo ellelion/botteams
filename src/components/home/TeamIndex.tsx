@@ -56,8 +56,8 @@ function ViewGridIcon() {
 }
 
 const VIEWS: { id: View; label: string; icon: ReactNode }[] = [
-  { id: "ledger", label: "List", icon: <ViewListIcon /> },
-  { id: "cards", label: "Cards", icon: <ViewGridIcon /> },
+  { id: "ledger", label: en.home.viewList, icon: <ViewListIcon /> },
+  { id: "cards", label: en.home.viewCards, icon: <ViewGridIcon /> },
 ];
 
 /*

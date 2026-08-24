@@ -89,7 +89,7 @@ export const en = {
     liveBadge: "Installable",
     filterAll: "All",
     viewCards: "Cards",
-    viewTable: "Table",
+    viewList: "List",
     colTeam: "Team",
     colCategory: "Category",
     colBots: "Bots",
