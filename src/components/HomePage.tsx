@@ -115,6 +115,9 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
                 </div>
               ))}
             </dl>
+            <p className="home-contribute-links mt-4 text-[0.72rem]">
+              <Link className="accent-hover underline" href="/guides">{en.home.faqGuides}</Link>
+            </p>
           </section>
           <script
             type="application/ld+json"
@@ -153,6 +156,9 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
               </div>
             ))}
           </dl>
+          <p className="home-contribute-links">
+            <Link className="accent-hover underline" href="/guides">{en.home.faqGuides}</Link>
+          </p>
         </details>
         <details name="home-more">
           <summary>{en.home.contributeSummary}</summary>
