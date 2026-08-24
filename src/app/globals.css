@@ -3349,7 +3349,7 @@ html[data-theme="light"] .cz-check input:checked {
   font-family: inherit;
   font-size: 0.88rem;
 }
-.cz-input::placeholder { color: var(--muted); }
+.cz-input::placeholder { color: var(--ink-soft); opacity: 1; }
 .cz-input::-webkit-search-cancel-button { appearance: none; }
 .cz-search-wrap { position: relative; display: block; }
 .cz-search-wrap .cz-input:not(:placeholder-shown) { padding-right: 88px; }
@@ -6526,7 +6526,11 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .guide-toc a:active,
   .doc-jump a:active,
   .home-hero-links a:active,
-  .home-contribute-links a:active {
+  .home-contribute-links a:active,
+  .spon-faq summary:active,
+  .cz-advanced summary:active,
+  .rp-sum:active,
+  .doc-toc-sum:active {
     transform: scale(0.96);
   }
 }
