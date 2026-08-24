@@ -369,7 +369,6 @@ export function Customize({
                         type="button"
                         className={`cz-mode${mode === m ? " is-on" : ""}`}
                         aria-pressed={mode === m}
-                        title={MODE_HINT[m]}
                         aria-describedby={`${modeHintId}-${m}`}
                         onClick={() => patch({ modes: { ...state.modes, [connector]: m } })}
                       >
@@ -377,6 +376,7 @@ export function Customize({
                       </button>
                     ))}
                   </span>
+                  <p className="cz-hint cz-mode-hint">{MODE_HINT[mode]}</p>
                 </li>
               );
             })}
