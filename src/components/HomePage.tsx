@@ -82,7 +82,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
             <pre className="installer-prompt is-whole mt-5 p-4 text-left text-[0.68rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
               <code>{CONTRIBUTE_SAMPLE}</code>
             </pre>
-            <p className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.72rem]">
+            <p className="home-contribute-links mt-4 text-[0.72rem]">
               <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-label={`${en.home.contributePr}. ${en.nav.opensNew}`}>
                 {en.home.contributePr}
               </a>
@@ -150,11 +150,10 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
         <details name="home-more">
           <summary>{en.home.contributeSummary}</summary>
           <p>{en.home.contributeBody}</p>
-          <p>
+          <p className="home-contribute-links">
             <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-label={`${en.home.contributeGuide}. ${en.nav.opensNew}`}>
               {en.home.contributeGuide}
             </a>
-            {" · "}
             <Link className="accent-hover underline" href="/docs">{en.home.contributeSpec}</Link>
           </p>
         </details>

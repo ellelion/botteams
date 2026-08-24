@@ -4128,10 +4128,24 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
    restatement at the bottom of this file raises them to 44. */
 .home-hero-manifesto a,
 .api-link,
-.hairline-row > a {
+.hairline-row > a,
+.home-contribute-links a {
   display: inline-flex;
   align-items: center;
   min-height: 24px;
+}
+.home-contribute-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 18px;
+}
+.home-more .home-contribute-links {
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
 }
 
 
@@ -5672,7 +5686,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .home-hero-manifesto a,
   .api-link,
   .hairline-row > a,
-  .index-name {
+  .index-name,
+  .home-contribute-links a {
     min-height: 44px;
   }
   .theme-control,
