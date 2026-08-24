@@ -2744,10 +2744,29 @@ a.chip-unverified:hover {
   cursor: pointer;
 }
 .cz-check input {
+  appearance: none;
   width: 16px;
   height: 16px;
-  accent-color: var(--accent-text);
+  margin: 0;
+  flex: none;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px 10px;
   cursor: pointer;
+}
+.cz-check input:checked {
+  background-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%230a0a0a' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' d='M3.2 8.2l3.2 3.2 6.4-6.4'/%3E%3C/svg%3E");
+}
+html[data-theme="light"] .cz-check input:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' d='M3.2 8.2l3.2 3.2 6.4-6.4'/%3E%3C/svg%3E");
+}
+.cz-check input:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
 }
 .cz-check-row {
   min-height: 32px;
@@ -2761,6 +2780,7 @@ a.chip-unverified:hover {
   .cz-check input {
     width: 20px;
     height: 20px;
+    background-size: 12px 12px;
   }
   .cz-check-row { min-height: 44px; }
 }
@@ -4179,6 +4199,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .chevron {
     border: 1px solid ButtonText;
   }
+  .cz-check input {
+    appearance: auto;
+    background: none;
+    border: 1px solid ButtonText;
+  }
 }
 
 
@@ -5494,7 +5519,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .cz-chip:active,
   a.chip:active,
   .copy-btn:active,
-  .pill-btn:active {
+  .pill-btn:active,
+  .cz-check input:active {
     transform: scale(0.96);
   }
 }
