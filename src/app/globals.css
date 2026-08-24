@@ -3170,6 +3170,10 @@ a.chip-unverified:focus-visible {
   color: var(--beta);
   font-size: 0.84rem;
 }
+/* Searching / nothing-matched are the live status, not a field caption. */
+.cz-hint[role="status"] {
+  font-size: 0.84rem;
+}
 .cz-skill-status {
   display: flex;
   flex-wrap: wrap;
