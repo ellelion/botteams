@@ -777,6 +777,11 @@ a.accent-hover {
   white-space: nowrap;
 }
 .chip-verified { color: var(--status-live); }
+a.chip-verified:hover,
+a.chip-unverified:hover {
+  color: var(--ink);
+  background: var(--surface-elevated);
+}
 .chip-featured {
   gap: 5px;
   border: 1px solid var(--accent-text);
@@ -1166,7 +1171,7 @@ a.accent-hover {
   .spon-cta,
   .foot-link,
   .doc-jump a,
-  .chip-xai,
+  a.chip,
   .cf-chip,
   .cf-browse,
   .cf-clear,
@@ -1217,7 +1222,7 @@ a.accent-hover {
   .filter-views .filter-chip--icon,
   .doc-jump a,
   .doc-toc-sum,
-  .chip-xai,
+  a.chip,
   .row-arrow-link,
   .rp-secondary,
   .cz-btn,
@@ -5382,7 +5387,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .foot-link,
   .doc-jump a,
   .doc-toc-sum,
-  .chip-xai,
+  a.chip,
   .cf-chip,
   .cf-browse,
   .cf-clear,
