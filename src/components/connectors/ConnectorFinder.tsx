@@ -7,7 +7,7 @@ import { ConnectorRow } from "@/components/ConnectorRow";
 import { CategoryIcon } from "@/components/icons/LineIcons";
 import { connectorQuerySearch, type ConnectorFinderQuery } from "@/lib/catalog-query";
 import { en } from "@/lib/messages/en";
-import { useScrollEdges } from "@/lib/use-scroll-edges";
+import { scrollIntoRail, useScrollEdges } from "@/lib/use-scroll-edges";
 
 /*
  * Finding one connector in 306.
@@ -368,7 +368,7 @@ export function ConnectorFinder({
           onFocus={(event) => {
             const chip = event.target;
             if (chip instanceof HTMLElement && chip.classList.contains("cf-chip")) {
-              chip.scrollIntoView({ inline: "nearest", block: "nearest" });
+              scrollIntoRail(event.currentTarget, chip);
             }
           }}
         >
