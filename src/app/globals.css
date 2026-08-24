@@ -811,7 +811,9 @@ a.accent-hover:focus-visible {
 }
 .chip-verified { color: var(--status-live); }
 a.chip-verified:hover,
-a.chip-unverified:hover {
+a.chip-verified:focus-visible,
+a.chip-unverified:hover,
+a.chip-unverified:focus-visible {
   color: var(--ink);
   background: var(--surface-elevated);
 }
@@ -831,7 +833,8 @@ a.chip-unverified:hover {
 /* Sourcing, not endorsement, so it reads as a citation rather than a
    seal: no fill, no accent, just a bordered label that links out. */
 .chip-xai { color: var(--ink-soft); }
-.chip-xai:hover { color: var(--ink); background: var(--surface-elevated); }
+.chip-xai:hover,
+.chip-xai:focus-visible { color: var(--ink); background: var(--surface-elevated); }
 /* The only chip that is a link, so the only one that needs a thumb. */
 .chip-beta {
   color: var(--beta);
@@ -2419,7 +2422,8 @@ a.chip-unverified:hover {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.cf-row-teams:hover { text-decoration: underline; }
+.cf-row-teams:hover,
+.cf-row-teams:focus-visible { text-decoration: underline; }
 .cf-row-teams:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 /* Shelf and short lists live in the page scroller, under the sticky
    search bar. Windowed rows stay inside .cf-scroll, so they must not
@@ -3248,7 +3252,8 @@ html[data-theme="light"] .cz-check input:checked {
 @media (prefers-reduced-motion: reduce) {
   .cz-advanced summary::after { transition: none; }
 }
-.cz-advanced summary:hover { color: var(--ink); }
+.cz-advanced summary:hover,
+.cz-advanced summary:focus-visible { color: var(--ink); }
 
 @media (max-width: 430px) {
   /* The mode control is the only thing wide enough to push Copy off the
@@ -3804,14 +3809,16 @@ html[data-theme="light"] .cz-check input:checked {
   letter-spacing: 0.1em;
   transition: color var(--dur) var(--ease);
 }
-.foot-grok:hover { color: var(--ink); }
+.foot-grok:hover,
+.foot-grok:focus-visible { color: var(--ink); }
 .foot-grok:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 4px; }
 .foot-mark-grok { width: 20px; height: 20px; flex: none; }
 .foot-mark-text { white-space: nowrap; }
 
 /* Leaves the site. Same icon on every row that does. */
 .foot-out { flex: none; opacity: 0.55; }
-.foot-link:hover .foot-out { opacity: 1; }
+.foot-link:hover .foot-out,
+.foot-link:focus-visible .foot-out { opacity: 1; }
 
 /* One artwork file per background. Never a filter, never a fill swap. */
 .grok-mark-on-dark { display: none; }
