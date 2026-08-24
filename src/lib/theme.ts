@@ -9,6 +9,10 @@ export const ACCENT_STORAGE_KEY = "grokbotteams-accent";
 /* Dark is the site now. Light is the same system inverted, opt-in. */
 export const DEFAULT_THEME: Theme = "dark";
 export const DEFAULT_ACCENT = "#54b9a6";
+/* Accent is also the colour of 0.6rem section labels. WCAG AA 4.5:1 is
+   the legal floor; stopping there left mint at 4.89 on white, which is
+   a thin wash at 9.6px. Six-to-one keeps the hue and reads as text. */
+export const ACCENT_TEXT_MIN_CONTRAST = 6;
 
 export const ACCENT_PALETTE = [
   "#54b9a6", "#ff6308", "#e11d48", "#c2410c", "#ea580c", "#ca8a04", "#ffe000", "#65a30d",
@@ -66,7 +70,7 @@ export function onAccentFor(accent: string): string {
 export function accentTextFor(accent: string, theme: Theme): string {
   for (let step = 0; step <= 20; step += 1) {
     const candidate = mix(accent, INK[theme], step / 20);
-    if (contrastRatio(candidate, PAGE[theme]) >= 4.5) return candidate;
+    if (contrastRatio(candidate, PAGE[theme]) >= ACCENT_TEXT_MIN_CONTRAST) return candidate;
   }
   return INK[theme];
 }
@@ -77,5 +81,5 @@ export function themeColorFor(theme: Theme): string {
 
 export function createThemeBootstrapScript(): string {
   const palette = JSON.stringify([...ACCENT_PALETTE]);
-  return `(function(){var p=${palette},d="${DEFAULT_ACCENT}",t="${DEFAULT_THEME}",a=d;try{var st=localStorage.getItem("${THEME_STORAGE_KEY}");if(st==="light"||st==="dark")t=st;var sa=(localStorage.getItem("${ACCENT_STORAGE_KEY}")||"").toLowerCase();if(p.indexOf(sa)>=0)a=sa;else if(sa)localStorage.removeItem("${ACCENT_STORAGE_KEY}")}catch(e){}var page=t==="dark"?"#0a0a0a":"#ffffff",ink=t==="dark"?"#ffffff":"#0a0a0a";function rgb(h){return[1,3,5].map(function(i){return parseInt(h.slice(i,i+2),16)})}function lum(h){var c=rgb(h).map(function(v){v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)});return.2126*c[0]+.7152*c[1]+.0722*c[2]}function cr(x,y){var X=lum(x),Y=lum(y);return(Math.max(X,Y)+.05)/(Math.min(X,Y)+.05)}function mix(x,y,n){var X=rgb(x),Y=rgb(y);return"#"+X.map(function(v,i){return Math.round(v+(Y[i]-v)*n).toString(16).padStart(2,"0")}).join("")}var at=ink;for(var i=0;i<=20;i++){var q=mix(a,ink,i/20);if(cr(q,page)>=4.5){at=q;break}}var on=cr("#0a0a0a",a)>=4.5?"#0a0a0a":cr("#ffffff",a)>=4.5?"#ffffff":cr("#000000",a)>=cr("#ffffff",a)?"#000000":"#ffffff";var root=document.documentElement;root.dataset.theme=t;root.style.setProperty("--accent",a);root.style.setProperty("--accent-text",at);root.style.setProperty("--on-accent",on);var meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",page)})();`;
+  return `(function(){var p=${palette},d="${DEFAULT_ACCENT}",t="${DEFAULT_THEME}",a=d;try{var st=localStorage.getItem("${THEME_STORAGE_KEY}");if(st==="light"||st==="dark")t=st;var sa=(localStorage.getItem("${ACCENT_STORAGE_KEY}")||"").toLowerCase();if(p.indexOf(sa)>=0)a=sa;else if(sa)localStorage.removeItem("${ACCENT_STORAGE_KEY}")}catch(e){}var page=t==="dark"?"#0a0a0a":"#ffffff",ink=t==="dark"?"#ffffff":"#0a0a0a";function rgb(h){return[1,3,5].map(function(i){return parseInt(h.slice(i,i+2),16)})}function lum(h){var c=rgb(h).map(function(v){v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)});return.2126*c[0]+.7152*c[1]+.0722*c[2]}function cr(x,y){var X=lum(x),Y=lum(y);return(Math.max(X,Y)+.05)/(Math.min(X,Y)+.05)}function mix(x,y,n){var X=rgb(x),Y=rgb(y);return"#"+X.map(function(v,i){return Math.round(v+(Y[i]-v)*n).toString(16).padStart(2,"0")}).join("")}var at=ink;for(var i=0;i<=20;i++){var q=mix(a,ink,i/20);if(cr(q,page)>=${ACCENT_TEXT_MIN_CONTRAST}){at=q;break}}var on=cr("#0a0a0a",a)>=4.5?"#0a0a0a":cr("#ffffff",a)>=4.5?"#ffffff":cr("#000000",a)>=cr("#ffffff",a)?"#000000":"#ffffff";var root=document.documentElement;root.dataset.theme=t;root.style.setProperty("--accent",a);root.style.setProperty("--accent-text",at);root.style.setProperty("--on-accent",on);var meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",page)})();`;
 }
