@@ -4207,9 +4207,10 @@ html[data-theme="light"] .cz-check input:checked {
   align-items: start;
   container-type: inline-size;
 }
-@container (max-width: 50rem) {
-  /* Text zoom does not shrink the viewport. Four nowrap columns do not
-     fit once 17rem of identity has taken half the pane. */
+@container (max-width: 70rem) {
+  /* 17rem of identity plus a 4-col map left ~112px tracks at 1024.
+     50rem only caught text-zoom / a 640 frame. 70rem also catches
+     the 960px pane beside the lockup. */
   .foot-cols {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 48px 24px;
@@ -4281,6 +4282,15 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   /* Identity stacks above the map rather than squeezing beside it. */
   .foot-panes { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .foot-meta { margin-top: 36px; padding-top: 22px; }
+}
+@media (max-width: 1279px) {
+  /* 1024 to 1279 still matches the 4-col default. Identity takes
+     17rem, so the map was four 112px tracks. Keep the 44px / dock
+     padding in the 1023 block so desktop chrome stays 26px rows. */
+  .foot-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px 24px;
+  }
 }
 @media (max-width: 1023px) {
   /* Same 2-column map x.ai uses on a phone. Do not collapse to one
