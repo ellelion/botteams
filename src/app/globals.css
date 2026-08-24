@@ -4025,7 +4025,9 @@ html[data-theme="light"] .cz-check input:checked {
   border-radius: var(--r-inner);
   background: var(--surface-elevated);
   color: var(--ink-soft);
-  font-size: 0.82rem;
+  /* Same size as empty bodies and customize alerts. This line is a
+     status recovery, not chrome. */
+  font-size: 0.84rem;
   line-height: 1.6;
 }
 .spon-paid a { color: inherit; }
@@ -5107,7 +5109,14 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   font: 500 1.05rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: -0.02em;
 }
-.run-bar-copy p { margin-top: 6px; color: var(--ink-soft); font-size: 0.82rem; line-height: 1.45; }
+.run-bar-copy p {
+  margin-top: 6px;
+  color: var(--ink-soft);
+  /* Same size as empty bodies. This is the “what to do next” line
+     next to View source, not chrome. */
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
 .run-bar-act { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .rp-job-list .hairline-row { padding-top: 10px; padding-bottom: 10px; }
 /* ── Reduced motion ───────────────────────────────────────────────────
