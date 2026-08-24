@@ -3764,6 +3764,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   align-items: center;
   gap: 6px;
   flex: none;
+  min-height: 28px;
   height: 28px;
   padding: 0 10px 0 7px;
   border: 1px solid var(--pill-line, color-mix(in srgb, var(--ink) 16%, transparent));
@@ -3840,9 +3841,20 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   line-height: 1.35;
 }
 @media (max-width: 1023px) {
-  .spon-mq--top { display: block; }
-  .spon-mq--bottom { display: block; }
-  .page-rails-main { padding-bottom: 68px; }
+  /* One ticker on the phone: the fixed bar. A second in-flow copy
+     stacked the same chips twice in the first screen. */
+  .spon-mq--top { display: none; }
+  .spon-mq--bottom {
+    display: block;
+    height: 56px;
+  }
+  .spon-mq--bottom .spon-chip {
+    height: 44px;
+    min-height: 44px;
+    font-size: 0.72rem;
+    padding: 0 12px 0 9px;
+  }
+  .page-rails-main { padding-bottom: 72px; }
 }
 
 
