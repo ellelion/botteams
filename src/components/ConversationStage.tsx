@@ -390,10 +390,9 @@ function ConversationStageLive({ team }: { team: Team }) {
                 </article>
               );
             }
-            if (turn.working || (turn.checks && turn.checks.length > 0)) {
-              const done = turn.working ? turn.working.state === "done" : true;
+            if (turn.working) {
+              const done = turn.working.state === "done";
               const checks = (turn.checks ?? []).slice(0, 4);
-              const copy = turn.working?.detail || turn.text;
               return (
                 <article
                   key={`${turn.speaker}-comp-${i}`}
@@ -408,7 +407,7 @@ function ConversationStageLive({ team }: { team: Team }) {
                       <span className="talk-card-title">{en.team.watchComputer}</span>
                       <span className="talk-card-badge"><i />{done ? en.team.watchDone : en.team.watchWorking}</span>
                     </div>
-                    {copy ? <p className="talk-card-copy">{copy}</p> : null}
+                    {turn.working.detail ? <p className="talk-card-copy">{turn.working.detail}</p> : null}
                     {checks.length ? (
                       <ul className="talk-check talk-check-compact" aria-label={en.team.watchReceipts}>
                         {checks.map((c) => (
@@ -420,6 +419,7 @@ function ConversationStageLive({ team }: { team: Team }) {
                 </article>
               );
             }
+            const receipts = (turn.checks ?? []).slice(0, 4);
             return (
               <article
                 key={`${turn.speaker}-${i}`}
@@ -432,6 +432,13 @@ function ConversationStageLive({ team }: { team: Team }) {
                 <div className="talk-bubble">
                   {stack || hideWho ? null : <p className="talk-bubble-who">{turn.speaker}</p>}
                   <p className="talk-bubble-text">{turn.text}</p>
+                  {receipts.length ? (
+                    <ul className="talk-check talk-check-compact" aria-label={en.team.watchReceipts}>
+                      {receipts.map((c) => (
+                        <li key={c}>{c}</li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
               </article>
             );
