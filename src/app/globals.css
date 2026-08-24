@@ -221,9 +221,11 @@
 }
 /* min-height is ignored on inline links. Same box as the spec jump list.
    Keep these selectors plain so the 44px restatements win. /guides
-   titles are the articles, not words in a sentence. */
+   titles are the articles, not words in a sentence. The alternatives
+   chooser “Read” column is a destination list too, not a sentence. */
 .guide-toc a,
-.guide-index a {
+.guide-index a,
+.guide-prose .spec-table a {
   display: inline-flex;
   align-items: center;
   min-height: 32px;
@@ -1503,6 +1505,7 @@ a.chip-unverified:focus-visible {
   .doc-jump a,
   .guide-toc a,
   .guide-index a,
+  .guide-prose .spec-table a,
   a.chip,
   .cf-chip,
   .cf-browse,
@@ -1568,6 +1571,7 @@ a.chip-unverified:focus-visible {
   .doc-jump a,
   .guide-toc a,
   .guide-index a,
+  .guide-prose .spec-table a,
   .doc-toc-sum,
   a.chip,
   .row-arrow-link,
@@ -6846,6 +6850,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .doc-jump a,
   .guide-toc a,
   .guide-index a,
+  .guide-prose .spec-table a,
   .doc-toc-sum,
   a.chip,
   .cf-chip,
@@ -6966,6 +6971,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .home-more summary:active,
   .guide-index a:active,
   .guide-toc a:active,
+  .guide-prose .spec-table a:active,
   .doc-jump a:active,
   .home-hero-links a:active,
   .home-contribute-links a:active,
