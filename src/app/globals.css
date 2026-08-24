@@ -473,9 +473,12 @@ html:not([data-theme="dark"]) .wings-mark {
 }
 /* Text zoom does not shrink the viewport. At 200% a 1280 screen still
    matches (min-width: 1024px). rem here follows the root size, so a
-   45rem bar is 720px at 100% and 1440px at 200%. Guides made 34rem
-   (1088px at 200%) too short for the 1280 row. */
-@container (max-width: 45rem) {
+   68rem bar is 1088px at 100% and 2176px at 200%. 45rem left the
+   nowrap Teams…Sponsor row on a 960px 1024-frame masthead. 1.4.12
+   letter-spacing then blew the page 55px and the bar 87px. 34rem
+   (1088px at 200%) was too short for the 1280 row at default
+   tracking; 68rem still hides that row under 200% text. */
+@container (max-width: 68rem) {
   .site-masthead-nav { display: none; }
   .site-menu { display: block; }
   .site-menu-button { width: 44px; height: 44px; }
