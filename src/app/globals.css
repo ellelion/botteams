@@ -2329,6 +2329,15 @@ a.chip-unverified:hover {
 }
 .cf-row-teams:hover { text-decoration: underline; }
 .cf-row-teams:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+/* Shelf and short lists live in the page scroller, under the sticky
+   search bar. Windowed rows stay inside .cf-scroll, so they must not
+   inherit this offset or the inner list grows a 200px hole. */
+.cf-shelf .cf-row-teams,
+.cf-results > .cf-list .cf-row-teams,
+.cf-browse,
+.cf-empty {
+  scroll-margin-top: calc(var(--masthead-h) + 9rem);
+}
 .cf-row-quiet {
   flex: none;
   color: var(--muted);
