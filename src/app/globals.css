@@ -1236,7 +1236,8 @@ a.chip-unverified:hover {
   .talk-dock-item,
   .spon-cta,
   .foot-link,
-  .theme-control-label {
+  .theme-control-label,
+  .cz-skill-scope .sel-button {
     min-height: 44px;
   }
   .filter-views .filter-chip--icon { width: 44px; }
@@ -5416,7 +5417,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .hero-stat,
   .site-wordmark,
   .foot-id,
-  .foot-grok {
+  .foot-grok,
+  .cz-skill-scope .sel-button {
     min-height: 44px;
   }
   .theme-control,
