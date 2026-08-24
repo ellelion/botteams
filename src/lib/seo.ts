@@ -23,7 +23,7 @@ export function organizationJsonLd() {
         addressCountry: "US",
       },
     },
-    logo: { "@type": "ImageObject", url: `${site.url}/brand/wings.webp`, width: 640, height: 640 },
+    logo: { "@type": "ImageObject", url: `${site.url}/icon.png`, width: 512, height: 512 },
     sameAs: [site.github],
     parentOrganization: { "@type": "Organization", name: site.company, url: "https://ellelion.com" },
     disambiguatingDescription: "Not affiliated with xAI.",

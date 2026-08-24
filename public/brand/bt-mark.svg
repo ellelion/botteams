@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="7" fill="#1a1a18"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="112" fill="#1a1a18"/>
   <text
-    x="16"
-    y="21"
+    x="256"
+    y="300"
     text-anchor="middle"
     fill="#f7f7f5"
     font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
-    font-size="15"
+    font-size="248"
     font-weight="700"
     letter-spacing="-0.04em"
   >BT</text>

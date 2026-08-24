@@ -1,13 +1,12 @@
 import Image from "next/image";
 
 /*
- * The tiny wings brand mark — theme-adaptive (black wings on the light
- * theme, white on dark, via the global .wings-on-* visibility rules).
+ * The BT site mark — a dark rounded square with white "BT" type.
  * Decorative: it always sits next to a text label, so it stays aria-hidden.
  *
  * `layoutSize` lets the mark render visually large while only occupying
  * that much height in the row (negative block margins absorb the rest),
- * so enlarging the wings never makes a one-screen page scroll.
+ * so enlarging the mark never makes a one-screen page scroll.
  */
 export function WingsMark({
   size = 16,
@@ -36,20 +35,12 @@ export function WingsMark({
       aria-hidden
     >
       <Image
-        src="/brand/wings-black.webp"
+        src="/brand/bt-mark.svg"
         alt=""
         fill
         sizes={`${size}px`}
         priority={priority}
-        className="wings-on-light object-contain"
-      />
-      <Image
-        src="/brand/wings-white.webp"
-        alt=""
-        fill
-        sizes={`${size}px`}
-        priority={priority}
-        className="wings-on-dark object-contain"
+        className="object-contain"
       />
     </span>
   );
