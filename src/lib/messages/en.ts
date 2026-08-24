@@ -10,6 +10,7 @@ export const en = {
   answerUse:
     "Use them at work, in a business, or for everyday life. Copy one installer prompt. Nothing is installed on this site.",
   onRamp: "Or start with one Bot.",
+  guideLink: "What is Grok Bot?",
   notAffiliated: "Not affiliated with xAI.",
   share: {
     copyLink: "Copy link",
@@ -22,6 +23,7 @@ export const en = {
     teams: "Grok Bot Teams",
     bots: "Grok Bots",
     docs: "Spec",
+    guide: "What is Grok Bot?",
     connectorsNav: "Connectors",
     api: "API",
     sponsor: "Sponsor",
@@ -393,6 +395,7 @@ export const en = {
     connectors: "Connectors",
     sponsor: "Sponsor",
     spec: "Spec",
+    guide: "What is Grok Bot?",
     api: "API",
     apiBots: "Bots API",
     openapi: "OpenAPI",

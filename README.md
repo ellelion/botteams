@@ -27,6 +27,7 @@ it end to end.
 | `/` | Team index. Search, category, connector filter, sort. |
 | `/teams/<slug>` | A team: Bots, group chat, routines, installer prompt, and Customize. |
 | `/bots/<slug>` | A bot: one Bot, routines, installer prompt, and Customize. No group chat, no Verified. |
+| `/grok-bot` | What is Grok Bot? Setup, teams, skills, routines, and limits. |
 | `/docs` | The team spec. Our recipe format, mapped onto official Grok Bot nouns. |
 | `/connectors` | Every connector Grok Bot reaches, and which teams use each. |
 | `/api` | Public API contract, readable without JavaScript. |
