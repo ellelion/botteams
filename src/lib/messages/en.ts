@@ -155,7 +155,7 @@ export const en = {
     botNameNeeded: "Every Bot needs a name.",
     botNameClash: "Two Bots share this name. Make them different.",
     botNote: "Extra wording for this Bot",
-    botNotePlaceholder: "Only the Stripe watcher should touch Stripe",
+    botNotePlaceholder: "Only this Bot",
     botNoteHint: "Wording only. It cannot stop another Bot reaching the connector.",
     room: "Group chat",
     roomName: "Group chat name",
