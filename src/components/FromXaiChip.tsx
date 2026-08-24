@@ -21,8 +21,9 @@ export function FromXaiChip({
   const cls = `chip chip-xai ${className}`.trim();
   if (as === "span") {
     return (
-      <span className={cls} title={en.xai.chipTitle}>
+      <span className={cls}>
         {en.xai.chip}
+        <span className="sr-only">. {en.xai.chipTitle}</span>
       </span>
     );
   }
@@ -32,8 +33,7 @@ export function FromXaiChip({
       href={XAI_USE_CASE_GALLERY}
       target="_blank"
       rel="noopener noreferrer"
-      title={en.xai.chipTitle}
-      aria-label={`${en.xai.chip}. ${en.nav.opensNew}`}
+      aria-label={`${en.xai.chip}. ${en.xai.chipTitle} ${en.nav.opensNew}`}
     >
       {en.xai.chip}
     </a>
