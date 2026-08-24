@@ -85,10 +85,19 @@ export function Select({
     };
   }, [open]);
 
-  /* Keep the active option in view, including when type-ahead jumps far. */
+  /* Keep the active option in the list pane. scrollIntoView also moves
+     ancestor pages, and at CSS zoom that threw the catalog off-screen. */
   useEffect(() => {
     if (!open) return;
-    listRef.current?.querySelector<HTMLElement>('[data-active="true"]')?.scrollIntoView({ block: "nearest" });
+    const list = listRef.current;
+    const el = list?.querySelector<HTMLElement>('[data-active="true"]');
+    if (!list || !el) return;
+    const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom);
+    const scale = Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
+    const pane = list.getBoundingClientRect();
+    const row = el.getBoundingClientRect();
+    if (row.bottom > pane.bottom) list.scrollTop += (row.bottom - pane.bottom) / scale;
+    else if (row.top < pane.top) list.scrollTop -= (pane.top - row.top) / scale;
   }, [open, active]);
 
   /* Open upward when the list would run off the bottom of the viewport.
@@ -102,17 +111,21 @@ export function Select({
     const root = rootEl;
     function place() {
       const box = root.getBoundingClientRect();
+      const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom);
+      const scale = Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
       const spaceBelow = window.innerHeight - box.bottom - 8;
       const spaceAbove = box.top - 8;
-      const available = Math.max(spaceBelow, spaceAbove);
-      /* Match the stylesheet cap (19rem, or half the viewport on a phone)
-         so leftover space above the button cannot become a full-screen menu. */
+      /* getBoundingClientRect is painted px; max-height is pre-zoom CSS. */
+      const available = Math.max(spaceBelow, spaceAbove) / scale;
+      /* Match the stylesheet cap (19rem, or the remaining viewport on a
+         phone) so leftover space above the button cannot become a
+         full-screen menu. */
       list.style.maxHeight = "";
       const cssCap = Number.parseFloat(getComputedStyle(list).maxHeight);
-      const cap = Number.isFinite(cssCap) && cssCap > 0 ? cssCap : Math.min(304, Math.floor(window.innerHeight * 0.5));
+      const cap = Number.isFinite(cssCap) && cssCap > 0 ? cssCap : Math.min(304, Math.floor(window.innerHeight * 0.5 / scale));
       list.style.maxHeight = `${Math.max(120, Math.floor(Math.min(available, cap)))}px`;
       const height = list.offsetHeight;
-      list.classList.toggle("is-up", spaceBelow < height && spaceAbove > spaceBelow);
+      list.classList.toggle("is-up", spaceBelow < height * scale && spaceAbove > spaceBelow);
     }
     place();
     const ro = new ResizeObserver(place);
