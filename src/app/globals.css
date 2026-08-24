@@ -374,6 +374,9 @@ body {
   cursor: pointer; transition: transform var(--dur) var(--ease);
 }
 .theme-accent-swatch:hover { transform: scale(1.12); }
+@media (prefers-reduced-motion: reduce) {
+  .theme-accent-swatch:hover { transform: none; }
+}
 
 /* Text CTA variant: same chrome as .theme-control, auto width so labels
    like "Copy installer prompt" are a real button, not a 34px square. */
