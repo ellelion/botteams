@@ -2205,6 +2205,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   animation: sel-in var(--dur) var(--ease);
 }
 .sel-list.is-end { left: auto; right: 0; }
+.sel-list.is-up { top: auto; bottom: calc(100% + 6px); }
 /* Fade and sit. A menu that travels reads as a thing being thrown at
    the reader; this one is simply there. */
 @keyframes sel-in {
