@@ -753,7 +753,6 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .chip-xai { color: var(--ink-soft); }
 .chip-xai:hover { color: var(--ink); background: var(--surface-elevated); }
 /* The only chip that is a link, so the only one that needs a thumb. */
-@media (max-width: 640px) { .chip-xai { min-height: 34px; } }
 .chip-beta {
   color: var(--beta);
   letter-spacing: 0.16em;
