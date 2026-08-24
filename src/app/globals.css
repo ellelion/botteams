@@ -340,11 +340,12 @@ body {
   color: var(--ink);
 }
 .site-wordmark-text { font-weight: 500; letter-spacing: -0.012em; }
-.wings-mark { border-radius: 22%; }
-/* The BT tile is #1a1a18. On dark paper that fill is ~1:1, so the
-   rounded square disappears and only the letters remain. --pill-line
-   is the 3:1 hairline used for other page-on-page chrome. */
-html[data-theme="dark"] .wings-mark {
+.wings-mark { border-radius: 0; }
+/* The ellelion tile is #fcfcfb. On light paper that fill is ~1:1, so
+   the square disappears and only the strokes remain. --pill-line is
+   the 3:1 hairline used for other page-on-page chrome. Dark paper
+   already sees the white tile. */
+html:not([data-theme="dark"]) .wings-mark {
   box-shadow: 0 0 0 1px var(--pill-line);
 }
 
