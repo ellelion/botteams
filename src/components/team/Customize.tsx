@@ -708,7 +708,11 @@ export function Customize({
         </details>
 
         <details className="rp-sec">
-          <summary className="rp-sum"><RecipeSecIcon name="notes" /><span className="rp-sum-lab">{en.recipe.secNotes}</span></summary>
+          <summary className="rp-sum">
+            <RecipeSecIcon name="notes" />
+            <span className="rp-sum-lab">{en.recipe.secNotes}</span>
+            <span className="rp-count">{notes.length}</span>
+          </summary>
           <div className="rp-secbody">{notes.length > 0 ? notes : <p className="rc-empty">{en.recipe.noNotes}</p>}</div>
         </details>
 

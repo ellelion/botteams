@@ -1046,7 +1046,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .cz-chip,
   .share-btn,
   .talk-watch-btn,
-  .talk-overlay-close {
+  .talk-overlay-close,
+  .spon-cta {
     min-height: 44px;
   }
   .filter-views .filter-chip--icon { width: 44px; }
@@ -2575,6 +2576,22 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .spon-cta-ghost:hover { opacity: 1; background: var(--surface-elevated); }
 .spon-cta-out { flex: none; }
 
+.spon-off {
+  margin-top: 18px;
+  padding: 22px 24px;
+  border-radius: var(--r-card);
+  background: var(--card);
+}
+.spon-off-title { font-size: 1rem; }
+.spon-off-body {
+  margin-top: 8px;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.6;
+  max-width: var(--w-measure);
+}
+.spon-off .theme-control { margin-top: 16px; }
+
 .spon-hero-cta {
   margin-top: 22px;
 }
@@ -3424,10 +3441,24 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 640px) {
   .rp-head { padding-top: 10px; }
   .rp-name { font-size: 1.4rem; }
-  .rp-head-act { width: 100%; flex-wrap: nowrap; }
+  .rp-head-act { width: 100%; flex-wrap: wrap; }
   .rp-head-act .theme-control,
-  .rp-head-act .rp-secondary,
-  .rp-head-act .share-btn { flex: 1 1 0; min-height: 44px; min-width: 0; justify-content: center; }
+  .rp-head-act .rp-secondary {
+    flex: 1 1 calc(50% - 4px);
+    min-height: 44px;
+    min-width: 0;
+    justify-content: center;
+  }
+  .rp-head-act .share-bar {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+  .rp-head-act .share-btn {
+    flex: 1 1 0;
+    min-height: 44px;
+    min-width: 0;
+    justify-content: center;
+  }
   /* The header is taller once the action wraps, so the section titles
      stop being sticky rather than stacking two bars deep. */
   .rp-sum { position: static; min-height: 56px; }

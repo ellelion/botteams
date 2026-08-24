@@ -127,14 +127,14 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
                 {team.addedVia ? (
                   <>
                     {en.team.basedOn}{" "}
-                    <a className="rp-secondary" href={team.addedVia} target="_blank" rel="noopener noreferrer">
+                    <a className="accent-hover underline" href={team.addedVia} target="_blank" rel="noopener noreferrer">
                       {team.contributor}
                     </a>
                   </>
                 ) : team.contributor ? (
                   <>
                     {en.team.contributedBy}{" "}
-                    <a className="rp-secondary" href={team.contributorUrl} target="_blank" rel="noopener noreferrer">
+                    <a className="accent-hover underline" href={team.contributorUrl} target="_blank" rel="noopener noreferrer">
                       {team.contributor}
                     </a>
                   </>
