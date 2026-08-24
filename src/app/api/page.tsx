@@ -59,7 +59,7 @@ export default function ApiDocsPage() {
             ].map(([href, route, note]) => (
               <div key={route} className="hairline-row py-3">
                 <dt className="text-[0.82rem]" style={{ fontFamily: ledger.mono, color: ledger.ink }}>
-                  <a className="accent-hover" href={href}>{route}</a>
+                  <a className="api-link accent-hover" href={href}>{route}</a>
                 </dt>
                 <dd className="mt-1 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{note}</dd>
               </div>
@@ -79,8 +79,8 @@ export default function ApiDocsPage() {
             cannot drift from the response. Defaults on this page and in the document come from one list.
           </p>
           <p className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.8rem]">
-            <a className="accent-hover underline" href="/openapi.json">Download OpenAPI 3.1 (JSON)</a>
-            <a className="accent-hover underline" href="/openapi.yaml">YAML</a>
+            <a className="api-link accent-hover underline" href="/openapi.json">Download OpenAPI 3.1 (JSON)</a>
+            <a className="api-link accent-hover underline" href="/openapi.yaml">YAML</a>
           </p>
           <p className="measure mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
             Default limit {DEFAULT_LIMIT}, maximum {MAX_LIMIT}. Values outside the range clamp rather than error.
