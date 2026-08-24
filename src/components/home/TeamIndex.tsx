@@ -666,11 +666,10 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
                   tabIndex={view === v.id ? 0 : -1}
                   aria-checked={view === v.id}
                   className={`filter-chip filter-chip--icon${view === v.id ? " is-on" : ""}`}
-                  aria-label={v.label}
-                  title={v.label}
                   onClick={() => writeView(v.id)}
                 >
                   {v.icon}
+                  <span>{v.label}</span>
                 </button>
               ))}
             </span>
