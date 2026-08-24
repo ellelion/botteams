@@ -3747,7 +3747,9 @@ html[data-theme="light"] .cz-check input:checked {
 .spon-fact-note {
   display: block;
   margin-top: 8px;
-  font-size: 0.75rem;
+  /* These are sentences under the counts, not fine print. Same size
+     as empty bodies and the checkout-off line on this page. */
+  font-size: 0.84rem;
   line-height: 1.35;
   padding-right: 4px;
   overflow-wrap: anywhere;
