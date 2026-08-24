@@ -80,7 +80,7 @@ export default function ApiDocsPage() {
           </p>
           <p className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.8rem]">
             <a className="api-link accent-hover underline" href="/openapi.json">Download OpenAPI 3.1 (JSON)</a>
-            <a className="api-link accent-hover underline" href="/openapi.yaml">YAML</a>
+            <a className="api-link accent-hover underline" href="/openapi.yaml">Download OpenAPI 3.1 (YAML)</a>
           </p>
           <p className="measure mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
             Default limit {DEFAULT_LIMIT}, maximum {MAX_LIMIT}. Values outside the range clamp rather than error.

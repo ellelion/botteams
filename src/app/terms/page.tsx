@@ -81,7 +81,7 @@ export default function TermsPage() {
         <p>
           Buying a{" "}
           <Link className="accent-hover underline" href="/sponsor">
-            placement
+            sponsor placement
           </Link>{" "}
           buys a marked listing on the side rail and the listing row for the term you pay: $1,500 for one month, $4,000 for three months,
           $7,500 for six months, one-time, card on Stripe. It is advertising. It is not Verified, it is not a team, and it
