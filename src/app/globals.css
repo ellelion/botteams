@@ -4677,8 +4677,18 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .spon-cta-ghost,
   .idx-card,
   .index-ad,
-  .skip-link {
+  .skip-link,
+  /* Filled labels set border-color: transparent at higher specificity
+     than .theme-control, so the generic ButtonText edge never reached
+     Copy, Mail us, or empty recoveries until restated here. */
+  .theme-control.theme-control-label,
+  .theme-control.theme-control-label:hover,
+  .theme-control.theme-control-label:focus-visible,
+  .theme-control-label,
+  .theme-control-label:hover,
+  .theme-control-label:focus-visible {
     border: 1px solid ButtonText;
+    filter: none;
   }
   .browse-pick-btn.is-on,
   .cat-pill.is-on,
