@@ -1581,7 +1581,9 @@ a.chip-unverified:focus-visible {
   padding: 13px 0;
   border-bottom: 1px solid var(--line);
   content-visibility: auto;
-  contain-intrinsic-size: auto 92px;
+  /* Rows paint 113-141px. 92 left a hole under the phone ticker when
+     a tablet fling hit the old estimated end and the list then grew. */
+  contain-intrinsic-size: auto 140px;
 }
 .index-head {
   grid-column: 1;
@@ -1827,7 +1829,7 @@ a.chip-unverified:focus-visible {
   .roster-shape-routines summary,
   .index-row a.chip {
     scroll-margin-top: calc(var(--masthead-h) + 5.5rem);
-    scroll-margin-bottom: 72px;
+    scroll-margin-bottom: 80px;
   }
   /* Filters and query chips are not sticky. Tab after a long list
      used to park them under the search field. */
@@ -3873,7 +3875,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 1023px) {
   /* Same 2-column map x.ai uses on a phone. Do not collapse to one
      tall list of 44px rows. A 4-column nowrap map overflows at 820. */
-  .foot-inner { padding: 40px 0 64px; }
+  .foot-inner { padding: 40px 0 calc(80px + env(safe-area-inset-bottom, 0px)); }
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 16px; }
   .foot-col ul { margin-top: 6px; }
   .foot-col li > .foot-link { white-space: normal; }
@@ -4919,11 +4921,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     font-size: 0.72rem;
     padding: 0 12px 0 9px;
   }
-  .page-rails-main { padding-bottom: 72px; }
-  html { scroll-padding-bottom: 72px; }
+  .page-rails-main { padding-bottom: 80px; }
+  html { scroll-padding-bottom: 80px; }
   .foot-link,
   .foot-grok {
-    scroll-margin-bottom: 72px;
+    scroll-margin-bottom: 80px;
   }
 }
 
