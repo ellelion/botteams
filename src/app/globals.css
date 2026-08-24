@@ -38,7 +38,13 @@
      hairline outline in the ink colour. */
   --pill-fill: #ffffff;
   --pill-fill-ink: #0a0a0a;
-  --pill-line: rgba(255, 255, 255, 0.32);
+  /* Outline pills and icon-only chrome. Alpha 0.32 white sank to
+     ~2.5:1 on paper and ~2.45:1 on elevated. 1.4.11 needs 3:1
+     against page, card, and elevated: the Accent trigger is four
+     mint dots (2.4:1 on paper, worse for yellow) so the circle is
+     the control. A solid, not alpha, so the line does not sink on
+     a lighter plane. */
+  --pill-line: #6a6a6a;
   --parchment: var(--page);
   --parchment-deep: var(--surface);
   --ink-muted: var(--ink-soft);
@@ -99,7 +105,10 @@
   --beta: #9a3412;
   --pill-fill: #0a0a0a;
   --pill-fill-ink: #ffffff;
-  --pill-line: rgba(10, 10, 10, 0.28);
+  /* 0.28 black on paper was ~1.9:1. #808089 holds 3:1 on paper,
+     card, and elevated without using --muted (that is a 7:1
+     sentence). */
+  --pill-line: #808089;
   /* Paper white, pale grey card. Not cream, and not a second beige. */
   --card: #f4f4f6;
   --shadow-float: 0 24px 64px -12px rgba(10, 10, 10, 0.16), 0 0 0 1px rgba(10, 10, 10, 0.06);
@@ -503,7 +512,7 @@ body {
   animation: sel-in var(--dur) var(--ease);
 }
 .theme-accent-swatch {
-  width: 28px; height: 28px; padding: 0; border: 1px solid var(--line-strong);
+  width: 28px; height: 28px; padding: 0; border: 1px solid var(--pill-line);
   border-radius: var(--r-pill);
   cursor: pointer; transition: border-color var(--dur) var(--ease);
 }
