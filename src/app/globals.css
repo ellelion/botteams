@@ -2800,6 +2800,12 @@ a.chip-unverified:hover {
   border-color: var(--ink);
   background: var(--surface-elevated);
 }
+.cz-btn-quiet.is-copy-fail:hover,
+.cz-btn-quiet.is-copy-fail:focus-visible {
+  color: var(--beta);
+  border-color: var(--beta);
+  background: transparent;
+}
 .cz-btn:focus-visible,
 .cz-chip:focus-visible,
 .cz-mode:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
