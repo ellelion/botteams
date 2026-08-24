@@ -2784,7 +2784,7 @@ a.chip-unverified:focus-visible {
   border-top: 1px solid var(--line);
 }
 .cf-browse {
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 20px;
   border: 1px solid var(--ink);
   border-radius: var(--r-pill);
@@ -3775,6 +3775,7 @@ html[data-theme="light"] .cz-check input:checked {
 .notfound-nav .theme-control-label {
   font-size: 0.88rem;
   letter-spacing: -0.01em;
+  min-height: 44px;
 }
 
 .spon-stage-sec {
