@@ -55,7 +55,7 @@ export default function DocsPage() {
           </li>
           <li>
             A Bot has a name, a job, its own conversation, and working context. Create via New chat, then Create new agent, then Edit Profile (name, title, description, avatar). Cited from the{" "}
-            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.bots} rel="nofollow noopener noreferrer">Bots</a> doc.
+            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.bots} rel="nofollow noopener noreferrer" aria-label="xAI Bots documentation">Bots</a> doc.
           </li>
           <li>
             Group chat is created by selecting{" "}
@@ -63,11 +63,11 @@ export default function DocsPage() {
           </li>
           <li>
             Account cap: <strong>50 Bots and group chats combined</strong>, from the{" "}
-            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.bots} rel="nofollow noopener noreferrer">Bots</a> doc.
+            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.bots} rel="nofollow noopener noreferrer" aria-label="xAI Bots documentation">Bots</a> doc.
           </li>
           <li>
             A{" "}
-            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.routines} rel="nofollow noopener noreferrer">routine</a>
+            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.routines} rel="nofollow noopener noreferrer" aria-label="xAI routines documentation">routine</a>
             {" "}tells one Bot when to run a workflow. One Bot can own <strong>up to 50 routines</strong>, and Grok Bot keeps the
             20 most recent runs of each. There is no documented cap on a team as a whole, so this directory does not invent one.
           </li>
