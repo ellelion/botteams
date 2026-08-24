@@ -565,7 +565,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
             event.preventDefault();
             setKind(ids[next]);
             const node = event.currentTarget.querySelector<HTMLElement>(`[data-kind="${ids[next]}"]`);
-            node?.focus();
+            node?.focus({ preventScroll: true });
             if (node) scrollIntoRail(event.currentTarget, node);
           }}
         >
@@ -606,7 +606,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
             event.preventDefault();
             setSection(ids[next]);
             const node = event.currentTarget.querySelector<HTMLElement>(`[data-category="${ids[next]}"]`);
-            node?.focus();
+            node?.focus({ preventScroll: true });
             if (node) scrollIntoRail(event.currentTarget, node);
           }}
         >
