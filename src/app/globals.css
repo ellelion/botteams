@@ -3177,7 +3177,10 @@ a.chip-unverified:focus-visible {
   gap: 10px 14px;
   margin-top: 10px;
 }
-.cz-skill-status .cz-hint { margin-top: 0; }
+.cz-skill-status .cz-hint {
+  margin-top: 0;
+  font-size: 0.84rem;
+}
 .rc-empty-block .rp-secondary,
 .cz-skill-status .cz-btn {
   font-size: 0.88rem;
