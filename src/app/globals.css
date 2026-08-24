@@ -2154,17 +2154,54 @@ a.chip-unverified:hover {
   position: static;
   top: auto;
 }
+@media (max-width: 1023px) {
+  /* Same as the catalog: only search sticks. Wrapped chips were a
+     230px wall, and Tab into a team count hid the link under them.
+     Search position is restated after the relative default. */
+  .cf-bar { display: contents; }
+}
 @media (min-width: 1024px) {
   /* The listing column is already under the masthead. top: 56px plus
      24px column padding parked the bar 86px down and left a strip of
      chips in the gap. */
-  .wings-main-col:has(.cf-bar) { padding-top: 0; }
+  .wings-main-col:has(.cf-bar) {
+    padding-top: 0;
+    /* Search + one chip row. Wrapped chips used to need 250px+ and
+       still lost. */
+    scroll-padding-top: 148px;
+  }
   .wings-main-col .cf-bar { top: 0; }
+  /* Offset lives on the column. A matching document scroll-margin
+     yanks the sticky column off the viewport. */
+  .cf-shelf .cf-row-teams,
+  .cf-results > .cf-list .cf-row-teams,
+  .cf-browse,
+  .cf-empty {
+    scroll-margin-top: 0;
+  }
 }
 .cf-search {
   position: relative;
   display: flex;
   align-items: center;
+}
+@media (max-width: 1023px) {
+  /* Restate after the relative default. Same specificity, later wins. */
+  .cf-search {
+    position: sticky;
+    top: var(--masthead-h);
+    z-index: 20;
+    background: var(--page);
+    padding-top: 12px;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .cf:has(.cf-scroll) .cf-search {
+    position: static;
+    top: auto;
+    box-shadow: none;
+  }
 }
 .cf-search-field {
   display: block;
@@ -2232,9 +2269,13 @@ a.chip-unverified:hover {
 
 .cf-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
 }
+.cf-chips::-webkit-scrollbar { display: none; }
 .cf-chip {
   display: inline-flex;
   align-items: center;
@@ -2259,16 +2300,7 @@ a.chip-unverified:hover {
 }
 .cf-chip.is-on:hover:not(:disabled) { background: var(--ink); color: var(--page); opacity: 0.88; }
 .cf-chip-icon { width: 14px; height: 14px; flex: none; opacity: .82; }
-@media (max-width: 720px) {
-  .cf-chips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-  }
-  .cf-chips::-webkit-scrollbar { display: none; }
-  .cf-chip { flex: none; white-space: nowrap; }
-}
+.cf-chip { flex: none; white-space: nowrap; }
 .cf-chip.is-on .cf-chip-icon { opacity: 1; }
 .cf-count {
   color: var(--ink-soft);
@@ -2368,11 +2400,13 @@ a.chip-unverified:hover {
 /* Shelf and short lists live in the page scroller, under the sticky
    search bar. Windowed rows stay inside .cf-scroll, so they must not
    inherit this offset or the inner list grows a 200px hole. */
-.cf-shelf .cf-row-teams,
-.cf-results > .cf-list .cf-row-teams,
-.cf-browse,
-.cf-empty {
-  scroll-margin-top: calc(var(--masthead-h) + 9rem);
+@media (max-width: 1023px) {
+  .cf-shelf .cf-row-teams,
+  .cf-results > .cf-list .cf-row-teams,
+  .cf-browse,
+  .cf-empty {
+    scroll-margin-top: calc(var(--masthead-h) + 9rem);
+  }
 }
 .cf-row-quiet {
   flex: none;
