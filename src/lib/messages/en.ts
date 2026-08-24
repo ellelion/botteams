@@ -187,6 +187,8 @@ export const en = {
     skillsEmpty: "Nothing matched. Try a shorter name.",
     skillsError: "Skillselion did not answer.",
     skillsRetry: "Try again",
+    skillsCountsLoading: "Looking up counts on Skillselion.",
+    skillsCountsFail: "Skillselion did not return counts.",
     skillsAdd: "Add",
     skillsView: "View on Skillselion",
     skillsInstall: "Install",
