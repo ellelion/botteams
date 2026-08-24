@@ -1151,6 +1151,23 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .cz-input { min-height: 44px; }
   .sel-option { min-height: 44px; }
   .sel-list { max-height: min(19rem, 50dvh); }
+  /* An iPad with a trackpad reports pointer: fine. The stacked layout
+     still needs a thumb-sized control. */
+  .browse-pick-btn,
+  .cat-pill,
+  .hero-stat,
+  .cf-chip,
+  .cf-browse,
+  .cf-clear,
+  .sel-button,
+  .doc-jump a,
+  .doc-toc-sum {
+    min-height: 44px;
+  }
+  .hero-stat {
+    align-items: center;
+    padding-inline: 6px;
+  }
 }
 @media (max-width: 639px) {
   .search-wrap { margin-top: 32px; margin-bottom: 8px; }
