@@ -589,5 +589,6 @@ export const en = {
     nav: "What you can do",
     retry: "Try again",
     back: "Browse teams",
+    guides: "Browse guides",
   },
 } as const;

@@ -24,6 +24,7 @@ export default function ErrorPage({
             {en.error.retry}
           </button>
           <Link href="/" className="theme-control theme-control-label">{en.error.back}</Link>
+          <Link href="/guides" className="theme-control theme-control-label">{en.error.guides}</Link>
         </nav>
       </div>
     </WingsSplit>
