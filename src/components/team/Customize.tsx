@@ -790,29 +790,35 @@ export function Customize({
         onToggleCapture={(event) => {
           const section = event.target;
           if (!(section instanceof HTMLDetailsElement) || !section.open) return;
+          const pin = () => {
+            const head = document.querySelector(".rp-head");
+            const col = section.closest(".wings-main-col");
+            const scale = cssZoom();
+            const bar = (head?.getBoundingClientRect().height ?? 0) / scale;
+            const sum = section.querySelector(".rp-sum") ?? section;
+            const scroller =
+              col instanceof HTMLElement && getComputedStyle(col).overflowY !== "visible"
+                ? col
+                : null;
+            if (scroller) {
+              const next =
+                (sum.getBoundingClientRect().top - scroller.getBoundingClientRect().top) / scale +
+                scroller.scrollTop -
+                bar -
+                32;
+              scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
+              return;
+            }
+            /* The exclusive Job close lays out a frame after open. The
+               first pin uses the tall page; the second uses the short one. */
+            const offset = (head?.getBoundingClientRect().bottom ?? 0) / scale + 8;
+            const top = sum.getBoundingClientRect().top / scale + window.scrollY - offset;
+            window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+          };
           window.requestAnimationFrame(() => {
             window.requestAnimationFrame(() => {
-              const head = document.querySelector(".rp-head");
-              const col = section.closest(".wings-main-col");
-              const scale = cssZoom();
-              const bar = (head?.getBoundingClientRect().height ?? 0) / scale;
-              const scroller =
-                col instanceof HTMLElement && getComputedStyle(col).overflowY !== "visible"
-                  ? col
-                  : null;
-              if (scroller) {
-                const sum = section.querySelector(".rp-sum") ?? section;
-                const next =
-                  (sum.getBoundingClientRect().top - scroller.getBoundingClientRect().top) / scale +
-                  scroller.scrollTop -
-                  bar -
-                  32;
-                scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
-                return;
-              }
-              const offset = (head?.getBoundingClientRect().bottom ?? 0) / scale + 8;
-              const top = section.getBoundingClientRect().top / scale + window.scrollY - offset;
-              window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+              pin();
+              window.requestAnimationFrame(pin);
             });
           });
         }}
