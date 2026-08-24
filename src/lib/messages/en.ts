@@ -171,6 +171,8 @@ export const en = {
     shared: "Link copied",
     shareFail: "Could not copy link",
     download: "Download markdown",
+    saving: "Saving markdown",
+    saveFail: "Could not save markdown",
     blocked: "Fix this before you copy",
     warn: "Worth a look",
     copyAnyway: "You can still copy it.",
