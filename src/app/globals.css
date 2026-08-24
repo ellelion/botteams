@@ -4209,6 +4209,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 /* Secondary next to Copy, so the primary action reads as the primary. */
 .rp-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 40px;
   padding: 0 15px;
   border: 1px solid var(--pill-line);
