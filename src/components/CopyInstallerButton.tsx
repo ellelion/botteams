@@ -16,18 +16,22 @@ export function CopyInstallerButton({
   disabledReason?: string;
 }) {
   const reasonId = useId();
-  const { copied, failed, copyText } = useCopyFeedback();
+  const { copied, failed, copyText, pulse } = useCopyFeedback();
 
   async function onCopy() {
-    if (disabled) return;
+    if (disabled) {
+      pulse("fail");
+      document.querySelector(".cz-alert-stop")?.scrollIntoView({ block: "nearest" });
+      return;
+    }
     await copyText(text);
   }
 
-  /* Keep the action name when copy is blocked. The alert already says
-     why. Replacing the label with that sentence duplicates it and, on a
-     phone, overflows the sticky row. */
+  /* Keep the action name while idle. A blocked click names the block
+     for two seconds, then returns. The long reason lives in the alert,
+     not on this button, so a phone sticky row does not overflow. */
   const label = failed
-    ? en.team.copyFail
+    ? (disabled ? en.customize.blocked : en.team.copyFail)
     : copied
       ? en.team.copied
       : en.team.copy;
@@ -36,11 +40,9 @@ export function CopyInstallerButton({
     <>
       <button
         type="button"
-        className={`theme-control theme-control-label${failed ? " is-copy-fail" : ""}`}
+        className={`theme-control theme-control-label${failed ? " is-copy-fail" : ""}${disabled ? " is-copy-blocked" : ""}`}
         onClick={onCopy}
-        disabled={disabled}
-        aria-disabled={disabled}
-        title={disabled ? disabledReason : undefined}
+        aria-disabled={disabled || undefined}
         aria-describedby={disabled && disabledReason ? reasonId : undefined}
       >
         {label}
