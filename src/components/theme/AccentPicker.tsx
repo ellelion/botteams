@@ -1,8 +1,13 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { en } from "@/lib/messages/en";
 import { ACCENT_PALETTE, DEFAULT_ACCENT } from "@/lib/theme";
 import { applyAccentPreference, readCurrentAccent } from "@/lib/theme-client";
+
+function accentName(hex: string): string {
+  return (en.theme.accents as Record<string, string>)[hex] ?? hex;
+}
 
 const listeners = new Set<() => void>();
 
@@ -116,8 +121,8 @@ export function AccentPicker() {
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={open ? popoverId : undefined}
-        aria-label="Choose accent color"
-        title="Choose accent color"
+        aria-label={en.theme.chooseAccent}
+        title={en.theme.chooseAccent}
         onClick={() => setOpen((value) => !value)}
       >
         <span className="theme-accent-mark" aria-hidden="true">
@@ -125,8 +130,8 @@ export function AccentPicker() {
         </span>
       </button>
       {open && (
-        <div id={popoverId} className="theme-accent-popover" role="dialog" aria-modal="true" aria-label="Choose accent color">
-          <div role="radiogroup" aria-label="Choose accent color">
+        <div id={popoverId} className="theme-accent-popover" role="dialog" aria-modal="true" aria-label={en.theme.chooseAccent}>
+          <div role="radiogroup" aria-label={en.theme.chooseAccent}>
             {ACCENT_PALETTE.map((value, index) => (
               <button
                 key={value}
@@ -136,8 +141,8 @@ export function AccentPicker() {
                 type="button"
                 role="radio"
                 aria-checked={accent === value}
-                aria-label={`Set accent ${value}`}
-                title={value}
+                aria-label={en.theme.setAccent(accentName(value))}
+                title={accentName(value)}
                 className={`theme-accent-swatch${accent === value ? " is-selected" : ""}`}
                 style={{ background: value }}
                 tabIndex={accent === value ? 0 : -1}

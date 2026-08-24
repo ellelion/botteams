@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { en } from "@/lib/messages/en";
 import { DEFAULT_THEME, type Theme } from "@/lib/theme";
 import { applyThemePreference, readCurrentTheme } from "@/lib/theme-client";
 
@@ -41,7 +42,7 @@ export function ThemeToggle() {
     getServerSnapshot,
   );
   const next = theme === "dark" ? "light" : "dark";
-  const label = `Switch to ${next} theme`;
+  const label = next === "light" ? en.theme.toLight : en.theme.toDark;
 
   return (
     <button
