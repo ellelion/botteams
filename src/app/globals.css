@@ -3069,8 +3069,8 @@ html[data-theme="light"] .cz-check input:checked {
   border-radius: var(--r-pill);
   background: var(--ink);
   color: var(--page);
-  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
-  letter-spacing: 0;
+  font: 500 0.88rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.01em;
   text-transform: none;
   cursor: pointer;
   transition: opacity var(--dur) var(--ease);
@@ -3104,6 +3104,10 @@ html[data-theme="light"] .cz-check input:checked {
 
 .spon-hero-cta {
   margin-top: 22px;
+}
+.spon-hero-cta.theme-control-label {
+  font-size: 0.88rem;
+  letter-spacing: -0.01em;
 }
 .spon-ask-cta {
   margin-top: 28px;
