@@ -48,14 +48,6 @@ function ChipRow({
     <div
       ref={rail.ref}
       className={`spon-mq-copy scroll-fade${rail.edges.start ? " has-start" : ""}${rail.edges.end ? " has-end" : ""}`}
-      style={{
-        flex: "0 1 auto",
-        minWidth: 0,
-        justifyContent: "center",
-        overflowX: "auto",
-        gap: 6,
-        paddingRight: 0,
-      }}
     >
       {base.map((slot, i) => (
         <Chip key={`${slot.id}-${i}`} slot={slot} campaign={campaign} />

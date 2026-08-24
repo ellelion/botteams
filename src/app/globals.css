@@ -4218,8 +4218,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .spon-mq {
   position: relative;
   height: 40px;
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
-  overflow: hidden;
+  overflow: clip;
   z-index: 30;
   background: var(--page);
   border-color: var(--line);
@@ -4235,8 +4237,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: none;
   position: fixed;
   left: 0;
-  right: 0;
+  right: auto;
   bottom: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: clip;
+  contain: inline-size;
   border-top-width: 1px;
 }
 .spon-mq-row {
@@ -4244,9 +4250,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   align-items: center;
   justify-content: center;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   height: 100%;
   padding: 0 10px;
   gap: 8px;
+  overflow: hidden;
 }
 .spon-mq-label {
   position: static;
@@ -4255,10 +4264,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: flex;
   align-items: center;
   padding: 0;
-  font-size: 0.5rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-soft);
   background: transparent;
   box-shadow: none;
 }
@@ -4286,8 +4295,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding-right: 8px;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 6px;
+  padding-right: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 .spon-mq-copy[aria-hidden] {
   display: none;
@@ -4355,10 +4368,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .idx-ad-kicker {
   display: block;
   align-self: flex-start;
-  font-size: 0.5rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-soft);
 }
 .idx-ad-body {
   display: flex;
