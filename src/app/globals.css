@@ -4042,10 +4042,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .rp-run-cadence { flex: none; text-align: right; white-space: nowrap; }
 
 .rp-acc { margin-top: 28px; border-top: 1px solid var(--line-strong); }
-.rp-sec {
-  border-bottom: 1px solid var(--line);
-  scroll-margin-top: calc(var(--masthead-h) + 72px);
-}
+.rp-sec { border-bottom: 1px solid var(--line); }
 .rp-sum {
   display: flex;
   align-items: center;
@@ -4058,7 +4055,6 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   padding: 0 2px;
   background: var(--page);
   color: var(--ink-soft);
-  scroll-margin-top: calc(var(--masthead-h) + 72px);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1rem;
   cursor: pointer;
