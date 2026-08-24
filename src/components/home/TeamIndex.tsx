@@ -351,6 +351,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
     [categories, inSource.length],
   );
   const categoriesRef = useScrollEdges<HTMLElement>(categoryOptions.length);
+  const kindRef = useScrollEdges<HTMLDivElement>();
 
   const connectorSelectOptions: SelectOption[] = useMemo(
     () => [
@@ -529,7 +530,8 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
         </form>
 
         <div
-          className="browse-pick"
+          ref={kindRef.ref}
+          className={`browse-pick scroll-fade${kindRef.edges.start ? " has-start" : ""}${kindRef.edges.end ? " has-end" : ""}`}
           role="radiogroup"
           aria-label={en.home.kindLabel}
           onKeyDown={(event) => {

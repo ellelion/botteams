@@ -31,6 +31,7 @@ export const en = {
     skip: "Skip to content",
     openMenu: "Open menu",
     closeMenu: "Close menu",
+    opensNew: "Opens in a new tab",
     onThisPage: "On this page",
     directory: "Directory",
   },

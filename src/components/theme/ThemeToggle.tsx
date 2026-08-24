@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import type { Theme } from "@/lib/theme";
+import { DEFAULT_THEME, type Theme } from "@/lib/theme";
 import { applyThemePreference, readCurrentTheme } from "@/lib/theme-client";
 
 const listeners = new Set<() => void>();
@@ -14,7 +14,7 @@ function subscribe(listener: () => void) {
 }
 
 function getServerSnapshot(): Theme {
-  return "light";
+  return DEFAULT_THEME;
 }
 
 function SunMark() {

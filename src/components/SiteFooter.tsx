@@ -87,7 +87,7 @@ export function SiteFooter() {
                   {/* Social-button use of the Invertocat, per github.com/logos:
                       the published mark beside the word, never recoloured
                       and never locked up with our own mark. */}
-                  <a className="foot-link" href={site.github} rel="noopener noreferrer" target="_blank">
+                  <a className="foot-link" href={site.github} rel="noopener noreferrer" target="_blank" aria-label={`${en.footer.github}. ${en.nav.opensNew}`}>
                     <GitHubIcon className="foot-mark h-4 w-4" />
                     {en.footer.github}
                   </a>
@@ -105,7 +105,7 @@ export function SiteFooter() {
                   <li key={product.href}>
                     {/* One icon, the same on all three. These are other
                         sites, not other brands to display. */}
-                    <a className="foot-link" href={product.href} rel="nofollow noopener noreferrer" target="_blank">
+                    <a className="foot-link" href={product.href} rel="nofollow noopener noreferrer" target="_blank" aria-label={`${product.name}. ${en.nav.opensNew}`}>
                       {product.name}
                       <ExternalLinkIcon className="foot-out" />
                     </a>
@@ -123,6 +123,7 @@ export function SiteFooter() {
             href={site.grokHome}
             rel="nofollow noopener noreferrer"
             target="_blank"
+            aria-label={`${en.footer.createdWithGrok}. ${en.nav.opensNew}`}
           >
             <GrokLogomark className="foot-mark-grok" />
             <span className="foot-mark-text">{en.footer.createdWithGrok}</span>
