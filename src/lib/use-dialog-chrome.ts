@@ -46,6 +46,15 @@ export function useDialogChrome({
     const start = focusables(dialog).find((el) => el !== restore) ?? focusables(dialog)[0];
     start?.focus();
 
+    /* Portaled dialogs sit on body. Mark every other body child inert so
+       browse mode cannot leave the sheet, Watch overlay, or overwrite. */
+    const inertRoots =
+      dialog.parentElement === document.body
+        ? [...document.body.children].filter((node): node is HTMLElement => node instanceof HTMLElement && node !== dialog)
+        : [];
+    const prevInert = inertRoots.map((node) => node.inert);
+    for (const node of inertRoots) node.inert = true;
+
     function onKey(event: KeyboardEvent) {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -70,6 +79,9 @@ export function useDialogChrome({
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
+      inertRoots.forEach((node, i) => {
+        node.inert = prevInert[i] ?? false;
+      });
       restore?.focus();
     };
   }, [open, rootRef, onClose]);
