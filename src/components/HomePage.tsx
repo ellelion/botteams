@@ -35,11 +35,16 @@ routines:
 export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery }) {
   const teamCount = teams.filter((t) => t.kind === "team").length;
   const botCount = teams.filter((t) => t.kind === "bot").length;
+  const catalogActive =
+    Boolean(query.q.trim()) ||
+    query.kind !== "team" ||
+    query.category !== "all" ||
+    query.integration !== "all";
   return (
     <WingsSplit
       hero={
         <>
-          <section className="story-beat relative flex min-h-0 flex-col items-center justify-center overflow-hidden py-3 pb-3 text-center lg:min-h-[calc(100dvh-var(--masthead-h))] lg:py-10 lg:pb-20">
+          <section className={`story-beat relative flex min-h-0 flex-col items-center justify-center overflow-hidden py-3 pb-3 text-center lg:min-h-[calc(100dvh-var(--masthead-h))] lg:py-10 lg:pb-20${catalogActive ? " is-catalog-active" : ""}`}>
             <div className="relative z-10 w-full max-w-full overflow-hidden px-1">
               <span className="os-badge">
                 <span className="os-badge-tag">Free</span>
@@ -51,12 +56,12 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
               <h1 className="font-display mx-auto mt-4 w-full max-w-full text-[clamp(1.7rem,3.5vw,2.9rem)] lg:mt-8 font-normal leading-[1.05] tracking-[-0.03em]" style={{ fontFamily: ledger.serif }}>
                 {en.h1}
               </h1>
-              <p className="mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed lg:mt-6 lg:text-[0.95rem]" style={{ color: ledger.inkSoft }}>
+              <p className="home-hero-manifesto mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed lg:mt-6 lg:text-[0.95rem]" style={{ color: ledger.inkSoft }}>
                 {en.answer}
                 <br />
                 {en.answerUse}
               </p>
-              <p className="mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+              <p className="home-hero-manifesto mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
                 <Link href="/?kind=bot" className="accent-hover underline">{en.onRamp}</Link>
               </p>
               <HeroStats teams={teamCount} bots={botCount} verifiedOn={site.verifiedOn} />
