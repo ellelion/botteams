@@ -48,8 +48,8 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
     <WingsSplit
       hero={
         <>
-          <section className={`story-beat relative flex min-h-0 flex-col items-center justify-center overflow-hidden py-3 pb-3 text-center lg:min-h-[calc(100dvh-var(--masthead-h))] lg:py-10 lg:pb-20${catalogActive ? " is-catalog-active" : ""}`}>
-            <div className="relative z-10 w-full max-w-full overflow-hidden px-1">
+          <section className={`story-beat relative flex min-h-0 flex-col items-center justify-center overflow-x-hidden py-3 pb-3 text-center lg:min-h-[calc(100dvh-var(--masthead-h))] lg:py-10 lg:pb-20${catalogActive ? " is-catalog-active" : ""}`}>
+            <div className="relative z-10 w-full max-w-full overflow-x-hidden px-1">
               <p className="home-hero-eyebrow hidden items-center justify-center gap-2 text-[0.62rem] uppercase tracking-[0.3em] lg:flex" style={{ color: ledger.accentText }}>
                 <GrokBotMark size={22} animate />
                 <RevealText text={en.eyebrow} delay={0.05} step={0.016} className="block" />
@@ -74,7 +74,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
                 {en.notAffiliated}
               </p>
             </div>
-            <Link href="/?kind=team" className="home-scroll-cue meta accent-hover absolute bottom-5 left-1/2 z-10 hidden lg:inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap transition-colors lg:bottom-4">
+            <Link href="/?kind=team" className="home-scroll-cue meta accent-hover absolute inset-x-0 bottom-5 z-10 mx-auto hidden w-max max-w-full lg:inline-flex items-center gap-2 whitespace-nowrap transition-colors lg:bottom-4">
               {en.home.scrollCue} <span aria-hidden>↓</span>
             </Link>
           </section>
