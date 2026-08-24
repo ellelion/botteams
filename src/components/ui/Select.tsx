@@ -152,6 +152,7 @@ export function Select({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
+        aria-activedescendant={open ? `${listId}-${active}` : undefined}
         aria-label={label}
         aria-autocomplete="none"
         onClick={() => (open ? setOpen(false) : openAt(selectedIndex))}
@@ -171,8 +172,6 @@ export function Select({
           className={`sel-list${align === "end" ? " is-end" : ""}`}
           role="listbox"
           aria-label={label}
-          aria-activedescendant={`${listId}-${active}`}
-          tabIndex={-1}
         >
           {options.map((option, i) => {
             const isSelected = option.value === value;

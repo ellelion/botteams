@@ -13,6 +13,7 @@ import {
   resolveConnector,
   XAI_CONNECTOR_DOCS,
 } from "@/lib/connectors";
+import { parseConnectorQuery } from "@/lib/catalog-query";
 import { en } from "@/lib/messages/en";
 import { listAll } from "@/lib/teams";
 import { site } from "@/lib/site";
@@ -23,7 +24,12 @@ export const metadata: Metadata = {
   alternates: { canonical: `${site.url}/connectors` },
 };
 
-export default function ConnectorsPage() {
+export default async function ConnectorsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const sp = await searchParams;
   const teams = listAll();
 
   // Which teams expect a given connector. Resolve every name a team writes
@@ -49,6 +55,7 @@ export default function ConnectorsPage() {
     aliases: aliases.get(e.slug) ?? [],
   }));
   const builtInCount = entries.filter((e) => e.builtIn).length;
+  const finderQuery = parseConnectorQuery(sp, categories);
 
   return (
     <WingsSplit
@@ -64,7 +71,7 @@ export default function ConnectorsPage() {
             still on the page and still checkable, but a visitor looking for
             Gmail should not have to read two paragraphs about where the
             list came from to reach the search field. */}
-        <ConnectorFinder entries={entries} categories={categories} />
+        <ConnectorFinder entries={entries} categories={categories} query={finderQuery} />
 
         <section className="mt-20 border-t pt-8" style={{ borderColor: ledger.hairline }}>
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.sourceTitle}</h2>

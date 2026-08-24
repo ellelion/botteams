@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { startTransition, useEffect, useId, useLayoutEffect, useMemo, useOptimistic, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { CategoryIcon } from "@/components/icons/LineIcons";
+import { connectorQuerySearch, type ConnectorFinderQuery } from "@/lib/catalog-query";
 import { en } from "@/lib/messages/en";
 
 /*
@@ -20,8 +22,7 @@ import { en } from "@/lib/messages/en";
  * worse than either.
  *
  * The one thing windowing costs is browser find-in-page over rows that are
- * not mounted. The search field is the answer to that, and it is focused
- * on arrival.
+ * not mounted. The search field is the answer to that, and slash focuses it.
  */
 
 export type FinderEntry = {
@@ -157,19 +158,65 @@ function WindowedList({ items }: { items: FinderEntry[] }) {
 export function ConnectorFinder({
   entries,
   categories,
+  query: initial,
 }: {
   entries: FinderEntry[];
   categories: string[];
+  query: ConnectorFinderQuery;
 }) {
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<string | null>(null);
-  const [builtInOnly, setBuiltInOnly] = useState(false);
-  const [browseAll, setBrowseAll] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const resultsId = useId();
+  type FinderFilters = Omit<ConnectorFinderQuery, "q">;
+  const serverFilters: FinderFilters = {
+    category: initial.category,
+    builtin: initial.builtin,
+    all: initial.all,
+  };
+  const [filters, setFilters] = useOptimistic(serverFilters, (_current, next: FinderFilters) => next);
+  const category = filters.category;
+  const builtInOnly = filters.builtin;
+  const browseAll = filters.all;
+  const [query, setQuery] = useState(initial.q);
+  const [urlQ, setUrlQ] = useState(initial.q);
+  if (initial.q !== urlQ) {
+    setUrlQ(initial.q);
+    if (!(query.startsWith(initial.q) && initial.q !== "" && query !== initial.q)) {
+      setQuery(initial.q);
+    }
+  }
   const searchRef = useRef<HTMLInputElement>(null);
 
-  /* Focused on arrival, because typing is the intended first move. */
+  function commit(next: ConnectorFinderQuery) {
+    startTransition(() => {
+      setFilters({ category: next.category, builtin: next.builtin, all: next.all });
+      const qs = connectorQuerySearch(next);
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    });
+  }
+
   useEffect(() => {
-    searchRef.current?.focus({ preventScroll: true });
+    const next = query.trim();
+    if (next === initial.q.trim()) return;
+    const handle = window.setTimeout(() => {
+      const qs = connectorQuerySearch({
+        q: next,
+        category,
+        builtin: builtInOnly,
+        all: browseAll,
+      });
+      startTransition(() => {
+        router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+      });
+    }, 250);
+    return () => window.clearTimeout(handle);
+  }, [query, initial.q, category, builtInOnly, browseAll, pathname, router]);
+
+  /* Focus only when the URL already asked for a search, so a first visit
+     keeps keyboard order at the skip link and the masthead. */
+  useEffect(() => {
+    if (initial.q) searchRef.current?.focus({ preventScroll: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -229,48 +276,73 @@ export function ConnectorFinder({
     return [];
   }, [mode, searched, entries, category]);
 
-  const reset = useCallback(() => {
+  const reset = () => {
     setQuery("");
-    setCategory(null);
-    setBuiltInOnly(false);
-    setBrowseAll(false);
+    commit({ q: "", category: null, builtin: false, all: false });
     searchRef.current?.focus();
-  }, []);
+  };
 
   function pickCategory(next: string) {
-    setCategory((prev) => (prev === next ? null : next));
-    setBuiltInOnly(false);
-    setBrowseAll(false);
+    const categoryNext = category === next ? null : next;
+    setQuery("");
+    commit({ q: "", category: categoryNext, builtin: false, all: false });
   }
 
   return (
     <div className="cf">
       {/* Search and chips stay put while a long list moves under them. */}
       <div className={mode === "all" ? "cf-bar is-bare" : "cf-bar"}>
-        <label className="cf-search">
-          <span className="sr-only">{en.connectors.searchLabel}</span>
-          <svg className="cf-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
-            <circle cx="11" cy="11" r="7" />
-            <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
-          </svg>
-          <input
-            ref={searchRef}
-            type="search"
-            className="cf-input"
-            placeholder={en.connectors.searchPlaceholder}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            autoComplete="off"
-          />
-          <kbd className="cf-kbd" aria-hidden>/</kbd>
-        </label>
+        <form
+          className="cf-search"
+          action="/connectors"
+          method="get"
+          role="search"
+          onSubmit={(event) => {
+            event.preventDefault();
+            commit({ q: query, category, builtin: builtInOnly, all: browseAll });
+          }}
+        >
+          <label className="cf-search-field">
+            <span className="sr-only">{en.connectors.searchLabel}</span>
+            <svg className="cf-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
+            </svg>
+            <input
+              ref={searchRef}
+              type="search"
+              name="q"
+              className="cf-input"
+              placeholder={en.connectors.searchPlaceholder}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              enterKeyHint="search"
+              aria-keyshortcuts="/ Meta+k Control+k"
+              aria-describedby={resultsId}
+            />
+          </label>
+          {query ? (
+            <button type="button" className="cf-search-clear" onClick={() => { setQuery(""); searchRef.current?.focus(); }}>
+              {en.connectors.clearSearch}
+            </button>
+          ) : (
+            <kbd className="cf-kbd" aria-hidden>/</kbd>
+          )}
+        </form>
 
         <div className="cf-chips">
           <button
             type="button"
             className={`cf-chip${builtInOnly ? " is-on" : ""}`}
             aria-pressed={builtInOnly}
-            onClick={() => { setBuiltInOnly((v) => !v); setCategory(null); setBrowseAll(false); }}
+            onClick={() => {
+              const next = !builtInOnly;
+              setQuery("");
+              commit({ q: "", category: null, builtin: next, all: false });
+            }}
           >
             <CategoryIcon name="Built in" className="cf-chip-icon" />
             {en.connectors.builtInLabel}
@@ -297,7 +369,7 @@ export function ConnectorFinder({
         </div>
       </div>
 
-      <p className="cf-summary" role="status" aria-live="polite">
+      <p className="cf-summary" id={resultsId} role="status" aria-live="polite">
         {mode === "shelf"
           ? en.connectors.shelfSummary(entries.length)
           : en.connectors.summary(list.length, entries.length)}
@@ -318,7 +390,10 @@ export function ConnectorFinder({
             <PlainList items={builtIns} />
           </section>
           <div className="cf-more">
-            <button type="button" className="cf-browse" onClick={() => setBrowseAll(true)}>
+            <button type="button" className="cf-browse" onClick={() => {
+              setQuery("");
+              commit({ q: "", category: null, builtin: false, all: true });
+            }}>
               {en.connectors.browseAll(entries.length)}
             </button>
             <p className="cf-shelf-note">{en.connectors.browseAllNote}</p>

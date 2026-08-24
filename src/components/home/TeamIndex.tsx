@@ -1,8 +1,8 @@
 "use client";
 
-import { startTransition, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { startTransition, useEffect, useId, useMemo, useOptimistic, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { SectionIcon } from "@/components/icons/LineIcons";
 import { Select, type SelectOption } from "@/components/ui/Select";
@@ -16,6 +16,7 @@ import { installerPrompt } from "@/lib/installer";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { grokDisplayBotName, grokRecipeTitle } from "@/lib/grok-names";
+import { indexQuerySearch, type IndexKind, type IndexQuery } from "@/lib/catalog-query";
 import { type Team } from "@/lib/types";
 import { houseSlots, sponsorHref, type SponsorSlot } from "@/data/sponsors";
 import { SponsorTicker } from "@/components/SponsorTicker";
@@ -28,6 +29,7 @@ import { resolveConnector, resolveConnectors } from "@/lib/connectors";
  *            something up.
  */
 type View = "ledger" | "cards";
+type IndexFilters = Pick<IndexQuery, "kind" | "category" | "integration" | "sort">;
 
 function ViewListIcon() {
   return (
@@ -211,65 +213,79 @@ function writeView(next: View) {
   for (const listener of viewListeners) listener();
 }
 
-export function TeamIndexFallback() {
-  return (
-    <div className="idx-skel" aria-busy="true" aria-live="polite">
-      <span className="sr-only">{en.home.loading}</span>
-      <div className="idx-skel-search" />
-      <div className="idx-skel-pills" />
-      <div className="idx-skel-row" />
-      <div className="idx-skel-row" />
-      <div className="idx-skel-row" />
-      <div className="idx-skel-row" />
-    </div>
-  );
-}
-
-export function TeamIndex({ teams }: { teams: Team[] }) {
+export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: IndexQuery }) {
   const router = useRouter();
   const pathname = usePathname();
-  const params = useSearchParams();
-  const paramsString = params.toString();
-  const qParam = params.get("q") ?? "";
-  const sectionParam = params.get("category") ?? params.get("section") ?? "all";
-  const integrationParam = params.get("integration") ?? "all";
-  const sortParam = params.get("sort") === "name" ? "name" : "newest";
+  const resultsId = useId();
   /* Three shelves, not two. Absent means our own company teams, which is
      what a visitor should land on: 56 one-Bot jobs sourced from xAI would
      otherwise be most of the first screen. */
   /* The shelf, not the source. From xAI is a badge on a card, not a
      filter: some Bots may be ours one day, and they will still be Bots. */
-  const kindRaw = params.get("kind");
-  const kindParam: "team" | "bot" | "all" = kindRaw === "bot" ? "bot" : kindRaw === "all" ? "all" : "team";
-  const view = useSyncExternalStore(subscribeView, readStoredView, () => "ledger");
-  const [query, setQuery] = useState(qParam);
+  const serverFilters: IndexFilters = {
+    kind: initial.kind,
+    category: initial.category,
+    integration: initial.integration,
+    sort: initial.sort,
+  };
+  const [filters, setFilters] = useOptimistic(serverFilters, (_current, next: IndexFilters) => next);
+  const kindParam = filters.kind;
+  const sectionParam = filters.category;
+  const integrationParam = filters.integration;
+  const sortParam = filters.sort;
+  const view = useSyncExternalStore(subscribeView, readStoredView, (): View => "ledger");
+  const [query, setQuery] = useState(initial.q);
+  const [urlQ, setUrlQ] = useState(initial.q);
+  if (initial.q !== urlQ) {
+    setUrlQ(initial.q);
+    if (!(query.startsWith(initial.q) && initial.q !== "" && query !== initial.q)) {
+      setQuery(initial.q);
+    }
+  }
   const [open, setOpen] = useState<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const fromSelf = useRef(false);
 
-  useEffect(() => {
-    if (fromSelf.current) {
-      fromSelf.current = false;
-      return;
-    }
-    setQuery(qParam);
-  }, [qParam]);
+  function currentQuery(patch: Partial<IndexQuery> = {}): IndexQuery {
+    return {
+      q: query,
+      kind: kindParam,
+      category: sectionParam,
+      integration: integrationParam,
+      sort: sortParam,
+      ...patch,
+    };
+  }
+
+  function commit(next: IndexQuery) {
+    startTransition(() => {
+      setFilters({
+        kind: next.kind,
+        category: next.category,
+        integration: next.integration,
+        sort: next.sort,
+      });
+      const qs = indexQuerySearch(next);
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    });
+  }
 
   useEffect(() => {
     const next = query.trim();
-    if (next === qParam) return;
+    if (next === initial.q.trim()) return;
     const handle = window.setTimeout(() => {
-      fromSelf.current = true;
-      const usp = new URLSearchParams(paramsString);
-      if (!next) usp.delete("q");
-      else usp.set("q", next);
-      const qs = usp.toString();
+      const qs = indexQuerySearch({
+        q: next,
+        kind: kindParam,
+        category: sectionParam,
+        integration: integrationParam,
+        sort: sortParam,
+      });
       startTransition(() => {
         router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
       });
     }, 250);
     return () => window.clearTimeout(handle);
-  }, [query, qParam, paramsString, pathname, router]);
+  }, [query, initial.q, kindParam, sectionParam, integrationParam, sortParam, pathname, router]);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -366,27 +382,24 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
 
   /* One writer for every filter, so each one lands in the URL and the page
      stays shareable. "all" clears rather than encoding a default. */
-  function setParam(key: string, next: string) {
-    const usp = new URLSearchParams(paramsString);
-    usp.delete("section");
-    if (!next || next === "all" || (key === "sort" && next === "newest")) usp.delete(key);
-    else usp.set(key, next);
-    const qs = usp.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  function setParam(key: "category" | "integration" | "sort", next: string) {
+    if (key === "sort") {
+      commit(currentQuery({ sort: next === "name" ? "name" : "newest" }));
+      return;
+    }
+    if (key === "category") {
+      commit(currentQuery({ category: next || "all" }));
+      return;
+    }
+    commit(currentQuery({ integration: next || "all" }));
   }
   const setSection = (next: string) => setParam("category", next);
 
   /* "all" means everything here, not "no filter", so this cannot go
      through setParam, which treats "all" as a clear. Switching shelf also
      drops the category, which belongs to the shelf you just left. */
-  function setKind(next: "team" | "bot" | "all") {
-    const usp = new URLSearchParams(paramsString);
-    usp.delete("section");
-    usp.delete("category");
-    if (next === "team") usp.delete("kind");
-    else usp.set("kind", next);
-    const qs = usp.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  function setKind(next: IndexKind) {
+    commit(currentQuery({ kind: next, category: "all" }));
   }
 
   const categoryLabel = categoryOptions.find((option) => option.value === sectionParam)?.label;
@@ -394,14 +407,7 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
 
   function clearFilters() {
     setQuery("");
-    fromSelf.current = true;
-    const usp = new URLSearchParams(paramsString);
-    usp.delete("q");
-    usp.delete("category");
-    usp.delete("section");
-    usp.delete("integration");
-    const qs = usp.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    commit(currentQuery({ q: "", category: "all", integration: "all" }));
     searchRef.current?.focus();
   }
 
@@ -460,23 +466,42 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
     <section id="teams">
       <SponsorTicker place="top" />
       <div className="index-tools">
-        <label className="search-wrap">
-          <span className="sr-only">{en.home.searchLabel}</span>
-          <svg className="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
-            <circle cx="11" cy="11" r="7" />
-            <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
-          </svg>
-          <input
-            ref={searchRef}
-            className="search-input"
-            type="search"
-            placeholder={en.home.searchPlaceholder}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            autoComplete="off"
-            enterKeyHint="search"
-            aria-keyshortcuts="/ Meta+k Control+k"
-          />
+        <form
+          className="search-wrap"
+          action="/"
+          method="get"
+          role="search"
+          onSubmit={(event) => {
+            event.preventDefault();
+            commit(currentQuery({ q: query }));
+          }}
+        >
+          {kindParam !== "team" ? <input type="hidden" name="kind" value={kindParam} /> : null}
+          {sectionParam !== "all" ? <input type="hidden" name="category" value={sectionParam} /> : null}
+          {integrationParam !== "all" ? <input type="hidden" name="integration" value={integrationParam} /> : null}
+          {sortParam === "name" ? <input type="hidden" name="sort" value="name" /> : null}
+          <label className="search-field">
+            <span className="sr-only">{en.home.searchLabel}</span>
+            <svg className="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
+            </svg>
+            <input
+              ref={searchRef}
+              className="search-input"
+              type="search"
+              name="q"
+              placeholder={en.home.searchPlaceholder}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              enterKeyHint="search"
+              aria-keyshortcuts="/ Meta+k Control+k"
+              aria-describedby={resultsId}
+            />
+          </label>
           {query ? (
             <button type="button" className="search-clear" onClick={() => { setQuery(""); searchRef.current?.focus(); }}>
               {en.home.clearSearch}
@@ -484,9 +509,26 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
           ) : (
             <kbd className="search-kbd" aria-hidden>{en.home.searchKbd}</kbd>
           )}
-        </label>
+        </form>
 
-        <div className="browse-pick" role="radiogroup" aria-label={en.home.kindLabel}>
+        <div
+          className="browse-pick"
+          role="radiogroup"
+          aria-label={en.home.kindLabel}
+          onKeyDown={(event) => {
+            const ids: IndexKind[] = ["team", "bot", "all"];
+            const index = ids.indexOf(kindParam);
+            let next = index;
+            if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % ids.length;
+            else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + ids.length) % ids.length;
+            else if (event.key === "Home") next = 0;
+            else if (event.key === "End") next = ids.length - 1;
+            else return;
+            event.preventDefault();
+            setKind(ids[next]);
+            event.currentTarget.querySelector<HTMLElement>(`[data-kind="${ids[next]}"]`)?.focus();
+          }}
+        >
           {([
             ["team", en.home.kindTeams, teamCount],
             ["bot", en.home.kindBots, botCount],
@@ -496,6 +538,8 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
               key={id}
               type="button"
               role="radio"
+              data-kind={id}
+              tabIndex={kindParam === id ? 0 : -1}
               aria-checked={kindParam === id}
               className={`browse-pick-btn${kindParam === id ? " is-on" : ""}`}
               onClick={() => setKind(id)}
@@ -546,12 +590,31 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
                 align="end"
               />
             </div>
-            <span className="filter-views" role="radiogroup" aria-label={en.home.listingView}>
+            <span
+              className="filter-views"
+              role="radiogroup"
+              aria-label={en.home.listingView}
+              onKeyDown={(event) => {
+                const ids = VIEWS.map((item) => item.id);
+                const index = Math.max(0, ids.indexOf(view));
+                let next = index;
+                if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % ids.length;
+                else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + ids.length) % ids.length;
+                else if (event.key === "Home") next = 0;
+                else if (event.key === "End") next = ids.length - 1;
+                else return;
+                event.preventDefault();
+                writeView(ids[next]);
+                event.currentTarget.querySelector<HTMLElement>(`[data-view="${ids[next]}"]`)?.focus();
+              }}
+            >
               {VIEWS.map((v) => (
                 <button
                   key={v.id}
                   type="button"
                   role="radio"
+                  data-view={v.id}
+                  tabIndex={view === v.id ? 0 : -1}
                   aria-checked={view === v.id}
                   className={`filter-chip filter-chip--icon${view === v.id ? " is-on" : ""}`}
                   aria-label={v.label}
@@ -566,23 +629,23 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
         </div>
 
         <div className="idx-status">
-          <p className="idx-count" role="status" aria-live="polite">
+          <p className="idx-count" id={resultsId} role="status" aria-live="polite">
             {en.home.results(sorted.length, inSource.length)}
           </p>
           {hasFilters ? (
             <div className="idx-chips">
               {query.trim() ? (
-                <button type="button" className="idx-chip" onClick={() => setQuery("")}>
+                <button type="button" className="idx-chip" aria-label={en.home.removeFilter(query.trim())} onClick={() => setQuery("")}>
                   {query.trim()} <span aria-hidden>×</span>
                 </button>
               ) : null}
               {sectionParam !== "all" && categoryLabel ? (
-                <button type="button" className="idx-chip" onClick={() => setSection("all")}>
+                <button type="button" className="idx-chip" aria-label={en.home.removeFilter(categoryLabel)} onClick={() => setSection("all")}>
                   {categoryLabel} <span aria-hidden>×</span>
                 </button>
               ) : null}
               {integrationParam !== "all" ? (
-                <button type="button" className="idx-chip" onClick={() => setParam("integration", "all")}>
+                <button type="button" className="idx-chip" aria-label={en.home.removeFilter(integrationParam)} onClick={() => setParam("integration", "all")}>
                   {integrationParam} <span aria-hidden>×</span>
                 </button>
               ) : null}
