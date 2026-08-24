@@ -1196,7 +1196,8 @@ a.chip-unverified:hover {
   .theme-control-label,
   .cz-advanced summary,
   button.cz-link,
-  p.cz-hint a.cz-link {
+  p.cz-hint a.cz-link,
+  .crumb-list a {
     min-height: 44px;
   }
   .theme-control {
@@ -1260,7 +1261,8 @@ a.chip-unverified:hover {
   .cz-skill-scope .sel-button,
   .cz-advanced summary,
   button.cz-link,
-  p.cz-hint a.cz-link {
+  p.cz-hint a.cz-link,
+  .crumb-list a {
     min-height: 44px;
   }
   .filter-views .filter-chip--icon { width: auto; min-width: 44px; }
@@ -1865,6 +1867,10 @@ a.chip-unverified:hover {
   content: "/";
   margin-left: 8px;
   color: var(--line-strong);
+}
+.crumb-list a {
+  display: inline-flex;
+  align-items: center;
 }
 .crumb-list [aria-current="page"] { color: var(--ink-soft); }
 
@@ -5609,7 +5615,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .cz-skill-scope .sel-button,
   .cz-advanced summary,
   button.cz-link,
-  p.cz-hint a.cz-link {
+  p.cz-hint a.cz-link,
+  .crumb-list a {
     min-height: 44px;
   }
   .theme-control,
