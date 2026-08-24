@@ -138,7 +138,9 @@ export function Customize({
     const asked = askedHits.current;
     for (const id of missing) asked.add(id);
     let cancelled = false;
-    fetch(`/api/skillselion/listings?ids=${missing.map(encodeURIComponent).join(",")}`)
+    const ac = new AbortController();
+    const cap = window.setTimeout(() => ac.abort(), 10_000);
+    fetch(`/api/skillselion/listings?ids=${missing.map(encodeURIComponent).join(",")}`, { signal: ac.signal })
       .then((res) => {
         if (!res.ok) throw new Error("listings failed");
         return res.json() as Promise<{ skills?: SkillselionHit[] }>;
@@ -160,9 +162,11 @@ export function Customize({
         if (cancelled) return;
         for (const id of missing) asked.delete(id);
         setListingsFailed(true);
-      });
+      })
+      .finally(() => window.clearTimeout(cap));
     return () => {
       cancelled = true;
+      ac.abort();
       /* React remounts this effect in development. Keep the ids askable
          or a cancelled first flight leaves every row pending forever. */
       for (const id of missing) asked.delete(id);

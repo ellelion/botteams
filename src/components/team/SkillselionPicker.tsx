@@ -7,8 +7,8 @@ import { en } from "@/lib/messages/en";
 import type { SkillPick, SkillselionHit, SkillUse } from "@/lib/skillselion";
 import type { TeamAgent } from "@/lib/types";
 
-async function searchSkills(q: string): Promise<SkillselionHit[]> {
-  const res = await fetch(`/api/skillselion/search?q=${encodeURIComponent(q)}`);
+async function searchSkills(q: string, signal?: AbortSignal): Promise<SkillselionHit[]> {
+  const res = await fetch(`/api/skillselion/search?q=${encodeURIComponent(q)}`, { signal });
   if (!res.ok) throw new Error("search failed");
   const body = (await res.json()) as { skills?: SkillselionHit[] };
   return Array.isArray(body.skills) ? body.skills : [];
@@ -51,12 +51,15 @@ export function SkillselionPicker({
   useEffect(() => {
     if (query.length < 2) return;
     let cancelled = false;
+    const ac = new AbortController();
     const wait = skipDelay.current ? 0 : 250;
     skipDelay.current = false;
     const t = window.setTimeout(() => {
+      if (cancelled) return;
       setBusy(true);
       setFailed(false);
-      searchSkills(query)
+      const cap = window.setTimeout(() => ac.abort(), 10_000);
+      searchSkills(query, ac.signal)
         .then((rows) => {
           if (cancelled) return;
           setFetched(rows);
@@ -68,12 +71,14 @@ export function SkillselionPicker({
           setFailed(true);
         })
         .finally(() => {
+          window.clearTimeout(cap);
           if (!cancelled) setBusy(false);
         });
     }, wait);
     return () => {
       cancelled = true;
       window.clearTimeout(t);
+      ac.abort();
     };
   }, [query, nonce]);
 
