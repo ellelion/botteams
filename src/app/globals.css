@@ -3699,6 +3699,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   text-transform: uppercase;
 }
 .rc-empty { margin-top: 14px; color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+.rc-empty-block { margin-top: 14px; }
+.rc-empty-block .rc-empty { margin-top: 0; }
+.rc-empty-block .cz-hint { margin-top: 6px; }
 
 /* The accordion. Titles always visible, Job open, the rest closed. */
 .rp-run-meta {

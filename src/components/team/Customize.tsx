@@ -822,7 +822,13 @@ export function Customize({
             ) : team.skills.length > 0 ? (
               <ul className="cz-list">{team.skills.map((name) => <li key={name} className="hairline-row">{name}</li>)}</ul>
             ) : (
-              <p className="rc-empty">{en.customize.skillsLead}</p>
+              <div className="rc-empty-block">
+                <p className="rc-empty">{en.recipe.noSkills}</p>
+                <p className="cz-hint">{en.recipe.noSkillsHint}</p>
+                <button type="button" className="rp-secondary mt-3" onClick={openCustomize}>
+                  {en.customize.open}
+                </button>
+              </div>
             )}
           </div>
         </details>
