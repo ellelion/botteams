@@ -5758,8 +5758,6 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .index-ad {
     scroll-margin-top: calc(var(--masthead-h) + 7.5rem);
   }
-  /* Last row must be able to sit below sticky search. */
-  #teams { padding-bottom: 12rem; }
   .wings-main-col:has(.index-tools),
   .wings-main-col:has(.cf-bar) {
     scroll-padding-top: 0;
@@ -5781,6 +5779,19 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .rp-related,
   .rp-related-name {
     scroll-margin-top: calc(var(--masthead-h) + 5rem);
+  }
+  .cf-row-teams,
+  .cf-row,
+  .cf-empty {
+    scroll-margin-top: calc(var(--masthead-h) + 7.5rem);
+  }
+}
+/* 12rem after the last row is for a zoomed desktop frame. On a phone
+   it left 192px of empty catalog before the footer. */
+@media (min-width: 1024px) {
+  @container page (max-width: 50rem) {
+    #teams,
+    .cf { padding-bottom: 12rem; }
   }
 }
 
