@@ -393,6 +393,24 @@ body {
     grid-template-columns: repeat(4, 22px);
   }
 }
+@media (pointer: coarse) {
+  .theme-control {
+    width: 44px;
+    height: 44px;
+  }
+  .theme-control.theme-control-label,
+  .theme-control-label {
+    height: 44px;
+  }
+  .theme-accent-swatch {
+    width: 44px;
+    height: 44px;
+  }
+  .theme-accent-popover {
+    grid-template-columns: repeat(4, 44px);
+    gap: 8px;
+  }
+}
 .theme-accent-swatch.is-selected { outline: 2px solid var(--ink); outline-offset: 2px; }
 
 /*
@@ -1403,27 +1421,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-size: 0.84rem;
   line-height: 1.6;
 }
-.idx-skel { margin-top: 16px; }
-.idx-skel-search,
-.idx-skel-pills,
-.idx-skel-row {
-  border-radius: var(--r-pill);
-  background: var(--card);
-  animation: idx-skel-pulse 1.2s var(--ease) infinite;
-}
-.idx-skel-search { height: 44px; margin-bottom: 14px; }
-.idx-skel-pills { height: 36px; width: 70%; margin-bottom: 18px; }
-.idx-skel-row {
-  height: 72px;
-  border-radius: var(--r-inner);
-  margin-bottom: 10px;
-}
-@keyframes idx-skel-pulse {
-  0%, 100% { opacity: 0.55; }
-  50% { opacity: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .idx-skel-search, .idx-skel-pills, .idx-skel-row { animation: none; }
+.index-row,
+.idx-card,
+.idx-empty {
+  scroll-margin-top: calc(var(--masthead-h, 56px) + 8px);
 }
 
 .home-more {

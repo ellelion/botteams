@@ -57,6 +57,16 @@ export function AccentPicker() {
   }
 
   function onSwatchKey(event: React.KeyboardEvent, index: number) {
+    if (event.key === "Home") {
+      event.preventDefault();
+      swatchRefs.current[0]?.focus();
+      return;
+    }
+    if (event.key === "End") {
+      event.preventDefault();
+      swatchRefs.current[ACCENT_PALETTE.length - 1]?.focus();
+      return;
+    }
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft" && event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
     event.preventDefault();
     const delta = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : -1;
@@ -93,6 +103,7 @@ export function AccentPicker() {
               title={value}
               className={`theme-accent-swatch${accent === value ? " is-selected" : ""}`}
               style={{ background: value }}
+              tabIndex={accent === value ? 0 : -1}
               onClick={() => pick(value)}
               onKeyDown={(event) => onSwatchKey(event, index)}
             />

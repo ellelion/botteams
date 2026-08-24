@@ -168,29 +168,38 @@ export function ConnectorFinder({
   const pathname = usePathname();
   const resultsId = useId();
   type FinderFilters = Omit<ConnectorFinderQuery, "q">;
-  const serverFilters: FinderFilters = {
-    category: initial.category,
-    builtin: initial.builtin,
-    all: initial.all,
-  };
+  const serverFilters = useMemo<FinderFilters>(
+    () => ({
+      category: initial.category,
+      builtin: initial.builtin,
+      all: initial.all,
+    }),
+    [initial.category, initial.builtin, initial.all],
+  );
   const [filters, setFilters] = useOptimistic(serverFilters, (_current, next: FinderFilters) => next);
   const category = filters.category;
   const builtInOnly = filters.builtin;
   const browseAll = filters.all;
   const [query, setQuery] = useState(initial.q);
-  const [urlQ, setUrlQ] = useState(initial.q);
-  if (initial.q !== urlQ) {
-    setUrlQ(initial.q);
-    if (!(query.startsWith(initial.q) && initial.q !== "" && query !== initial.q)) {
+  const [seenQ, setSeenQ] = useState(initial.q);
+  const [pushedQ, setPushedQ] = useState(initial.q);
+  if (initial.q !== seenQ) {
+    setSeenQ(initial.q);
+    if (initial.q !== pushedQ) {
       setQuery(initial.q);
+      setPushedQ(initial.q);
     }
   }
   const searchRef = useRef<HTMLInputElement>(null);
 
   function commit(next: ConnectorFinderQuery) {
+    const normalized = next.q.trim()
+      ? { q: next.q.trim(), category: null, builtin: false, all: false }
+      : { ...next, q: "" };
+    setPushedQ(normalized.q);
     startTransition(() => {
-      setFilters({ category: next.category, builtin: next.builtin, all: next.all });
-      const qs = connectorQuerySearch(next);
+      setFilters({ category: normalized.category, builtin: normalized.builtin, all: normalized.all });
+      const qs = connectorQuerySearch(normalized);
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     });
   }
@@ -199,18 +208,17 @@ export function ConnectorFinder({
     const next = query.trim();
     if (next === initial.q.trim()) return;
     const handle = window.setTimeout(() => {
-      const qs = connectorQuerySearch({
+      commit({
         q: next,
         category,
         builtin: builtInOnly,
         all: browseAll,
       });
-      startTransition(() => {
-        router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-      });
     }, 250);
     return () => window.clearTimeout(handle);
-  }, [query, initial.q, category, builtInOnly, browseAll, pathname, router]);
+    // commit writes the URL; the listed fields are the debounce inputs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, initial.q, category, builtInOnly, browseAll]);
 
   /* Focus only when the URL already asked for a search, so a first visit
      keeps keyboard order at the skip link and the masthead. */
@@ -325,7 +333,7 @@ export function ConnectorFinder({
             />
           </label>
           {query ? (
-            <button type="button" className="cf-search-clear" onClick={() => { setQuery(""); searchRef.current?.focus(); }}>
+            <button type="button" className="cf-search-clear" onClick={() => { setQuery(""); commit({ q: "", category: null, builtin: false, all: false }); searchRef.current?.focus(); }}>
               {en.connectors.clearSearch}
             </button>
           ) : (

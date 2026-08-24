@@ -39,7 +39,7 @@ export const en = {
     /* Two facts, never one total. 56 of these have no group chat, so
        adding them up and calling the sum "teams" is the lie. */
     counts: (teams: number, bots: number) =>
-      `${teams} ${teams === 1 ? "team" : "teams"} · ${bots} ${bots === 1 ? "bot" : "bots"}`,
+      `${teams} ${teams === 1 ? "team" : "teams"} · ${bots} ${bots === 1 ? "Bot" : "Bots"}`,
     kindTeams: "Grok Bot Teams",
     kindBots: "Grok Bots",
     kindAll: "All",
@@ -383,7 +383,7 @@ export const en = {
     noNotes: "No notes on this one.",
   },
   bot: {
-    allBots: "All bots",
+    allBots: "All Bots",
     one: "1 Bot",
     noRoom: "No group chat",
     relatedTitle: "Bots that share these connectors",

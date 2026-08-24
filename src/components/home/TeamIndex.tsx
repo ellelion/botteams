@@ -222,12 +222,15 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
      otherwise be most of the first screen. */
   /* The shelf, not the source. From xAI is a badge on a card, not a
      filter: some Bots may be ours one day, and they will still be Bots. */
-  const serverFilters: IndexFilters = {
-    kind: initial.kind,
-    category: initial.category,
-    integration: initial.integration,
-    sort: initial.sort,
-  };
+  const serverFilters = useMemo<IndexFilters>(
+    () => ({
+      kind: initial.kind,
+      category: initial.category,
+      integration: initial.integration,
+      sort: initial.sort,
+    }),
+    [initial.kind, initial.category, initial.integration, initial.sort],
+  );
   const [filters, setFilters] = useOptimistic(serverFilters, (_current, next: IndexFilters) => next);
   const kindParam = filters.kind;
   const sectionParam = filters.category;
@@ -235,11 +238,13 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
   const sortParam = filters.sort;
   const view = useSyncExternalStore(subscribeView, readStoredView, (): View => "ledger");
   const [query, setQuery] = useState(initial.q);
-  const [urlQ, setUrlQ] = useState(initial.q);
-  if (initial.q !== urlQ) {
-    setUrlQ(initial.q);
-    if (!(query.startsWith(initial.q) && initial.q !== "" && query !== initial.q)) {
+  const [seenQ, setSeenQ] = useState(initial.q);
+  const [pushedQ, setPushedQ] = useState(initial.q);
+  if (initial.q !== seenQ) {
+    setSeenQ(initial.q);
+    if (initial.q !== pushedQ) {
       setQuery(initial.q);
+      setPushedQ(initial.q);
     }
   }
   const [open, setOpen] = useState<string | null>(null);
@@ -257,14 +262,16 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
   }
 
   function commit(next: IndexQuery) {
+    const normalized = { ...next, q: next.q.trim() };
+    setPushedQ(normalized.q);
     startTransition(() => {
       setFilters({
-        kind: next.kind,
-        category: next.category,
-        integration: next.integration,
-        sort: next.sort,
+        kind: normalized.kind,
+        category: normalized.category,
+        integration: normalized.integration,
+        sort: normalized.sort,
       });
-      const qs = indexQuerySearch(next);
+      const qs = indexQuerySearch(normalized);
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     });
   }
@@ -273,19 +280,18 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
     const next = query.trim();
     if (next === initial.q.trim()) return;
     const handle = window.setTimeout(() => {
-      const qs = indexQuerySearch({
+      commit({
         q: next,
         kind: kindParam,
         category: sectionParam,
         integration: integrationParam,
         sort: sortParam,
       });
-      startTransition(() => {
-        router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-      });
     }, 250);
     return () => window.clearTimeout(handle);
-  }, [query, initial.q, kindParam, sectionParam, integrationParam, sortParam, pathname, router]);
+    // commit writes the URL; the listed fields are the debounce inputs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, initial.q, kindParam, sectionParam, integrationParam, sortParam]);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -503,7 +509,15 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
             />
           </label>
           {query ? (
-            <button type="button" className="search-clear" onClick={() => { setQuery(""); searchRef.current?.focus(); }}>
+            <button
+              type="button"
+              className="search-clear"
+              onClick={() => {
+                setQuery("");
+                commit(currentQuery({ q: "" }));
+                searchRef.current?.focus();
+              }}
+            >
               {en.home.clearSearch}
             </button>
           ) : (
@@ -635,7 +649,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
           {hasFilters ? (
             <div className="idx-chips">
               {query.trim() ? (
-                <button type="button" className="idx-chip" aria-label={en.home.removeFilter(query.trim())} onClick={() => setQuery("")}>
+                <button type="button" className="idx-chip" aria-label={en.home.removeFilter(query.trim())} onClick={() => { setQuery(""); commit(currentQuery({ q: "" })); }}>
                   {query.trim()} <span aria-hidden>×</span>
                 </button>
               ) : null}
