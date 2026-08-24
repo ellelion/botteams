@@ -1252,6 +1252,7 @@ a.chip-unverified:focus-visible {
    the column. rem in @container tracks the root. */
 .wings-main-col { container-type: inline-size; }
 @container (max-width: 24rem) {
+  .idx-cards { grid-template-columns: minmax(0, 1fr); }
   .spec-table,
   .spec-table thead,
   .spec-table tbody {
@@ -3022,7 +3023,10 @@ a.chip-unverified:focus-visible {
 
 .idx-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
+  /* min(258px, 100%) so a 177px zoomed column does not grow a 258px track.
+     Viewport media at 720px never sees CSS zoom: the layout viewport stays
+     1280 while .wings-main-col shrinks. */
+  grid-template-columns: repeat(auto-fill, minmax(min(258px, 100%), 1fr));
   gap: 16px;
 }
 .idx-card {
@@ -3054,6 +3058,7 @@ a.chip-unverified:focus-visible {
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
   transition: color var(--dur) var(--ease);
 }
 .idx-card-chips {
@@ -3065,6 +3070,7 @@ a.chip-unverified:focus-visible {
   color: var(--ink-soft);
   font-size: 0.76rem;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 .idx-card-foot {
   display: flex;
