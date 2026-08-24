@@ -4572,8 +4572,6 @@ html[data-theme="dark"] .talk-compose-bar,
 html[data-theme="dark"] .talk-you { background: #1a1a1a; }
 html:not([data-theme="dark"]) .talk-compose-bar,
 html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
-html[data-theme="dark"] .talk-composer { background: #1f1f1f; }
-html:not([data-theme="dark"]) .talk-composer { background: #fcfcfc; }
 
 .home-split:has(.talk-preview-band) .wings-persist {
   grid-row-start: 2;
@@ -5063,57 +5061,16 @@ html:not([data-theme="dark"]) .talk-composer { background: #fcfcfc; }
 .talk-compose-bar {
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  justify-content: center;
+  padding: 0 16px;
   flex: none;
-}
-.talk-composer-fade { display: none; }
-.talk-composer {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 46px;
-  height: 46px;
-  width: 100%;
-  box-sizing: border-box;
   margin: 0;
-  padding: 12px 14px;
-  border-radius: 9999px;
-  border: 0.5px solid rgba(0, 0, 0, 0.1);
-  background: #1f1f1f;
-  color: var(--talk-mute);
-  font-size: 14px;
+}
+.talk-composer-ph {
+  color: var(--talk-soft);
+  font-size: 13px;
   line-height: 20px;
-  pointer-events: none;
-  user-select: none;
-}
-.talk-plus {
-  width: 28px;
-  height: 28px;
-  border-radius: 99px;
-  display: grid;
-  place-items: center;
-  background: rgba(16, 16, 0, 0.04);
-  color: var(--talk-mute);
-  font-size: 18px;
-  line-height: 1;
-  flex: none;
-}
-.talk-composer-ph { flex: 1; }
-.talk-mic {
-  width: 28px;
-  height: 28px;
-  border-radius: 99px;
-  background: #111110;
-  border: 0;
-  flex: none;
-  position: relative;
-}
-.talk-mic::after {
-  content: "";
-  position: absolute;
-  inset: 8px 11px 7px;
-  border-radius: 99px;
-  background: #fff;
+  text-align: center;
 }
 .talk-overlay {
   position: fixed;

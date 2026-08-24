@@ -460,13 +460,9 @@ function ConversationStageLive({ team }: { team: Team }) {
           ) : null}
         </div>
 
-        <div className="talk-compose-bar">
-          <div className="talk-composer" aria-hidden>
-            <span className="talk-plus" aria-hidden>+</span>
-            <span className="talk-composer-ph">{en.team.watchReplayHint}</span>
-            <span className="talk-mic" aria-hidden />
-          </div>
-        </div>
+        <p className="talk-compose-bar" role="note">
+          <span className="talk-composer-ph">{en.team.watchReplayHint}</span>
+        </p>
       </div>
       </div>
     </section>
