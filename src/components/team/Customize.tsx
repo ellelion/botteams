@@ -780,7 +780,7 @@ export function Customize({
                   scroller.getBoundingClientRect().top +
                   scroller.scrollTop -
                   bar -
-                  16;
+                  32;
                 scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
                 return;
               }
