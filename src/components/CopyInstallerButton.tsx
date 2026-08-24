@@ -44,20 +44,22 @@ export function CopyInstallerButton({
       : en.team.copy;
 
   return (
-    <button
-      type="button"
-      className="theme-control theme-control-label"
-      onClick={onCopy}
-      disabled={disabled}
-      aria-disabled={disabled}
-      title={disabled ? disabledReason : undefined}
-      aria-describedby={disabled && disabledReason ? reasonId : undefined}
-    >
-      {label}
+    <>
+      <button
+        type="button"
+        className="theme-control theme-control-label"
+        onClick={onCopy}
+        disabled={disabled}
+        aria-disabled={disabled}
+        title={disabled ? disabledReason : undefined}
+        aria-describedby={disabled && disabledReason ? reasonId : undefined}
+      >
+        {label}
+        <span className="sr-only" role="status" aria-live="polite">
+          {copied || failed ? label : ""}
+        </span>
+      </button>
       {disabled && disabledReason ? <span id={reasonId} className="sr-only">{disabledReason}</span> : null}
-      <span className="sr-only" role="status" aria-live="polite">
-        {copied || failed ? label : ""}
-      </span>
-    </button>
+    </>
   );
 }
