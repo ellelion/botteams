@@ -452,7 +452,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
             <span className="idx-card-tag">{row.team.tagline}</span>
             <span className="idx-card-foot">
               <ConnectorRow names={row.team.connectors} size={15} />
-              <span className="idx-card-bots"><RosterShape bots={row.team.bots} rooms={row.team.rooms.length} routines={row.team.routines} /></span>
+              <span className="idx-card-bots"><RosterShape bots={row.team.bots} rooms={row.team.rooms.length} routines={row.team.routines} allowTip={false} /></span>
             </span>
           </Link>
         ),
