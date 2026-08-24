@@ -3153,7 +3153,9 @@ a.chip-unverified:focus-visible {
 .cz-truth {
   margin-top: 10px;
   color: var(--ink-soft);
-  font-size: 0.8rem;
+  /* Same size as empty bodies. Leads and the sold-out line are
+     “what to do next”, not chrome. */
+  font-size: 0.84rem;
   line-height: 1.6;
 }
 .cz-truth a { color: inherit; }
@@ -4603,7 +4605,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   }
 }
 
-.rp-note { margin-top: 12px; color: var(--ink-soft); font-size: 0.8rem; line-height: 1.6; }
+.rp-note {
+  margin-top: 12px;
+  color: var(--ink-soft);
+  /* Same sentence as the Customize install note, which is already 0.84. */
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
 .rc-h2 {
   color: var(--accent-text);
   font-size: 11px;
