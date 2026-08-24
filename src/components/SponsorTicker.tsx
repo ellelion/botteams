@@ -21,7 +21,6 @@ function Chip({
       href={sponsorHref(slot, "rail")}
       target="_blank"
       rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
-      style={{ height: 20, fontSize: "0.58rem", padding: "0 6px 0 5px" }}
     >
       {slot.mark ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -58,7 +57,6 @@ function ChipRow({
       <a
         className="spon-chip spon-chip-add"
         href="/sponsor"
-        style={{ height: 20, fontSize: "0.58rem", padding: "0 6px" }}
       >
         {en.sponsor.addYours}
       </a>
