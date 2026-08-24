@@ -810,8 +810,8 @@ export function Customize({
                 scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
                 return;
               }
-              const offset = (head?.getBoundingClientRect().bottom ?? 0) + 8;
-              const top = section.getBoundingClientRect().top + window.scrollY - offset;
+              const offset = (head?.getBoundingClientRect().bottom ?? 0) / scale + 8;
+              const top = section.getBoundingClientRect().top / scale + window.scrollY - offset;
               window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
             });
           });
