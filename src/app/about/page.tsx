@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Block, PageJump, PageShell } from "@/components/PageShell";
+import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default function AboutPage() {
         </p>
         <p>
           Every recipe is in the open at{" "}
-          <a className="accent-hover underline" href={site.github} rel="noopener noreferrer" target="_blank">
+          <a className="accent-hover underline" href={site.github} rel="noopener noreferrer" target="_blank" aria-label={`ellelion/botteams. ${en.nav.opensNew}`}>
             ellelion/botteams
           </a>
           . GitHub is the whole content system. If a recipe is wrong you can see why and send the fix.
@@ -62,7 +63,7 @@ export default function AboutPage() {
         <ul className="mt-1">
           {site.ellelionSites.map((product) => (
             <li key={product.href} className="hairline-row py-3">
-              <a className="accent-hover underline" href={product.href} rel="nofollow noopener noreferrer" target="_blank">
+              <a className="accent-hover underline" href={product.href} rel="nofollow noopener noreferrer" target="_blank" aria-label={`${product.name}. ${en.nav.opensNew}`}>
                 {product.name}
               </a>
             </li>

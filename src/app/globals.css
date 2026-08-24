@@ -1337,20 +1337,6 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   gap: 8px;
   padding-inline: 0;
 }
-.index-expand-hit {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border: 0;
-  padding: 0;
-  background: transparent;
-  cursor: pointer;
-}
-.index-head .index-name,
-.index-head .index-chips {
-  position: relative;
-  z-index: 1;
-}
 .index-body { grid-column: 1; position: relative; z-index: 1; }
 .index-name {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
@@ -1418,15 +1404,29 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
-  margin-top: 2px;
+  width: 32px;
+  height: 32px;
+  margin: 0;
   border: 0;
+  border-radius: var(--r-pill);
   background: transparent;
   color: var(--muted);
   cursor: pointer;
   flex: none;
-  pointer-events: none;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.chevron:hover,
+.index-row:hover .chevron,
+.team-card:hover .chevron {
+  color: var(--ink);
+  background: var(--surface-elevated);
+}
+.chevron:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+@media (max-width: 640px) {
+  .chevron { width: 44px; height: 44px; }
 }
 .index-body { padding: 4px 0 16px 0; }
 .index-copy {
@@ -3572,7 +3572,14 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   box-shadow: var(--shadow-float);
   animation: rp-sheet-in var(--dur) var(--ease);
 }
-@keyframes rp-sheet-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rp-sheet-in {
+  from { transform: translateX(12px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes rp-sheet-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
 @media (prefers-reduced-motion: reduce) { .rp-sheet { animation: none; } }
 .rp-sheet-head {
   flex: none;
@@ -3581,7 +3588,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   align-items: center;
   justify-content: space-between;
   gap: 10px 14px;
-  padding: 16px 20px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 16px;
   border-bottom: 1px solid var(--line);
 }
 .rp-sheet-act { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
@@ -3590,7 +3597,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 4px 20px 28px;
+  padding: 4px 20px calc(28px + env(safe-area-inset-bottom, 0px));
 }
 
 @media (max-width: 720px) {
@@ -3632,9 +3639,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   /* The header is taller once the action wraps, so the section titles
      stop being sticky rather than stacking two bars deep. */
   .rp-sum { position: static; min-height: 56px; }
-  .rp-sheet { width: 100%; border-left: 0; }
-  .rp-sheet-head { padding: 14px 16px; }
-  .rp-sheet-body { padding: 4px 16px 28px; }
+  .rp-sheet { width: 100%; border-left: 0; animation-name: rp-sheet-up; }
+  .rp-sheet-head { padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 14px; }
+  .rp-sheet-body { padding: 4px 16px calc(28px + env(safe-area-inset-bottom, 0px)); }
   .rp-sheet-act .theme-control,
   .rp-sheet-act .rp-secondary { min-height: 44px; }
   /* The chips take inline actions later, so they get a thumb-sized box
@@ -4263,8 +4270,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 1023px) {
   .wings-main-col { background: transparent; }
   .rp-head {
-    background: color-mix(in srgb, var(--page) 42%, transparent);
-    box-shadow: none;
+    background: var(--page);
+    box-shadow: 0 1px 0 var(--line);
   }
   .rp-main { background: transparent; }
 }

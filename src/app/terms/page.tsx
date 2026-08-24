@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Block, PageJump, PageShell } from "@/components/PageShell";
+import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -50,7 +51,7 @@ export default function TermsPage() {
       <Block title="The recipes are MIT">
         <p>
           Every team and Bot file in{" "}
-          <a className="accent-hover underline" href={site.github} rel="noopener noreferrer" target="_blank">
+          <a className="accent-hover underline" href={site.github} rel="noopener noreferrer" target="_blank" aria-label={`ellelion/botteams. ${en.nav.opensNew}`}>
             ellelion/botteams
           </a>{" "}
           is MIT licensed. Copy them, change them, ship them commercially, keep the copyright notice. You do not need our
@@ -115,6 +116,7 @@ export default function TermsPage() {
             href={site.brandGuidelines}
             rel="nofollow noopener noreferrer"
             target="_blank"
+            aria-label={`xAI brand guidelines. ${en.nav.opensNew}`}
           >
             brand guidelines
           </a>

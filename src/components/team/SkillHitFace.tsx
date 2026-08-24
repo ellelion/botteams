@@ -33,7 +33,7 @@ export function SkillHitFace({
             <span className="cz-hint">
               {" "}
               by{" "}
-              <a className="cz-link" href={who} target="_blank" rel="noreferrer">
+              <a className="cz-link" href={who} target="_blank" rel="noopener noreferrer" aria-label={`${face.author}. ${en.nav.opensNew}`}>
                 {face.author}
               </a>
             </span>
@@ -44,7 +44,7 @@ export function SkillHitFace({
           {waiting ? "…" : en.customize.skillsMeta(fmtCount(face.installs), fmtCount(face.stars))}
           {extra ? ` · ${extra}` : null}
           {" · "}
-          <a className="cz-link" href={face.url} target="_blank" rel="noreferrer">
+          <a className="cz-link" href={face.url} target="_blank" rel="noopener noreferrer" aria-label={`${en.customize.skillsView}. ${en.nav.opensNew}`}>
             {en.customize.skillsView}
           </a>
         </p>

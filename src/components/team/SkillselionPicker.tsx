@@ -141,10 +141,17 @@ export function SkillselionPicker({
         />
       </label>
       {listOpen ? (
-        <ul id={listId} className="cz-list cz-skill-hits mt-2" role="listbox" aria-label={en.customize.skillsSearch}>
-          {busy ? <li className="cz-hint" role="status">{en.customize.skillsSearching}</li> : null}
-          {!busy && failed ? <li className="cz-hint" role="status">{en.customize.skillsError}</li> : null}
-          {!busy && !failed && hits.length === 0 ? <li className="cz-hint" role="status">{en.customize.skillsEmpty}</li> : null}
+        <>
+        <p className={hits.length ? "sr-only" : "cz-hint mt-2"} role="status" aria-live="polite">
+          {busy
+            ? en.customize.skillsSearching
+            : failed
+              ? en.customize.skillsError
+              : hits.length === 0
+                ? en.customize.skillsEmpty
+                : en.customize.skillsFound(hits.length)}
+        </p>
+        <ul id={listId} className="cz-list cz-skill-hits mt-2" role="listbox" aria-label={en.customize.skillsSearch} hidden={hits.length === 0}>
           {hits.map((hit, i) => (
             <li
               key={hit.id}
@@ -162,6 +169,7 @@ export function SkillselionPicker({
             </li>
           ))}
         </ul>
+        </>
       ) : null}
       {picks.length > 0 ? (
         <ul className="cz-list mt-4">

@@ -18,6 +18,7 @@ export function FromXaiChip({ className = "" }: { className?: string }) {
       target="_blank"
       rel="noopener noreferrer"
       title={en.xai.chipTitle}
+      aria-label={`${en.xai.chip}. ${en.nav.opensNew}`}
     >
       {en.xai.chip}
     </a>
