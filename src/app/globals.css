@@ -1490,11 +1490,25 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .home-more dt { color: var(--ink); font-weight: 500; }
 .home-more dd { margin: 6px 0 14px; }
 
+.doc-toc { margin: 4px 0 22px; }
+.doc-toc-fold { border: 0; }
+.doc-toc-sum {
+  display: none;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent-text);
+  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+.doc-toc-sum::-webkit-details-marker { display: none; }
+.doc-toc-sum:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .doc-jump {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 18px;
-  margin: 4px 0 22px;
   font-size: 0.78rem;
 }
 .doc-jump a {
@@ -1502,6 +1516,11 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   align-items: center;
   min-height: 32px;
   color: var(--ink-soft);
+}
+@media (max-width: 640px) {
+  .doc-toc-sum { display: flex; }
+  .doc-toc-fold:not([open]) .doc-jump { display: none; }
+  .doc-jump { gap: 4px 14px; }
 }
 .wings-main-col :is(h2, h3, section)[id] {
   scroll-margin-top: calc(var(--masthead-h, 56px) + 12px);
