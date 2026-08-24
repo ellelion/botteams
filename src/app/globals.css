@@ -2113,6 +2113,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cf-browse:hover { opacity: 0.88; }
 .cf-browse:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 
+.cf-results.is-pending { opacity: 0.62; }
+@media (prefers-reduced-motion: reduce) {
+  .cf-results.is-pending { opacity: 1; }
+}
 .cf-empty {
   margin-top: 26px;
   padding: 40px 28px;

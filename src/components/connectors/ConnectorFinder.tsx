@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useEffect, useId, useLayoutEffect, useMemo, useOptimistic, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useOptimistic, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
@@ -193,13 +193,14 @@ export function ConnectorFinder({
   }
   const searchRef = useRef<HTMLInputElement>(null);
   const chipsRef = useScrollEdges<HTMLDivElement>(categories.length);
+  const [isPending, startFilter] = useTransition();
 
   function commit(next: ConnectorFinderQuery) {
     const normalized = next.q.trim()
       ? { q: next.q.trim(), category: null, builtin: false, all: false }
       : { ...next, q: "" };
     setPushedQ(normalized.q);
-    startTransition(() => {
+    startFilter(() => {
       setFilters({ category: normalized.category, builtin: normalized.builtin, all: normalized.all });
       const qs = connectorQuerySearch(normalized);
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
@@ -382,7 +383,7 @@ export function ConnectorFinder({
         </div>
       </div>
 
-      <p className="cf-summary" id={resultsId} role="status" aria-live="polite">
+      <p className="cf-summary" id={resultsId} role="status" aria-live="polite" aria-busy={isPending}>
         {mode === "shelf"
           ? en.connectors.shelfSummary(entries.length)
           : en.connectors.summary(list.length, entries.length)}
@@ -391,6 +392,7 @@ export function ConnectorFinder({
         ) : null}
       </p>
 
+      <div className={`cf-results${isPending ? " is-pending" : ""}`}>
       {mode === "shelf" ? (
         <>
           <section className="cf-shelf">
@@ -423,6 +425,7 @@ export function ConnectorFinder({
       ) : (
         <PlainList items={list} />
       )}
+      </div>
     </div>
   );
 }
