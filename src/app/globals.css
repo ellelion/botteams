@@ -1047,7 +1047,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .share-btn,
   .talk-watch-btn,
   .talk-overlay-close,
-  .spon-cta {
+  .spon-cta,
+  .foot-link {
     min-height: 44px;
   }
   .filter-views .filter-chip--icon { width: 44px; }
@@ -3045,7 +3046,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 16px; }
   .foot-col ul { margin-top: 6px; }
   .foot-col li > .foot-link { white-space: normal; }
-  .foot-link { min-height: 26px; }
+  .foot-link { min-height: 44px; }
   .foot-legal { max-width: none; }
   .foot-meta { flex-direction: column; align-items: flex-start; gap: 14px; }
 }
