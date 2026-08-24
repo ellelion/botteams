@@ -1,6 +1,6 @@
 export const site = {
   name: "botteams.ai",
-  updatedAt: "2026-08-23",
+  updatedAt: "2026-08-24",
   verifiedOn: "2026-08-23",
   title: "Grok Bot teams directory · botteams.ai",
   description:
