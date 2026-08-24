@@ -12,14 +12,17 @@ export async function generateMetadata({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
   const { kind } = parseIndexQuery(await searchParams);
-  /* Default keeps the existing full title. Bots and All use the shelf
-     name so the tab matches the heading the field already follows. */
-  const title =
-    kind === "bot"
-      ? en.home.indexTitleBots
-      : kind === "all"
-        ? en.home.indexTitleAll
-        : { absolute: site.title };
+  /* generateMetadata string titles skip the layout template here, so
+     every shelf sets the full tab name. Default stays the existing
+     directory title. */
+  const title = {
+    absolute:
+      kind === "bot"
+        ? `${en.home.indexTitleBots} · ${site.name}`
+        : kind === "all"
+          ? `${en.home.indexTitleAll} · ${site.name}`
+          : site.title,
+  };
   return {
     title,
     description: site.description,
