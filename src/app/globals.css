@@ -288,7 +288,7 @@ body {
 .site-menu-link.is-current { color: var(--ink); font-weight: 500; }
 .site-menu-link.is-current::before { background: var(--accent-text); }
 
-@media (max-width: 720px) {
+@media (max-width: 1023px) {
   :root {
     --masthead-h: calc(56px + env(safe-area-inset-top, 0px));
     --sec-y: 2rem;
@@ -312,7 +312,7 @@ body {
   .theme-controls { gap: 8px; }
 }
 
-@media (min-width: 721px) {
+@media (min-width: 1024px) {
   .site-menu { display: none !important; }
 }
 
@@ -1140,7 +1140,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   }
   .filter-views .filter-chip--icon { width: 44px; }
 }
-@media (max-width: 720px) {
+@media (max-width: 1023px) {
   /* iOS Safari zooms the page when a focused field is under 16px. */
   .search-input,
   .cf-input,
@@ -3724,14 +3724,17 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   padding: 4px 20px calc(28px + env(safe-area-inset-bottom, 0px));
 }
 
-@media (max-width: 720px) {
-  /* Hero already has the H1 + full tagline on the stacked mobile column. */
+@media (max-width: 1023px) {
+  /* Hero already has the H1 + full tagline on the stacked column. */
   .rp-head-id { display: none; }
-  /* One sticky on a phone: the copy row. Section titles stay in flow so
+  /* One sticky bar: the copy row. Section titles stay in flow so
      opening Routines cannot slide a heading under Copy link / Post on X. */
   .rp-sum { position: static; }
   .rp-sec,
   .rp-sum { scroll-margin-top: calc(var(--masthead-h) + 96px); }
+  .rp-head-act .theme-control,
+  .rp-head-act .rp-secondary,
+  .rp-head-act .share-btn { min-height: 44px; }
 }
 @media (max-width: 640px) {
   .rp-head { padding: 8px 0; }
@@ -4386,7 +4389,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 
 /* Full-width conversation preview: own grid row above hero+listing. */
 .talk-preview-band {
-  background: #fff;
+  background: var(--page);
   grid-column: 1 / -1;
   grid-row: 1;
   width: 100%;
@@ -4642,7 +4645,6 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   font-size: 14px;
   font-weight: 560;
   letter-spacing: -0.15px;
-  color: #ffffff;
 }
 .talk-replay {
   border: 0.5px solid var(--talk-border);
@@ -5077,7 +5079,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 @media (prefers-reduced-motion: reduce) {
   .talk-overlay, .talk-overlay-canvas { animation: none; }
 }
-@media (max-width: 720px) {
+@media (max-width: 1023px) {
   .talk-overlay {
     padding: 0;
     align-items: stretch;
@@ -5092,6 +5094,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
     max-height: none;
     border-radius: 0;
     background: inherit;
+    animation: none;
   }
   .talk-overlay-canvas .talk-stage {
     width: 100%;
@@ -5138,7 +5141,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 }
 .talk-watch-inline:hover { text-decoration: underline; }
 
-@media (min-width: 721px) {
+@media (min-width: 1024px) {
   .talk-stage { height: 660px; }
   .talk-body {
     grid-template-columns: var(--talk-sidebar) minmax(0, 1fr);
@@ -5233,3 +5236,48 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 .talk-stack-sm .grok-bot-mark:nth-child(1) { left: 5px; top: 0; }
 .talk-stack-sm .grok-bot-mark:nth-child(2) { left: 0; top: 9px; }
 .talk-stack-sm .grok-bot-mark:nth-child(3) { left: 10px; top: 9px; }
+
+/* Thumb-sized controls, restated last. An earlier (pointer: coarse) list
+   loses to a later min-height: 36px on the same class. */
+@media (pointer: coarse) {
+  .search-clear,
+  .browse-pick-btn,
+  .idx-chip,
+  .idx-chip-clear,
+  .cat-pill,
+  .sel-button,
+  .filter-views .filter-chip--icon,
+  .row-arrow-link,
+  .rp-secondary,
+  .cz-btn,
+  .cz-mode,
+  .cz-check,
+  .cz-chip,
+  .share-btn,
+  .talk-watch-btn,
+  .talk-overlay-close,
+  .talk-dock-item,
+  .spon-cta,
+  .foot-link,
+  .doc-jump a,
+  .doc-toc-sum,
+  .chip-xai,
+  .cf-chip,
+  .cf-browse,
+  .cf-clear,
+  .cf-search-clear,
+  .theme-control-label,
+  .hero-stat {
+    min-height: 44px;
+  }
+  .theme-control,
+  .site-menu-button {
+    width: 44px;
+    height: 44px;
+  }
+  .filter-views .filter-chip--icon { width: 44px; }
+  .hero-stat {
+    align-items: center;
+    padding-inline: 6px;
+  }
+}
