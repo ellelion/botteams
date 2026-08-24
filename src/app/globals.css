@@ -2223,10 +2223,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 6px;
-  border: 0;
+  border: 1px solid var(--line);
   border-radius: var(--r-inner);
-  background: var(--surface-elevated);
-  box-shadow: var(--shadow-float);
+  background: var(--page);
   animation: sel-in var(--dur) var(--ease);
 }
 .sel-list.is-end { left: auto; right: 0; }
@@ -3455,10 +3454,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   min-width: 16rem;
   max-width: 24rem;
   padding: 10px 12px;
-  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
-  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-inner);
   background: var(--page);
-  box-shadow: var(--shadow-float);
   text-transform: none;
   letter-spacing: 0;
   white-space: normal;
@@ -4218,7 +4216,6 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   margin: 0;
   padding: 0;
   list-style: none;
-  perspective: 720px;
 }
 .side-rail-item,
 .add-yours {
@@ -4230,8 +4227,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   margin: 0;
   padding: 11px 12px 12px;
   border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--paper) 92%, white);
+  border-radius: var(--r-card);
+  background: var(--card);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -4280,6 +4277,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   text-decoration: none;
   color: inherit;
 }
+.side-rail-item:hover { border-color: var(--ink); }
 .add-yours:hover { border-color: var(--accent-text); }
 .add-yours-kicker {
   display: flex;
@@ -4329,55 +4327,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .site-foot { margin-top: 0; }
 }
 
-@keyframes rail-sway {
-  0%, 100% { transform: rotate(-0.55deg); }
-  50% { transform: rotate(0.7deg); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .side-rail-item,
-  .add-yours { animation: none; }
-}
-
-.side-rail {
-  perspective: none;
-}
 .side-rail-item,
 .add-yours {
   position: relative;
-  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 420ms ease, border-color 280ms ease;
-  will-change: transform;
+  transition: border-color var(--dur) var(--ease);
 }
-.side-rail-item::after,
-.add-yours::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(115deg, transparent 20%, color-mix(in srgb, white 55%, transparent) 48%, transparent 72%);
-  transform: translateX(-130%);
-  opacity: 0;
-  transition: transform 620ms ease, opacity 280ms ease;
-}
-@media (hover: hover) and (pointer: fine) {
-  .side-rail-item:hover,
-  .add-yours:hover {
-    transform: translateY(-5px) rotateY(-7deg) rotateX(2deg);
-    box-shadow: 0 10px 22px color-mix(in srgb, var(--ink) 10%, transparent);
-    border-color: color-mix(in srgb, var(--ink) 28%, transparent);
-    z-index: 1;
-  }
-  .side-rail-item:hover::after,
-  .add-yours:hover::after {
-    transform: translateX(130%);
-    opacity: 0.7;
-  }
-}
-@keyframes rail-sway {
-  0%, 100% { transform: none; }
-}
-
 
 .wings-persist { view-transition-name: wings; }
 .wings-main-col:focus {
