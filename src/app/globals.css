@@ -127,6 +127,7 @@
 /* One padding scale for every page frame. It was 24/40/64, and the 64
    was 128px of empty gutter on a 1280 screen that the catalog wanted. */
 .page-pad {
+  container-type: inline-size;
   padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
 }
 @media (min-width: 640px) {
@@ -5694,6 +5695,39 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   }
 }
 
+/* CSS zoom leaves the viewport at 1280, so the 1024 split and the
+   1280 rail still fire while the frame is ~640px. Hero was 98px and
+   clipped the title. This block sits after those viewport rules. */
+@container (max-width: 50rem) {
+  .page-rails {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding-inline: 0;
+  }
+  .side-rail--left,
+  .side-rail--right { display: none; }
+  .home-split { grid-template-columns: minmax(0, 1fr); }
+  .wings-hero-col {
+    position: static;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    border-right-width: 0;
+  }
+  .wings-main-col {
+    grid-column: 1;
+    grid-row: auto;
+    position: static;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+  .story-beat {
+    min-height: 0;
+    overflow-x: visible;
+  }
+  .font-display { overflow-wrap: anywhere; }
+}
 
 /* Full-width conversation preview: own grid row above hero+listing. */
 .talk-preview-band {
