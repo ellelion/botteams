@@ -820,7 +820,7 @@ export function Customize({
             pin();
             if (left > 1) window.requestAnimationFrame(() => chase(left - 1));
           };
-          window.requestAnimationFrame(() => chase(8));
+          window.requestAnimationFrame(() => chase(16));
         }}
       >
         <details className="rp-sec" name="recipe" open>
