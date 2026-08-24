@@ -809,18 +809,18 @@ export function Customize({
               scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
               return;
             }
-            /* The exclusive Job close lays out a frame after open. The
-               first pin uses the tall page; the second uses the short one. */
             const offset = (head?.getBoundingClientRect().bottom ?? 0) / scale + 8;
             const top = sum.getBoundingClientRect().top / scale + window.scrollY - offset;
             window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
           };
-          window.requestAnimationFrame(() => {
-            window.requestAnimationFrame(() => {
-              pin();
-              window.requestAnimationFrame(pin);
-            });
-          });
+          /* Exclusive close settles in 2 frames at 100% and several more
+             at CSS zoom 200%. Pin each frame until the page height stops
+             moving the summary. */
+          const chase = (left: number) => {
+            pin();
+            if (left > 1) window.requestAnimationFrame(() => chase(left - 1));
+          };
+          window.requestAnimationFrame(() => chase(8));
         }}
       >
         <details className="rp-sec" name="recipe" open>
