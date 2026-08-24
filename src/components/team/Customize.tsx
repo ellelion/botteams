@@ -2,6 +2,7 @@
 
 import { grokDisplayBotName, grokMemberName, grokRecipeTitle } from "@/lib/grok-names";
 import { Children, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
 import { createPortal } from "react-dom";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
@@ -812,7 +813,18 @@ export function Customize({
             <span className="rp-count">{resolved.routines.length}</span>
           </summary>
           <div className="rp-secbody">
-            {resolved.routines.length > 0 ? routinesPart : <p className="rc-empty">{en.recipe.noRoutines}</p>}
+            {resolved.routines.length > 0 ? routinesPart : (
+              <div className="rc-empty-block">
+                <p className="rc-empty">{en.recipe.noRoutines}</p>
+                <p className="cz-hint">{en.recipe.noRoutinesHint}</p>
+                <Link
+                  href={solo ? "/guides/create-a-grok-bot" : "/guides/install-a-grok-bot-team"}
+                  className="rp-secondary mt-3"
+                >
+                  {solo ? en.recipe.noRoutinesBotGuide : en.recipe.noRoutinesGuide}
+                </Link>
+              </div>
+            )}
           </div>
         </details>
 

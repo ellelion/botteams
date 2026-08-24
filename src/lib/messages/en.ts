@@ -478,6 +478,10 @@ export const en = {
     secRelated: "Related",
     secNotes: "Notes",
     noRoutines: "No routines in this recipe.",
+    noRoutinesHint:
+      "Add a routine in Grok Bot after you paste the installer. This site does not invent one.",
+    noRoutinesGuide: "Read the install guide",
+    noRoutinesBotGuide: "Read how to create a Bot",
     noNotes: "No notes on this one.",
     noSkills: "No skills in this recipe.",
     noSkillsHint:
