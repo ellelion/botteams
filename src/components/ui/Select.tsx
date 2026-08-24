@@ -35,6 +35,7 @@ export function Select({
   onChange,
   className = "",
   align = "start",
+  bare = false,
 }: {
   id?: string;
   /* Read to screen readers, and used as the fallback button text. */
@@ -45,6 +46,8 @@ export function Select({
   onChange: (next: string) => void;
   className?: string;
   align?: "start" | "end";
+  /* Trigger only. Use next to Install / Fetch when a caption would not fit. */
+  bare?: boolean;
 }) {
   const auto = useId();
   const listId = `${id ?? auto}-list`;
@@ -181,8 +184,8 @@ export function Select({
   }
 
   return (
-    <div className={`sel has-caption ${className}`.trim()} ref={rootRef}>
-      <span className="sel-caption" id={captionId}>{shownCaption}</span>
+    <div className={`sel${bare ? "" : " has-caption"} ${className}`.trim()} ref={rootRef}>
+      {bare ? null : <span className="sel-caption" id={captionId}>{shownCaption}</span>}
       <button
         ref={buttonRef}
         id={id}

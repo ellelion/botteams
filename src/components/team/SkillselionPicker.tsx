@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { SkillHitFace } from "@/components/team/SkillHitFace";
+import { Select } from "@/components/ui/Select";
 import { en } from "@/lib/messages/en";
 import type { SkillPick, SkillselionHit, SkillUse } from "@/lib/skillselion";
 import type { TeamAgent } from "@/lib/types";
@@ -219,22 +220,20 @@ export function SkillselionPicker({
                 failed={counts?.failed}
                 extra={pick.use === "install" ? en.customize.skillsInstall : en.customize.skillsFetch}
               />
+              <span className="cz-skill-tools">
+                <Select
+                  className="cz-skill-scope"
+                  label={en.customize.skillsScope}
+                  bare
+                  align="end"
+                  value={pick.scope}
+                  options={[
+                    { value: "team", label: en.customize.skillsScopeTeam },
+                    ...agents.map((agent) => ({ value: agent.name, label: agent.name })),
+                  ]}
+                  onChange={(next) => setScope(pick.id, pick.scope, next)}
+                />
               <span className="cz-modes" role="group" aria-label={pick.name}>
-                <label className="cz-skill-scope">
-                  <span className="sr-only">{en.customize.skillsScope}</span>
-                  <select
-                    className="cz-input"
-                    value={pick.scope}
-                    onChange={(e) => setScope(pick.id, pick.scope, e.target.value)}
-                  >
-                    <option value="team">{en.customize.skillsScopeTeam}</option>
-                    {agents.map((agent) => (
-                      <option key={agent.name} value={agent.name}>
-                        {agent.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
                 <button
                   type="button"
                   className={`cz-mode${pick.use === "install" ? " is-on" : ""}`}
@@ -254,6 +253,7 @@ export function SkillselionPicker({
                 <button type="button" className="cz-mode" onClick={() => remove(pick.id, pick.scope)}>
                   {en.customize.skillsRemove}
                 </button>
+              </span>
               </span>
             </li>
             );
