@@ -1291,6 +1291,7 @@ a.chip-unverified:focus-visible {
   .search-input,
   .cf-input,
   .spon-input,
+  .spon-file,
   .cz-input {
     font-size: 1rem;
   }
@@ -4661,6 +4662,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .idx-chip,
   .search-input,
   .cf-input,
+  .cz-input,
+  .spon-input,
+  .spon-file,
   .cz-btn,
   .cz-mode,
   .talk-watch-btn,
@@ -6147,6 +6151,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .search-input,
   .cf-input,
   .spon-input,
+  .spon-file,
   .cz-input,
   .cz-prompt-edit {
     font-size: 1rem;
