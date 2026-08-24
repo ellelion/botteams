@@ -5728,6 +5728,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     min-height: 0;
     overflow-x: visible;
   }
+  /* The cue sat at the bottom of a sticky hero column. After the
+     split stacks, How is 32px below, so "Browse teams" is a dead
+     hop before the extra copy. */
+  .home-scroll-cue { display: none; }
   .font-display { overflow-wrap: anywhere; }
   /* Document is the scroller. Sticky top: 0 pinned the filter stack
      to the viewport and covered focused catalog names (2.4.11). */
