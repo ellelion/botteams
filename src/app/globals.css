@@ -4345,7 +4345,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     flex: 0 0 auto;
     width: auto;
   }
-  .rp-sheet { width: 100%; border-left: 0; animation-name: rp-sheet-up; }
+  .rp-sheet { width: 100%; border-left: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .rp-sheet { animation-name: rp-sheet-up; }
+}
   .rp-sheet-head { padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 14px; }
   .rp-sheet-body { padding: 4px 16px calc(28px + env(safe-area-inset-bottom, 0px)); }
   .rp-sheet-act .theme-control,
