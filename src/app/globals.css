@@ -4298,6 +4298,14 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .share-btn { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
 .share-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
+.share-btn.is-copy-fail:hover,
+.share-btn.is-copy-fail:focus-visible {
+  /* The click that fails leaves the pointer on the control. Hover
+     would otherwise paint the fail label as idle ink. */
+  color: var(--beta);
+  border-color: var(--beta);
+  background: transparent;
+}
 .share-btn:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .rp-disclaimer {
   color: var(--ink-soft);
