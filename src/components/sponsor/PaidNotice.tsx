@@ -22,6 +22,9 @@ export function PaidNotice() {
   const paid = params.get("paid") === "1";
   if (!paid) return null;
   return (
-    <p className="spon-paid" role="status">{en.sponsor.paid}</p>
+    <p className="spon-paid" role="status">
+      {en.sponsor.paid}{" "}
+      <a className="accent-hover underline" href={`mailto:${site.email}`}>{en.sponsor.paidMail}</a>.
+    </p>
   );
 }
