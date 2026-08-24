@@ -6854,6 +6854,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .home-contribute-links a,
   .home-scroll-cue,
   .spon-paid-link,
+  .side-rail-item .spon-paid-link,
+  .site-masthead-nav a,
   .cf-row-teams {
     min-height: 44px;
     min-width: 44px;
@@ -6864,6 +6866,14 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   }
   .theme-control,
   .site-menu-button {
+    width: 44px;
+    height: 44px;
+  }
+  /* Square icon controls. A later width/height: 32px on the same
+     class would otherwise keep the GitHub mark and catalog chevron
+     at 32 on an iPad that still shows desktop chrome. */
+  .site-nav-icon,
+  .chevron {
     width: 44px;
     height: 44px;
   }
