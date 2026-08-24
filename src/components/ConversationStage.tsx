@@ -99,16 +99,13 @@ function WatchOverlay({ team }: { team: Team }) {
 
   return (
     <>
-      <a
+      <button
+        type="button"
         className="talk-watch-btn"
-        href="#watch"
-        onClick={(e) => {
-          e.preventDefault();
-          openWatch();
-        }}
+        onClick={openWatch}
       >
         {label}
-      </a>
+      </button>
       {open && typeof document !== "undefined"
         ? createPortal(
             <div

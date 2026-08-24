@@ -5604,10 +5604,14 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   min-height: 44px;
   margin-top: 0.35rem;
   padding: 0 2px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  font: inherit;
   font-size: 0.8rem;
   color: var(--accent-text);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
+  cursor: pointer;
 }
 .talk-watch-btn:hover { border-bottom-color: var(--accent-text); }
 .talk-watch-btn:focus-visible {
