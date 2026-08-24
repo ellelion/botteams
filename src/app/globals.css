@@ -5736,6 +5736,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .wings-main-col {
   animation: copy-in var(--dur) var(--ease);
 }
+/* 1.4.12 letter-spacing 0.12em turns “alternatives” wider than the
+   22rem hero. overflow-x hidden on the desktop column then clips it. */
+.wings-hero-col h1 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
 @keyframes copy-in {
   from { opacity: 0.35; }
   to { opacity: 1; }
