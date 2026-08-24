@@ -591,7 +591,7 @@ export const en = {
   error: {
     kicker: "Error",
     title: "This page failed to load.",
-    body: "Try again, or go back to the directory.",
+    body: "Try again, go back to the directory, or read the Grok Bot guides.",
     nav: "What you can do",
     retry: "Try again",
     back: "Browse teams",
