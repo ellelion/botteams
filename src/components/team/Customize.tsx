@@ -689,41 +689,39 @@ export function Customize({
 
   return (
     <div className="rp">
+      <div className="rp-head-id">
+        <p className="rp-name">{grokRecipeTitle(team.kind, team.name)}</p>
+        <p className="rp-job">{team.tagline}</p>
+      </div>
       <header className="rp-head">
-        <div className="rp-head-row">
-          <div className="rp-head-id">
-            <p className="rp-name">{grokRecipeTitle(team.kind, team.name)}</p>
-            <p className="rp-job">{team.tagline}</p>
-          </div>
-          <div
-            ref={actionsRef}
-            className={`rp-head-act scroll-fade${actionEdges.start ? " has-start" : ""}${actionEdges.end ? " has-end" : ""}`}
+        <div
+          ref={actionsRef}
+          className={`rp-head-act scroll-fade${actionEdges.start ? " has-start" : ""}${actionEdges.end ? " has-end" : ""}`}
+        >
+          <CopyInstallerButton
+            text={verdict.canCopy ? prompt : ""}
+            disabled={!verdict.canCopy}
+            disabledReason={verdict.errors[0]}
+          />
+          {/* Secondary on purpose. Copy is the transaction. */}
+          <button
+            type="button"
+            className="rp-secondary"
+            aria-expanded={sheet !== null}
+            aria-haspopup="dialog"
+            aria-controls={sheet !== null ? sheetId : undefined}
+            onClick={openCustomize}
           >
-            <CopyInstallerButton
-              text={verdict.canCopy ? prompt : ""}
-              disabled={!verdict.canCopy}
-              disabledReason={verdict.errors[0]}
-            />
-            {/* Secondary on purpose. Copy is the transaction. */}
-            <button
-              type="button"
-              className="rp-secondary"
-              aria-expanded={sheet !== null}
-              aria-haspopup="dialog"
-              aria-controls={sheet !== null ? sheetId : undefined}
-              onClick={openCustomize}
-            >
-              {en.customize.open}
-            </button>
-            <ShareBar name={grokRecipeTitle(team.kind, team.name)} />
-          </div>
+            {en.customize.open}
+          </button>
+          <ShareBar name={grokRecipeTitle(team.kind, team.name)} />
         </div>
-        {team.fromXai ? (
-          <div className="rp-head-chips">
-            <FromXaiChip />
-          </div>
-        ) : null}
       </header>
+      {team.fromXai ? (
+        <div className="rp-head-chips">
+          <FromXaiChip />
+        </div>
+      ) : null}
 
       {verdictPart}
 
