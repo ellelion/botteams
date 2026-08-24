@@ -72,6 +72,9 @@ export function Customize({
   const alsoHintId = useId();
   const botNameErrorBase = useId();
   const botNoteHintBase = useId();
+  const promptEditLabelId = useId();
+  const promptEditHintId = useId();
+  const promptEditEditedId = useId();
   const sheetRef = useRef<HTMLDivElement>(null);
   const overwriteRef = useRef<HTMLDivElement>(null);
   const closeSheet = useCallback(() => setSheet(null), []);
@@ -626,10 +629,10 @@ export function Customize({
         />
       </div>
       <details className="cz-advanced mt-4">
-        <summary>{en.customize.advanced}</summary>
-        <p className="cz-hint mt-2">{en.customize.advancedHint}</p>
+        <summary id={promptEditLabelId}>{en.customize.advanced}</summary>
+        <p id={promptEditHintId} className="cz-hint mt-2">{en.customize.advancedHint}</p>
         {state.override !== null ? (
-          <p className="cz-hint mt-2">
+          <p id={promptEditEditedId} className="cz-hint mt-2">
             {en.customize.advancedEdited}{" "}
             <button type="button" className="cz-link" onClick={() => setState((p) => ({ ...p, override: null }))}>
               {en.customize.advancedRegenerate}
@@ -639,8 +642,11 @@ export function Customize({
         <textarea
           className="cz-input cz-prompt-edit mt-3"
           rows={14}
+          spellCheck={false}
           value={prompt}
           onChange={(e) => setState((p) => ({ ...p, override: e.target.value }))}
+          aria-labelledby={promptEditLabelId}
+          aria-describedby={state.override !== null ? `${promptEditHintId} ${promptEditEditedId}` : promptEditHintId}
         />
       </details>
       <pre className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
