@@ -291,6 +291,8 @@ body {
   justify-content: center;
   min-height: 24px;
   min-width: 24px;
+  flex: none;
+  white-space: nowrap;
 }
 .site-masthead-nav a.is-current {
   color: var(--ink);

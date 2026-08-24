@@ -27,6 +27,7 @@ export const en = {
     bots: "Grok Bots",
     docs: "Spec",
     guide: "What is Grok Bot?",
+    guideShort: "Grok Bot",
     guides: "Guides",
     connectorsNav: "Connectors",
     api: "API",

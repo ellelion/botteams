@@ -42,20 +42,23 @@ export function SiteNavLinks({
             </a>
           );
         }
+        const masthead = className === "site-masthead-nav";
+        const shown = masthead && item.short ? item.short : item.label;
         return (
           <Link
             key={item.id}
             href={item.href}
             scroll={false}
             className={
-              className === "site-masthead-nav"
+              masthead
                 ? `accent-hover${current ? " is-current" : ""}`
                 : `site-menu-link${current ? " is-current" : ""}`
             }
+            aria-label={item.short && masthead ? item.label : undefined}
             aria-current={current ? "page" : undefined}
             onClick={onNavigate}
           >
-            {item.label}
+            {shown}
           </Link>
         );
       })}
