@@ -1116,6 +1116,18 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   }
   .filter-views .filter-chip--icon { width: 44px; }
 }
+@media (max-width: 720px) {
+  /* iOS Safari zooms the page when a focused field is under 16px. */
+  .search-input,
+  .cf-input,
+  .spon-input,
+  .cz-input {
+    font-size: 1rem;
+  }
+  .cz-input { min-height: 44px; }
+  .sel-option { min-height: 44px; }
+  .sel-list { max-height: min(19rem, 50dvh); }
+}
 @media (max-width: 639px) {
   .search-wrap { margin-top: 32px; margin-bottom: 8px; }
   .index-header .section-title { display: none; }
