@@ -65,7 +65,7 @@ export default function ApiDocsPage() {
               </div>
             ))}
           </dl>
-          <p className="measure mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+          <p className="measure mt-4 text-[0.84rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             There is no per-item endpoint. <code style={{ fontFamily: ledger.mono }}>/api/teams/&lt;slug&gt;</code> and{" "}
             <code style={{ fontFamily: ledger.mono }}>/api/bots/&lt;slug&gt;</code> both return 404 by design. Filter the
             collection instead.
@@ -82,7 +82,7 @@ export default function ApiDocsPage() {
             <a className="api-link accent-hover underline" href="/openapi.json">Download OpenAPI 3.1 (JSON)</a>
             <a className="api-link accent-hover underline" href="/openapi.yaml">Download OpenAPI 3.1 (YAML)</a>
           </p>
-          <p className="measure mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+          <p className="measure mt-3 text-[0.84rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             Default limit {DEFAULT_LIMIT}, maximum {MAX_LIMIT}. Values outside the range clamp rather than error.
           </p>
         </section>
@@ -176,7 +176,7 @@ export default function ApiDocsPage() {
               `}`,
             ].join("\n")}</code>
           </pre>
-          <p className="measure mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
+          <p className="measure mt-4 text-[0.84rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             <code style={{ fontFamily: ledger.mono }}>addedAt</code> is the date stated in the team file and nothing else.
             It is never inferred and never invented. A file that does not state one reports null and sorts last.
           </p>

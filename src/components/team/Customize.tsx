@@ -354,7 +354,7 @@ export function Customize({
       <div className="mt-3">
         {hasConnectors ? <ConnectorRow names={team.connectors} labeled size={18} /> : connectorsEmpty}
       </div>
-      <div className="mt-4 grid gap-2 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+      <div className="mt-4 grid gap-2 text-[0.84rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
         {solo ? <p>{en.xai.soloNote}</p> : null}
         {hasConnectors ? <p>{en.team.connectorsNote}</p> : null}
         <p>{en.team.installNote}</p>
