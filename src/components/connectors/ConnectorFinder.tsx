@@ -454,6 +454,9 @@ export function ConnectorFinder({
                 {en.connectors.backToShelf}
               </button>
             ) : null}
+            <Link href="/guides/grok-bot-connectors" className="theme-control theme-control-label">
+              {en.connectors.emptyGuide}
+            </Link>
           </nav>
         </div>
       ) : list.length > WINDOW_FROM ? (

@@ -314,6 +314,7 @@ export const en = {
     emptyNav: "Empty results",
     emptyBody:
       "Grok Bot can also reach anything that speaks MCP, so a connector missing here may still work. Try a shorter word, or a category.",
+    emptyGuide: "Read the connectors guide",
     teamCount: (n: number) => (n === 1 ? "1 team" : `${n} teams`),
     byoTitle: "Bring your own MCP",
     byoBody:
