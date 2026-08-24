@@ -1180,7 +1180,9 @@ a.chip-unverified:focus-visible {
 .search-icon {
   position: absolute;
   left: 14px;
-  color: var(--muted);
+  /* Same step as the hint. Muted sat a contrast step below the
+     placeholder after that field became the visible name. */
+  color: var(--ink-soft);
   pointer-events: none;
 }
 .search-input {
@@ -2281,7 +2283,7 @@ a.chip-unverified:focus-visible {
 .cf-search-icon {
   position: absolute;
   left: 13px;
-  color: var(--muted);
+  color: var(--ink-soft);
   pointer-events: none;
 }
 .cf-input {
