@@ -3052,9 +3052,14 @@ a.chip-unverified:focus-visible {
 .cz-hint {
   display: block;
   margin-top: 6px;
-  color: var(--muted);
+  color: var(--ink-soft);
   font-size: 0.74rem;
   line-height: 1.5;
+}
+.cz-hint[role="alert"],
+.cz-hint.is-fail,
+.cz-skill-status[role="alert"] .cz-hint {
+  color: var(--beta);
 }
 .cz-skill-status {
   display: flex;
@@ -3437,7 +3442,7 @@ html[data-theme="light"] .cz-check input:checked {
 .cz-alert-warn .cz-alert-title { color: var(--ink-soft); }
 .cz-alert ul { color: var(--ink-soft); }
 .cz-alert li + li { margin-top: 5px; }
-.cz-alert-foot { margin-top: 7px; color: var(--muted); font-size: 0.76rem; }
+.cz-alert-foot { margin-top: 7px; color: var(--ink-soft); font-size: 0.76rem; }
 .cz-alert-actions {
   display: flex;
   flex-wrap: wrap;

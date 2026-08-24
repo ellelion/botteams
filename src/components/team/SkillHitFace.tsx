@@ -56,7 +56,7 @@ export function SkillHitFace({
           ) : null}
         </span>
         {face.summary ? <p className="cz-bot-persona">{face.summary}</p> : null}
-        <p className="cz-hint">
+        <p className={failed ? "cz-hint is-fail" : "cz-hint"}>
           {counts}
           {extra ? ` · ${extra}` : null}
           {compact ? null : (

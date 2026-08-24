@@ -62,7 +62,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
                 <br />
                 {en.answerUse}
               </p>
-              <p className="home-hero-links mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+              <p className="home-hero-links mx-auto mt-3 max-w-md text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
                 <Link href="/grok-bot" className="accent-hover underline">{en.guideLink}</Link>
                 {" · "}
                 <Link href="/guides" className="accent-hover underline">{en.guidesLink}</Link>
