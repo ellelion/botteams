@@ -438,6 +438,19 @@ body {
     grid-template-columns: repeat(4, 22px);
   }
 }
+@media (max-width: 1023px) {
+  .theme-accent-swatch {
+    width: 44px;
+    height: 44px;
+  }
+  .theme-accent-popover {
+    grid-template-columns: repeat(4, 44px);
+    gap: 8px;
+    max-height: min(20rem, calc(100dvh - var(--masthead-h) - 32px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
 @media (pointer: coarse) {
   .theme-control {
     width: 44px;
