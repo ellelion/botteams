@@ -15,7 +15,6 @@ export default function NotFound() {
     >
       <div className="idx-empty">
         <p className="idx-empty-title">{en.notFound.title}</p>
-        <p className="idx-empty-body">{en.notFound.body}</p>
         <nav className="notfound-nav" aria-label={en.notFound.kicker}>
           <Link href="/" className="theme-control theme-control-label">{en.notFound.back}</Link>
           <Link href="/?kind=bot" className="theme-control theme-control-label">{en.notFound.backBots}</Link>
