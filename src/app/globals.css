@@ -2908,9 +2908,13 @@ html[data-theme="light"] .cz-check input:checked {
   margin-top: 11px;
 }
 .cz-alert-actions .cz-btn:focus,
+.cz-alert-actions .cz-btn:focus-visible,
 .rp-sheet-act .theme-control:focus,
+.rp-sheet-act .theme-control:focus-visible,
 .rp-sheet-act .rp-secondary:focus,
-.site-menu [role="dialog"] a:focus {
+.rp-sheet-act .rp-secondary:focus-visible,
+.site-menu [role="dialog"] a:focus,
+.site-menu [role="dialog"] a:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: 2px;
 }
@@ -4848,6 +4852,7 @@ html[data-theme="dark"] .talk-stage {
 }
 .talk-rail-row:hover::before { opacity: 0.7; }
 .talk-rail-row.is-on::before { opacity: 1; background: color-mix(in srgb, var(--talk-text) 12%, transparent); }
+.talk-rail-row:focus,
 .talk-rail-row:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: -3px;
@@ -4945,6 +4950,7 @@ html[data-theme="dark"] .talk-stage {
 }
 .talk-dock-item.is-on span { color: var(--talk-text); font-weight: 560; }
 .talk-dock-item.is-on .grok-bot-mark { transform: translateY(-2px); }
+.talk-dock-item:focus,
 .talk-dock-item:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: -3px;
