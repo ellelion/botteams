@@ -2938,8 +2938,10 @@ a.chip-unverified:focus-visible {
   text-decoration: underline;
   cursor: pointer;
 }
-.cz-link:hover,
-.cz-link:focus-visible { color: var(--ink); }
+a.cz-link:hover,
+a.cz-link:focus-visible,
+button.cz-link:hover,
+button.cz-link:focus-visible { color: var(--ink); }
 
 /* Connector modes. A segmented control rather than a select: three fixed
    choices that are worth reading side by side. */
