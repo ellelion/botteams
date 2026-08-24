@@ -95,7 +95,7 @@
   --accent: #54b9a6;
   --accent-text: #336a60;
   --on-accent: #0a0a0a;
-  --status-live: #15803d;
+  --status-live: #166534;
   --beta: #c2410c;
   --pill-fill: #0a0a0a;
   --pill-fill-ink: #ffffff;
@@ -770,10 +770,11 @@ a.accent-hover {
   background: var(--surface);
   color: var(--muted);
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
-  font-size: 0.55rem;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1;
   white-space: nowrap;
 }
 .chip-verified { color: var(--status-live); }
