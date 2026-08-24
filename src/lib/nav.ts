@@ -6,6 +6,8 @@ export type NavId = "teams" | "bots" | "connectors" | "guide" | "guides" | "docs
 export type NavItem = {
   href: string;
   label: string;
+  /* Masthead only. The phone sheet keeps the full label. */
+  short?: string;
   id: NavId;
   external?: boolean;
 };
@@ -14,7 +16,7 @@ export const MAIN_NAV: NavItem[] = [
   { href: "/", label: en.nav.teams, id: "teams" },
   { href: "/?kind=bot", label: en.nav.bots, id: "bots" },
   { href: "/connectors", label: en.nav.connectorsNav, id: "connectors" },
-  { href: "/grok-bot", label: en.nav.guide, id: "guide" },
+  { href: "/grok-bot", label: en.nav.guide, short: en.nav.guideShort, id: "guide" },
   { href: "/guides", label: en.nav.guides, id: "guides" },
   { href: "/docs", label: en.nav.docs, id: "docs" },
   { href: "/api", label: en.nav.api, id: "api" },
