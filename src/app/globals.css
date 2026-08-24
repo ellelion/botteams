@@ -189,6 +189,7 @@ body {
   font-size: 0.9375rem;
   letter-spacing: -0.005em;
   box-shadow: 0 1px 0 var(--line);
+  container-type: inline-size;
 }
 
 .site-masthead a:hover { color: var(--ink); }
@@ -315,7 +316,17 @@ body {
 }
 
 @media (min-width: 1024px) {
-  .site-menu { display: none !important; }
+  .site-menu { display: none; }
+}
+/* Text zoom does not shrink the viewport. At 200% a 1024 screen still
+   matches (min-width: 1024px) and the inline nav overflows by 21px.
+   rem here follows the root size, so a 34rem bar is 544px at 100% and
+   1088px at 200%. */
+@container (max-width: 34rem) {
+  .site-masthead-nav { display: none; }
+  .site-menu { display: block; }
+  .site-menu-button { width: 44px; height: 44px; }
+  .theme-control { width: 44px; height: 44px; }
 }
 
 :where(a, button):focus-visible,
