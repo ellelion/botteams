@@ -86,10 +86,10 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
               <code>{CONTRIBUTE_SAMPLE}</code>
             </pre>
             <p className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.72rem]">
-              <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">
+              <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-label={`${en.home.contributePr}. ${en.nav.opensNew}`}>
                 {en.home.contributePr}
               </a>
-              <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">
+              <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-label={`${en.home.contributeGuide}. ${en.nav.opensNew}`}>
                 {en.home.contributeGuide}
               </a>
               <Link className="accent-hover underline" href="/docs">{en.home.contributeSpec}</Link>
@@ -154,7 +154,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
           <summary>{en.home.contributeSummary}</summary>
           <p>{en.home.contributeBody}</p>
           <p>
-            <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">
+            <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-label={`${en.home.contributeGuide}. ${en.nav.opensNew}`}>
               {en.home.contributeGuide}
             </a>
             {" · "}

@@ -95,6 +95,8 @@ export const en = {
     colConnectors: "Connectors",
     openTeam: "Open team",
     viewFull: (kind: "team" | "bot") => kind === "bot" ? "View the full Bot" : "View the full team",
+    expand: (title: string) => `Expand ${title}`,
+    collapse: (title: string) => `Collapse ${title}`,
     browseLabel: "Browse",
     categoriesAria: "Team categories",
     filterCategory: "Filter by category",
@@ -188,6 +190,7 @@ export const en = {
     skillsFetch: "Fetch at run",
     skillsRemove: "Remove",
     skillsMeta: (installs: string, stars: string) => `${installs} installs · ${stars} stars`,
+    skillsFound: (n: number) => (n === 1 ? "1 skill" : `${n} skills`),
   },
   team: {
     copy: "Copy installer prompt",

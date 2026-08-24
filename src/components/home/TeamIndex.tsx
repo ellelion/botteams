@@ -156,7 +156,7 @@ function ListingAd({ slot, as }: { slot: SponsorSlot; as: "row" | "card" }) {
       href={sponsorHref(slot, "rail")}
       target="_blank"
       rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
-      aria-label={`${en.sponsor.listingKicker}: ${slot.name ?? "Sponsor"}`}
+      aria-label={`${en.sponsor.listingKicker}: ${slot.name ?? "Sponsor"}. ${en.nav.opensNew}`}
     >
       <span className="idx-ad-kicker">{en.sponsor.listingKicker}</span>
       <span className="idx-ad-body">
@@ -724,24 +724,23 @@ function TeamExpandable({
   return (
     <article className={`${shellClass}${open ? " is-open" : ""}`}>
       <div className="index-head">
-        <button
-          type="button"
-          className="index-expand-hit"
-          aria-expanded={open}
-          aria-controls={bodyId}
-          aria-label={open ? `Collapse ${title}` : `Expand ${title}`}
-          onClick={onToggle}
-        />
         <div className="min-w-0 flex-1">
-          <div className="index-titleline flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+          <div className="index-titleline flex flex-wrap items-center gap-x-2 gap-y-0.5">
             <Link href={hrefFor(team)} className="index-name">
               {title}
             </Link>
-            <span className="chevron" aria-hidden>
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <button
+              type="button"
+              className="chevron"
+              aria-expanded={open}
+              aria-controls={bodyId}
+              aria-label={open ? en.home.collapse(title) : en.home.expand(title)}
+              onClick={onToggle}
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
                 <path d={open ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"} />
               </svg>
-            </span>
+            </button>
             <span className="team-card-meta"><RosterShape bots={team.bots} rooms={team.rooms.length} routines={team.routines} /></span>
           </div>
           <p className="index-tagline">{team.tagline}</p>

@@ -119,14 +119,14 @@ export default async function BotPage({ params }: { params: Promise<{ slug: stri
                 {team.addedVia ? (
                   <>
                     {en.team.basedOn}{" "}
-                    <a className="accent-hover underline" href={team.addedVia} target="_blank" rel="noopener noreferrer">
+                    <a className="accent-hover underline" href={team.addedVia} target="_blank" rel="noopener noreferrer" aria-label={`${team.contributor}. ${en.nav.opensNew}`}>
                       {team.contributor}
                     </a>
                   </>
                 ) : team.contributor ? (
                   <>
                     {en.team.contributedBy}{" "}
-                    <a className="accent-hover underline" href={team.contributorUrl} target="_blank" rel="noopener noreferrer">
+                    <a className="accent-hover underline" href={team.contributorUrl} target="_blank" rel="noopener noreferrer" aria-label={`${team.contributor}. ${en.nav.opensNew}`}>
                       {team.contributor}
                     </a>
                   </>
@@ -146,6 +146,7 @@ export default async function BotPage({ params }: { params: Promise<{ slug: stri
                 href={`${site.github}/blob/main/bots/${team.slug}.md`}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={`${en.team.viewSource}. ${en.nav.opensNew}`}
               >
                 {en.team.viewSource}
               </a>

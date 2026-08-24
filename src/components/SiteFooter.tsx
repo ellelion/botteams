@@ -32,7 +32,7 @@ function Column({ title, items }: { title: string; items: Item[] }) {
         {items.map((item) => (
           <li key={item.href}>
             {item.external ? (
-              <a className="foot-link" href={item.href} rel="nofollow noopener noreferrer" target="_blank">
+              <a className="foot-link" href={item.href} rel="nofollow noopener noreferrer" target="_blank" aria-label={`${item.label}. ${en.nav.opensNew}`}>
                 {item.label}
               </a>
             ) : (

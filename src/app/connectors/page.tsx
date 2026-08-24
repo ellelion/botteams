@@ -81,12 +81,12 @@ export default async function ConnectorsPage({
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.connectors.sourceTitle}</h2>
           <p className="measure mt-3 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             {en.connectors.builtInNote(builtInCount)}{" "}
-            <a className="accent-hover underline" href={XAI_CONNECTOR_DOCS} target="_blank" rel="noopener noreferrer">
+            <a className="accent-hover underline" href={XAI_CONNECTOR_DOCS} target="_blank" rel="noopener noreferrer" aria-label={`${en.connectors.builtInSource}. ${en.nav.opensNew}`}>
               {en.connectors.builtInSource}
             </a>
             {". "}
             {en.connectors.sourceNote}{" "}
-            <a className="accent-hover underline" href={CATALOG_SOURCE} target="_blank" rel="noopener noreferrer">
+            <a className="accent-hover underline" href={CATALOG_SOURCE} target="_blank" rel="noopener noreferrer" aria-label={`${en.connectors.sourceLabel}. ${en.nav.opensNew}`}>
               {en.connectors.sourceLabel}
             </a>
             {en.connectors.sourceTail(CATALOG_AS_OF)}

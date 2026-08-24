@@ -24,6 +24,7 @@ function Chip({
       href={sponsorHref(slot, "rail")}
       target="_blank"
       rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
+      aria-label={`${name}. ${en.nav.opensNew}`}
     >
       {slot.mark ? (
         // eslint-disable-next-line @next/next/no-img-element

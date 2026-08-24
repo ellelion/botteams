@@ -43,7 +43,7 @@ export function ShareBar({ name, className = "" }: { name: string; className?: s
       <span className="sr-only" role="status" aria-live="polite">
         {copied || failed ? copyLabel : ""}
       </span>
-      <a className="share-btn" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener noreferrer" onClick={postOnX}>
+      <a className="share-btn" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener noreferrer" onClick={postOnX} aria-label={`${en.share.postOnX}. ${en.nav.opensNew}`}>
         {en.share.postOnX}
       </a>
     </div>

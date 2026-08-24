@@ -19,6 +19,7 @@ import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 import type { Team } from "@/lib/types";
 import { useDialogChrome } from "@/lib/use-dialog-chrome";
+import { useScrollEdges } from "@/lib/use-scroll-edges";
 import {
   MODES,
   MODE_HINT,
@@ -103,6 +104,7 @@ export function Customize({
   }, [team]);
 
   useDialogChrome({ open: sheet !== null && mounted, rootRef: sheetRef, onClose: closeSheet });
+  const actionsRef = useScrollEdges<HTMLDivElement>();
 
   useEffect(() => {
     if (!pending) return;
@@ -596,10 +598,13 @@ export function Customize({
       <header className="rp-head">
         <div className="rp-head-row">
           <div className="rp-head-id">
-            <h1 className="rp-name">{grokRecipeTitle(team.kind, team.name)}</h1>
+            <p className="rp-name">{grokRecipeTitle(team.kind, team.name)}</p>
             <p className="rp-job">{team.tagline}</p>
           </div>
-          <div className="rp-head-act">
+          <div
+            ref={actionsRef.ref}
+            className={`rp-head-act scroll-fade${actionsRef.edges.start ? " has-start" : ""}${actionsRef.edges.end ? " has-end" : ""}`}
+          >
             <CopyInstallerButton
               text={verdict.canCopy ? prompt : ""}
               disabled={!verdict.canCopy}

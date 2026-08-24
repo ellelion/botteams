@@ -127,14 +127,14 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
                 {team.addedVia ? (
                   <>
                     {en.team.basedOn}{" "}
-                    <a className="accent-hover underline" href={team.addedVia} target="_blank" rel="noopener noreferrer">
+                    <a className="accent-hover underline" href={team.addedVia} target="_blank" rel="noopener noreferrer" aria-label={`${team.contributor}. ${en.nav.opensNew}`}>
                       {team.contributor}
                     </a>
                   </>
                 ) : team.contributor ? (
                   <>
                     {en.team.contributedBy}{" "}
-                    <a className="accent-hover underline" href={team.contributorUrl} target="_blank" rel="noopener noreferrer">
+                    <a className="accent-hover underline" href={team.contributorUrl} target="_blank" rel="noopener noreferrer" aria-label={`${team.contributor}. ${en.nav.opensNew}`}>
                       {team.contributor}
                     </a>
                   </>
@@ -154,6 +154,7 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
                 href={`${site.github}/blob/main/teams/${team.slug}.md`}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={`${en.team.viewSource}. ${en.nav.opensNew}`}
               >
                 {en.team.viewSource}
               </a>
