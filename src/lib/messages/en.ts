@@ -113,7 +113,7 @@ export const en = {
     sortName: "A to Z",
     specCta: "Team spec",
     searchLabel: "Search teams",
-    searchPlaceholder: "Search name, job, connector, Bot",
+    searchPlaceholder: "Name, job, connector, Bot",
     searchKbd: "/",
     clearSearch: "Clear search",
     results: (shown: number, total: number) =>
