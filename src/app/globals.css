@@ -3596,6 +3596,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 720px) {
   /* Hero already has the H1 + full tagline on the stacked mobile column. */
   .rp-head-id { display: none; }
+  /* One sticky on a phone: the copy row. Section titles stay in flow so
+     opening Routines cannot slide a heading under Copy link / Post on X. */
+  .rp-sum { position: static; }
+  .rp-sec { scroll-margin-top: calc(var(--masthead-h) + 88px); }
 }
 @media (max-width: 640px) {
   .rp-head { padding-top: 10px; }
