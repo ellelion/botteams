@@ -978,7 +978,8 @@ a.chip-unverified:hover {
 /* Docs, sponsor, about, and the other data pages used a 0.6rem / 0.26em
    utility trio for H2s. That is 9.6px with tracking so wide the words
    fall apart. Match the recipe eyebrow. */
-.text-\[0\.6rem\].uppercase.tracking-\[0\.26em\] {
+.text-\[0\.6rem\].uppercase.tracking-\[0\.26em\],
+.text-\[0\.62rem\].uppercase.tracking-\[0\.3em\] {
   font-size: 11px;
   letter-spacing: 0.12em;
 }
