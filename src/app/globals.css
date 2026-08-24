@@ -439,7 +439,9 @@ body {
   border-color: var(--beta);
 }
 .theme-control.theme-control-label:disabled,
-.theme-control-label:disabled {
+.theme-control-label:disabled,
+.theme-control-label.is-copy-blocked,
+.theme-control-label[aria-disabled="true"] {
   opacity: 0.45;
   cursor: not-allowed;
   filter: none;
