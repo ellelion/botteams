@@ -2416,31 +2416,27 @@ a.chip-unverified:focus-visible {
   margin-top: 6px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  column-gap: 40px;
-}
-@media (min-width: 900px) {
-  .cf-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .cf-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 0 2px;
+  min-height: 52px;
+  padding: 10px 2px;
   border-bottom: 1px solid var(--line);
   box-sizing: border-box;
 }
 .cf-row-id {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 9px;
   min-width: 0;
 }
 .cf-row-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
   font-size: 0.9rem;
+  line-height: 1.35;
 }
 .cf-flag {
   flex: none;

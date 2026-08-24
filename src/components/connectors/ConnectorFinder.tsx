@@ -35,9 +35,10 @@ export type FinderEntry = {
   aliases: string[];
 };
 
-/* Row height has to be a constant for windowing to know where it is, so
-   rows are one line with the name ellipsised rather than wrapping. */
-const ROW = 52;
+/* Row height has to be a constant for windowing to know where it is.
+   Two lines fit a spaced name at 320; a one-line ellipsis clipped
+   "Google Calendar" when letter-spacing was 0.12em. */
+const ROW = 72;
 /* Below this, a plain list is cheaper than the machinery. */
 const WINDOW_FROM = 60;
 
@@ -69,9 +70,9 @@ function score(entry: FinderEntry, q: string): number {
   return 3;
 }
 
-function Row({ entry }: { entry: FinderEntry }) {
+function Row({ entry, locked = false }: { entry: FinderEntry; locked?: boolean }) {
   return (
-    <li className="cf-row" style={{ height: ROW }}>
+    <li className="cf-row" style={locked ? { height: ROW } : undefined}>
       <span className="cf-row-id">
         <ConnectorRow names={[entry.name]} size={18} />
         <span className="cf-row-name">{entry.name}</span>
@@ -149,7 +150,7 @@ function WindowedList({ items }: { items: FinderEntry[] }) {
           className="cf-list"
           style={{ position: "absolute", insetInline: 0, transform: `translateY(${startRow * ROW}px)` }}
         >
-          {slice.map((e) => <Row key={e.slug} entry={e} />)}
+          {slice.map((e) => <Row key={e.slug} entry={e} locked />)}
         </ul>
       </div>
     </div>
