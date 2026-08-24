@@ -738,6 +738,16 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 a.accent-hover {
   overflow-wrap: anywhere;
 }
+a.accent-hover:hover,
+a.accent-hover:focus-visible {
+  color: var(--accent-text);
+}
+/* Masthead stays ink on hover. Mint there would be a second brand colour
+   on every Teams / Spec / Sponsor pass. */
+.site-masthead a.accent-hover:hover,
+.site-masthead a.accent-hover:focus-visible {
+  color: var(--ink);
+}
 .team-prose a {
   text-decoration: underline;
   text-underline-offset: 2px;
