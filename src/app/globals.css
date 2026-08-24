@@ -5780,9 +5780,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .rp-related-name {
     scroll-margin-top: calc(var(--masthead-h) + 5rem);
   }
-  .cf-row-teams,
-  .cf-row,
-  .cf-empty {
+  .cf-shelf .cf-row-teams,
+  .cf-results > .cf-list .cf-row-teams,
+  .cf-browse,
+  .cf-empty,
+  .cf-row {
     scroll-margin-top: calc(var(--masthead-h) + 7.5rem);
   }
 }
