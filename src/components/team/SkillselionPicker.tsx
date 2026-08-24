@@ -133,6 +133,14 @@ export function SkillselionPicker({
     onChange(picks.filter((p) => !(p.id === id && p.scope === scope)));
   }
 
+  function clearSearch() {
+    setQ("");
+    setFetched([]);
+    setFailed(false);
+    setOpen(false);
+    searchRef.current?.focus();
+  }
+
   return (
     <fieldset className="cz-group">
       <legend className="cz-legend">{en.customize.skills}</legend>
@@ -140,29 +148,36 @@ export function SkillselionPicker({
       <p className="cz-truth">{en.customize.skillsScopeLead}</p>
       <label className="cz-field">
         <span className="cz-field-label">{en.customize.skillsSearch}</span>
-        <input
-          ref={searchRef}
-          type="search"
-          className="cz-input"
-          placeholder={en.customize.skillsPlaceholder}
-          value={q}
-          onChange={(e) => {
-            setQ(e.target.value);
-            setOpen(true);
-            setActive(0);
-          }}
-          onFocus={() => setOpen(true)}
-          onKeyDown={onSearchKey}
-          autoComplete="off"
-          role="combobox"
-          aria-expanded={listOpen}
-          aria-controls={listId}
-          aria-autocomplete="list"
-          aria-activedescendant={listOpen ? activeId : undefined}
-          aria-busy={busy}
-          aria-invalid={failed || undefined}
-          aria-describedby={listOpen ? statusId : undefined}
-        />
+        <span className="cz-search-wrap">
+          <input
+            ref={searchRef}
+            type="search"
+            className="cz-input"
+            placeholder={en.customize.skillsPlaceholder}
+            value={q}
+            onChange={(e) => {
+              setQ(e.target.value);
+              setOpen(true);
+              setActive(0);
+            }}
+            onFocus={() => setOpen(true)}
+            onKeyDown={onSearchKey}
+            autoComplete="off"
+            role="combobox"
+            aria-expanded={listOpen}
+            aria-controls={listId}
+            aria-autocomplete="list"
+            aria-activedescendant={listOpen ? activeId : undefined}
+            aria-busy={busy}
+            aria-invalid={failed || undefined}
+            aria-describedby={listOpen ? statusId : undefined}
+          />
+          {q ? (
+            <button type="button" className="cz-search-clear" onClick={clearSearch}>
+              {en.customize.skillsClear}
+            </button>
+          ) : null}
+        </span>
       </label>
       {listOpen ? (
         <>
@@ -185,17 +200,7 @@ export function SkillselionPicker({
             <p id={statusId} className="cz-hint" role="status" aria-live="polite">
               {en.customize.skillsEmpty}
             </p>
-            <button
-              type="button"
-              className="cz-btn cz-btn-quiet"
-              onClick={() => {
-                setQ("");
-                setFetched([]);
-                setFailed(false);
-                setOpen(false);
-                searchRef.current?.focus();
-              }}
-            >
+            <button type="button" className="cz-btn cz-btn-quiet" onClick={clearSearch}>
               {en.customize.skillsClear}
             </button>
           </div>
