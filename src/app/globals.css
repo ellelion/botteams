@@ -5455,10 +5455,18 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 }
 .talk-computer .talk-card-copy { margin: 8px 0 6px; }
 .talk-computer .talk-check-compact { margin-top: 4px; }
+.talk-bubble .talk-check-compact {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 0.5px solid var(--talk-border);
+}
 .talk-check-compact li {
   font-size: 12px;
   line-height: 16px;
   color: var(--talk-soft);
+}
+.talk-entry.is-you .talk-check-compact li {
+  color: var(--talk-user-ink);
 }
 
 
