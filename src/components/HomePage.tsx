@@ -2,6 +2,7 @@ import Link from "next/link";
 import { TeamIndex } from "@/components/home/TeamIndex";
 import { RevealText } from "@/components/home/RevealText";
 import { HeroStats } from "@/components/home/HeroStats";
+import { StoryBeat } from "@/components/home/StoryBeat";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { WingsSplit } from "@/components/WingsSplit";
 import type { IndexQuery } from "@/lib/catalog-query";
@@ -48,7 +49,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
     <WingsSplit
       hero={
         <>
-          <section className={`story-beat relative flex min-h-0 flex-col items-center justify-center overflow-x-hidden py-3 pb-3 text-center lg:min-h-[calc(100dvh-var(--masthead-h))] lg:py-10 lg:pb-20${catalogActive ? " is-catalog-active" : ""}`}>
+          <StoryBeat catalogActive={catalogActive}>
             <div className="relative z-10 w-full max-w-full overflow-x-hidden px-1">
               <p className="home-hero-eyebrow hidden items-center justify-center gap-2 text-[0.62rem] uppercase tracking-[0.3em] lg:flex" style={{ color: ledger.accentText }}>
                 <GrokBotMark size={22} animate />
@@ -77,7 +78,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
             <Link href="/?kind=team" className="home-scroll-cue meta accent-hover absolute inset-x-0 bottom-5 z-10 mx-auto hidden w-max max-w-full lg:inline-flex items-center gap-2 whitespace-nowrap transition-colors lg:bottom-4">
               {en.home.scrollCue} <span aria-hidden>↓</span>
             </Link>
-          </section>
+          </StoryBeat>
           <section className="wings-hero-extra relative z-10 mx-auto max-w-xl pb-[var(--sec-y)] pt-[var(--sec-y)] text-center hidden lg:block">
             <h2 className="text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>{en.home.howTitle}</h2>
             <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.howBody}</p>
