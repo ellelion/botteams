@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
        ellelion SVG; keep the .png names so scrapers do not 404. */
     return [
       { source: "/icon.png", destination: "/icon.svg" },
-      { source: "/apple-icon.png", destination: "/apple-icon.svg" },
+      { source: "/apple-icon.png", destination: "/apple-icon" },
     ];
   },
 };
