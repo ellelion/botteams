@@ -79,6 +79,7 @@ export const en = {
     faqXaiQ: "Is botteams.ai affiliated with xAI?",
     faqXaiA:
       "No. Ellelion LLC operates this directory. From xAI on a Bot is sourcing from xAI's published use cases, not a certification.",
+    faqGuides: "Read the Grok Bot guides",
     sponsorsTitle: "Sponsor slots",
     sponsorsNote: "Twelve slots. Skillselion and Agent Plugins Directory are the first two.",
     available: "Available",
