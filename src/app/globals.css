@@ -630,8 +630,9 @@ body {
     grid-template-columns: repeat(4, 44px);
     gap: 8px;
     /* Same remaining-viewport token as the phone menu. 20rem wins at
-       100%; CSS zoom makes 100dvh larger than the painted pane. */
-    max-height: min(20rem, var(--menu-max-h, calc(100dvh - var(--masthead-h) - 32px)));
+       100%. Subtract 8px so the 8px gap under the trigger stays on
+       the glass at CSS zoom. */
+    max-height: min(20rem, calc(var(--menu-max-h, calc(100dvh - var(--masthead-h))) - 8px));
     overflow-y: auto;
     overscroll-behavior: contain;
   }
