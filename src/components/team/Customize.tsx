@@ -75,6 +75,7 @@ export function Customize({
   const [editing, setEditing] = useState(false);
   const [state, setState] = useState<CustomState>(() => defaultState(team));
   const { copied: shared, failed: shareFail, copyText } = useCopyFeedback();
+  const { copied: saved, failed: saveFail, pulse: pulseSave } = useCopyFeedback();
   const [liveHits, setLiveHits] = useState<Record<string, SkillselionHit>>({});
   const [resolvedHits, setResolvedHits] = useState<Record<string, true>>({});
   const [listingsFailed, setListingsFailed] = useState(false);
@@ -237,13 +238,18 @@ export function Customize({
   }
 
   function download() {
-    const blob = new Blob([toMarkdown(team, state)], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${team.slug}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
+    try {
+      const blob = new Blob([toMarkdown(team, state)], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${team.slug}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+      pulseSave("ok");
+    } catch {
+      pulseSave("fail");
+    }
   }
 
   /* The page hands us several sibling sections. Key them once so the
@@ -521,9 +527,12 @@ export function Customize({
             <span className="sr-only" role="status" aria-live="polite">
               {shareFail ? en.customize.shareFail : shared ? en.customize.shared : ""}
             </span>
-            <button type="button" className="cz-btn cz-btn-quiet" onClick={download}>
-              {en.customize.download}
+            <button type="button" className={`cz-btn cz-btn-quiet${saveFail ? " is-copy-fail" : ""}`} onClick={download}>
+              {saveFail ? en.customize.saveFail : saved ? en.customize.saving : en.customize.download}
             </button>
+            <span className="sr-only" role="status" aria-live="polite">
+              {saveFail ? en.customize.saveFail : saved ? en.customize.saving : ""}
+            </span>
           </div>
         </fieldset>
       </div>

@@ -40,6 +40,7 @@ export function useCopyFeedback(resetMs = 2000) {
     status,
     copied: status === "ok",
     failed: status === "fail",
+    pulse,
     copyText,
   };
 }
