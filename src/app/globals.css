@@ -1253,11 +1253,6 @@ a.chip-unverified:focus-visible {
 .wings-main-col { container-type: inline-size; }
 @container (max-width: 24rem) {
   .idx-cards { grid-template-columns: minmax(0, 1fr); }
-  .rp-chips,
-  .rp-room-grid,
-  .rp-connectors .connector-row {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .spec-table,
   .spec-table thead,
   .spec-table tbody {
@@ -4313,6 +4308,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 1.08;
+  overflow-wrap: anywhere;
 }
 .rp-job {
   margin-top: 5px;
@@ -4458,7 +4454,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .rp-chips,
 .rp-room-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* 10rem tracks collapse via min(100%) when the zoomed column is 177px.
+     A later unscoped 3-col rule used to override the early @container. */
+  grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
   gap: 14px 20px;
   margin-top: 12px;
   padding: 0;
@@ -4767,6 +4765,18 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 520px) {
   .rp-chips,
   .rp-room-grid { grid-template-columns: minmax(0, 1fr); }
+}
+/* Viewport media above never sees CSS zoom. Repeat the 1-col stack here
+   so it wins over the 3-col / auto-fit defaults. */
+@container (max-width: 24rem) {
+  .rp-chips,
+  .rp-room-grid,
+  .rp-connectors .connector-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* 3vw follows the 1280 layout viewport, so the title stayed 2.25rem
+     in a 177px column and "Reproduction" blew the pane by 30px. */
+  .rp-name { font-size: 1.4rem; }
 }
 @media (max-width: 1023px) {
   .rp-name { font-size: 1.4rem; }
