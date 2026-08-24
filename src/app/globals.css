@@ -3046,6 +3046,7 @@ a.chip-unverified:focus-visible {
   gap: 10px 12px;
 }
 .cz-panel {
+  min-width: 0;
   padding: 18px 0 4px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -3063,6 +3064,9 @@ a.chip-unverified:focus-visible {
   margin-top: 12px;
 }
 .cz-group {
+  /* Fieldset min-content is the nowrap mode row. At 200% that row is
+     wider than the sheet and the pane grows 8px past the glass. */
+  min-width: 0;
   margin-top: 22px;
   padding-top: 16px;
   border: 0;
@@ -3227,11 +3231,15 @@ button.cz-link:focus-visible { color: var(--ink); }
 .cz-conn-name .connector-fallback { width: 16px; height: 16px; }
 .cz-modes {
   display: inline-flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
   border: 1px solid var(--pill-line);
   border-radius: var(--r-pill);
   overflow: hidden;
 }
 .cz-mode {
+  min-width: 0;
   min-height: 30px;
   padding: 0 11px;
   border: 0;
@@ -4654,6 +4662,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .rp-sheet-body {
   flex: 1 1 auto;
+  min-width: 0;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
