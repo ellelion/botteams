@@ -5,7 +5,7 @@ export function grokTeamName(name: string): string {
 }
 export function grokBotName(name: string): string {
   const n = name.trim().replace(/\s+Grok Bot$/i, "").replace(/\s+Bot$/i, "").trim();
-  return n + " Grok Bot";
+  return n ? `${n} Grok Bot` : "";
 }
 
 export function grokRoomName(name: string): string {
@@ -26,6 +26,7 @@ function roleOnly(agentName: string): string {
 }
 
 export function grokMemberName(teamName: string, agentName: string): string {
+  if (!agentName.trim()) return "";
   const role = roleOnly(agentName);
   const base = grokTeamBase(teamName);
   const raw = agentName.replace(/\s+Grok Bot$/i, "").replace(/\s+Bot$/i, "").trim();
