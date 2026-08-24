@@ -1801,7 +1801,9 @@ a.chip-unverified:hover {
      off the viewport. */
   .wings-main-col:has(.index-tools) {
     padding-top: 0;
-    scroll-padding-top: 280px;
+    /* 320 clears search + filters + a chip row. 280 left the arrow
+       two pixels under the chips. */
+    scroll-padding-top: 320px;
   }
   .wings-main-col:has(.index-tools) #teams {
     padding-top: 1.5rem;
@@ -1809,7 +1811,7 @@ a.chip-unverified:hover {
   /* Keep "View team" under the sticky chrome while an expanded row
      is read, instead of sliding it under search + filters. */
   .row-arrow-link {
-    top: 280px;
+    top: 320px;
   }
 }
 
