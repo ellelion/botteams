@@ -8,7 +8,13 @@ const FOCUSABLE =
 function focusables(root: HTMLElement) {
   return [...root.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((el) => {
     if (el.hasAttribute("disabled") || el.getAttribute("aria-hidden") === "true") return false;
-    if (el.classList.contains("rp-scrim") || el.classList.contains("site-menu-scrim")) return false;
+    if (
+      el.classList.contains("rp-scrim") ||
+      el.classList.contains("site-menu-scrim") ||
+      el.classList.contains("talk-overlay-scrim")
+    ) {
+      return false;
+    }
     return true;
   });
 }

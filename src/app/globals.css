@@ -370,6 +370,13 @@ body {
 }
 .theme-control-label { transition: filter var(--dur) var(--ease), transform 150ms cubic-bezier(0.2, 0, 0, 1); }
 .theme-control-label:active { transform: scale(0.96); }
+.theme-control.theme-control-label:disabled,
+.theme-control-label:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: none;
+  transform: none;
+}
 .rp-secondary { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), transform 150ms cubic-bezier(0.2, 0, 0, 1); }
 .rp-secondary:active { transform: scale(0.96); }
 
@@ -1033,7 +1040,13 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .sel-button,
   .filter-views .filter-chip--icon,
   .row-arrow-link,
-  .rp-secondary {
+  .rp-secondary,
+  .cz-btn,
+  .cz-mode,
+  .cz-chip,
+  .share-btn,
+  .talk-watch-btn,
+  .talk-overlay-close {
     min-height: 44px;
   }
   .filter-views .filter-chip--icon { width: 44px; }
@@ -2350,6 +2363,16 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cz-mode + .cz-mode { border-left: 1px solid var(--line-strong); }
 .cz-mode:hover { color: var(--ink); }
 .cz-mode.is-on { background: var(--ink); color: var(--page); }
+.cz-skill-hits .cz-skill-opt {
+  cursor: pointer;
+  border-radius: var(--r-inner);
+  padding-inline: 8px;
+  margin-inline: -8px;
+}
+.cz-skill-hits .cz-skill-opt.is-active {
+  background: color-mix(in oklab, var(--accent-text) 8%, var(--surface));
+}
+.cz-skill-hits .cz-skill-opt .cz-btn { pointer-events: none; }
 
 /* Roster rows. A Bot that is off stays on the page, greyed, so turning it
    back on is one click and nothing is lost. */
@@ -2472,7 +2495,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  margin-bottom: 7px;
+  margin: 0 0 7px;
 }
 .cz-alert-warn .cz-alert-title { color: var(--ink-soft); }
 .cz-alert ul { color: var(--ink-soft); }
@@ -2811,6 +2834,26 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-size: 0.62rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+}
+.spon-field-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.spon-count {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.72rem;
+}
+.spon-field.is-full .spon-count { color: var(--accent-text); }
+.spon-field-hint {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
 }
 .spon-input,
 .spon-file {
@@ -3418,7 +3461,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .share-btn {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
+  min-height: 40px;
   padding: 0 13px;
   border: 1px solid var(--pill-line);
   border-radius: var(--r-pill);
@@ -4629,6 +4672,35 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   box-sizing: border-box;
   animation: talk-overlay-dim 220ms ease both;
 }
+.talk-overlay-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.talk-overlay-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--pill-line);
+  border-radius: var(--r-pill);
+  background: var(--surface-elevated);
+  color: var(--ink);
+  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.talk-overlay-close:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
 .talk-overlay-canvas {
   position: relative;
   z-index: 1;
@@ -4673,13 +4745,19 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 .talk-watch-btn {
   display: inline-flex;
   align-items: center;
-  margin-top: 0.65rem;
+  min-height: 44px;
+  margin-top: 0.35rem;
+  padding: 0 2px;
   font-size: 0.8rem;
   color: var(--accent-text);
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
 .talk-watch-btn:hover { border-bottom-color: var(--accent-text); }
+.talk-watch-btn:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+}
 .talk-watch-inline {
   display: inline;
   margin-left: 0.6rem;

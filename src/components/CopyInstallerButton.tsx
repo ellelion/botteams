@@ -1,11 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { en } from "@/lib/messages/en";
 
 /* Clipboard only. The shelf does not count copies: a number nobody can
    verify is worse than no number. */
-export function CopyInstallerButton({ text, disabled = false }: { text: string; disabled?: boolean }) {
+export function CopyInstallerButton({
+  text,
+  disabled = false,
+  disabledReason,
+}: {
+  text: string;
+  disabled?: boolean;
+  disabledReason?: string;
+}) {
+  const reasonId = useId();
   const [copied, setCopied] = useState(false);
   const [failed, setFailed] = useState(false);
   const timer = useRef<number>(0);
@@ -25,7 +34,13 @@ export function CopyInstallerButton({ text, disabled = false }: { text: string; 
     }
   }
 
-  const label = failed ? en.team.copyFail : copied ? en.team.copied : en.team.copy;
+  const label = disabled
+    ? en.customize.blocked
+    : failed
+      ? en.team.copyFail
+      : copied
+        ? en.team.copied
+        : en.team.copy;
 
   return (
     <button
@@ -34,9 +49,12 @@ export function CopyInstallerButton({ text, disabled = false }: { text: string; 
       onClick={onCopy}
       disabled={disabled}
       aria-disabled={disabled}
+      title={disabled ? disabledReason : undefined}
+      aria-describedby={disabled && disabledReason ? reasonId : undefined}
       aria-live="polite"
     >
       {label}
+      {disabled && disabledReason ? <span id={reasonId} className="sr-only">{disabledReason}</span> : null}
     </button>
   );
 }

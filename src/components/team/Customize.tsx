@@ -1,6 +1,6 @@
 "use client";
 
-import { grokBotName, grokDisplayBotName, grokMemberName, grokRecipeTitle } from "@/lib/grok-names";
+import { grokDisplayBotName, grokMemberName, grokRecipeTitle } from "@/lib/grok-names";
 import { Children, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { ConnectorRow } from "@/components/ConnectorRow";
@@ -62,7 +62,11 @@ export function Customize({
 }) {
   const [sheet, setSheet] = useState<"customize" | null>(null);
   const sheetId = useId();
+  const overwriteTitleId = useId();
+  const overwriteBodyId = useId();
+  const modeHintId = useId();
   const sheetRef = useRef<HTMLDivElement>(null);
+  const overwriteRef = useRef<HTMLDivElement>(null);
   const closeSheet = useCallback(() => setSheet(null), []);
   /* Portals need a document, so nothing renders one until after hydration. */
   const [mounted, setMounted] = useState(false);
@@ -99,6 +103,11 @@ export function Customize({
   }, [team]);
 
   useDialogChrome({ open: sheet !== null && mounted, rootRef: sheetRef, onClose: closeSheet });
+
+  useEffect(() => {
+    if (!pending) return;
+    overwriteRef.current?.querySelector<HTMLButtonElement>("button")?.focus();
+  }, [pending]);
 
   const askedHits = useRef<Set<string>>(new Set());
   useEffect(() => {
@@ -230,7 +239,7 @@ export function Customize({
         </div>
       ) : null}
       {verdict.warnings.length > 0 ? (
-        <div className="cz-alert cz-alert-warn">
+        <div className="cz-alert cz-alert-warn" role="status">
           <p className="cz-alert-title">{en.customize.warn}</p>
           <ul>{verdict.warnings.map((w) => <li key={w}>{w}</li>)}</ul>
           <p className="cz-alert-foot">{en.customize.copyAnyway}</p>
@@ -254,9 +263,15 @@ export function Customize({
   );
 
   const overwritePart = pending ? (
-      <div className="cz-alert cz-alert-stop" role="alertdialog" aria-label={en.customize.overwriteTitle}>
-        <p className="cz-alert-title">{en.customize.overwriteTitle}</p>
-        <p>{en.customize.overwriteBody}</p>
+      <div
+        ref={overwriteRef}
+        className="cz-alert cz-alert-stop"
+        role="alertdialog"
+        aria-labelledby={overwriteTitleId}
+        aria-describedby={overwriteBodyId}
+      >
+        <h3 id={overwriteTitleId} className="cz-alert-title">{en.customize.overwriteTitle}</h3>
+        <p id={overwriteBodyId}>{en.customize.overwriteBody}</p>
         <div className="cz-alert-actions">
           <button
             type="button"
@@ -310,6 +325,7 @@ export function Customize({
                         className={`cz-mode${mode === m ? " is-on" : ""}`}
                         aria-pressed={mode === m}
                         title={MODE_HINT[m]}
+                        aria-describedby={`${modeHintId}-${m}`}
                         onClick={() => patch({ modes: { ...state.modes, [connector]: m } })}
                       >
                         {MODE_LABEL[m]}
@@ -320,6 +336,11 @@ export function Customize({
               );
             })}
           </ul>
+          <div className="sr-only">
+            {MODES.map((m) => (
+              <p key={m} id={`${modeHintId}-${m}`}>{MODE_HINT[m]}</p>
+            ))}
+          </div>
           {readish.length > 0 ? <p className="cz-hint mt-3">{en.customize.pluginsNote(readish.join(", "))}</p> : null}
         </fieldset>
 
@@ -579,7 +600,11 @@ export function Customize({
             <p className="rp-job">{team.tagline}</p>
           </div>
           <div className="rp-head-act">
-            <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
+            <CopyInstallerButton
+              text={verdict.canCopy ? prompt : ""}
+              disabled={!verdict.canCopy}
+              disabledReason={verdict.errors[0]}
+            />
             {/* Secondary on purpose. Copy is the transaction. */}
             <button
               type="button"
@@ -705,13 +730,17 @@ export function Customize({
           leaves the URL exactly as it was. */}
       {sheet !== null && mounted
         ? createPortal(
-        <div id={sheetId} ref={sheetRef} className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-label={en.customize.title}>
+        <div id={sheetId} ref={sheetRef} className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-labelledby={`${sheetId}-title`}>
           <button type="button" className="rp-scrim" aria-label={en.recipe.close} onClick={closeSheet} />
           <div className="rp-sheet">
             <div className="rp-sheet-head">
-              <p className="rc-h2">{en.customize.title}</p>
+              <h2 id={`${sheetId}-title`} className="rc-h2">{en.customize.title}</h2>
               <div className="rp-sheet-act">
-                <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
+                <CopyInstallerButton
+              text={verdict.canCopy ? prompt : ""}
+              disabled={!verdict.canCopy}
+              disabledReason={verdict.errors[0]}
+            />
                 <button type="button" className="rp-secondary" onClick={closeSheet}>{en.recipe.close}</button>
               </div>
             </div>
