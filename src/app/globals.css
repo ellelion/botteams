@@ -1035,10 +1035,10 @@ a.chip-unverified:hover {
     content: attr(data-label);
     display: block;
     margin-bottom: 2px;
-    color: var(--muted-strong);
-    font: 500 0.62rem/1.2 var(--font-geist-mono), ui-monospace, monospace;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    color: var(--ink-soft);
+    font: 500 11px/1.3 var(--font-geist-sans), system-ui, sans-serif;
+    letter-spacing: 0;
+    text-transform: none;
   }
 }
 
