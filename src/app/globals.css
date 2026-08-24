@@ -975,6 +975,13 @@ a.chip-unverified:hover {
   text-transform: uppercase;
   margin-bottom: 8px;
 }
+/* Docs, sponsor, about, and the other data pages used a 0.6rem / 0.26em
+   utility trio for H2s. That is 9.6px with tracking so wide the words
+   fall apart. Match the recipe eyebrow. */
+.text-\[0\.6rem\].uppercase.tracking-\[0\.26em\] {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
 
 .section-title {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
@@ -1308,9 +1315,9 @@ a.chip-unverified:hover {
   border-radius: var(--r-pill);
   background: var(--surface);
   color: var(--ink-soft);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
@@ -1746,9 +1753,9 @@ a.chip-unverified:hover {
   align-items: center;
   min-height: 44px;
   color: var(--accent-text);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
   list-style: none;
 }
@@ -3065,10 +3072,10 @@ html[data-theme="light"] .cz-check input:checked {
 }
 .spon-live-kicker {
   margin: 22px 0 0;
-  color: var(--muted);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  color: var(--ink-soft);
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .spon-live {
   margin: 10px 0 0;
@@ -3993,9 +4000,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   border-radius: var(--r-pill);
   background: transparent;
   color: var(--ink-soft);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
 }
 .share-btn { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
@@ -4428,10 +4435,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .side-rail--left,
 .side-rail--right { display: none; }
 .side-rail-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  line-height: 1.4;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   margin: 0 0 12px;
   padding-block: 0.25em;
   overflow: visible;
@@ -5215,9 +5221,9 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   border-radius: var(--r-pill);
   background: var(--surface-elevated);
   color: var(--ink);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
 }
 .talk-overlay-close:focus-visible {
