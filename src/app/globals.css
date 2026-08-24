@@ -154,7 +154,10 @@ body {
   left: max(12px, env(safe-area-inset-left));
   top: max(8px, env(safe-area-inset-top));
   z-index: 200;
-  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
   border-radius: var(--r-pill);
   background: var(--ink);
   color: var(--page);
@@ -2131,8 +2134,8 @@ a.chip-unverified:hover {
 }
 .cf-chip.is-on .cf-chip-icon { opacity: 1; }
 .cf-count {
-  color: var(--muted);
-  font-size: 0.68rem;
+  color: var(--ink-soft);
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 .cf-chip.is-on .cf-count { color: var(--page); opacity: .7; }
@@ -2302,7 +2305,7 @@ a.chip-unverified:hover {
 .sel-caption {
   padding-inline: 4px;
   color: var(--ink-soft);
-  font: 500 0.68rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
 }
 .sel.has-caption .sel-button { max-width: 100%; width: 100%; }
 .sel-button {
@@ -2394,8 +2397,8 @@ a.chip-unverified:hover {
 }
 .sel-count {
   flex: none;
-  color: var(--muted);
-  font-size: 0.68rem;
+  color: var(--ink-soft);
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -4699,6 +4702,9 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   --talk-user: #f2f1ef;
   --talk-user-ink: #111110;
   --talk-border: rgba(237, 236, 236, 0.1);
+  --talk-badge: #8fd4dc;
+  --talk-badge-work: #e8b84a;
+  --talk-badge-done: #5ee0a8;
   --talk-r: 24px;
   --talk-sidebar: 280px;
   display: flex;
@@ -4730,6 +4736,9 @@ html:not([data-theme="dark"]) .talk-stage {
   --talk-user: #111110;
   --talk-user-ink: #ffffff;
   --talk-border: rgba(20, 20, 20, 0.15);
+  --talk-badge: #0e5963;
+  --talk-badge-work: #7a4f08;
+  --talk-badge-done: #166534;
 }
 html[data-theme="dark"] .talk-stage {
   --talk-text: #edecec;
@@ -4741,6 +4750,9 @@ html[data-theme="dark"] .talk-stage {
   --talk-user: #f2f1ef;
   --talk-user-ink: #111110;
   --talk-border: rgba(237, 236, 236, 0.1);
+  --talk-badge: #8fd4dc;
+  --talk-badge-work: #e8b84a;
+  --talk-badge-done: #5ee0a8;
 }
 .talk-titlebar {
   flex: none;
@@ -4855,9 +4867,8 @@ html[data-theme="dark"] .talk-stage {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  height: 44px;
   min-height: 44px;
-  padding: 0 16px;
+  padding: 6px 16px;
   border-bottom: 0.5px solid var(--talk-border);
 }
 .talk-head-who { display: flex; align-items: center; gap: 8px; min-width: 0; }
@@ -4908,7 +4919,9 @@ html[data-theme="dark"] .talk-stage {
   border: 0;
   background: transparent;
   color: inherit;
-  font-size: 10px;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
   min-width: 52px;
   padding: 0;
 }
@@ -5013,11 +5026,12 @@ html[data-theme="dark"] .talk-stage {
   align-items: center;
   gap: 6px;
   border-radius: 999px;
-  padding: 0 7px;
-  height: 19px;
-  font-size: 12px;
+  padding: 2px 8px;
+  min-height: 22px;
+  height: auto;
+  font-size: 11px;
   background: color-mix(in srgb, #64b5ff 14%, transparent);
-  color: #156e7a;
+  color: var(--talk-badge);
 }
 .talk-card-badge i {
   width: 5px;
@@ -5025,8 +5039,8 @@ html[data-theme="dark"] .talk-stage {
   border-radius: 99px;
   background: currentColor;
 }
-.talk-card.is-work .talk-card-badge { background: color-mix(in srgb, #e8a33d 16%, transparent); color: #9a6b12; }
-.talk-card.is-done .talk-card-badge { background: color-mix(in srgb, #4cc79b 16%, transparent); color: #1f7a58; }
+.talk-card.is-work .talk-card-badge { background: color-mix(in srgb, #e8a33d 16%, transparent); color: var(--talk-badge-work); }
+.talk-card.is-done .talk-card-badge { background: color-mix(in srgb, #4cc79b 16%, transparent); color: var(--talk-badge-done); }
 .talk-card-copy { margin: 8px 0 0; font-size: 13px; line-height: 18px; color: var(--talk-soft); }
 .talk-computer { max-width: min(560px, 100%); }
 .talk-screen {
@@ -5456,6 +5470,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
    same class. iPad + trackpad is pointer: fine, so width has to be
    in this query too. */
 @media (pointer: coarse), (max-width: 1023px) {
+  .skip-link,
   .search-clear,
   .browse-pick-btn,
   .idx-chip,
