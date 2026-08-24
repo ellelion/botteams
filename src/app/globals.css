@@ -136,6 +136,87 @@
 /* Paragraph inside a data page. Never the page, only the sentence. */
 .measure { max-width: var(--w-measure); }
 
+/* Long-form guide. Sentence-case headings. team-prose uppercases H2s
+   for recipe notes; a query heading cannot survive that. */
+.guide-prose {
+  max-width: var(--w-measure);
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+.guide-prose > * + * {
+  margin-top: 1rem;
+}
+.guide-prose h2 {
+  margin-top: 2.75rem;
+  color: var(--ink);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+.guide-prose h2:first-child {
+  margin-top: 0.25rem;
+}
+.guide-prose h3 {
+  margin-top: 1.75rem;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+.guide-prose ol,
+.guide-prose ul {
+  padding-left: 1.2rem;
+}
+.guide-prose ol {
+  list-style: decimal;
+}
+.guide-prose ul {
+  list-style: disc;
+}
+.guide-prose li + li {
+  margin-top: 0.45rem;
+}
+.guide-prose a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.guide-prose a:hover,
+.guide-prose a:focus-visible {
+  color: var(--accent-text);
+}
+.guide-prose .guide-toc {
+  margin: 1.25rem 0 0;
+}
+.guide-quote {
+  margin: 1.35rem 0 0;
+  padding: 0.15rem 0 0.15rem 1rem;
+  border-left: 1px solid var(--line-strong);
+}
+.guide-quote blockquote {
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.guide-quote figcaption {
+  margin-top: 0.55rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+.guide-source {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+.guide-faq section + section {
+  margin-top: 0.25rem;
+}
+
 html { background: var(--page); }
 body {
   background: var(--page);

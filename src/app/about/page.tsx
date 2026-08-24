@@ -20,7 +20,12 @@ export default function AboutPage() {
         <p>
           A team here is one markdown file. It names the Bots, the group chat they share, the routines each Bot owns, and
           the connectors your account needs first. The site turns that file into one installer prompt you paste into Grok
-          Bot. A bot is the same thing with a single Bot and no group chat.
+          Bot. A bot is the same thing with a single Bot and no group chat. The product those recipes run on is explained
+          in{" "}
+          <Link className="accent-hover underline" href="/grok-bot">
+            the Grok Bot guide
+          </Link>
+          .
         </p>
         <p>
           Every recipe is in the open at{" "}
