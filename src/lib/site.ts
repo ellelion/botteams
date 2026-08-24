@@ -44,6 +44,20 @@ export const XAI_DOCS = {
 /* Date this directory last read the Grok Bot docs end to end. */
 export const GROK_BOT_GUIDE_UPDATED = "2026-08-24";
 
+/* Date the /guides cluster was verified against live vendor docs. */
+export const GUIDES_UPDATED = "2026-08-24";
+
+export const COMPARE_DOCS = {
+  coworkOverview: "https://claude.com/docs/cowork/overview",
+  coworkGetStarted: "https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork",
+  chatgptWorkHelp: "https://help.openai.com/en/articles/20001275-chatgpt-work-and-codex",
+  chatgptWorkLaunch: "https://openai.com/index/chatgpt-for-your-most-ambitious-work/",
+  cursorCloudAgent: "https://cursor.com/docs/cloud-agent",
+  devinIntro: "https://docs.devin.ai/get-started/devin-intro",
+  manusWelcome: "https://manus.im/docs/introduction/welcome",
+  manusBlog: "https://manus.im/blog/best-ai-agents-customer-service",
+} as const;
+
 /* xAI's public gallery of Grok Bot use cases. Cited on every recipe we
    directory from it. Sourcing, never endorsement: nothing on this site is
    certified by xAI. */
