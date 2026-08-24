@@ -948,6 +948,36 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   letter-spacing: 0;
   text-transform: none;
 }
+@media (max-width: 639px) {
+  .spec-table,
+  .spec-table tbody {
+    display: block;
+    width: 100%;
+  }
+  .spec-table tr {
+    display: grid;
+    gap: 6px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .spec-table tr:has(> th[scope="col"]) { display: none; }
+  .spec-table th,
+  .spec-table td {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+  .spec-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    color: var(--muted-strong);
+    font: 500 0.62rem/1.2 var(--font-geist-mono), ui-monospace, monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+}
 
 .stats-strip {
   display: flex;
@@ -1562,6 +1592,22 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   list-style: none;
 }
 .doc-toc-sum::-webkit-details-marker { display: none; }
+.doc-toc-sum::after {
+  content: "";
+  margin-left: auto;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--dur) var(--ease);
+}
+.doc-toc-fold[open] .doc-toc-sum::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .doc-toc-sum::after { transition: none; }
+}
 .doc-toc-sum:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .doc-jump {
   display: flex;
@@ -1596,6 +1642,22 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   letter-spacing: -0.02em;
 }
 .spon-faq summary::-webkit-details-marker { display: none; }
+.spon-faq summary::after {
+  content: "";
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--muted-strong);
+  border-bottom: 1.5px solid var(--muted-strong);
+  transform: rotate(45deg);
+  transition: transform var(--dur) var(--ease);
+}
+.spon-faq details[open] summary::after {
+  transform: translateY(3px) rotate(-135deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .spon-faq summary::after { transition: none; }
+}
 .spon-faq details p {
   padding: 0 0 16px;
   color: var(--ink-soft);
@@ -1612,8 +1674,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   list-style: none;
   margin: 0;
   padding: 0;
-  color: var(--muted);
-  font-size: 0.72rem;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
   line-height: 1.4;
 }
 .crumb-list li:not(:last-child)::after {

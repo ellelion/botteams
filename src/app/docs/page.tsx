@@ -82,13 +82,13 @@ export default function DocsPage() {
           <caption className="sr-only">Bot recipes versus team recipes</caption>
           <tbody>
             <tr><th scope="col"><span className="sr-only">Field</span></th><th scope="col">bots/</th><th scope="col">teams/</th></tr>
-            <tr><th scope="row"><code>kind</code></th><td><code>bot</code></td><td><code>team</code></td></tr>
-            <tr><th scope="row"><code>bots</code></th><td>Always 1</td><td>2 to 6, matching <code>agents</code></td></tr>
-            <tr><th scope="row"><code>agents</code></th><td>Exactly one</td><td>One per Bot</td></tr>
-            <tr><th scope="row"><code>rooms</code></th><td>Forbidden. Empty or absent</td><td>Required. Each holds 2 to 6 Bots</td></tr>
-            <tr><th scope="row"><code>routines</code></th><td>0 to 50 per owning Bot</td><td>0 to 50 per owning Bot</td></tr>
-            <tr><th scope="row">Verified</th><td>Never</td><td>When the roster fits the limits</td></tr>
-            <tr><th scope="row">URL</th><td><code>/bots/&lt;slug&gt;</code></td><td><code>/teams/&lt;slug&gt;</code></td></tr>
+            <tr><th scope="row"><code>kind</code></th><td data-label="bots/"><code>bot</code></td><td data-label="teams/"><code>team</code></td></tr>
+            <tr><th scope="row"><code>bots</code></th><td data-label="bots/">Always 1</td><td data-label="teams/">2 to 6, matching <code>agents</code></td></tr>
+            <tr><th scope="row"><code>agents</code></th><td data-label="bots/">Exactly one</td><td data-label="teams/">One per Bot</td></tr>
+            <tr><th scope="row"><code>rooms</code></th><td data-label="bots/">Forbidden. Empty or absent</td><td data-label="teams/">Required. Each holds 2 to 6 Bots</td></tr>
+            <tr><th scope="row"><code>routines</code></th><td data-label="bots/">0 to 50 per owning Bot</td><td data-label="teams/">0 to 50 per owning Bot</td></tr>
+            <tr><th scope="row">Verified</th><td data-label="bots/">Never</td><td data-label="teams/">When the roster fits the limits</td></tr>
+            <tr><th scope="row">URL</th><td data-label="bots/"><code>/bots/&lt;slug&gt;</code></td><td data-label="teams/"><code>/teams/&lt;slug&gt;</code></td></tr>
           </tbody>
         </table>
 
@@ -96,7 +96,7 @@ export default function DocsPage() {
         <p className="measure mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           A <strong>From xAI</strong> chip means the job is our write-up of one xAI publishes in its{" "}
           <a className="accent-hover underline underline-offset-2" href={XAI_USE_CASE_GALLERY} rel="nofollow noopener noreferrer">Grok Bot use-case gallery</a>.
-          It is sourcing and nothing more. It is not a certification, it is not Verified, and xAI does not review, endorse, or
+          It is sourcing and nothing more. It is not a certification, it is not Verified, and xAI does not review or
           endorse anything on this directory. The title and the category are theirs. The Bot, the connectors, the modes and the
           standing instructions are ours.
         </p>

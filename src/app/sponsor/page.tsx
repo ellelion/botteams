@@ -188,6 +188,7 @@ export default async function SponsorPage() {
                       target="_blank"
                       rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
                       style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
+                      aria-label={`${slot.name}. ${en.nav.opensNew}`}
                     >
                       {slot.mark ? (
                         // eslint-disable-next-line @next/next/no-img-element
