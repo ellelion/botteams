@@ -414,6 +414,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
 
   const categoryLabel = categoryOptions.find((option) => option.value === sectionParam)?.label;
   const hasFilters = Boolean(query.trim()) || sectionParam !== "all" || integrationParam !== "all";
+  const onlyQuery = Boolean(query.trim()) && sectionParam === "all" && integrationParam === "all";
 
   function clearFilters() {
     setQuery("");
@@ -424,10 +425,17 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
   const listing = sorted.length === 0 ? (
     <div className={`idx-empty${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
       <p className="idx-empty-title">{en.home.emptyTitle(query.trim())}</p>
-      <p className="idx-empty-body">{en.home.emptyBody}</p>
-      <button type="button" className="cf-browse" onClick={clearFilters}>
-        {en.home.clearFilters}
-      </button>
+      <p className="idx-empty-body">{onlyQuery ? en.home.emptyBodySearch : en.home.emptyBodyFilters}</p>
+      <nav className="notfound-nav" aria-label={en.home.emptyNav}>
+        <button type="button" className="cf-browse" onClick={clearFilters}>
+          {onlyQuery ? en.home.clearSearch : en.home.clearFilters}
+        </button>
+        {kindParam !== "all" ? (
+          <Link href="/?kind=all" className="theme-control theme-control-label">
+            {en.home.emptySeeAll}
+          </Link>
+        ) : null}
+      </nav>
     </div>
   ) : view === "cards" ? (
     <div className={`idx-cards${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
@@ -702,7 +710,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
                 </button>
               ) : null}
               <button type="button" className="idx-chip-clear" onClick={clearFilters}>
-                {en.home.clearFilters}
+                {onlyQuery ? en.home.clearSearch : en.home.clearFilters}
               </button>
             </div>
           ) : null}

@@ -121,7 +121,10 @@ export const en = {
         ? `${shown} ${shown === 1 ? "result" : "results"}`
         : `${shown} of ${total} ${total === 1 ? "result" : "results"}`,
     emptyTitle: (q: string) => (q ? `Nothing matches "${q}".` : "Nothing matches those filters."),
-    emptyBody: "Try another word, or clear the filters to see the whole shelf.",
+    emptyBodySearch: "Try another word, or clear the search.",
+    emptyBodyFilters: "Try another word, or clear the filters.",
+    emptyNav: "Empty results",
+    emptySeeAll: "See teams and Bots",
     clearFilters: "Clear filters",
     loading: "Loading teams",
     updating: "Updating",
