@@ -1220,6 +1220,7 @@ a.chip-unverified:hover {
   .cf-clear,
   .theme-control-label,
   .cz-advanced summary,
+  .roster-shape-routines summary,
   button.cz-link,
   p.cz-hint a.cz-link,
   .crumb-list a,
@@ -1289,6 +1290,7 @@ a.chip-unverified:hover {
   .theme-control-label,
   .cz-skill-scope .sel-button,
   .cz-advanced summary,
+  .roster-shape-routines summary,
   button.cz-link,
   p.cz-hint a.cz-link,
   .crumb-list a,
@@ -3764,6 +3766,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .roster-shape {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   font-size: 13px;
@@ -3790,16 +3793,26 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .roster-shape-n { font-variant-numeric: tabular-nums; }
 .roster-shape-routines {
   position: relative;
-  cursor: default;
+  display: inline;
 }
+.roster-shape-routines summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  cursor: pointer;
+  list-style: none;
+}
+.roster-shape-routines summary::-webkit-details-marker { display: none; }
+.roster-shape-routines summary::marker { content: ""; }
 .roster-shape-tip {
   display: none;
   position: absolute;
   left: 0;
   top: calc(100% + 8px);
   z-index: 20;
-  min-width: 16rem;
-  max-width: 24rem;
+  min-width: 0;
+  width: max-content;
+  max-width: min(20rem, calc(100vw - 2rem));
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: var(--r-inner);
@@ -3807,9 +3820,27 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   text-transform: none;
   letter-spacing: 0;
   white-space: normal;
+  overflow-wrap: anywhere;
 }
-.roster-shape-routines:hover .roster-shape-tip,
-.roster-shape-routines:focus-within .roster-shape-tip { display: flex; flex-direction: column; gap: 8px; }
+.roster-shape-routines[open] > .roster-shape-tip {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+@media (max-width: 1023px) {
+  .roster-shape-routines[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1 1 100%;
+  }
+  .roster-shape-tip {
+    position: static;
+    width: auto;
+    max-width: none;
+    margin-top: 8px;
+  }
+}
 .roster-shape-tip-row { display: flex; flex-direction: column; gap: 2px; }
 .roster-shape-tip-row strong {
   font: 500 0.78rem/1.25 var(--font-geist-sans), system-ui, sans-serif;
@@ -5775,6 +5806,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .foot-grok,
   .cz-skill-scope .sel-button,
   .cz-advanced summary,
+  .roster-shape-routines summary,
   button.cz-link,
   p.cz-hint a.cz-link,
   .crumb-list a,
