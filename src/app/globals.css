@@ -3055,13 +3055,16 @@ a.chip-unverified:focus-visible {
   overflow: hidden;
 }
 
-/* Roster rows. A Bot that is off stays on the page, greyed, so turning it
-   back on is one click and nothing is lost. */
+/* Roster rows. A Bot that is off stays on the page, quieter, so turning
+   it back on is one click and nothing is lost. Opacity 0.5 on the whole
+   row painted light-theme type at ~3.7:1 and faded the checkbox with it. */
 .cz-bot {
   padding: 12px 0;
   border-bottom: 1px solid var(--line);
 }
-.cz-bot.is-off { opacity: 0.5; }
+.cz-bot.is-off,
+.cz-bot.is-off .cz-bot-persona,
+.cz-bot.is-off .cz-hint { color: var(--muted); }
 .cz-bot-top {
   display: flex;
   align-items: center;
