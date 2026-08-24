@@ -102,17 +102,20 @@ export const en = {
     expand: (title: string) => `Expand ${title}`,
     collapse: (title: string) => `Collapse ${title}`,
     browseLabel: "Browse",
-    categoriesAria: "Team categories",
+    categoriesAria: (kind: "team" | "bot" | "all") =>
+      kind === "bot" ? "Bot categories" : kind === "all" ? "Categories" : "Team categories",
     filterCategory: "Filter by category",
     filterConnector: "Filter by connector",
     filterConnectorShort: "Connector",
     anyConnector: "Any connector",
-    sortLabel: "Sort teams",
+    sortLabel: (kind: "team" | "bot" | "all") =>
+      kind === "bot" ? "Sort Bots" : kind === "all" ? "Sort teams and Bots" : "Sort teams",
     sortShort: "Sort",
     sortNewest: "Newly added",
     sortName: "A to Z",
     specCta: "Team spec",
-    searchLabel: "Search teams",
+    searchLabel: (kind: "team" | "bot" | "all") =>
+      kind === "bot" ? "Search Bots" : kind === "all" ? "Search teams and Bots" : "Search teams",
     searchPlaceholder: "Name, job, Bot",
     searchKbd: "/",
     clearSearch: "Clear search",

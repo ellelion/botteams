@@ -505,7 +505,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
           {integrationParam !== "all" ? <input type="hidden" name="integration" value={integrationParam} /> : null}
           {sortParam === "name" ? <input type="hidden" name="sort" value="name" /> : null}
           <label className="search-field">
-            <span className="sr-only">{en.home.searchLabel}</span>
+            <span className="sr-only">{en.home.searchLabel(kindParam)}</span>
             <svg className="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
               <circle cx="11" cy="11" r="7" />
               <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
@@ -589,7 +589,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
           ref={categoriesRef.ref}
           className={`cat-rail scroll-fade${categoriesRef.edges.start ? " has-start" : ""}${categoriesRef.edges.end ? " has-end" : ""}`}
           role="radiogroup"
-          aria-label={en.home.categoriesAria}
+          aria-label={en.home.categoriesAria(kindParam)}
           onKeyDown={(event) => {
             const ids = categoryOptions.map((option) => option.value);
             const index = Math.max(0, ids.indexOf(sectionParam));
@@ -642,7 +642,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
               />
               <Select
                 id="index-sort"
-                label={en.home.sortLabel}
+                label={en.home.sortLabel(kindParam)}
                 caption={en.home.sortShort}
                 value={sortParam}
                 options={sortOptions}
