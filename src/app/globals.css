@@ -1727,6 +1727,7 @@ a.chip-unverified:hover {
   text-decoration: underline;
 }
 .idx-chip:hover { background: var(--surface-elevated); }
+.idx-chip-clear:hover { color: var(--ink); }
 .idx-empty {
   margin-top: 18px;
   padding: 36px 24px;
@@ -4573,10 +4574,17 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   background: transparent;
 }
 .idx-card.idx-ad {
-  gap: 6px;
-  padding: 14px;
-  border: 1px dashed var(--line);
-  border-radius: 10px;
+  gap: 8px;
+  padding: 28px 26px 24px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-card);
+  background: var(--card);
+}
+.idx-card.idx-ad .idx-ad-body,
+.idx-card.idx-ad .idx-ad-name {
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
 }
 .index-ad-open { border-bottom-style: dashed; }
 .idx-ad-kicker {
