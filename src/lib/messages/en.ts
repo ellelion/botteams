@@ -194,6 +194,7 @@ export const en = {
     watchBot: "Watch this Bot",
     watchLabel: "Team conversation",
     watchLabelBot: "Bot conversation",
+    watchTyping: "A Bot is typing",
     bots: "bots",
     botCount: (n: number) => (n === 1 ? "1 Bot" : `${n} Bots`),
     section: "Sidebar section",
