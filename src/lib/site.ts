@@ -1,3 +1,4 @@
+/* Public name is botteams.ai. Never grokbotteams.ai in user-facing copy. */
 export const site = {
   name: "botteams.ai",
   updatedAt: "2026-08-24",
@@ -10,7 +11,6 @@ export const site = {
   email: "info@ellelion.com",
   address: "30 N Gould St Ste R, Sheridan, WY 82801, United States",
   github: "https://github.com/ellelion/botteams",
-  typeInDomain: "grokbotteam.ai",
   entity:
     "botteams.ai is a public directory of company teams for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
   /* The other Ellelion products. They are not "sisters", they are the

@@ -15,6 +15,8 @@ export type RailInterval = (typeof RAIL_INTERVALS)[number];
 
 /* Checkout, webhook, and setup must agree on these or a paid session
    is silently dropped. */
+/* Internal Stripe/checkout metadata. Public name is botteams.ai. Do not
+   print this string on the site. */
 export const RAIL_BRAND = "grokbotteams";
 export const RAIL_PLACEMENT = "side-rail";
 

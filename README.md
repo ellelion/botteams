@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://botteams.ai">
+    <img src="docs/readme-hero.png" alt="botteams.ai: company teams for Grok Bot" width="800" />
+  </a>
+</p>
+
 # Grok Bot Teams
 
 Install a Grok Bot team, not a bot.
@@ -6,10 +12,7 @@ A public directory of company teams for Grok Bot. Pick a team, copy one installe
 prompt, paste it into Grok Bot. It creates the named Bots, the group chat, and
 proposes the routines for you to confirm.
 
-No accounts on this site. No plugin API. No one-click OAuth. Connectors have to
-be on your Grok Bot account already.
-
-Ellelion LLC · info@ellelion.com · MIT · **Not affiliated with xAI.**
+[botteams.ai](https://botteams.ai) · no accounts · MIT · not affiliated with xAI
 
 ## The directory is a repo
 
@@ -17,8 +20,9 @@ A team is one markdown file in [`teams/`](./teams). Front matter names the Bots,
 the group chat, the routines, and the connectors. The installer prompt is
 generated from it, so the file is the product and GitHub is the CMS.
 
-To add one, read [CONTRIBUTING.md](./CONTRIBUTING.md). The bar is that you ran
-it end to end.
+To add one, copy [`docs/examples/sample-team.md`](./docs/examples/sample-team.md)
+or [`docs/examples/sample-bot.md`](./docs/examples/sample-bot.md) and read
+[CONTRIBUTING.md](./CONTRIBUTING.md). The bar is that you ran it end to end.
 
 ## Pages
 
@@ -102,13 +106,10 @@ Node 22.12.0 (see `.nvmrc`).
 
 A row is a **team**. The unit is a **Bot**, capital B. Group chats hold two to six Bots. No em-dashes.
 
-`status: team` is a team you can install. `status: example` is a format demo.
-The folder, the route, the type, and the copy all say team. There is no
-older spelling kept alive as an alias: nothing had shipped to anyone, so a
-second name would only have been a second thing to maintain.
+`kind: team` or `kind: bot` is the shape. `status: installable` is a recipe
+you can run. `status: example` is a format demo. Do not write `status: team`.
 
-Canonical domain: botteams.ai. `grokbotteam.ai` (no s) is a type-in that
-should 301 when DNS exists. This repo does not buy or configure DNS.
+Canonical domain: botteams.ai.
 
 ## Stack
 

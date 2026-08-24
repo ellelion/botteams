@@ -1,0 +1,70 @@
+name: Listing preview
+
+on:
+  pull_request:
+    paths:
+      - "teams/**.md"
+      - "bots/**.md"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const { execSync } = require("node:child_process");
+            const base = context.payload.pull_request.base.sha;
+            const files = execSync(
+              `git diff --name-only --diff-filter=A ${base}...HEAD -- teams bots`,
+              { encoding: "utf8" },
+            )
+              .trim()
+              .split("\n")
+              .filter((f) => f.endsWith(".md"));
+            if (!files.length) {
+              core.info("No new listing files.");
+              return;
+            }
+            const lines = files.map((file) => {
+              const slug = file.replace(/^(teams|bots)\//, "").replace(/\.md$/, "");
+              const kind = file.startsWith("bots/") ? "bots" : "teams";
+              return `- \`${file}\` → https://botteams.ai/${kind}/${slug}`;
+            });
+            const body = [
+              "<!-- listing-preview -->",
+              "After this pull request is merged, these listings go live on production. There is no second admin step.",
+              "",
+              ...lines,
+            ].join("\n");
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find((c) =>
+              (c.body || "").includes("<!-- listing-preview -->"),
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

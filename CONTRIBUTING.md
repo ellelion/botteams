@@ -32,18 +32,20 @@ alphanumerics and dashes only.
 slug: founder-os                    # required, equals the filename
 name: Founder OS                    # required
 tagline: One line for the job.      # required
-bots: 3                             # required, must equal the agents length
+bots: 2                             # required, must equal the agents length
 section: Founder OS                 # required, from the closed list below
-status: team                        # required: team (installable) or example
+kind: team                          # required: team or bot
+status: installable                 # required: installable or example
 connectors:                         # required, account-wide union
   - Stripe
   - Gmail
 agents:                             # required, 2 to 6 Bots
   - name: Founder · Money
-    persona: What this Bot does, and what it will not do.
-    icon: card                      # optional
-    connectors: [Stripe]            # optional, must be a subset of the team list
-    reuse: true                     # optional
+    persona: Reads Stripe. Drafts the brief. Never moves funds.
+    connectors: [Stripe]
+  - name: Founder · Inbox
+    persona: Drafts mail. Never sends.
+    connectors: [Gmail]
 rooms:                              # required, each 2 to 6 members
   - name: Founder HQ
     members: [Founder · Money, Founder · Inbox]
@@ -53,9 +55,13 @@ routines:                           # required
     schedule: Every Monday at 08:00
     prompt: Read Stripe. Draft the brief. Never move funds.
 ---
+```
 
 Body prose is optional. It renders under the roster.
-```
+
+Complete templates that pass `npm run validate`:
+[`docs/examples/sample-team.md`](./docs/examples/sample-team.md) and
+[`docs/examples/sample-bot.md`](./docs/examples/sample-bot.md).
 
 ### Optional attribution
 
@@ -163,8 +169,12 @@ not on the team.
 - Group chats hold **two to six Bots**.
 - No em-dashes.
 
-## Contributing by post
+## After merge
 
-Not live yet. There is no directory handle to tag, so a pull request is the only
-way in today. The intended flow is written up in
-[`docs/x-mention-bot.md`](./docs/x-mention-bot.md).
+GitHub is the CMS. There is no other admin. Merge to `main` deploys
+https://botteams.ai. A team file at `teams/<slug>.md` is live at
+`/teams/<slug>`. A bot file at `bots/<slug>.md` is live at `/bots/<slug>`.
+
+CI must pass first (`npm run validate` and `npm run build`). Vercel also
+builds a preview on the pull request. Merge to `main` is the publish step.
+There is no second admin screen.
