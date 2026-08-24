@@ -3755,9 +3755,11 @@ html[data-theme="light"] .cz-check input:checked {
 .spon-hero-cta {
   margin-top: 22px;
 }
-.spon-hero-cta.theme-control-label {
+.spon-hero-cta.theme-control-label,
+.spon-off .theme-control-label {
   font-size: 0.88rem;
   letter-spacing: -0.01em;
+  min-height: 44px;
 }
 .spon-ask-cta {
   margin-top: 28px;
@@ -4942,6 +4944,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   justify-content: center;
   min-height: 24px;
   min-width: 24px;
+}
+/* Endpoint and download actions sat in 0.8rem parents (12.8px).
+   Sponsor / empty recoveries already use 0.88rem for the same job. */
+.api-link {
+  font-size: 0.88rem;
 }
 .home-scroll-cue {
   min-height: 24px;
