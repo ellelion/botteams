@@ -5756,8 +5756,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .idx-empty,
   .index-name,
   .index-ad {
-    scroll-margin-top: calc(var(--masthead-h) + 5.5rem);
+    scroll-margin-top: calc(var(--masthead-h) + 6.5rem);
   }
+  /* Last row must be able to sit below sticky search. */
+  #teams { padding-bottom: 8rem; }
   .wings-main-col:has(.index-tools),
   .wings-main-col:has(.cf-bar) {
     scroll-padding-top: 0;
