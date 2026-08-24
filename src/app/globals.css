@@ -4542,8 +4542,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 
 html:not([data-theme="dark"]) .talk-stage {
   --talk-text: #0a0a0a;
-  --talk-soft: rgba(10, 10, 10, 0.62);
-  --talk-mute: rgba(20, 20, 20, 0.4);
+  --talk-soft: rgba(10, 10, 10, 0.72);
+  --talk-mute: rgba(20, 20, 20, 0.64);
   --talk-editor: rgba(252, 252, 252, 0.65);
   --talk-chrome: #fbfbfb;
   --talk-agent: rgba(16, 16, 0, 0.04);
@@ -4553,8 +4553,8 @@ html:not([data-theme="dark"]) .talk-stage {
 }
 html[data-theme="dark"] .talk-stage {
   --talk-text: #edecec;
-  --talk-soft: rgba(237, 236, 236, 0.68);
-  --talk-mute: rgba(237, 236, 236, 0.42);
+  --talk-soft: rgba(237, 236, 236, 0.72);
+  --talk-mute: rgba(237, 236, 236, 0.64);
   --talk-editor: #141414;
   --talk-chrome: #1a1a1a;
   --talk-agent: rgba(255, 255, 255, 0.06);
@@ -4593,8 +4593,8 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
 /* Live conversation stage: dark window, after public x.ai/bot screenshot. */
 .talk-stage {
   --talk-text: #edecec;
-  --talk-soft: rgba(237, 236, 236, 0.68);
-  --talk-mute: rgba(237, 236, 236, 0.42);
+  --talk-soft: rgba(237, 236, 236, 0.72);
+  --talk-mute: rgba(237, 236, 236, 0.64);
   --talk-editor: #141414;
   --talk-chrome: #1a1a1a;
   --talk-agent: rgba(255, 255, 255, 0.06);
@@ -4619,6 +4619,30 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   overflow: hidden;
   scroll-margin-top: calc(var(--masthead-h) + 12px);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+/* Theme tokens restated after the dark defaults so light Watch is
+   actually light, and mute/soft stay at 4.5:1 on the rail paper. */
+html:not([data-theme="dark"]) .talk-stage {
+  --talk-text: #0a0a0a;
+  --talk-soft: rgba(10, 10, 10, 0.72);
+  --talk-mute: rgba(20, 20, 20, 0.64);
+  --talk-editor: rgba(252, 252, 252, 0.65);
+  --talk-chrome: #fbfbfb;
+  --talk-agent: rgba(16, 16, 0, 0.04);
+  --talk-user: #111110;
+  --talk-user-ink: #ffffff;
+  --talk-border: rgba(20, 20, 20, 0.15);
+}
+html[data-theme="dark"] .talk-stage {
+  --talk-text: #edecec;
+  --talk-soft: rgba(237, 236, 236, 0.72);
+  --talk-mute: rgba(237, 236, 236, 0.64);
+  --talk-editor: #141414;
+  --talk-chrome: #1a1a1a;
+  --talk-agent: rgba(255, 255, 255, 0.06);
+  --talk-user: #f2f1ef;
+  --talk-user-ink: #111110;
+  --talk-border: rgba(237, 236, 236, 0.1);
 }
 .talk-titlebar {
   flex: none;
@@ -4707,7 +4731,7 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
 }
 .talk-rail-row:hover::before { opacity: 0.7; }
 .talk-rail-row.is-on::before { opacity: 1; background: color-mix(in srgb, var(--talk-text) 12%, transparent); }
-.talk-rail-row .talk-rail-name { color: var(--talk-mute); }
+.talk-rail-row .talk-rail-name { color: var(--talk-text); }
 .talk-rail-row.is-on .talk-rail-name { color: var(--talk-text); }
 .talk-rail-meta { min-width: 0; display: grid; gap: 2px; }
 .talk-rail-name {
@@ -4722,7 +4746,7 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
 }
 .talk-rail-snip {
   font-size: 12px;
-  color: var(--talk-mute);
+  color: var(--talk-soft);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -5056,6 +5080,10 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   background: #1a1a1a;
   border-top: 0.5px solid var(--talk-border);
 }
+html[data-theme="dark"] .talk-compose-bar,
+html[data-theme="dark"] .talk-you { background: #1a1a1a; }
+html:not([data-theme="dark"]) .talk-compose-bar,
+html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
 .talk-compose-bar {
   display: flex;
   align-items: center;
