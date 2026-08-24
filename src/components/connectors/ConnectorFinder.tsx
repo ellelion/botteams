@@ -347,6 +347,12 @@ export function ConnectorFinder({
         <div
           ref={chipsRef.ref}
           className={`cf-chips scroll-fade${chipsRef.edges.start ? " has-start" : ""}${chipsRef.edges.end ? " has-end" : ""}`}
+          onFocus={(event) => {
+            const chip = event.target;
+            if (chip instanceof HTMLElement && chip.classList.contains("cf-chip")) {
+              chip.scrollIntoView({ inline: "nearest", block: "nearest" });
+            }
+          }}
         >
           <button
             type="button"
