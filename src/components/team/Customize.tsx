@@ -77,6 +77,7 @@ export function Customize({
   const promptEditEditedId = useId();
   const sheetRef = useRef<HTMLDivElement>(null);
   const overwriteRef = useRef<HTMLDivElement>(null);
+  const overwriteRestoreRef = useRef<HTMLElement | null>(null);
   const closeSheet = useCallback(() => setSheet(null), []);
   /* Portals need a document, so nothing renders one until after hydration. */
   const [mounted, setMounted] = useState(false);
@@ -118,7 +119,12 @@ export function Customize({
   }, [team]);
 
   useDialogChrome({ open: sheet !== null && mounted, paused: Boolean(pending), rootRef: sheetRef, onClose: closeSheet });
-  useDialogChrome({ open: Boolean(pending) && mounted, rootRef: overwriteRef, onClose: closeOverwrite });
+  useDialogChrome({
+    open: Boolean(pending) && mounted,
+    rootRef: overwriteRef,
+    onClose: closeOverwrite,
+    restoreFromRef: overwriteRestoreRef,
+  });
   const { ref: actionsRef, edges: actionEdges } = useScrollEdges<HTMLDivElement>();
 
   const askedHits = useRef<Set<string>>(new Set());
@@ -198,8 +204,11 @@ export function Customize({
      throwing the rewrite away. */
   const guard = useCallback(
     (change: () => void) => {
-      if (state.override !== null) setPending(() => change);
-      else change();
+      if (state.override !== null) {
+        overwriteRestoreRef.current =
+          document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        setPending(() => change);
+      } else change();
     },
     [state.override],
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -47,8 +47,8 @@ function isolate(keep: HTMLElement) {
  * Dialog chrome for sheets, Watch, overwrite, and the mobile menu: lock
  * page scroll, move focus in, trap Tab, close on Escape, restore focus
  * on the way out. `paused` keeps the sheet mounted under overwrite
- * without stealing keys, inert, or focus. Restore is keyed only to
- * `open` so pausing does not jump back to the Customize trigger.
+ * without stealing keys, inert, or focus. Restore runs in the same
+ * cleanup as un-inert, so the field is live before we focus it.
  */
 export function useDialogChrome({
   open,
@@ -56,26 +56,35 @@ export function useDialogChrome({
   rootRef,
   onClose,
   getInitialFocus,
+  restoreFromRef,
 }: {
   open: boolean;
   paused?: boolean;
   rootRef: RefObject<HTMLElement | null>;
   onClose: () => void;
   getInitialFocus?: (root: HTMLElement) => HTMLElement | null | undefined;
+  restoreFromRef?: RefObject<HTMLElement | null>;
 }) {
   const restoreRef = useRef<HTMLElement | null>(null);
+  const didEnterRef = useRef(false);
+  const openRef = useRef(open);
+
+  useLayoutEffect(() => {
+    openRef.current = open;
+  });
 
   useEffect(() => {
-    if (!open) return;
-    restoreRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    return () => {
-      restoreRef.current?.focus();
-      restoreRef.current = null;
-    };
-  }, [open]);
+    if (!open) {
+      didEnterRef.current = false;
+      return;
+    }
+    if (!restoreRef.current) {
+      restoreRef.current =
+        restoreFromRef?.current ??
+        (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    }
+    if (paused) return;
 
-  useEffect(() => {
-    if (!open || paused) return;
     const panel = rootRef.current;
     if (!panel) return;
 
@@ -86,13 +95,14 @@ export function useDialogChrome({
     const list = focusables(panel);
     const preferred = getInitialFocus?.(panel);
     const start = preferred ?? list.find((el) => el !== restoreRef.current) ?? list[0];
-    /* Opening: move focus in. Resuming after overwrite: the field that
-       triggered the alert is already inside, so leave it alone. A trigger
-       that lives inside the root (menu, accent) is list[0], so we still
-       step to the first real control. */
     const active = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const preserve = Boolean(active && panel.contains(active) && active !== list[0] && !preferred);
+    /* First open: move focus in. Resume after overwrite: leave the field
+       that triggered the alert. A trigger that lives inside the root
+       (menu, accent) is list[0] and still needs the step inward. */
+    const resume = didEnterRef.current;
+    const preserve = Boolean(resume && active && panel.contains(active) && !preferred);
     if (!preserve) start?.focus();
+    didEnterRef.current = true;
 
     function onKey(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -121,6 +131,10 @@ export function useDialogChrome({
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
       release();
+      if (!openRef.current) {
+        restoreRef.current?.focus();
+        restoreRef.current = null;
+      }
     };
-  }, [open, paused, rootRef, onClose, getInitialFocus]);
+  }, [open, paused, rootRef, onClose, getInitialFocus, restoreFromRef]);
 }
