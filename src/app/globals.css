@@ -1174,12 +1174,17 @@ a.chip-unverified:focus-visible {
   margin-bottom: 14px;
 }
 .search-field {
+  position: relative;
   display: block;
   width: 100%;
 }
 .search-icon {
   position: absolute;
   left: 14px;
+  top: 0;
+  bottom: 0;
+  margin-block: auto;
+  height: 16px;
   /* Same step as the hint. Muted sat a contrast step below the
      placeholder after that field became the visible name. */
   color: var(--ink-soft);
@@ -2277,12 +2282,17 @@ a.chip-unverified:focus-visible {
   }
 }
 .cf-search-field {
+  position: relative;
   display: block;
   width: 100%;
 }
 .cf-search-icon {
   position: absolute;
   left: 13px;
+  top: 0;
+  bottom: 0;
+  margin-block: auto;
+  height: 16px;
   color: var(--ink-soft);
   pointer-events: none;
 }
