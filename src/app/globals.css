@@ -3539,7 +3539,7 @@ html[data-theme="light"] .cz-check input:checked {
   border: 1px solid var(--line-strong);
   border-radius: var(--r-inner);
   background: var(--card);
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   line-height: 1.6;
 }
 /* Severity reads from the title and a faint wash, not a slab of colour
@@ -3558,7 +3558,7 @@ html[data-theme="light"] .cz-check input:checked {
 .cz-alert-warn .cz-alert-title { color: var(--ink-soft); }
 .cz-alert ul { color: var(--ink-soft); }
 .cz-alert li + li { margin-top: 5px; }
-.cz-alert-foot { margin-top: 7px; color: var(--ink-soft); font-size: 0.76rem; }
+.cz-alert-foot { margin-top: 7px; color: var(--ink-soft); font-size: 0.84rem; }
 .cz-alert-actions {
   display: flex;
   flex-wrap: wrap;
