@@ -450,6 +450,15 @@ body {
     overflow-y: auto;
     overscroll-behavior: contain;
   }
+  /* Label pills are more specific than .theme-control, so the 44px
+     masthead rule above cannot enlarge Copy / Sponsor / 404. */
+  .theme-control.theme-control-label,
+  .theme-control-label {
+    width: auto;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 14px;
+  }
 }
 @media (pointer: coarse) {
   .theme-control {
@@ -787,7 +796,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .filter-selects .sel { min-width: 0; flex: 1 1 auto; }
 .filter-selects .sel-button { max-width: 100%; }
-@media (max-width: 720px) {
+@media (max-width: 1023px) {
   .filter-selects { width: 100%; }
 }
 .filter-chip {
@@ -1166,22 +1175,39 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .sel-option { min-height: 44px; }
   .sel-list { max-height: min(19rem, 50dvh); }
   /* An iPad with a trackpad reports pointer: fine. The stacked layout
-     still needs a thumb-sized control. */
+     still needs a thumb-sized control. Keep this list in step with the
+     late (pointer: coarse) restatement at the bottom of the file. */
+  .search-clear,
   .browse-pick-btn,
+  .idx-chip,
+  .idx-chip-clear,
   .cat-pill,
   .hero-stat,
   .cf-chip,
   .cf-browse,
   .cf-clear,
+  .cf-search-clear,
   .sel-button,
+  .filter-views .filter-chip--icon,
   .doc-jump a,
   .doc-toc-sum,
   .chip-xai,
   .row-arrow-link,
+  .rp-secondary,
   .cz-btn,
-  .cz-chip {
+  .cz-mode,
+  .cz-check,
+  .cz-chip,
+  .share-btn,
+  .talk-watch-btn,
+  .talk-overlay-close,
+  .talk-dock-item,
+  .spon-cta,
+  .foot-link,
+  .theme-control-label {
     min-height: 44px;
   }
+  .filter-views .filter-chip--icon { width: 44px; }
   .hero-stat {
     align-items: center;
     padding-inline: 6px;
@@ -1706,7 +1732,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   min-height: 32px;
   color: var(--ink-soft);
 }
-@media (max-width: 640px) {
+@media (max-width: 1023px) {
+  /* Stacked Wings already spent the first screen on the hero. A wrap of
+     44px jump links would push the first heading off the page. */
   .doc-toc-sum { display: flex; }
   .doc-toc-fold:not([open]) .doc-jump { display: none; }
   .doc-jump { gap: 4px 14px; }
@@ -2657,7 +2685,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   min-height: 32px;
   font-size: 0.85rem;
 }
-@media (pointer: coarse) {
+@media (pointer: coarse), (max-width: 1023px) {
   .cz-check {
     min-width: 44px;
     min-height: 44px;
@@ -3333,9 +3361,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .foot-panes { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .foot-meta { margin-top: 36px; padding-top: 22px; }
 }
-@media (max-width: 720px) {
+@media (max-width: 1023px) {
   /* Same 2-column map x.ai uses on a phone. Do not collapse to one
-     tall list of 44px rows. */
+     tall list of 44px rows. A 4-column nowrap map overflows at 820. */
   .foot-inner { padding: 40px 0 64px; }
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 16px; }
   .foot-col ul { margin-top: 6px; }
@@ -3769,20 +3797,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .rp-head-id { display: none; }
   /* One sticky bar: the copy row. Section titles stay in flow so
      opening Routines cannot slide a heading under Copy link / Post on X. */
-  .rp-sum { position: static; }
+  .rp-sum { position: static; min-height: 56px; }
   .rp-sec,
   .rp-sum { scroll-margin-top: calc(var(--masthead-h) + 96px); }
-  .rp-head-act .theme-control,
-  .rp-head-act .rp-secondary,
-  .rp-head-act .share-btn { min-height: 44px; }
-  .rp-sheet { width: 100%; border-left: 0; animation-name: rp-sheet-up; }
-  .rp-sheet-head { padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 14px; }
-  .rp-sheet-body { padding: 4px 16px calc(28px + env(safe-area-inset-bottom, 0px)); }
-  .rp-sheet-act .theme-control,
-  .rp-sheet-act .rp-secondary { min-height: 44px; }
-  .rp-chip { min-height: 44px; }
-}
-@media (max-width: 640px) {
   .rp-head { padding: 8px 0; }
   .rp-name { font-size: 1.4rem; }
   .rp-head-act {
@@ -3794,7 +3811,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   }
   .rp-head-act::-webkit-scrollbar { display: none; }
   .rp-head-act .theme-control,
-  .rp-head-act .rp-secondary {
+  .rp-head-act .rp-secondary,
+  .rp-head-act .share-btn {
     flex: 0 0 auto;
     min-height: 44px;
     min-width: 0;
@@ -3804,14 +3822,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     flex: 0 0 auto;
     width: auto;
   }
-  .rp-head-act .share-btn {
-    min-height: 44px;
-    min-width: 0;
-    justify-content: center;
-  }
-  /* The header is taller once the action wraps, so the section titles
-     stop being sticky rather than stacking two bars deep. */
-  .rp-sum { position: static; min-height: 56px; }
+  .rp-sheet { width: 100%; border-left: 0; animation-name: rp-sheet-up; }
+  .rp-sheet-head { padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 14px; }
+  .rp-sheet-body { padding: 4px 16px calc(28px + env(safe-area-inset-bottom, 0px)); }
+  .rp-sheet-act .theme-control,
+  .rp-sheet-act .rp-secondary { min-height: 44px; }
+  .rp-chip { min-height: 44px; }
 }
 
 
