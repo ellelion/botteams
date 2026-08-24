@@ -297,7 +297,9 @@ body {
   color: var(--muted);
   font-size: 0.9375rem;
   letter-spacing: -0.005em;
-  box-shadow: 0 1px 0 var(--line);
+  /* Page-on-page sticky chrome. --line is ~1.1:1; the hairline is
+     the only edge once content scrolls underneath. */
+  box-shadow: 0 1px 0 var(--pill-line);
   container-type: inline-size;
 }
 
@@ -389,7 +391,7 @@ body {
   flex-direction: column;
   padding: 6px 16px 14px;
   background: var(--page);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--pill-line);
 }
 
 .site-menu-link {
@@ -1310,7 +1312,7 @@ a.chip-unverified:focus-visible {
   z-index: 8;
   background: var(--page);
   padding-bottom: 8px;
-  box-shadow: 0 1px 0 var(--line);
+  box-shadow: 0 1px 0 var(--pill-line);
 }
 .index-tools {
   container-type: inline-size;
@@ -1340,7 +1342,7 @@ a.chip-unverified:focus-visible {
     margin-top: 0;
     padding-top: 12px;
     padding-bottom: 8px;
-    box-shadow: 0 1px 0 var(--line);
+    box-shadow: 0 1px 0 var(--pill-line);
   }
 }
 .search-wrap {
@@ -1619,7 +1621,10 @@ a.chip-unverified:focus-visible {
 .browse-pick-count {
   margin-left: 3px;
   font-variant-numeric: tabular-nums;
-  opacity: .65;
+  color: var(--muted);
+}
+.browse-pick-btn.is-on .browse-pick-count {
+  color: inherit;
 }
 @media (max-width: 560px) {
   /* Two rows of controls on a phone rather than one that scrolls off. */
@@ -2412,7 +2417,7 @@ a.chip-unverified:focus-visible {
   gap: 12px;
   padding: 12px 0 10px;
   background: var(--page);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--pill-line);
 }
 /* Browse all puts a bordered scroll box directly under the bar, and the
    two edges stacked into a double rule. */
@@ -2464,7 +2469,7 @@ a.chip-unverified:focus-visible {
     padding-top: 12px;
     padding-bottom: 10px;
     margin-bottom: 12px;
-    box-shadow: 0 1px 0 var(--line);
+    box-shadow: 0 1px 0 var(--pill-line);
   }
   .cf:has(.cf-scroll) .cf-search {
     position: static;
@@ -3866,7 +3871,7 @@ html[data-theme="light"] .cz-check input:checked {
     min-height: 56px;
     padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
     background: var(--page);
-    box-shadow: 0 -1px 0 var(--line);
+    box-shadow: 0 -1px 0 var(--pill-line);
     color: var(--ink-soft);
     font-size: 0.78rem;
     text-decoration: none;
@@ -4198,7 +4203,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   z-index: 26;
   padding: 10px 0;
   background: var(--page);
-  border-bottom: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--pill-line);
   box-shadow: 0 -32px 0 0 var(--page);
 }
 @media (min-width: 1024px) {
@@ -4613,7 +4618,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   flex-direction: column;
   width: min(40rem, 100%);
   height: 100%;
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--pill-line);
   background: var(--page);
   animation: rp-sheet-in var(--dur) var(--ease);
 }
@@ -5075,6 +5080,24 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     background: none;
     border: 1px solid ButtonText;
   }
+  /* Sticky/fixed page-on-page chrome. Color mode uses --pill-line
+     (often a box-shadow). Forced colors drop shadows. */
+  .site-masthead,
+  .index-chrome,
+  #teams .search-wrap,
+  .cf-bar,
+  .cf-search,
+  .rp-head,
+  .site-menu-sheet {
+    border-bottom: 1px solid ButtonText;
+  }
+  .spon-mq--bottom,
+  .spon-dock {
+    border-top: 1px solid ButtonText;
+  }
+  .rp-sheet {
+    border-left: 1px solid ButtonText;
+  }
 }
 
 
@@ -5095,7 +5118,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   overflow: clip;
   z-index: 30;
   background: var(--page);
-  border-color: var(--line);
+  border-color: var(--pill-line);
   border-style: solid;
   border-width: 0;
 }
@@ -5478,7 +5501,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .wings-main-col { background: transparent; }
   .rp-head {
     background: var(--page);
-    box-shadow: 0 1px 0 var(--line);
+    box-shadow: 0 1px 0 var(--pill-line);
   }
   .rp-main { background: transparent; }
 }
