@@ -311,7 +311,7 @@ export function Customize({
         aria-labelledby={overwriteTitleId}
         aria-describedby={overwriteBodyId}
       >
-        <button type="button" className="cz-overwrite-scrim" aria-label={en.customize.overwriteKeep} onClick={closeOverwrite} />
+        <button type="button" className="cz-overwrite-scrim" tabIndex={-1} aria-label={en.customize.overwriteKeep} onClick={closeOverwrite} />
         <div className="cz-overwrite-card cz-alert cz-alert-stop">
           <h3 id={overwriteTitleId} className="cz-alert-title">{en.customize.overwriteTitle}</h3>
           <p id={overwriteBodyId}>{en.customize.overwriteBody}</p>
@@ -863,7 +863,7 @@ export function Customize({
       {sheet !== null && mounted
         ? createPortal(
         <div id={sheetId} ref={sheetRef} className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-labelledby={`${sheetId}-title`}>
-          <button type="button" className="rp-scrim" aria-label={en.recipe.close} onClick={closeSheet} />
+          <button type="button" className="rp-scrim" tabIndex={-1} aria-label={en.recipe.close} onClick={closeSheet} />
           <div className="rp-sheet">
             <div className="rp-sheet-head">
               <h2 id={`${sheetId}-title`} className="rc-h2">{en.customize.title}</h2>

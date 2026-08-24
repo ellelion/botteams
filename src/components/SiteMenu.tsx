@@ -47,7 +47,7 @@ export function SiteMenu() {
       </button>
       {open ? (
         <>
-          <button type="button" className="site-menu-scrim" aria-label={en.nav.closeMenu} onClick={close} />
+          <button type="button" className="site-menu-scrim" tabIndex={-1} aria-label={en.nav.closeMenu} onClick={close} />
           <div id={panelId} role="dialog" aria-modal="true" aria-label={en.nav.mainAria}>
             <Suspense fallback={<SiteNavLinks className="site-menu-sheet" onNavigate={close} />}>
               <MenuLinks onNavigate={close} />
