@@ -4856,6 +4856,7 @@ html[data-theme="dark"] .talk-stage {
 .talk-rail-row:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: -3px;
+  box-shadow: inset 0 0 0 2px var(--accent-text);
 }
 .talk-rail-row .talk-rail-name { color: var(--talk-text); }
 .talk-rail-row.is-on .talk-rail-name { color: var(--talk-text); }
@@ -4954,6 +4955,7 @@ html[data-theme="dark"] .talk-stage {
 .talk-dock-item:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: -3px;
+  box-shadow: inset 0 0 0 2px var(--accent-text);
 }
 .talk-thread {
   flex: 1;
