@@ -4265,9 +4265,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   white-space: normal;
   overflow-wrap: anywhere;
 }
-.rp-sum:has(.rp-count) { display: grid; grid-template-columns: 16px 5.5rem 1.15rem minmax(0,1fr) auto; column-gap: 8px; align-items: center; }
+/* Label column used to be 5.5rem. "Routines" is already 88px once
+   letter-spacing is 0.12em, so 1.4.12 clipped the word into the count. */
+.rp-sum:has(.rp-count) { display: grid; grid-template-columns: 16px max-content minmax(1.15rem, auto) minmax(0,1fr) auto; column-gap: 8px; align-items: center; }
 .rp-sum:has(.rp-count) > .line-icon { grid-column: 1; }
-.rp-sum:has(.rp-count) > .rp-sum-lab { grid-column: 2; overflow: hidden; text-overflow: ellipsis; }
+.rp-sum:has(.rp-count) > .rp-sum-lab { grid-column: 2; overflow: visible; }
 .rp-sum:has(.rp-count)::after { grid-column: 5; margin-left: 0; }
 .rp-count {
   grid-column: 3;
