@@ -443,6 +443,12 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
               {row.team.section}
             </span>
             <span className="idx-card-name">{grokRecipeTitle(row.team.kind, row.team.name)}</span>
+            {row.team.featured || row.team.fromXai ? (
+              <span className="idx-card-chips">
+                {row.team.featured ? <FeaturedChip /> : null}
+                {row.team.fromXai ? <FromXaiChip as="span" /> : null}
+              </span>
+            ) : null}
             <span className="idx-card-tag">{row.team.tagline}</span>
             <span className="idx-card-foot">
               <ConnectorRow names={row.team.connectors} size={15} />
