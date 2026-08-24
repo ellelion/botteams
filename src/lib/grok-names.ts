@@ -10,7 +10,7 @@ export function grokBotName(name: string): string {
 
 export function grokRoomName(name: string): string {
   const n = name.trim().replace(/\s+group chat$/i, "").replace(/\s+team$/i, "").trim();
-  return n + " group chat";
+  return n ? `${n} group chat` : "";
 }
 
 export function grokRecipeTitle(kind: "bot" | "team", name: string): string {

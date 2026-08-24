@@ -67,6 +67,8 @@ export function Customize({
   const overwriteTitleId = useId();
   const overwriteBodyId = useId();
   const modeHintId = useId();
+  const roomNameErrorId = useId();
+  const roomSizeErrorId = useId();
   const sheetRef = useRef<HTMLDivElement>(null);
   const overwriteRef = useRef<HTMLDivElement>(null);
   const closeSheet = useCallback(() => setSheet(null), []);
@@ -433,7 +435,7 @@ export function Customize({
         </fieldset>
 
         {solo ? null : (
-        <fieldset className="cz-group">
+        <fieldset className="cz-group" aria-invalid={resolved.members.length < 2 || resolved.members.length > 6 ? true : undefined} aria-describedby={resolved.members.length < 2 || resolved.members.length > 6 ? roomSizeErrorId : undefined}>
           <legend className="cz-legend">{en.customize.room}</legend>
           <label className="cz-field">
             <span className="cz-field-label">{en.customize.roomName}</span>
@@ -442,7 +444,12 @@ export function Customize({
               className="cz-input"
               value={state.roomName}
               onChange={(e) => patch({ roomName: e.target.value })}
+              aria-invalid={!resolved.roomName || undefined}
+              aria-describedby={!resolved.roomName ? roomNameErrorId : undefined}
             />
+            {!resolved.roomName ? (
+              <p id={roomNameErrorId} className="cz-hint" role="alert">{en.customize.roomNameNeeded}</p>
+            ) : null}
           </label>
           <p className="cz-field-label mt-4">
             {en.customize.roomMembers} · {en.customize.roomRule}{" "}
@@ -450,6 +457,9 @@ export function Customize({
               {en.customize.roomCount(resolved.members.length)}
             </span>
           </p>
+          {resolved.members.length < 2 || resolved.members.length > 6 ? (
+            <p id={roomSizeErrorId} className="cz-hint" role="alert">{en.customize.roomSizeNeeded}</p>
+          ) : null}
           <ul className="cz-members">
             {team.agents.filter((a) => isOn(state, a.name)).map((agent) => (
               <li key={agent.name}>
@@ -588,7 +598,11 @@ export function Customize({
         {en.team.promptTitle}
       </h2>
       <div className="cz-actions">
-        <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
+        <CopyInstallerButton
+          text={verdict.canCopy ? prompt : ""}
+          disabled={!verdict.canCopy}
+          disabledReason={verdict.errors[0]}
+        />
       </div>
       <details className="cz-advanced mt-4">
         <summary>{en.customize.advanced}</summary>
