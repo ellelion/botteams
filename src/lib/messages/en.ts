@@ -50,6 +50,7 @@ export const en = {
     kindAll: "All",
     kindLabel: "Kind",
     featured: "Featured",
+    featuredHint: "Pinned first on the directory.",
     labelTeam: "Team",
     labelBot: "Bot",
     /* "3 Bots · 1 group chat" for a team, "1 Bot" for a bot. Never a

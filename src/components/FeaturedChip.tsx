@@ -27,9 +27,10 @@ function OfficialSeal() {
 
 export function FeaturedChip({ className = "" }: { className?: string }) {
   return (
-    <span className={`chip chip-featured ${className}`.trim()} title={en.home.featured}>
+    <span className={`chip chip-featured ${className}`.trim()}>
       <OfficialSeal />
       {en.home.featured}
+      <span className="sr-only">. {en.home.featuredHint}</span>
     </span>
   );
 }
