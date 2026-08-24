@@ -1,11 +1,9 @@
 "use client";
 
-import { useCallback, useId, useRef, useState } from "react";
-import Link from "next/link";
+import { Suspense, useCallback, useId, useRef, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { GitHubIcon } from "@/components/icons/GitHubIcon";
+import { SiteNavLinks } from "@/components/SiteNav";
 import { en } from "@/lib/messages/en";
-import { MAIN_NAV, isNavCurrent } from "@/lib/nav";
 import { useDialogChrome } from "@/lib/use-dialog-chrome";
 
 function MenuGlyph({ open }: { open: boolean }) {
@@ -20,12 +18,16 @@ function MenuGlyph({ open }: { open: boolean }) {
   );
 }
 
+function MenuLinks({ onNavigate }: { onNavigate: () => void }) {
+  const pathname = usePathname();
+  const kind = useSearchParams().get("kind");
+  return <SiteNavLinks className="site-menu-sheet" pathname={pathname} kind={kind} onNavigate={onNavigate} />;
+}
+
 export function SiteMenu() {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
-  const kind = useSearchParams().get("kind");
   const close = useCallback(() => setOpen(false), []);
 
   useDialogChrome({ open, rootRef, onClose: close });
@@ -46,38 +48,11 @@ export function SiteMenu() {
       {open ? (
         <>
           <button type="button" className="site-menu-scrim" aria-label={en.nav.closeMenu} onClick={close} />
-          <nav id={panelId} className="site-menu-sheet" role="dialog" aria-modal="true" aria-label={en.nav.mainAria}>
-            {MAIN_NAV.map((item) => {
-              const current = isNavCurrent(item.id, pathname, kind);
-              if (item.external) {
-                return (
-                  <a
-                    key={item.id}
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="site-menu-link"
-                    onClick={close}
-                  >
-                    <GitHubIcon className="h-[14px] w-[14px]" />
-                    {item.label}
-                  </a>
-                );
-              }
-              return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  scroll={false}
-                  className={`site-menu-link${current ? " is-current" : ""}`}
-                  aria-current={current ? "page" : undefined}
-                  onClick={close}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
+          <div id={panelId} role="dialog" aria-modal="true" aria-label={en.nav.mainAria}>
+            <Suspense fallback={<SiteNavLinks className="site-menu-sheet" onNavigate={close} />}>
+              <MenuLinks onNavigate={close} />
+            </Suspense>
+          </div>
         </>
       ) : null}
     </div>

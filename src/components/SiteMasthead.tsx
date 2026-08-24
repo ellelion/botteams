@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { SiteMenu } from "@/components/SiteMenu";
-import { SiteNav } from "@/components/SiteNav";
+import { SiteNav, SiteNavFallback } from "@/components/SiteNav";
 import { ThemeControls } from "@/components/theme/ThemeControls";
 import { WingsMark } from "@/components/WingsMark";
 import { en } from "@/lib/messages/en";
@@ -14,13 +14,11 @@ export function SiteMasthead() {
         <span className="site-wordmark-text">{en.wordmark}</span>
       </Link>
       <div className="site-masthead-actions">
-        <Suspense fallback={<nav className="site-masthead-nav" aria-label={en.nav.mainAria} />}>
+        <Suspense fallback={<SiteNavFallback />}>
           <SiteNav />
         </Suspense>
         <ThemeControls />
-        <Suspense fallback={null}>
-          <SiteMenu />
-        </Suspense>
+        <SiteMenu />
       </div>
     </header>
   );
