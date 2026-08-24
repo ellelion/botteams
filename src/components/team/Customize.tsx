@@ -22,7 +22,7 @@ import { site } from "@/lib/site";
 import type { Team } from "@/lib/types";
 import { useCopyFeedback } from "@/lib/use-copy-feedback";
 import { useDialogChrome } from "@/lib/use-dialog-chrome";
-import { useScrollEdges } from "@/lib/use-scroll-edges";
+import { cssZoom, useScrollEdges } from "@/lib/use-scroll-edges";
 import {
   MODES,
   MODE_HINT,
@@ -794,7 +794,8 @@ export function Customize({
             window.requestAnimationFrame(() => {
               const head = document.querySelector(".rp-head");
               const col = section.closest(".wings-main-col");
-              const bar = head?.getBoundingClientRect().height ?? 0;
+              const scale = cssZoom();
+              const bar = (head?.getBoundingClientRect().height ?? 0) / scale;
               const scroller =
                 col instanceof HTMLElement && getComputedStyle(col).overflowY !== "visible"
                   ? col
@@ -802,8 +803,7 @@ export function Customize({
               if (scroller) {
                 const sum = section.querySelector(".rp-sum") ?? section;
                 const next =
-                  sum.getBoundingClientRect().top -
-                  scroller.getBoundingClientRect().top +
+                  (sum.getBoundingClientRect().top - scroller.getBoundingClientRect().top) / scale +
                   scroller.scrollTop -
                   bar -
                   32;

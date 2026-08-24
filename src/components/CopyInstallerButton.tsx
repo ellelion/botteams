@@ -2,6 +2,7 @@
 
 import { useId } from "react";
 import { en } from "@/lib/messages/en";
+import { cssZoom } from "@/lib/use-scroll-edges";
 import { useCopyFeedback } from "@/lib/use-copy-feedback";
 
 /* Clipboard only. The shelf does not count copies: a number nobody can
@@ -21,7 +22,17 @@ export function CopyInstallerButton({
   async function onCopy() {
     if (disabled) {
       pulse("fail");
-      document.querySelector(".cz-alert-stop")?.scrollIntoView({ block: "nearest" });
+      const alert = document.querySelector(".cz-alert-stop");
+      const pane = alert instanceof HTMLElement ? alert.closest(".rp-sheet-body") : null;
+      if (alert instanceof HTMLElement && pane instanceof HTMLElement) {
+        const scale = cssZoom();
+        const next =
+          (alert.getBoundingClientRect().top - pane.getBoundingClientRect().top) / scale +
+          pane.scrollTop;
+        pane.scrollTo({ top: Math.max(0, next) });
+      } else if (alert instanceof HTMLElement) {
+        alert.scrollIntoView({ block: "nearest" });
+      }
       return;
     }
     await copyText(text);
