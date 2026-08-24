@@ -3199,10 +3199,11 @@ html[data-theme="light"] .cz-check input:checked {
 .cz-search-clear:focus-visible { color: var(--ink); }
 .cz-input:focus,
 .cz-input:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-/* Off-roster Bot names live in this field. Opacity faded the name into
-   the sheet; muted type stays AA and still reads as not editable. */
+/* Off-roster Bot names live in this field. Opacity faded the name.
+   ink-soft stays a step below filled type and keeps AA room on --card
+   (muted on dark card is 4.66:1). */
 .cz-input:disabled {
-  color: var(--muted);
+  color: var(--ink-soft);
   opacity: 1;
   cursor: not-allowed;
 }
