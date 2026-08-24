@@ -2644,6 +2644,12 @@ a.chip-unverified:hover {
   margin-top: 10px;
 }
 .cz-skill-status .cz-hint { margin-top: 0; }
+.rc-empty-block .rp-secondary,
+.cz-skill-status .cz-btn {
+  font-size: 0.88rem;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
 .cz-list { margin-top: 12px; }
 
 .cz-btn {
@@ -2877,7 +2883,8 @@ html[data-theme="light"] .cz-check input:checked {
   font-size: 0.88rem;
 }
 .cz-input::placeholder { color: var(--muted); }
-.cz-input:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 1px; }
+.cz-input:focus,
+.cz-input:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .cz-input:disabled { opacity: 0.55; cursor: not-allowed; }
 .cz-textarea { min-height: 82px; line-height: 1.55; resize: vertical; }
 .cz-prompt-edit {
