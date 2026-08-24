@@ -6517,6 +6517,11 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .spon-paid-link,
   .cf-row-teams {
     min-height: 44px;
+    min-width: 44px;
+  }
+  .wings-crumb a,
+  .cf-row-teams {
+    justify-content: center;
   }
   .theme-control,
   .site-menu-button {
