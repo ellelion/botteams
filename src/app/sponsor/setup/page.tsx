@@ -23,15 +23,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const GUIDELINES = [
-  "Digital products only.",
-  "Public URL, not a shortener, not a competing Grok Bot team or bot directory.",
-  "No crypto, no trading signals, no lead-generation.",
-  "Title 28 characters or fewer. Short description 52 or fewer. Plain, like the directory.",
-  "A simple mark (png, svg, webp, or jpg). Not a landing screenshot, not a person photo, not a watermarked stock ad.",
-  "An automated review checks that list, up to three times. After that, our team will review your listing and get back to you shortly.",
-];
-
 async function loadSession(sessionId: string) {
   if (!databaseUrl() || !process.env.STRIPE_SECRET_KEY) {
     return { kind: "unconfigured" as const };
@@ -135,7 +126,7 @@ export default async function SponsorSetupPage({
                 {en.sponsor.guidelinesTitle}
               </h2>
               <ul className="mt-4">
-                {GUIDELINES.map((rule) => (
+                {en.sponsor.guidelines.map((rule) => (
                   <li key={rule} className="hairline-row measure py-3 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
                     {rule}
                   </li>

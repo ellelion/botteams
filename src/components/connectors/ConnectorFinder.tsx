@@ -358,7 +358,7 @@ export function ConnectorFinder({
               commit({ q: "", category: null, builtin: next, all: false });
             }}
           >
-            <CategoryIcon name="Built in" className="cf-chip-icon" />
+            <CategoryIcon name={en.connectors.builtInLabel} className="cf-chip-icon" />
             {en.connectors.builtInLabel}
             <span className="cf-count">{builtInTotal}</span>
           </button>
