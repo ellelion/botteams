@@ -4998,6 +4998,29 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     outline: 2px solid Highlight;
     outline-offset: 2px;
   }
+  /* Error sentences use --beta in color mode. That token is ignored
+     here, so the room-size hint and setup field errors would read as
+     ordinary body copy. */
+  .cz-hint[role="alert"],
+  .cz-hint.is-fail,
+  .cz-skill-status[role="alert"] .cz-hint,
+  .spon-field-error,
+  .spon-error,
+  .spon-reasons {
+    color: Highlight;
+  }
+  .cz-alert-stop,
+  .spon-error,
+  .cz-skill-status[role="alert"] {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    border-color: Highlight;
+  }
+  .spon-input[aria-invalid="true"],
+  .spon-file[aria-invalid="true"],
+  .cz-input[aria-invalid="true"] {
+    border: 2px solid Highlight;
+  }
   .theme-accent-mark i,
   .theme-accent-swatch {
     border: 1px solid ButtonText;
@@ -6496,7 +6519,14 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   a.chip:active,
   .copy-btn:active,
   .pill-btn:active,
-  .cz-check input:active {
+  .cz-check input:active,
+  .row-arrow-link:active,
+  .home-more summary:active,
+  .guide-index a:active,
+  .guide-toc a:active,
+  .doc-jump a:active,
+  .home-hero-links a:active,
+  .home-contribute-links a:active {
     transform: scale(0.96);
   }
 }
