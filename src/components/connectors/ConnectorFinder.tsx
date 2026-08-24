@@ -7,7 +7,7 @@ import { ConnectorRow } from "@/components/ConnectorRow";
 import { CategoryIcon } from "@/components/icons/LineIcons";
 import { connectorQuerySearch, type ConnectorFinderQuery } from "@/lib/catalog-query";
 import { en } from "@/lib/messages/en";
-import { scrollIntoRail, useScrollEdges } from "@/lib/use-scroll-edges";
+import { focusWithoutPageScroll, scrollIntoRail, useScrollEdges } from "@/lib/use-scroll-edges";
 
 /*
  * Finding one connector in 306.
@@ -365,6 +365,17 @@ export function ConnectorFinder({
         <div
           ref={chipsRef.ref}
           className={`cf-chips scroll-fade${chipsRef.edges.start ? " has-start" : ""}${chipsRef.edges.end ? " has-end" : ""}`}
+          onKeyDown={(event) => {
+            if (event.key !== "Tab") return;
+            const chips = [...event.currentTarget.querySelectorAll<HTMLElement>(".cf-chip:not([disabled])")];
+            const index = chips.indexOf(event.target as HTMLElement);
+            if (index < 0) return;
+            const next = chips[index + (event.shiftKey ? -1 : 1)];
+            if (!next) return;
+            event.preventDefault();
+            focusWithoutPageScroll(next);
+            scrollIntoRail(event.currentTarget, next);
+          }}
           onFocus={(event) => {
             const chip = event.target;
             if (chip instanceof HTMLElement && chip.classList.contains("cf-chip")) {
