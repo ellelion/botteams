@@ -1042,6 +1042,25 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .index-header .section-title { display: none; }
   .cat-rail { margin-bottom: 10px; }
   .hero-stats { margin-top: 0.5rem; }
+  .search-kbd,
+  .cf-kbd { display: none; }
+}
+@media (max-width: 1023px) {
+  .story-beat.is-catalog-active {
+    padding-block: 0.35rem;
+    min-height: 0;
+  }
+  .story-beat.is-catalog-active .os-badge,
+  .story-beat.is-catalog-active .home-hero-manifesto {
+    display: none;
+  }
+  .story-beat.is-catalog-active h1 {
+    margin-top: 0.2rem;
+    font-size: 1.35rem;
+  }
+  .story-beat.is-catalog-active .hero-stats {
+    margin-top: 0.45rem;
+  }
 }
 
 /* ── Browsing 26 categories ───────────────────────────────────────────
