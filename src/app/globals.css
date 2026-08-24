@@ -6654,9 +6654,10 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   }
   .talk-overlay-canvas .talk-head {
     order: 1;
-    /* Close is position:absolute on the canvas. Without this, Replay
-       and the title sit under the 44px Close at 320. */
-    padding-right: calc(16px + 44px + 8px);
+    /* Close is position:absolute on the canvas. 68px cleared the
+       default Close but 1.4.12 grows it to 66px at right: 8, so Replay
+       overlapped by 6px. 88px keeps an 8px gap after that growth. */
+    padding-right: 5.5rem;
   }
   .talk-overlay-canvas .talk-thread {
     order: 2;
