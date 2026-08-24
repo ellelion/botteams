@@ -162,7 +162,12 @@
   letter-spacing: -0.02em;
   text-transform: none;
 }
-.guide-prose h2:first-child {
+/* :first-child also matched every section heading, so mid-article
+   breaks collapsed to 4px. Limit this to the first heading in the
+   column: after the on-this-page list, or the first cluster. */
+.guide-prose > h2:first-child,
+.guide-prose > .guide-toc + h2,
+.guide-prose > section:first-of-type > h2 {
   margin-top: 0.25rem;
 }
 .guide-prose h3 {
@@ -196,6 +201,8 @@
 }
 .guide-prose .guide-toc {
   margin: 1.25rem 0 0;
+  padding-left: 0;
+  list-style: none;
 }
 /* min-height is ignored on inline links. Same box as the spec jump list.
    Keep this selector as plain .guide-toc a so the 44px restatements win. */
@@ -427,11 +434,11 @@ body {
 @media (min-width: 1024px) {
   .site-menu { display: none; }
 }
-/* Text zoom does not shrink the viewport. At 200% a 1024 screen still
-   matches (min-width: 1024px) and the inline nav overflows by 21px.
-   rem here follows the root size, so a 34rem bar is 544px at 100% and
-   1088px at 200%. */
-@container (max-width: 34rem) {
+/* Text zoom does not shrink the viewport. At 200% a 1280 screen still
+   matches (min-width: 1024px). rem here follows the root size, so a
+   45rem bar is 720px at 100% and 1440px at 200%. Guides made 34rem
+   (1088px at 200%) too short for the 1280 row. */
+@container (max-width: 45rem) {
   .site-masthead-nav { display: none; }
   .site-menu { display: block; }
   .site-menu-button { width: 44px; height: 44px; }
