@@ -36,6 +36,7 @@ export const en = {
     opensNew: "Opens in a new tab",
     onThisPage: "On this page",
     directory: "Directory",
+    breadcrumb: "Breadcrumb",
   },
   home: {
     indexTitle: "Grok Bot Teams",
@@ -206,6 +207,7 @@ export const en = {
     skillsCountsLoading: "Looking up counts on Skillselion.",
     skillsCountsFail: "Skillselion did not return counts.",
     skillsAdd: "Add",
+    skillsBy: "by",
     skillsView: "View on Skillselion",
     skillsInstall: "Install",
     skillsFetch: "Fetch at run",

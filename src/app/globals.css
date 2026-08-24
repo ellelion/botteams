@@ -3522,7 +3522,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   text-transform: uppercase;
   cursor: pointer;
 }
-.rp-secondary { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
+.rp-secondary { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), transform 80ms cubic-bezier(0.2, 0, 0, 1); }
 .rp-secondary:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
 .rp-secondary:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .rp-head-chips {
@@ -5433,5 +5433,46 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .cz-skill-scope .cz-input {
     min-height: 44px;
     padding: 8px 14px;
+  }
+}
+
+/* Press: a 4% squash, same as the theme label. No lift and no shadow.
+   Instant on most chrome (their transitions list colour only). Reduced
+   motion keeps the control still. */
+@media (prefers-reduced-motion: no-preference) {
+  .cz-btn:active:not(:disabled),
+  .spon-cta:active:not(:disabled),
+  .share-btn:active,
+  .cat-pill:active,
+  .rp-secondary:active,
+  .filter-chip:active,
+  .idx-chip:active,
+  .idx-chip-clear:active,
+  .site-menu-button:active,
+  .theme-control:active:not(:disabled),
+  .sel-button:active,
+  .cf-chip:active,
+  .cf-browse:active,
+  .cf-clear:active,
+  .cf-search-clear:active,
+  .talk-watch-btn:active,
+  .talk-overlay-close:active,
+  .talk-dock-item:active,
+  .theme-accent-swatch:active,
+  .search-clear:active,
+  .browse-pick-btn:active,
+  .cz-chip:active,
+  a.chip:active,
+  .copy-btn:active,
+  .pill-btn:active {
+    transform: scale(0.96);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-control-label:active,
+  .rp-secondary:active,
+  .theme-accent-swatch:active,
+  .theme-accent-swatch:hover {
+    transform: none;
   }
 }
