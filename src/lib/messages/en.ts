@@ -482,6 +482,10 @@ export const en = {
       "Add a routine in Grok Bot after you paste the installer. This site does not invent one.",
     noRoutinesGuide: "Read the install guide",
     noRoutinesBotGuide: "Read how to create a Bot",
+    noConnectors: "No connectors in this recipe.",
+    noConnectorsHint:
+      "Connect what the job needs in Grok Bot before you paste. This site does not invent a list.",
+    noConnectorsGuide: "Read the connectors guide",
     noNotes: "No notes on this one.",
     noSkills: "No skills in this recipe.",
     noSkillsHint:

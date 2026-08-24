@@ -299,15 +299,25 @@ export function Customize({
     </>
   );
 
+  const hasConnectors = team.connectors.length > 0;
+  const connectorsEmpty = (
+    <div className="rc-empty-block">
+      <p className="rc-empty">{en.recipe.noConnectors}</p>
+      <p className="cz-hint">{en.recipe.noConnectorsHint}</p>
+      <Link href="/guides/grok-bot-connectors" className="rp-secondary mt-3">
+        {en.recipe.noConnectorsGuide}
+      </Link>
+    </div>
+  );
   const connectorsPart = (
     <div className="rc-connectors">
-      <h2 className="rc-h2">{en.team.connectFirst}</h2>
+      <h2 className="rc-h2">{hasConnectors ? en.team.connectFirst : en.recipe.secConnectors}</h2>
       <div className="mt-3">
-        <ConnectorRow names={team.connectors} labeled size={18} />
+        {hasConnectors ? <ConnectorRow names={team.connectors} labeled size={18} /> : connectorsEmpty}
       </div>
       <div className="mt-4 grid gap-2 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
         {solo ? <p>{en.xai.soloNote}</p> : null}
-        <p>{en.team.connectorsNote}</p>
+        {hasConnectors ? <p>{en.team.connectorsNote}</p> : null}
         <p>{en.team.installNote}</p>
       </div>
     </div>
@@ -356,6 +366,7 @@ export function Customize({
           <span className="cz-hint">{en.customize.resetHint}</span>
         </div>
 
+        {hasConnectors ? (
         <fieldset className="cz-group">
           <legend className="cz-legend">{en.customize.connectors}</legend>
           <p className="cz-truth">{en.customize.connectorTruth}</p>
@@ -399,6 +410,7 @@ export function Customize({
           </div>
           {readish.length > 0 ? <p className="cz-hint mt-3">{en.customize.pluginsNote(readish.join(", "))}</p> : null}
         </fieldset>
+        ) : null}
 
         <fieldset className="cz-group">
           <legend className="cz-legend">{en.customize.bots}</legend>
@@ -761,7 +773,9 @@ export function Customize({
             fourth mystery tab. */}
         <div className="rp-connectors">
           <span className="rp-room-label">{en.recipe.secConnectors}</span>
-          <ConnectorRow names={team.connectors} labeled size={18} />
+          {hasConnectors ? (
+            <ConnectorRow names={team.connectors} labeled size={18} />
+          ) : connectorsEmpty}
         </div>
       </section>
 
