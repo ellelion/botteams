@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Block, PageShell } from "@/components/PageShell";
+import { Block, PageJump, PageShell } from "@/components/PageShell";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -16,6 +16,16 @@ export default function TermsPage() {
       title="Terms"
       lead={`Short, and in the same voice as the rest of the site. ${site.company} operates ${site.name}. Using the site means these terms apply to you. Paying for a rail slot is agreement to these terms and to the Privacy policy.`}
     >
+      <PageJump
+        items={[
+          "Who you are dealing with",
+          "The recipes are MIT",
+          "You paste them at your own risk",
+          "Paid rail slots",
+          "Acceptable use",
+          "Changes and contact",
+        ]}
+      />
       <Block title="Who you are dealing with">
         <p>
           {site.company}, {site.address}. Email{" "}
@@ -35,7 +45,7 @@ export default function TermsPage() {
 
       <Block title="The recipes are MIT">
         <p>
-          Every team and bot file in{" "}
+          Every team and Bot file in{" "}
           <a className="accent-hover underline" href={site.github} rel="noopener noreferrer" target="_blank">
             ellelion/botteams
           </a>{" "}
