@@ -165,9 +165,6 @@ function ConversationStageLive({ team }: { team: Team }) {
   const solo = view !== null ? agents[view] : null;
   const soloName = solo ? grokDisplayBotName(solo.name) : "";
   const headTitle = solo ? soloName : roomLabel;
-  const composer = solo
-    ? `Message ${soloName}`
-    : `Message ${team.rooms[0] ? grokRoomName(team.rooms[0].name) : team.name}`;
 
   const script = useMemo(() => {
     if (view === null) return turns;
@@ -319,6 +316,7 @@ function ConversationStageLive({ team }: { team: Team }) {
       <div className="talk-main">
         <header className="talk-head">
           <h2 className="talk-head-title">{headTitle}</h2>
+          <p className="talk-replay">{en.team.watchReplay}</p>
         </header>
 
         <div className="talk-dock" aria-label="Open a Bot or the group chat">
@@ -472,7 +470,7 @@ function ConversationStageLive({ team }: { team: Team }) {
         <div className="talk-compose-bar">
           <div className="talk-composer" aria-hidden>
             <span className="talk-plus" aria-hidden>+</span>
-            <span className="talk-composer-ph">{composer.replace(/^\+\s*/, "")}</span>
+            <span className="talk-composer-ph">{en.team.watchReplayHint}</span>
             <span className="talk-mic" aria-hidden />
           </div>
         </div>

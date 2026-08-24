@@ -4751,6 +4751,8 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
 .talk-head {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   height: 44px;
   min-height: 44px;
   padding: 0 16px;
@@ -4766,12 +4768,20 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
 }
 .talk-head-title {
   margin: 1px 0 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--talk-text);
   font-size: 14px;
   font-weight: 560;
   letter-spacing: -0.15px;
 }
 .talk-replay {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
   border: 0.5px solid var(--talk-border);
   border-radius: 999px;
   background: transparent;
