@@ -1,10 +1,10 @@
-import { Suspense } from "react";
 import Link from "next/link";
-import { TeamIndex, TeamIndexFallback } from "@/components/home/TeamIndex";
+import { TeamIndex } from "@/components/home/TeamIndex";
 import { RevealText } from "@/components/home/RevealText";
 import { HeroStats } from "@/components/home/HeroStats";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { WingsSplit } from "@/components/WingsSplit";
+import type { IndexQuery } from "@/lib/catalog-query";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import type { Team } from "@/lib/types";
@@ -32,7 +32,7 @@ routines:
     prompt: Read Stripe. Draft the weekly money brief. Never move funds.
 ---`;
 
-export function HomePage({ teams }: { teams: Team[] }) {
+export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery }) {
   const teamCount = teams.filter((t) => t.kind === "team").length;
   const botCount = teams.filter((t) => t.kind === "bot").length;
   return (
@@ -124,9 +124,7 @@ export function HomePage({ teams }: { teams: Team[] }) {
         </>
       }
     >
-      <Suspense fallback={<TeamIndexFallback />}>
-        <TeamIndex teams={teams} />
-      </Suspense>
+      <TeamIndex teams={teams} query={query} />
       <div className="home-more lg:hidden">
         <details>
           <summary>{en.home.howSummary}</summary>

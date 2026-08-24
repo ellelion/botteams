@@ -25,17 +25,18 @@ export default function DocsPage() {
     >
         <h2 className="mt-2 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Fields</h2>
         <table className="spec-table mt-4">
+          <caption className="sr-only">Recipe fields</caption>
           <tbody>
-            <tr><th><code>name</code></th><td>Team title on the directory.</td></tr>
-            <tr><th><code>tagline</code></th><td>One line for the job of the team.</td></tr>
-            <tr><th><code>bots</code></th><td>Count of Bots in the team. Must match the bots list length.</td></tr>
-            <tr><th><code>section</code></th><td>Sidebar section name the human creates in Grok Bot.</td></tr>
-            <tr><th><code>status</code></th><td><code>team</code> (installable team) or <code>example</code> (format demo).</td></tr>
-            <tr><th><code>connectors</code></th><td>Account-wide connectors this team expects already connected. Union of per-Bot lists.</td></tr>
-            <tr><th>Bots list <code>agents</code></th><td>Each Bot: <code>name</code> + <code>persona</code> (the job). Optional <code>icon</code>, <code>connectors</code> (subset of the team list), <code>reuse</code>.</td></tr>
-            <tr><th>Group chats <code>rooms</code></th><td>Each group chat: <code>name</code> + <code>members</code> (Bot names). Visible label is Group chat.</td></tr>
-            <tr><th><code>routines</code></th><td><code>name</code>, owner Bot, <code>schedule</code>, <code>prompt</code>. A routine is owned by one Bot.</td></tr>
-            <tr><th><code>skills</code></th><td>Optional. Named later. Skills cannot be attached at Bot create time.</td></tr>
+            <tr><th scope="row"><code>name</code></th><td>Team title on the directory.</td></tr>
+            <tr><th scope="row"><code>tagline</code></th><td>One line for the job of the team.</td></tr>
+            <tr><th scope="row"><code>bots</code></th><td>Count of Bots in the team. Must match the bots list length.</td></tr>
+            <tr><th scope="row"><code>section</code></th><td>Sidebar section name the human creates in Grok Bot.</td></tr>
+            <tr><th scope="row"><code>status</code></th><td><code>team</code> (installable team) or <code>example</code> (format demo).</td></tr>
+            <tr><th scope="row"><code>connectors</code></th><td>Account-wide connectors this team expects already connected. Union of per-Bot lists.</td></tr>
+            <tr><th scope="row">Bots list <code>agents</code></th><td>Each Bot: <code>name</code> + <code>persona</code> (the job). Optional <code>icon</code>, <code>connectors</code> (subset of the team list), <code>reuse</code>.</td></tr>
+            <tr><th scope="row">Group chats <code>rooms</code></th><td>Each group chat: <code>name</code> + <code>members</code> (Bot names). Visible label is Group chat.</td></tr>
+            <tr><th scope="row"><code>routines</code></th><td><code>name</code>, owner Bot, <code>schedule</code>, <code>prompt</code>. A routine is owned by one Bot.</td></tr>
+            <tr><th scope="row"><code>skills</code></th><td>Optional. Named later. Skills cannot be attached at Bot create time.</td></tr>
           </tbody>
         </table>
 
@@ -71,15 +72,16 @@ export default function DocsPage() {
           with no group chat is not a team.
         </p>
         <table className="spec-table mt-5">
+          <caption className="sr-only">Bot recipes versus team recipes</caption>
           <tbody>
-            <tr><th /><th>bots/</th><th>teams/</th></tr>
-            <tr><th><code>kind</code></th><td><code>bot</code></td><td><code>team</code></td></tr>
-            <tr><th><code>bots</code></th><td>Always 1</td><td>2 to 6, matching <code>agents</code></td></tr>
-            <tr><th><code>agents</code></th><td>Exactly one</td><td>One per Bot</td></tr>
-            <tr><th><code>rooms</code></th><td>Forbidden. Empty or absent</td><td>Required. Each holds 2 to 6 Bots</td></tr>
-            <tr><th><code>routines</code></th><td>0 to 50 per owning Bot</td><td>0 to 50 per owning Bot</td></tr>
-            <tr><th>Verified</th><td>Never</td><td>When the roster fits the limits</td></tr>
-            <tr><th>URL</th><td><code>/bots/&lt;slug&gt;</code></td><td><code>/teams/&lt;slug&gt;</code></td></tr>
+            <tr><th scope="col"><span className="sr-only">Field</span></th><th scope="col">bots/</th><th scope="col">teams/</th></tr>
+            <tr><th scope="row"><code>kind</code></th><td><code>bot</code></td><td><code>team</code></td></tr>
+            <tr><th scope="row"><code>bots</code></th><td>Always 1</td><td>2 to 6, matching <code>agents</code></td></tr>
+            <tr><th scope="row"><code>agents</code></th><td>Exactly one</td><td>One per Bot</td></tr>
+            <tr><th scope="row"><code>rooms</code></th><td>Forbidden. Empty or absent</td><td>Required. Each holds 2 to 6 Bots</td></tr>
+            <tr><th scope="row"><code>routines</code></th><td>0 to 50 per owning Bot</td><td>0 to 50 per owning Bot</td></tr>
+            <tr><th scope="row">Verified</th><td>Never</td><td>When the roster fits the limits</td></tr>
+            <tr><th scope="row">URL</th><td><code>/bots/&lt;slug&gt;</code></td><td><code>/teams/&lt;slug&gt;</code></td></tr>
           </tbody>
         </table>
 

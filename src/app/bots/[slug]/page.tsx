@@ -74,7 +74,7 @@ export default async function BotPage({ params }: { params: Promise<{ slug: stri
         {related.map((other) => (
           <li key={other.slug} className="hairline-row py-3">
             <Link href={`/bots/${other.slug}`} className="accent-hover" style={{ fontFamily: ledger.serif }}>
-              {other.name}
+              {grokRecipeTitle(other.kind, other.name)}
             </Link>
             <p className="mt-1 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{other.tagline}</p>
             <div className="mt-2">

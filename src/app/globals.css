@@ -291,7 +291,7 @@ body {
     font-size: 0.875rem;
   }
   .site-menu-button { width: 44px; height: 44px; }
-  .theme-control { width: 40px; height: 40px; }
+  .theme-control { width: 44px; height: 44px; }
 
   .site-masthead-actions { gap: 8px; }
   .site-masthead-nav { display: none; }
@@ -378,14 +378,14 @@ body {
    masthead's height, which --masthead-h mirrors. */
 @media (max-width: 640px) {
   .theme-control {
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
   }
 
   .theme-control.theme-control-label,
   .theme-control-label {
     width: auto;
-    height: 34px;
+    height: 44px;
     padding: 0 14px;
   }
 
@@ -947,6 +947,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   margin-top: 16px;
   margin-bottom: 14px;
 }
+.search-field {
+  display: block;
+  width: 100%;
+}
 .search-icon {
   position: absolute;
   left: 14px;
@@ -1003,6 +1007,17 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .search-kbd { display: none; }
   .search-input { padding-right: 16px; }
   .search-input:not(:placeholder-shown) { padding-right: 88px; }
+  .search-clear,
+  .browse-pick-btn,
+  .idx-chip,
+  .idx-chip-clear,
+  .cat-pill,
+  .sel-button,
+  .filter-views .filter-chip--icon,
+  .row-arrow-link {
+    min-height: 44px;
+  }
+  .filter-views .filter-chip--icon { width: 44px; }
 }
 @media (max-width: 639px) {
   .search-wrap { margin-top: 32px; margin-bottom: 8px; }
@@ -1462,7 +1477,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   flex-wrap: wrap;
   gap: 10px;
   padding-top: 24px;
+  justify-content: center;
 }
+.idx-empty .notfound-nav { padding-top: 8px; }
 
 .row-arrow-link { position: relative; z-index: 1; }
 
@@ -1623,6 +1640,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: flex;
   align-items: center;
 }
+.cf-search-field {
+  display: block;
+  width: 100%;
+}
 .cf-search-icon {
   position: absolute;
   left: 13px;
@@ -1641,13 +1662,32 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-size: 0.95rem;
   transition: background var(--dur) var(--ease);
 }
+.cf-input:not(:placeholder-shown) { padding-right: 88px; }
 .cf-input::placeholder { color: var(--ink-soft); }
 .cf-input:focus {
   outline: 1px solid var(--accent);
   outline-offset: -1px;
   background: var(--surface-elevated);
 }
-.cf-input::-webkit-search-cancel-button { filter: invert(0.6); }
+.cf-input::-webkit-search-cancel-button { appearance: none; }
+.cf-search-clear {
+  position: absolute;
+  right: 8px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--accent-text);
+  font: 500 0.72rem/1 var(--font-geist-sans), system-ui, sans-serif;
+  cursor: pointer;
+}
+.cf-search-clear:hover { color: var(--ink); }
+.cf-search:focus-within .cf-kbd { display: none; }
+@media (pointer: coarse) {
+  .cf-kbd { display: none; }
+  .cf-search-clear { min-height: 44px; }
+}
 .cf-kbd {
   position: absolute;
   right: 14px;
