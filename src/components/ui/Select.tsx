@@ -76,6 +76,31 @@ export function Select({
     listRef.current?.querySelector<HTMLElement>('[data-active="true"]')?.scrollIntoView({ block: "nearest" });
   }, [open, active]);
 
+  /* Open upward when the list would run off the bottom of the viewport. */
+  useEffect(() => {
+    if (!open) return;
+    const listEl = listRef.current;
+    const buttonEl = buttonRef.current;
+    if (!listEl || !buttonEl) return;
+    const list = listEl;
+    const button = buttonEl;
+    function place() {
+      const btn = button.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - btn.bottom - 12;
+      const spaceAbove = btn.top - 12;
+      const height = list.offsetHeight;
+      list.classList.toggle("is-up", spaceBelow < height && spaceAbove > spaceBelow);
+      list.style.maxHeight = `${Math.max(160, Math.max(spaceBelow, spaceAbove))}px`;
+    }
+    place();
+    window.addEventListener("resize", place);
+    return () => {
+      window.removeEventListener("resize", place);
+      listEl.style.maxHeight = "";
+      listEl.classList.remove("is-up");
+    };
+  }, [open]);
+
   function openAt(index: number) {
     setActive(index);
     setOpen(true);
