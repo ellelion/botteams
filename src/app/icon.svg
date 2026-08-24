@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-label="botteams.ai">
   <rect width="24" height="24" rx="5" fill="#0a0a0a"/>
-  <path d="M7 5 V19 M7 5 H13 a3.5 3.5 0 0 1 0 7 H7 M7 12 H13.8 a3.5 3.5 0 0 1 0 7 H7" fill="none" stroke="#ededed" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="16.5" cy="8.5" r="1.5" fill="#54b9a6"/>
+  <path d="M3 5 V19 M3 5 H8.4 a2.5 2.5 0 0 1 0 5.6 H3 M3 10.6 H8.8 a2.5 2.5 0 0 1 0 6.4 H3 M13 5 H21 M17 5 V19" fill="none" stroke="#ededed" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="21" cy="5" r="1.5" fill="#54b9a6"/>
 </svg>

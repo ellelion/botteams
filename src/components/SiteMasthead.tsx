@@ -10,7 +10,7 @@ export function SiteMasthead() {
   return (
     <header className="site-masthead">
       <Link href="/" className="site-wordmark accent-hover inline-flex shrink-0 items-center gap-2" aria-label={en.nav.homeAria}>
-        <BotteamsMark size={22} />
+        <BotteamsMark size={24} />
         <span className="site-wordmark-text">{en.wordmark}</span>
       </Link>
       <div className="site-masthead-actions">

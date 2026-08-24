@@ -1,15 +1,14 @@
 /*
- * Family letter mark: a single rounded stroke B with the mint accent
- * at the upper bowl. Same path as the ellelion.com catalog BrandMark
- * and as src/app/icon.svg. currentColor follows the wordmark so the
- * stroke flips with the theme; the dot stays #54b9a6.
+ * Family two-letter mark: BT with the mint accent at the T bar.
+ * Same path as the ellelion.com catalog BrandMark and as icon.svg.
+ * currentColor follows the wordmark; the dot stays #54b9a6.
  */
 
-const B_PATH =
-  "M7 5 V19 M7 5 H13 a3.5 3.5 0 0 1 0 7 H7 M7 12 H13.8 a3.5 3.5 0 0 1 0 7 H7";
+const BT_PATH =
+  "M3 5 V19 M3 5 H8.4 a2.5 2.5 0 0 1 0 5.6 H3 M3 10.6 H8.8 a2.5 2.5 0 0 1 0 6.4 H3 M13 5 H21 M17 5 V19";
 
 export function BotteamsMark({
-  size = 22,
+  size = 24,
   className = "",
 }: {
   size?: number;
@@ -26,13 +25,13 @@ export function BotteamsMark({
       aria-hidden
     >
       <path
-        d={B_PATH}
+        d={BT_PATH}
         stroke="currentColor"
-        strokeWidth="2.5"
+        strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx="16.5" cy="8.5" r="1.5" fill="#54b9a6" />
+      <circle cx="21" cy="5" r="1.5" fill="#54b9a6" />
     </svg>
   );
 }
