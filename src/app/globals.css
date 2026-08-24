@@ -2252,12 +2252,18 @@ a.chip-unverified:hover {
 }
 .cf-row-teams {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  min-width: 24px;
   color: var(--accent-text);
   font-size: 0.76rem;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 .cf-row-teams:hover { text-decoration: underline; }
+.cf-row-teams:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .cf-row-quiet {
   flex: none;
   color: var(--muted);
@@ -5717,7 +5723,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .index-name,
   .home-contribute-links a,
   .home-scroll-cue,
-  .spon-paid-link {
+  .spon-paid-link,
+  .cf-row-teams {
     min-height: 44px;
   }
   .theme-control,
