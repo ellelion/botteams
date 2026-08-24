@@ -82,7 +82,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
           <section className="wings-hero-extra relative z-10 mx-auto max-w-xl pb-[var(--sec-y)] pt-[var(--sec-y)] text-center hidden lg:block">
             <h2 className="text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>{en.home.howTitle}</h2>
             <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.howBody}</p>
-            <p className="home-contribute-links mt-4 text-[0.72rem]">
+            <p className="home-contribute-links mt-4">
               <Link className="accent-hover underline" href="/guides/install-a-grok-bot-team">{en.home.howGuide}</Link>
             </p>
 
@@ -93,7 +93,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
             <pre className="installer-prompt is-whole mt-5 p-4 text-left text-[0.68rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
               <code>{CONTRIBUTE_SAMPLE}</code>
             </pre>
-            <p className="home-contribute-links mt-4 text-[0.72rem]">
+            <p className="home-contribute-links mt-4">
               <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-label={`${en.home.contributePr}. ${en.nav.opensNew}`}>
                 {en.home.contributePr}
               </a>
@@ -119,7 +119,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
                 </div>
               ))}
             </dl>
-            <p className="home-contribute-links mt-4 text-[0.72rem]">
+            <p className="home-contribute-links mt-4">
               <Link className="accent-hover underline" href="/guides">{en.home.faqGuides}</Link>
             </p>
           </section>

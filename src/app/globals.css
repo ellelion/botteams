@@ -4945,6 +4945,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   min-height: 24px;
   min-width: 24px;
 }
+/* How / contribute recoveries used 0.72rem on desktop while the
+   phone accordion already set the same labels at 0.9rem. */
+.home-contribute-links a {
+  font-size: 0.88rem;
+}
 /* Endpoint and download actions sat in 0.8rem parents (12.8px).
    Sponsor / empty recoveries already use 0.88rem for the same job. */
 .api-link {
