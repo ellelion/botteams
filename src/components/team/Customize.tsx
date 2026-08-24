@@ -69,6 +69,9 @@ export function Customize({
   const modeHintId = useId();
   const roomNameErrorId = useId();
   const roomSizeErrorId = useId();
+  const alsoHintId = useId();
+  const botNameErrorBase = useId();
+  const botNoteHintBase = useId();
   const sheetRef = useRef<HTMLDivElement>(null);
   const overwriteRef = useRef<HTMLDivElement>(null);
   const closeSheet = useCallback(() => setSheet(null), []);
@@ -389,6 +392,15 @@ export function Customize({
           <ul className="cz-list">
             {team.agents.map((agent, i) => {
               const on = isOn(state, agent.name);
+              const resolvedAgent = resolved.agents.find((row) => row.source.name === agent.name);
+              const blankName = on && !resolvedAgent?.name;
+              const clashName = Boolean(
+                on &&
+                  resolvedAgent?.name &&
+                  resolved.agents.filter((row) => row.name.toLowerCase() === resolvedAgent.name.toLowerCase()).length > 1,
+              );
+              const nameErrorId = `${botNameErrorBase}-${i}`;
+              const noteHintId = `${botNoteHintBase}-${i}`;
               return (
                 <li key={agent.name} className={`cz-bot${on ? "" : " is-off"}`}>
                   <div className="cz-bot-top">
@@ -407,9 +419,16 @@ export function Customize({
                         value={state.names[agent.name] ?? grokMemberName(team.name, agent.name)}
                         disabled={!on}
                         onChange={(e) => patch({ names: { ...state.names, [agent.name]: e.target.value } })}
+                        aria-invalid={blankName || clashName || undefined}
+                        aria-describedby={blankName || clashName ? nameErrorId : undefined}
                       />
                     </label>
                   </div>
+                  {blankName || clashName ? (
+                    <p id={nameErrorId} className="cz-hint" role="alert">
+                      {blankName ? en.customize.botNameNeeded : en.customize.botNameClash}
+                    </p>
+                  ) : null}
                   <p className="cz-bot-persona">{agent.persona}</p>
                   {agent.reuse ? <p className="cz-hint">{en.customize.reuseNote}</p> : null}
                   {agent.connectors.length > 0 ? (
@@ -424,8 +443,9 @@ export function Customize({
                         placeholder={en.customize.botNotePlaceholder}
                         value={state.notes[agent.name] ?? ""}
                         onChange={(e) => patch({ notes: { ...state.notes, [agent.name]: e.target.value } })}
+                        aria-describedby={noteHintId}
                       />
-                      <span className="cz-hint">{en.customize.botNoteHint}</span>
+                      <span id={noteHintId} className="cz-hint">{en.customize.botNoteHint}</span>
                     </label>
                   ) : null}
                 </li>
@@ -514,9 +534,10 @@ export function Customize({
               placeholder={en.customize.alsoPlaceholder}
               value={state.free}
               onChange={(e) => patch({ free: e.target.value })}
+              aria-describedby={alsoHintId}
             />
           </label>
-          <p className="cz-hint">{en.customize.alsoNoSecrets}</p>
+          <p id={alsoHintId} className="cz-hint">{en.customize.alsoNoSecrets}</p>
         </fieldset>
 
         <fieldset className="cz-group">

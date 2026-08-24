@@ -138,6 +138,8 @@ export const en = {
     bots: "Grok Bots",
     botOn: "On this team",
     botName: "Bot name",
+    botNameNeeded: "Every Bot needs a name.",
+    botNameClash: "Two Bots share this name. Make them different.",
     botNote: "Extra wording for this Bot",
     botNotePlaceholder: "Only the Stripe watcher should touch Stripe",
     botNoteHint: "Wording only. It cannot stop another Bot reaching the connector.",
