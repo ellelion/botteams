@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 /*
  * A listbox we own.
@@ -76,8 +76,9 @@ export function Select({
     listRef.current?.querySelector<HTMLElement>('[data-active="true"]')?.scrollIntoView({ block: "nearest" });
   }, [open, active]);
 
-  /* Open upward when the list would run off the bottom of the viewport. */
-  useEffect(() => {
+  /* Open upward when the list would run off the bottom of the viewport.
+     Layout first, then again if icons change the height. */
+  useLayoutEffect(() => {
     if (!open) return;
     const listEl = listRef.current;
     const rootEl = rootRef.current;
@@ -93,8 +94,11 @@ export function Select({
       list.style.maxHeight = `${Math.max(120, Math.floor(Math.max(spaceBelow, spaceAbove)))}px`;
     }
     place();
+    const ro = new ResizeObserver(place);
+    ro.observe(list);
     window.addEventListener("resize", place);
     return () => {
+      ro.disconnect();
       window.removeEventListener("resize", place);
       listEl.style.maxHeight = "";
       listEl.classList.remove("is-up");
