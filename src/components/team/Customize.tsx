@@ -145,8 +145,10 @@ export function Customize({
       });
     return () => {
       cancelled = true;
+      /* React remounts this effect in development. Keep the ids askable
+         or a cancelled first flight leaves every row pending forever. */
+      for (const id of missing) askedHits.current.delete(id);
     };
-  }, [mounted, state.skillPicks, liveHits, resolvedHits, listingsNonce]);
 
   function retryListings() {
     askedHits.current.clear();
