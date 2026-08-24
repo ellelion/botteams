@@ -307,7 +307,7 @@ function ConversationStageLive({ team }: { team: Team }) {
               className={`talk-dock-item${view === null ? " is-on" : ""}`}
               aria-pressed={view === null}
               onClick={() => setView(null)}
-              title={roomLabel}
+              aria-label={`${en.team.watchGroup}, ${roomLabel}`}
             >
               <span className="talk-stack talk-stack-sm">
                 {agents.slice(0, 3).map((agent, i) => (
@@ -325,7 +325,7 @@ function ConversationStageLive({ team }: { team: Team }) {
               style={botMarkStyle(i, agent.name, agent.persona)}
               aria-pressed={view === i}
               onClick={() => setView(i)}
-              title={grokDisplayBotName(agent.name)}
+              aria-label={grokDisplayBotName(agent.name)}
             >
               <GrokBotMark size={22} animate={view === i} style={botMarkStyle(i, agent.name, agent.persona)} />
               <span>{grokDisplayBotName(agent.name).replace(" Grok Bot", "")}</span>
@@ -421,7 +421,7 @@ function ConversationStageLive({ team }: { team: Team }) {
                     {checks.length ? (
                       <ul className="talk-check talk-check-compact" aria-label={en.team.watchReceipts}>
                         {checks.map((c) => (
-                          <li key={c}>{c}</li>
+                          <li key={c} className="is-on">{c}</li>
                         ))}
                       </ul>
                     ) : null}
@@ -446,7 +446,7 @@ function ConversationStageLive({ team }: { team: Team }) {
                   {receipts.length ? (
                     <ul className="talk-check talk-check-compact" aria-label={en.team.watchReceipts}>
                       {receipts.map((c) => (
-                        <li key={c}>{c}</li>
+                        <li key={c} className="is-on">{c}</li>
                       ))}
                     </ul>
                   ) : null}
