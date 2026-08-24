@@ -4956,6 +4956,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   }
   .browse-pick-btn.is-on,
   .cat-pill.is-on,
+  .filter-chip.is-on,
+  .cz-chip.is-on,
   .filter-views .filter-chip--icon.is-on,
   .cf-chip.is-on,
   .theme-accent-swatch.is-selected,
