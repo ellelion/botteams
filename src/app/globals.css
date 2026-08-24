@@ -1894,6 +1894,9 @@ a.chip-unverified:focus-visible {
   color: var(--ink-soft);
 }
 .home-more details[open] summary { color: var(--ink); }
+.home-more summary:hover,
+.home-more summary:focus-visible { color: var(--accent-text); }
+.home-more summary:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .home-more summary::-webkit-details-marker { display: none; }
 .home-more summary::after {
   content: "";
@@ -1988,6 +1991,9 @@ a.chip-unverified:focus-visible {
   color: var(--ink-soft);
 }
 .spon-faq details[open] summary { color: var(--ink); }
+.spon-faq summary:hover,
+.spon-faq summary:focus-visible { color: var(--accent-text); }
+.spon-faq summary:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .spon-faq summary::-webkit-details-marker { display: none; }
 .spon-faq summary::after {
   content: "";
