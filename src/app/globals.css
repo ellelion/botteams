@@ -1685,8 +1685,11 @@ a.chip-unverified:focus-visible {
   transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
 .chevron:hover,
+.chevron:focus-visible,
 .index-row:hover .chevron,
-.team-card:hover .chevron {
+.index-row:focus-within .chevron,
+.team-card:hover .chevron,
+.team-card:focus-within .chevron {
   color: var(--ink);
   background: var(--surface-elevated);
 }
