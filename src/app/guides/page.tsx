@@ -89,7 +89,7 @@ export default function GuidesIndexPage() {
               <section key={cluster.id}>
                 <h2 id={cluster.id}>{cluster.title}</h2>
                 <p>{cluster.lead}</p>
-                <ul>
+                <ul className="guide-index">
                   {items.map((guide) => (
                     <li key={guide.slug}>
                       <Link className="accent-hover underline underline-offset-2" href={`/guides/${guide.slug}`}>
