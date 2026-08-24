@@ -40,13 +40,31 @@ export function AccentPicker() {
         triggerRef.current?.focus();
       }
     };
+    const tab = (event: KeyboardEvent) => {
+      if (event.key !== "Tab") return;
+      const root = wrapRef.current;
+      if (!root) return;
+      const list = [...root.querySelectorAll<HTMLElement>("button:not([disabled])")];
+      if (list.length === 0) return;
+      const first = list[0];
+      const last = list[list.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
     document.addEventListener("mousedown", outside);
     document.addEventListener("keydown", escape);
+    document.addEventListener("keydown", tab);
     const selected = ACCENT_PALETTE.findIndex((color) => color === accent);
     swatchRefs.current[selected >= 0 ? selected : 0]?.focus();
     return () => {
       document.removeEventListener("mousedown", outside);
       document.removeEventListener("keydown", escape);
+      document.removeEventListener("keydown", tab);
     };
   }, [open, accent]);
 
@@ -93,7 +111,7 @@ export function AccentPicker() {
         </span>
       </button>
       {open && (
-        <div id={popoverId} className="theme-accent-popover" role="dialog" aria-label="Choose accent color">
+        <div id={popoverId} className="theme-accent-popover" role="dialog" aria-modal="true" aria-label="Choose accent color">
           <div role="radiogroup" aria-label="Choose accent color">
             {ACCENT_PALETTE.map((value, index) => (
               <button

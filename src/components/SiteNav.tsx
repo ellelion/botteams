@@ -29,7 +29,7 @@ export function SiteNavLinks({
               target="_blank"
               rel="noopener noreferrer"
               className={className === "site-masthead-nav" ? "accent-hover site-nav-icon" : "site-menu-link"}
-              aria-label={className === "site-masthead-nav" ? item.label : undefined}
+              aria-label={`${item.label}. ${en.nav.opensNew}`}
               title={item.label}
               onClick={onNavigate}
             >

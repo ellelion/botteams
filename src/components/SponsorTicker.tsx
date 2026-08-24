@@ -1,3 +1,5 @@
+"use client";
+
 import {
   type Campaign,
   houseSlots,
@@ -6,6 +8,7 @@ import {
 } from "@/data/sponsors";
 import { HideNextIndicator } from "@/components/HideNextIndicator";
 import { en } from "@/lib/messages/en";
+import { useScrollEdges } from "@/lib/use-scroll-edges";
 
 function Chip({
   slot,
@@ -39,9 +42,11 @@ function ChipRow({
   campaign: Campaign;
 }) {
   const base = slots.length ? slots : houseSlots;
+  const rail = useScrollEdges<HTMLDivElement>(base.length);
   return (
     <div
-      className="spon-mq-copy"
+      ref={rail.ref}
+      className={`spon-mq-copy scroll-fade${rail.edges.start ? " has-start" : ""}${rail.edges.end ? " has-end" : ""}`}
       style={{
         flex: "0 1 auto",
         minWidth: 0,

@@ -51,10 +51,12 @@ export function CopyInstallerButton({
       aria-disabled={disabled}
       title={disabled ? disabledReason : undefined}
       aria-describedby={disabled && disabledReason ? reasonId : undefined}
-      aria-live="polite"
     >
       {label}
       {disabled && disabledReason ? <span id={reasonId} className="sr-only">{disabledReason}</span> : null}
+      <span className="sr-only" role="status" aria-live="polite">
+        {copied || failed ? label : ""}
+      </span>
     </button>
   );
 }
