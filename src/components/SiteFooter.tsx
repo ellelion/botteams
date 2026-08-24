@@ -2,17 +2,17 @@ import Link from "next/link";
 import { ExternalLinkIcon } from "@/components/icons/ExternalLinkIcon";
 import { GitHubIcon } from "@/components/icons/GitHubIcon";
 import { GrokLogomark } from "@/components/icons/GrokLogomark";
-import { WingsMark } from "@/components/WingsMark";
+import { BotteamsMark } from "@/components/icons/BotteamsMark";
 import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 
 /*
  * Two panes. Who this is on the left, where to go on the right.
  *
- * The left pane is identity: the mark, the name, and the legal line that
- * has to travel with them. The Grok credit sits at the bottom of that
- * pane with real space above it, because it is a credit and not part of
- * our lockup. It is never beside the wings and never inside a badge.
+ * The left pane is identity: the B letter mark, the name, and the legal
+ * line that has to travel with them. The Grok credit sits at the bottom
+ * of that pane with real space above it, because it is a credit and not
+ * part of our lockup. It is never beside the B and never inside a badge.
  *
  * The right pane is the map: what you can browse, what you can read
  * against, the company, and the rest of what Ellelion ships.
@@ -67,7 +67,7 @@ export function SiteFooter() {
         <div className="foot-panes">
           <div className="foot-identity">
             <Link href="/" className="foot-id" aria-label={en.nav.homeAria}>
-              <WingsMark size={40} layoutSize={22} />
+              <BotteamsMark size={24} />
               <span className="foot-id-name">{en.wordmark}</span>
             </Link>
             <p className="foot-legal">
@@ -117,7 +117,7 @@ export function SiteFooter() {
         </div>
         <div className="foot-meta">
           <p className="foot-meta-note">{en.footer.notAffiliated}</p>
-          {/* Credit at the bottom of the footer, well clear of the wings. */}
+          {/* Credit at the bottom of the footer, well clear of the lockup. */}
           <a
             className="foot-grok"
             href={site.grokHome}

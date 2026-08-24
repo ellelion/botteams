@@ -2,7 +2,7 @@ import Link from "next/link";
 import { GitHubIcon } from "@/components/icons/GitHubIcon";
 import { SiteMenu } from "@/components/SiteMenu";
 import { ThemeControls } from "@/components/theme/ThemeControls";
-import { WingsMark } from "@/components/WingsMark";
+import { BotteamsMark } from "@/components/icons/BotteamsMark";
 import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 
@@ -10,7 +10,7 @@ export function SiteMasthead() {
   return (
     <header className="site-masthead">
       <Link href="/" className="site-wordmark accent-hover inline-flex shrink-0 items-center gap-2" aria-label={en.nav.homeAria}>
-        <WingsMark size={36} layoutSize={18} priority />
+        <BotteamsMark size={22} />
         <span className="site-wordmark-text">{en.wordmark}</span>
       </Link>
       <div className="site-masthead-actions">
