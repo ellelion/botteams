@@ -2647,6 +2647,10 @@ a.chip-unverified:hover {
   transition: background var(--dur) var(--ease);
 }
 .idx-card:hover { background: var(--surface-elevated); }
+.idx-card:hover .idx-card-name,
+.idx-card:focus-visible .idx-card-name {
+  color: var(--accent-text);
+}
 .idx-card:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
 .idx-card-cat {
   color: var(--accent-text);
@@ -2659,6 +2663,7 @@ a.chip-unverified:hover {
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: -0.01em;
+  transition: color var(--dur) var(--ease);
 }
 .idx-card-chips {
   display: flex;
