@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { en } from "@/lib/messages/en";
 import { ACCENT_PALETTE, DEFAULT_ACCENT } from "@/lib/theme";
 import { applyAccentPreference, readCurrentAccent } from "@/lib/theme-client";
+import { useDialogChrome } from "@/lib/use-dialog-chrome";
 
 function accentName(hex: string): string {
   return (en.theme.accents as Record<string, string>)[hex] ?? hex;
@@ -33,51 +34,27 @@ export function AccentPicker() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const swatchRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const close = useCallback(() => setOpen(false), []);
+  const initialSwatch = useCallback(
+    (root: HTMLElement) => root.querySelector<HTMLElement>('[role="radio"][aria-checked="true"]'),
+    [],
+  );
+
+  useDialogChrome({ open, rootRef: wrapRef, onClose: close, getInitialFocus: initialSwatch });
 
   useEffect(() => {
     if (!open) return;
     const outside = (event: MouseEvent) => {
       if (wrapRef.current && !wrapRef.current.contains(event.target as Node)) setOpen(false);
     };
-    const escape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-        triggerRef.current?.focus();
-      }
-    };
-    const tab = (event: KeyboardEvent) => {
-      if (event.key !== "Tab") return;
-      const root = wrapRef.current;
-      if (!root) return;
-      const list = [...root.querySelectorAll<HTMLElement>("button:not([disabled])")];
-      if (list.length === 0) return;
-      const first = list[0];
-      const last = list[list.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
     document.addEventListener("mousedown", outside);
-    document.addEventListener("keydown", escape);
-    document.addEventListener("keydown", tab);
-    const selected = ACCENT_PALETTE.findIndex((color) => color === accent);
-    swatchRefs.current[selected >= 0 ? selected : 0]?.focus();
-    return () => {
-      document.removeEventListener("mousedown", outside);
-      document.removeEventListener("keydown", escape);
-      document.removeEventListener("keydown", tab);
-    };
-  }, [open, accent]);
+    return () => document.removeEventListener("mousedown", outside);
+  }, [open]);
 
   function pick(value: string) {
     applyAccentPreference(value);
     for (const listener of listeners) listener();
     setOpen(false);
-    triggerRef.current?.focus();
   }
 
   function onSwatchKey(event: React.KeyboardEvent, index: number) {

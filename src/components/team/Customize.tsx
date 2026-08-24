@@ -117,7 +117,7 @@ export function Customize({
     hydrated.current = true;
   }, [team]);
 
-  useDialogChrome({ open: sheet !== null && mounted && !pending, rootRef: sheetRef, onClose: closeSheet });
+  useDialogChrome({ open: sheet !== null && mounted, paused: Boolean(pending), rootRef: sheetRef, onClose: closeSheet });
   useDialogChrome({ open: Boolean(pending) && mounted, rootRef: overwriteRef, onClose: closeOverwrite });
   const { ref: actionsRef, edges: actionEdges } = useScrollEdges<HTMLDivElement>();
 

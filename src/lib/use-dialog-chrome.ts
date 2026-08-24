@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -21,39 +21,69 @@ function focusables(root: HTMLElement) {
 }
 
 /*
- * Dialog chrome for sheets and the mobile menu: lock page scroll, move
- * focus in, trap Tab, close on Escape, restore focus on the way out.
+ * Inert every ancestor sibling of `keep` so an in-page dialog (site menu,
+ * accent picker) isolates the rest of the document the same way a
+ * portaled sheet does. Walking to body also covers Watch / Customize /
+ * overwrite, which sit as a body child.
+ */
+function isolate(keep: HTMLElement) {
+  const nodes: { el: HTMLElement; prev: boolean }[] = [];
+  let node: HTMLElement | null = keep;
+  while (node && node.parentElement) {
+    for (const sibling of node.parentElement.children) {
+      if (sibling === node || !(sibling instanceof HTMLElement)) continue;
+      nodes.push({ el: sibling, prev: sibling.inert });
+      sibling.inert = true;
+    }
+    if (node.parentElement === document.body) break;
+    node = node.parentElement;
+  }
+  return () => {
+    for (const { el, prev } of nodes) el.inert = prev;
+  };
+}
+
+/*
+ * Dialog chrome for sheets, Watch, overwrite, and the mobile menu: lock
+ * page scroll, move focus in, trap Tab, close on Escape, restore focus
+ * on the way out. `paused` keeps the sheet mounted under overwrite
+ * without stealing keys, inert, or focus.
  */
 export function useDialogChrome({
   open,
+  paused = false,
   rootRef,
   onClose,
+  getInitialFocus,
 }: {
   open: boolean;
+  paused?: boolean;
   rootRef: RefObject<HTMLElement | null>;
   onClose: () => void;
+  getInitialFocus?: (root: HTMLElement) => HTMLElement | null | undefined;
 }) {
+  const skipRestoreRef = useRef(false);
+  skipRestoreRef.current = Boolean(paused);
+
   useEffect(() => {
-    if (!open) return;
+    if (!open || paused) return;
     const root = rootRef.current;
     if (!root) return;
 
     const restore = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const dialog = root;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const release = isolate(root);
 
-    const start = focusables(dialog).find((el) => el !== restore) ?? focusables(dialog)[0];
-    start?.focus();
-
-    /* Portaled dialogs sit on body. Mark every other body child inert so
-       browse mode cannot leave the sheet, Watch overlay, or overwrite. */
-    const inertRoots =
-      dialog.parentElement === document.body
-        ? [...document.body.children].filter((node): node is HTMLElement => node instanceof HTMLElement && node !== dialog)
-        : [];
-    const prevInert = inertRoots.map((node) => node.inert);
-    for (const node of inertRoots) node.inert = true;
+    const list = focusables(root);
+    const preferred = getInitialFocus?.(root);
+    const start = preferred ?? list.find((el) => el !== restore) ?? list[0];
+    /* Opening: move focus in. Resuming after overwrite: the field that
+       triggered the alert is already inside, so leave it alone. A trigger
+       that lives inside the root (menu, accent) is list[0], so we still
+       step to the first real control. */
+    const preserve = Boolean(restore && root.contains(restore) && restore !== list[0] && !preferred);
+    if (!preserve) start?.focus();
 
     function onKey(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -62,10 +92,10 @@ export function useDialogChrome({
         return;
       }
       if (event.key !== "Tab") return;
-      const list = focusables(dialog);
-      if (list.length === 0) return;
-      const first = list[0];
-      const last = list[list.length - 1];
+      const next = focusables(root);
+      if (next.length === 0) return;
+      const first = next[0];
+      const last = next[next.length - 1];
       if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
@@ -79,10 +109,8 @@ export function useDialogChrome({
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
-      inertRoots.forEach((node, i) => {
-        node.inert = prevInert[i] ?? false;
-      });
-      restore?.focus();
+      release();
+      if (!skipRestoreRef.current) restore?.focus();
     };
-  }, [open, rootRef, onClose]);
+  }, [open, paused, rootRef, onClose, getInitialFocus]);
 }

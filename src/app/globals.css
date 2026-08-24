@@ -5445,7 +5445,7 @@ html[data-theme="dark"] .talk-stage {
 .talk-check li.is-on .talk-tl-dot { background: var(--accent); }
 .talk-check li.is-on {
   color: var(--talk-text);
-  animation: talk-check 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: talk-check var(--dur) var(--ease) both;
 }
 .talk-check-mark {
   width: 16px;
@@ -5679,8 +5679,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   50% { opacity: 0.7; }
 }
 @keyframes talk-check {
-  from { opacity: 0; transform: scale(0.4); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .talk-you {
