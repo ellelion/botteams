@@ -4791,7 +4791,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   text-align: left;
 }
 .index-ad:hover .idx-ad-name,
-.idx-card.idx-ad:hover .idx-ad-name { color: var(--accent-text); }
+.index-ad:focus-visible .idx-ad-name,
+.idx-card.idx-ad:hover .idx-ad-name,
+.idx-card.idx-ad:focus-visible .idx-ad-name { color: var(--accent-text); }
 .index-ad-open { border-bottom-style: dashed; }
 .idx-ad-kicker {
   display: block;
