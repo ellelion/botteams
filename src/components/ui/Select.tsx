@@ -89,9 +89,15 @@ export function Select({
       const box = root.getBoundingClientRect();
       const spaceBelow = window.innerHeight - box.bottom - 8;
       const spaceAbove = box.top - 8;
+      const available = Math.max(spaceBelow, spaceAbove);
+      /* Match the stylesheet cap (19rem, or half the viewport on a phone)
+         so leftover space above the button cannot become a full-screen menu. */
+      list.style.maxHeight = "";
+      const cssCap = Number.parseFloat(getComputedStyle(list).maxHeight);
+      const cap = Number.isFinite(cssCap) && cssCap > 0 ? cssCap : Math.min(304, Math.floor(window.innerHeight * 0.5));
+      list.style.maxHeight = `${Math.max(120, Math.floor(Math.min(available, cap)))}px`;
       const height = list.offsetHeight;
       list.classList.toggle("is-up", spaceBelow < height && spaceAbove > spaceBelow);
-      list.style.maxHeight = `${Math.max(120, Math.floor(Math.max(spaceBelow, spaceAbove)))}px`;
     }
     place();
     const ro = new ResizeObserver(place);
