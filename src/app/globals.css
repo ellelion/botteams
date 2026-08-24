@@ -340,6 +340,13 @@ body {
   color: var(--ink);
 }
 .site-wordmark-text { font-weight: 500; letter-spacing: -0.012em; }
+.wings-mark { border-radius: 22%; }
+/* The BT tile is #1a1a18. On dark paper that fill is ~1:1, so the
+   rounded square disappears and only the letters remain. --pill-line
+   is the 3:1 hairline used for other page-on-page chrome. */
+html[data-theme="dark"] .wings-mark {
+  box-shadow: 0 0 0 1px var(--pill-line);
+}
 
 .site-masthead-actions {
   display: flex;
@@ -1633,7 +1640,15 @@ a.chip-unverified:focus-visible {
   align-items: center;
   gap: 12px;
   margin: 0 0 12px;
+  min-width: 0;
+  /* Always a scrollport. At CSS zoom the column goes phone-narrow
+     while the viewport stays 1280, so the 560px wrap never applies
+     and Teams / Bots / All pushed the catalog 6px past the pane. */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
 }
+.browse-pick::-webkit-scrollbar { display: none; }
 .browse-pick-label {
   font-size: 13px;
   font-weight: 500;
@@ -5014,6 +5029,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
    controls must keep a visible edge when background color is ignored. */
 @media (forced-colors: active) {
   .theme-control,
+  .wings-mark,
   .browse-pick-btn,
   .cat-pill,
   .sel-button,

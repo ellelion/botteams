@@ -25,7 +25,7 @@ export function WingsMark({
 
   return (
     <span
-      className={`relative inline-block shrink-0 ${className}`}
+      className={`wings-mark relative inline-block shrink-0 ${className}`}
       style={{
         width: size,
         height: size,
