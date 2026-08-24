@@ -126,6 +126,13 @@ export const en = {
     contributeSummary: "Add a team",
     listingView: "Listing view",
     removeFilter: (value: string) => `Remove filter ${value}`,
+    /* The date is when we last checked xAI's published Grok Bot limits.
+       It is not the team Verified badge (roster of two to six Bots). */
+    statsTeams: "Teams",
+    statsBots: "Bots",
+    limitsChecked: "Limits checked",
+    statsAria: (teams: number, bots: number, day: string) =>
+      `${teams} teams, ${bots} Bots, limits checked ${day}`,
   },
   customize: {
     open: "Customize",
@@ -422,6 +429,7 @@ export const en = {
   docs: {
     title: "Team spec",
     h1: "Team spec",
+    limitsCheckedOn: "Limits checked on",
   },
   recipe: {
     close: "Close",

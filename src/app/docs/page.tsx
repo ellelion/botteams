@@ -24,7 +24,8 @@ export default function DocsPage() {
             This is Ellelion&apos;s recipe format for a company team. It is not an xAI file format. xAI did not author these teams. The YAML below is ours. The nouns it maps onto are xAI&apos;s, documented by them.
           </p>
           <p className="meta mt-3">
-            Verified on <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
+            {en.docs.limitsCheckedOn}{" "}
+            <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
           </p>
         </WingsHero>
       }
