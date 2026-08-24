@@ -4295,6 +4295,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cz-mode,
   .talk-watch-btn,
   .talk-overlay-close,
+  .talk-replay,
   .talk-rail-row,
   .talk-dock-item,
   .site-menu-button,
@@ -5003,8 +5004,19 @@ html[data-theme="dark"] .talk-stage {
   border-radius: 999px;
   background: transparent;
   color: var(--talk-soft);
-  font-size: 12px;
+  font: 500 12px/1 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
   padding: 5px 12px;
+  cursor: pointer;
+}
+.talk-replay:hover {
+  color: var(--talk-text);
+  border-color: color-mix(in srgb, var(--talk-text) 55%, var(--talk-border));
+}
+.talk-replay:focus,
+.talk-replay:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
 }
 .talk-dock {
   display: flex;
@@ -5636,6 +5648,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .talk-watch-btn,
   .talk-overlay-close,
   .talk-dock-item,
+  .talk-replay,
+  .sel-option,
   .spon-cta,
   .foot-link,
   .doc-jump a,
@@ -5717,6 +5731,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .talk-watch-btn:active,
   .talk-overlay-close:active,
   .talk-dock-item:active,
+  .talk-replay:active,
   .theme-accent-swatch:active,
   .search-clear:active,
   .browse-pick-btn:active,

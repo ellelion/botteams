@@ -292,8 +292,10 @@ function ConversationStageLive({ team }: { team: Team }) {
 
       <div className="talk-main">
         <header className="talk-head">
-          <h2 className="talk-head-title">{headTitle}</h2>
-          <p className="talk-replay">{en.team.watchReplay}</p>
+          <h3 className="talk-head-title">{headTitle}</h3>
+          <button type="button" className="talk-replay" onClick={start}>
+            {en.team.watchReplay}
+          </button>
         </header>
 
         <div className="talk-dock" aria-label={en.team.watchDock}>
