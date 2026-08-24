@@ -3766,22 +3766,28 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   line-height: 1.4;
   overflow: visible;
 }
+/* Toolbar only. Identity lives above this so a desktop H1 cannot
+   become a 300px sticky wall over Routines. Parent is .rp, which
+   includes the roster and accordion, so the bar can stick for the
+   whole recipe. */
 .rp-head {
   position: sticky;
   top: var(--masthead-h);
   z-index: 26;
-  padding: 12px 0 12px;
+  padding: 10px 0;
   background: var(--page);
   border-bottom: 1px solid var(--line-strong);
   box-shadow: 0 -32px 0 0 var(--page);
 }
-.rp-head-row {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
+@media (min-width: 1024px) {
+  /* The listing column is already under the masthead. */
+  .rp-head { top: 0; }
 }
-.rp-head-id { min-width: 0; width: 100%; }
+.rp-head-id {
+  min-width: 0;
+  width: 100%;
+  margin-bottom: 14px;
+}
 .rp-name {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: clamp(1.55rem, 3vw, 2.25rem);
@@ -4033,21 +4039,23 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .rp-run-cadence { flex: none; text-align: right; white-space: nowrap; }
 
 .rp-acc { margin-top: 28px; border-top: 1px solid var(--line-strong); }
-.rp-sec { border-bottom: 1px solid var(--line); }
+.rp-sec {
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: calc(var(--masthead-h) + 72px);
+}
 .rp-sum {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
-  /* Sticky titles, thin enough not to stack into a wall with the
-     header above them. */
-  position: sticky;
-  top: 4.75rem;
-  z-index: 15;
+  /* In flow. Exclusive <details name> already prevents a stack, and
+     a sticky title under the copy bar was a second wall on desktop. */
+  position: static;
   min-height: 48px;
   padding: 0 2px;
   background: var(--page);
   color: var(--ink-soft);
+  scroll-margin-top: calc(var(--masthead-h) + 72px);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1rem;
   cursor: pointer;
@@ -4191,9 +4199,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .rp-head-id { display: none; }
   /* One sticky bar: the copy row. Section titles stay in flow so
      opening Routines cannot slide a heading under Copy link / Post on X. */
-  .rp-sum { position: static; min-height: 56px; }
+  .rp-sum { min-height: 56px; }
   .rp-sec,
-  .rp-sum { scroll-margin-top: calc(var(--masthead-h) + 96px); }
+  .rp-sum { scroll-margin-top: calc(var(--masthead-h) + 72px); }
   .rp-head { padding: 8px 0; }
   .rp-name { font-size: 1.4rem; }
   .rp-head-act {
