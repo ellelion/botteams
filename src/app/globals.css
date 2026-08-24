@@ -10,7 +10,7 @@
  * x.ai contrast, our wings.
  *
  * Near-black canvas, white type, outline pills, and depth from a lighter
- * surface rather than a shadow. Orange is one rare moment of emphasis,
+ * surface rather than a shadow. Mint is one rare moment of emphasis,
  * never a second brand colour.
  *
  * Dark is the default. Light is the same system inverted onto white
@@ -28,8 +28,8 @@
   --line: #1f2228;
   --line-strong: #33383f;
   --leader: #2a2e35;
-  --accent: #ff6308;
-  --accent-text: #ff8a4d;
+  --accent: #54b9a6;
+  --accent-text: #54b9a6;
   --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
   --on-accent: #0a0a0a;
   --status-live: #4ade80;
@@ -92,9 +92,9 @@
   --line: #e4e4e7;
   --line-strong: #c7c7cc;
   --leader: #d4d4d8;
-  --accent: #ff6308;
-  --accent-text: #c2410c;
-  --on-accent: #ffffff;
+  --accent: #54b9a6;
+  --accent-text: #3a7c6f;
+  --on-accent: #0a0a0a;
   --status-live: #15803d;
   --beta: #c2410c;
   --pill-fill: #0a0a0a;
@@ -1225,8 +1225,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 
 /* Grok Bot face mark. Silhouette is xAI's, used to identify the product
-   this shelf serves. --fg and --bg are the same tint hooks x.ai uses, so
-   one copy of the artwork serves a roster of differently coloured Bots.
+   this shelf serves. --fg follows the site accent so faces stay in
+   theme; --bg is the page punch-through for eyes and smile.
 
    The motion below reproduces the three states we sampled off the live
    mark (idle, curious, happy): a slow vertical breathe, a head tilt, eyes
@@ -1243,7 +1243,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   overflow: visible;
   user-select: none;
 }
-.grok-bot-mark__head { fill: var(--fg, var(--ink)); }
+.grok-bot-mark__head { fill: var(--fg, var(--accent)); }
 .grok-bot-mark__eye,
 .grok-bot-mark__smile { fill: var(--bg, var(--page)); }
 
@@ -3377,11 +3377,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .index-ad,
 .idx-card.idx-ad {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: center;
-  text-align: center;
-  gap: 8px 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 6px;
   padding: 12px 0;
   margin: 0;
   border: 0;
@@ -3392,23 +3392,33 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   background: transparent;
 }
 .idx-card.idx-ad {
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  gap: 6px;
   padding: 14px;
   border: 1px dashed var(--line);
   border-radius: 10px;
 }
 .index-ad-open { border-bottom-style: dashed; }
 .idx-ad-kicker {
-  font-size: 0.58rem;
-  letter-spacing: 0.16em;
+  display: block;
+  align-self: flex-start;
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
+}
+.idx-ad-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  min-width: 0;
+  text-align: center;
 }
 .idx-ad-name {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   font-size: 0.95rem;
 }

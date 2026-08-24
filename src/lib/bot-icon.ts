@@ -23,24 +23,14 @@ export function sectionSlug(section: string): string {
 /*
  * Per-Bot mark styling.
  *
- * x.ai tints the same face per context (their Engineering chips run
- * --fg:#EA4045), so a roster reads as distinct Bots rather than one Bot
- * printed six times. We do the same by position in the roster.
+ * Faces follow the site accent (--accent), so they stay in theme when
+ * the visitor picks a colour or switches light/dark. Connector brand
+ * marks stay in their own colours.
  *
- * The cycle is offset per Bot too. Six faces tilting and blinking on the
- * same frame reads as a strobe; offsetting them reads as a room full of
- * colleagues. The delay is negative so every Bot starts mid-cycle rather
- * than sitting still waiting for its turn.
+ * Blink/tilt is still offset per Bot. Six faces on the same frame read
+ * as a strobe; offsetting them reads as a room of colleagues. The delay
+ * is negative so every Bot starts mid-cycle rather than waiting.
  */
-const BOT_MARK_COLORS = [
-  "#54B9A6",
-  "#F19D38",
-  "#6464EF",
-  "#885CF5",
-  "#3C82F6",
-  "#ED712E",
-];
-
 export function botUiKind(name: string, persona = ""): "product" | "code" | "find" | "market" | "trust" | "money" | "desk" {
   const n = `${name} ${persona}`.toLowerCase();
   if (/money|stripe|ramp|billing|cfo/.test(n)) return "money";
@@ -52,22 +42,10 @@ export function botUiKind(name: string, persona = ""): "product" | "code" | "fin
   return "desk";
 }
 
-const KIND_COLORS: Record<ReturnType<typeof botUiKind>, string> = {
-  product: "#54B9A6",
-  code: "#3C82F6",
-  find: "#6464EF",
-  market: "#F19D38",
-  trust: "#885CF5",
-  money: "#ED712E",
-  desk: "#54B9A6",
-};
-
-export function botMarkStyle(index: number, name = "", persona = ""): Record<string, string> {
-  const kind = name ? botUiKind(name, persona) : "desk";
-  const fg = name ? KIND_COLORS[kind] : BOT_MARK_COLORS[index % BOT_MARK_COLORS.length];
+export function botMarkStyle(index: number, _name = "", _persona = ""): Record<string, string> {
   return {
-    "--fg": fg,
-    "--bot-accent": fg,
+    "--fg": "var(--accent)",
+    "--bot-accent": "var(--accent)",
     "--gb-delay": `-${((index * 1.9) % 12).toFixed(2)}s`,
   };
 }

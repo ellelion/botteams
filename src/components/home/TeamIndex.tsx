@@ -155,14 +155,16 @@ function ListingAd({ slot, as }: { slot: SponsorSlot; as: "row" | "card" }) {
       rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
     >
       <span className="idx-ad-kicker">{en.sponsor.listingKicker}</span>
-      <span className="idx-ad-name">
-        {slot.mark ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img className="spon-chip-mark" src={slot.mark} alt="" width={16} height={16} />
-        ) : null}
-        {slot.name ?? "Sponsor"}
+      <span className="idx-ad-body">
+        <span className="idx-ad-name">
+          {slot.mark ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="spon-chip-mark" src={slot.mark} alt="" width={16} height={16} />
+          ) : null}
+          {slot.name ?? "Sponsor"}
+        </span>
+        {slot.line ? <span className="idx-ad-line">{slot.line}</span> : null}
       </span>
-      {slot.line ? <span className="idx-ad-line">{slot.line}</span> : null}
     </a>
   );
 }
@@ -171,7 +173,9 @@ function ListingSlot({ as }: { as: "row" | "card" }) {
   return (
     <a className={as === "card" ? "idx-card idx-ad idx-ad-open" : "index-ad index-ad-open"} href="/sponsor">
       <span className="idx-ad-kicker">{en.sponsor.takeSlot}</span>
-      <span className="idx-ad-name">{en.sponsor.putListing}</span>
+      <span className="idx-ad-body">
+        <span className="idx-ad-name">{en.sponsor.putListing}</span>
+      </span>
     </a>
   );
 }

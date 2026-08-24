@@ -1,5 +1,5 @@
 /*
- * The Bot face on this shelf. Colour is --fg / --bg. Motion is CSS.
+ * The Bot face on this shelf. Colour is --fg (site accent) / --bg. Motion is CSS.
  * Ellelion LLC, not affiliated with xAI.
  */
 

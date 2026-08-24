@@ -33,7 +33,7 @@ export const ledgerOg = {
   inkMuted: "#a8abb2",
   label: "#7d8187",
   numeral: "#7d8187",
-  oxblood: "#ff6308",
+  oxblood: "#54b9a6",
   green: "#4ade80",
   hairline: "#1f2229",
   leader: "#2a2e35",

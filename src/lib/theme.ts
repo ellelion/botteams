@@ -8,10 +8,10 @@ export const THEME_STORAGE_KEY = "grokbotteams-theme-v3";
 export const ACCENT_STORAGE_KEY = "grokbotteams-accent";
 /* Dark is the site now. Light is the same system inverted, opt-in. */
 export const DEFAULT_THEME: Theme = "dark";
-export const DEFAULT_ACCENT = "#ff6308";
+export const DEFAULT_ACCENT = "#54b9a6";
 
 export const ACCENT_PALETTE = [
-  "#ff6308", "#e11d48", "#c2410c", "#ea580c", "#ca8a04", "#ffe000", "#65a30d",
+  "#54b9a6", "#ff6308", "#e11d48", "#c2410c", "#ea580c", "#ca8a04", "#ffe000", "#65a30d",
   "#4f7a55", "#0e7c7b", "#0891b2", "#0284c7", "#2563eb", "#4f46e5",
   "#7c5cff", "#9333ea", "#c026d3", "#db2777", "#8a2f24", "#b5563c",
   "#92400e", "#b45309", "#a16207", "#9c6644", "#8b5e3c", "#a8845c",
