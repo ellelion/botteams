@@ -1318,6 +1318,7 @@ a.chip-unverified:focus-visible {
   .cf-browse,
   .cf-clear,
   .cf-search-clear,
+  .cz-search-clear,
   .sel-button,
   .filter-views .filter-chip--icon,
   .doc-jump a,
@@ -3170,6 +3171,24 @@ html[data-theme="light"] .cz-check input:checked {
 }
 .cz-input::placeholder { color: var(--muted); }
 .cz-input::-webkit-search-cancel-button { appearance: none; }
+.cz-search-wrap { position: relative; display: block; }
+.cz-search-wrap .cz-input:not(:placeholder-shown) { padding-right: 88px; }
+.cz-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--accent-text);
+  font: 500 0.72rem/1 var(--font-geist-sans), system-ui, sans-serif;
+  cursor: pointer;
+}
+.cz-search-clear:hover,
+.cz-search-clear:focus-visible { color: var(--ink); }
 .cz-input:focus,
 .cz-input:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 /* Off-roster Bot names live in this field. Opacity faded the name into
@@ -4711,6 +4730,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .idx-chip-clear,
   .search-clear,
   .cf-search-clear,
+  .cz-search-clear,
   .add-yours,
   .cz-chip,
   .filter-chip,
@@ -6136,6 +6156,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .cf-browse,
   .cf-clear,
   .cf-search-clear,
+  .cz-search-clear,
   .theme-control-label,
   .hero-stat,
   .site-wordmark,
@@ -6211,6 +6232,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .cf-browse:active,
   .cf-clear:active,
   .cf-search-clear:active,
+  .cz-search-clear:active,
   .talk-watch-btn:active,
   .talk-overlay-close:active,
   .talk-dock-item:active,
