@@ -2241,6 +2241,10 @@ a.chip-unverified:focus-visible {
   align-items: center;
   min-height: 32px;
   color: var(--ink-soft);
+  /* Same mark as the guide TOC. Without an underline these read as
+     muted words until hover, so On this page looked inert. */
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 @media (max-width: 1023px) {
   /* Stacked Wings already spent the first screen on the hero. A wrap of
