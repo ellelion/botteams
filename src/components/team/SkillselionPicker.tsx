@@ -17,11 +17,17 @@ export function SkillselionPicker({
   picks,
   agents,
   liveHits,
+  listingsFailed = false,
+  skillCounts,
+  onRetryListings,
   onChange,
 }: {
   picks: SkillPick[];
   agents: TeamAgent[];
   liveHits?: Record<string, SkillselionHit>;
+  listingsFailed?: boolean;
+  skillCounts?: (id: string) => { pending: boolean; failed: boolean };
+  onRetryListings?: () => void;
   onChange: (next: SkillPick[]) => void;
 }) {
   const listId = useId();
@@ -201,12 +207,16 @@ export function SkillselionPicker({
         </>
       ) : null}
       {picks.length > 0 ? (
-        <ul className="cz-list mt-4">
-          {picks.map((pick) => (
+        <ul className="cz-list mt-4" aria-busy={picks.some((pick) => skillCounts?.(pick.id).pending) || undefined}>
+          {picks.map((pick) => {
+            const counts = skillCounts?.(pick.id);
+            return (
             <li key={`${pick.id}::${pick.scope}`} className="cz-conn">
               <SkillHitFace
                 hit={pick}
                 live={liveHits?.[pick.id]}
+                pending={counts?.pending}
+                failed={counts?.failed}
                 extra={pick.use === "install" ? en.customize.skillsInstall : en.customize.skillsFetch}
               />
               <span className="cz-modes" role="group" aria-label={pick.name}>
@@ -246,8 +256,17 @@ export function SkillselionPicker({
                 </button>
               </span>
             </li>
-          ))}
+            );
+          })}
         </ul>
+      ) : null}
+      {listingsFailed && onRetryListings ? (
+        <div className="cz-skill-status" role="alert">
+          <p className="cz-hint">{en.customize.skillsCountsFail}</p>
+          <button type="button" className="cz-btn cz-btn-quiet" onClick={onRetryListings}>
+            {en.customize.skillsRetry}
+          </button>
+        </div>
       ) : null}
     </fieldset>
   );

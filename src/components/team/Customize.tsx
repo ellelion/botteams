@@ -76,6 +76,9 @@ export function Customize({
   const [state, setState] = useState<CustomState>(() => defaultState(team));
   const { copied: shared, failed: shareFail, copyText } = useCopyFeedback();
   const [liveHits, setLiveHits] = useState<Record<string, SkillselionHit>>({});
+  const [resolvedHits, setResolvedHits] = useState<Record<string, true>>({});
+  const [listingsFailed, setListingsFailed] = useState(false);
+  const [listingsNonce, setListingsNonce] = useState(0);
 
   /* A recipe change while a hand-edited prompt exists parks here until the
      human says which one wins. */
@@ -113,25 +116,50 @@ export function Customize({
   useEffect(() => {
     if (!mounted) return;
     const ids = [...new Set(state.skillPicks.map((p) => p.id).filter(Boolean))];
-    const missing = ids.filter((id) => !liveHits[id] && !askedHits.current.has(id));
+    const missing = ids.filter((id) => !liveHits[id] && !resolvedHits[id] && !askedHits.current.has(id));
     if (missing.length === 0) return;
     for (const id of missing) askedHits.current.add(id);
     let cancelled = false;
     fetch(`/api/skillselion/listings?ids=${missing.map(encodeURIComponent).join(",")}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((body: { skills?: SkillselionHit[] } | null) => {
-        if (cancelled || !body?.skills) return;
+      .then((res) => {
+        if (!res.ok) throw new Error("listings failed");
+        return res.json() as Promise<{ skills?: SkillselionHit[] }>;
+      })
+      .then((body) => {
+        if (cancelled) return;
         setLiveHits((prev) => {
           const next = { ...prev };
           for (const hit of body.skills ?? []) next[hit.id] = hit;
           return next;
         });
+        setResolvedHits((prev) => {
+          const next = { ...prev };
+          for (const id of missing) next[id] = true;
+          return next;
+        });
       })
-      .catch(() => {});
+      .catch(() => {
+        if (cancelled) return;
+        for (const id of missing) askedHits.current.delete(id);
+        setListingsFailed(true);
+      });
     return () => {
       cancelled = true;
     };
-  }, [mounted, state.skillPicks, liveHits]);
+  }, [mounted, state.skillPicks, liveHits, resolvedHits, listingsNonce]);
+
+  function retryListings() {
+    askedHits.current.clear();
+    setResolvedHits({});
+    setListingsFailed(false);
+    setListingsNonce((n) => n + 1);
+  }
+
+  function skillCounts(id: string): { pending: boolean; failed: boolean } {
+    if (liveHits[id] || resolvedHits[id]) return { pending: false, failed: false };
+    if (listingsFailed) return { pending: false, failed: true };
+    return { pending: true, failed: false };
+  }
 
 
 
@@ -434,6 +462,9 @@ export function Customize({
           picks={state.skillPicks}
           agents={team.agents}
           liveHits={liveHits}
+          listingsFailed={listingsFailed}
+          skillCounts={skillCounts}
+          onRetryListings={retryListings}
           onChange={(skillPicks) => patch({ skillPicks })}
         />
 
@@ -708,17 +739,32 @@ export function Customize({
           </summary>
           <div className="rp-secbody">
             {state.skillPicks.length > 0 ? (
-              <ul className="cz-list">
-                {state.skillPicks.map((pick) => (
-                  <li key={`${pick.id}::${pick.scope}`} className="hairline-row">
-                    <SkillHitFace
-                      hit={pick}
-                      live={liveHits[pick.id]}
-                      extra={pick.use === "install" ? en.customize.skillsInstall : en.customize.skillsFetch}
-                    />
-                  </li>
-                ))}
+              <>
+              <ul className="cz-list" aria-busy={state.skillPicks.some((pick) => skillCounts(pick.id).pending) || undefined}>
+                {state.skillPicks.map((pick) => {
+                  const counts = skillCounts(pick.id);
+                  return (
+                    <li key={`${pick.id}::${pick.scope}`} className="hairline-row">
+                      <SkillHitFace
+                        hit={pick}
+                        live={liveHits[pick.id]}
+                        pending={counts.pending}
+                        failed={counts.failed}
+                        extra={pick.use === "install" ? en.customize.skillsInstall : en.customize.skillsFetch}
+                      />
+                    </li>
+                  );
+                })}
               </ul>
+              {listingsFailed ? (
+                <div className="cz-skill-status" role="alert">
+                  <p className="cz-hint">{en.customize.skillsCountsFail}</p>
+                  <button type="button" className="cz-btn cz-btn-quiet" onClick={retryListings}>
+                    {en.customize.skillsRetry}
+                  </button>
+                </div>
+              ) : null}
+              </>
             ) : team.skills.length > 0 ? (
               <ul className="cz-list">{team.skills.map((name) => <li key={name} className="hairline-row">{name}</li>)}</ul>
             ) : (
