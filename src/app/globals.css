@@ -2039,7 +2039,8 @@ a.chip-unverified:focus-visible {
   padding-top: 24px;
   justify-content: center;
 }
-.idx-empty .notfound-nav { padding-top: 8px; }
+.idx-empty .notfound-nav,
+.cf-empty .notfound-nav { padding-top: 8px; }
 
 /* Grok Bot face mark. Silhouette is xAI's, used to identify the product
    this shelf serves. --fg follows the site accent so faces stay in
@@ -3384,6 +3385,7 @@ html[data-theme="light"] .cz-check input:checked {
 .spon-ask-cta.theme-control-label,
 .spon-off .theme-control-label,
 .idx-empty .theme-control-label,
+.cf-empty .theme-control-label,
 .notfound-nav .theme-control-label {
   font-size: 0.88rem;
   letter-spacing: -0.01em;

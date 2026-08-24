@@ -194,6 +194,7 @@ export function ConnectorFinder({
   const searchRef = useRef<HTMLInputElement>(null);
   const chipsRef = useScrollEdges<HTMLDivElement>(categories.length);
   const [isPending, startFilter] = useTransition();
+  const [resume, setResume] = useState<FinderFilters>(serverFilters);
 
   function commit(next: ConnectorFinderQuery) {
     const normalized = next.q.trim()
@@ -206,6 +207,22 @@ export function ConnectorFinder({
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     });
   }
+
+  const reset = () => {
+    setQuery("");
+    setResume({ category: null, builtin: false, all: false });
+    commit({ q: "", category: null, builtin: false, all: false });
+    searchRef.current?.focus();
+  };
+
+  const clearSearchOnly = (opts?: { blur?: boolean }) => {
+    setQuery("");
+    commit({ q: "", category: resume.category, builtin: resume.builtin, all: resume.all });
+    if (opts?.blur) searchRef.current?.blur();
+    else searchRef.current?.focus();
+  };
+
+  const canResume = Boolean(resume.category || resume.builtin || resume.all);
 
   useEffect(() => {
     const next = query.trim();
@@ -240,13 +257,13 @@ export function ConnectorFinder({
         searchRef.current?.select();
       }
       if (e.key === "Escape" && typing) {
-        setQuery("");
-        searchRef.current?.blur();
+        e.preventDefault();
+        clearSearchOnly({ blur: true });
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [resume]);
 
   const q = norm(query);
 
@@ -287,12 +304,6 @@ export function ConnectorFinder({
     return [];
   }, [mode, searched, entries, category]);
 
-  const reset = () => {
-    setQuery("");
-    commit({ q: "", category: null, builtin: false, all: false });
-    searchRef.current?.focus();
-  };
-
   function pickCategory(next: string) {
     const categoryNext = category === next ? null : next;
     setQuery("");
@@ -326,7 +337,13 @@ export function ConnectorFinder({
               className="cf-input"
               placeholder={en.connectors.searchPlaceholder}
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (!query.trim() && next.trim()) {
+                  setResume({ category, builtin: builtInOnly, all: browseAll });
+                }
+                setQuery(next);
+              }}
               autoComplete="off"
               autoCorrect="off"
               spellCheck={false}
@@ -336,7 +353,7 @@ export function ConnectorFinder({
             />
           </label>
           {query ? (
-            <button type="button" className="cf-search-clear" onClick={() => { setQuery(""); commit({ q: "", category: null, builtin: false, all: false }); searchRef.current?.focus(); }}>
+            <button type="button" className="cf-search-clear" onClick={() => clearSearchOnly()}>
               {en.connectors.clearSearch}
             </button>
           ) : (
@@ -425,7 +442,18 @@ export function ConnectorFinder({
         <div className="cf-empty">
           <p className="cf-empty-title">{en.connectors.emptyTitle(query)}</p>
           <p className="cf-empty-body">{en.connectors.emptyBody}</p>
-          <button type="button" className="cf-browse" onClick={reset}>{en.connectors.backToShelf}</button>
+          <nav className="notfound-nav" aria-label={en.connectors.emptyNav}>
+            {mode === "search" ? (
+              <button type="button" className="cf-browse" onClick={() => clearSearchOnly()}>
+                {en.connectors.clearSearch}
+              </button>
+            ) : null}
+            {mode !== "search" || canResume ? (
+              <button type="button" className={mode === "search" ? "theme-control theme-control-label" : "cf-browse"} onClick={reset}>
+                {en.connectors.backToShelf}
+              </button>
+            ) : null}
+          </nav>
         </div>
       ) : list.length > WINDOW_FROM ? (
         <WindowedList items={list} />
