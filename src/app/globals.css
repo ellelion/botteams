@@ -5188,7 +5188,7 @@ html[data-theme="dark"] .talk-stage {
   outline-offset: -3px;
 }
 .talk-thread-swap {
-  animation: talk-thread-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  animation: talk-thread-in var(--dur) var(--ease) both;
 }
 @keyframes talk-thread-in {
   from { opacity: 0; transform: translateY(8px); }
@@ -5199,7 +5199,7 @@ html[data-theme="dark"] .talk-stage {
 }
 .talk-entry {
   max-width: min(640px, 100%);
-  animation: talk-in 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  animation: talk-in var(--dur) var(--ease) both;
 }
 .talk-entry.is-you {
   align-self: flex-end;
@@ -5210,7 +5210,9 @@ html[data-theme="dark"] .talk-stage {
   color: var(--talk-user-ink);
 }
 .talk-entry.is-you .talk-bubble-text { color: var(--talk-user-ink); }
-.talk-entry.is-you .talk-bubble-who { color: rgba(255, 255, 255, 0.55); }
+.talk-entry.is-you .talk-bubble-who {
+  color: color-mix(in srgb, var(--talk-user-ink) 72%, var(--talk-user));
+}
 .talk-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -5613,7 +5615,13 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   text-decoration: none;
   cursor: pointer;
 }
-.talk-watch-btn:hover { border-bottom-color: var(--accent-text); }
+.talk-watch-btn:hover,
+.talk-watch-btn:focus,
+.talk-watch-btn:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+.talk-watch-btn:focus,
 .talk-watch-btn:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: 3px;
