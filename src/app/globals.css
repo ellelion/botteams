@@ -3939,7 +3939,9 @@ html[data-theme="light"] .cz-check input:checked {
 
 .spon-dock { display: none; }
 
-@media (min-width: 900px) {
+/* Viewport 900px used to 4-up these in the 586px wings column
+   (117px cells, 113px-tall notes). Follow the column, not the window. */
+@container (min-width: 48rem) {
   .spon-facts {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 32px 40px;
@@ -5796,16 +5798,6 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   @container page (max-width: 50rem) {
     #teams,
     .cf { padding-bottom: 12rem; }
-    /* 900px media still 4-ups facts on a 1280 viewport. Two-up fits
-       the 576 stacked column. On a phone the 24rem 1-col must win. */
-    .spon-facts {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 32px 24px;
-    }
-    .spon-fact + .spon-fact {
-      border-left: 0;
-      padding-left: 0;
-    }
   }
 }
 
