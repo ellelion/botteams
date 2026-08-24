@@ -481,7 +481,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
   return (
     <section id="teams">
       <SponsorTicker place="top" />
-      <div className="index-tools">
+      <div className="index-chrome">
         <form
           className="search-wrap"
           action="/"
@@ -535,6 +535,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
           )}
         </form>
 
+        <div className="index-tools">
         <div
           ref={kindRef.ref}
           className={`browse-pick scroll-fade${kindRef.edges.start ? " has-start" : ""}${kindRef.edges.end ? " has-end" : ""}`}
@@ -705,6 +706,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
               </button>
             </div>
           ) : null}
+        </div>
         </div>
       </div>
 

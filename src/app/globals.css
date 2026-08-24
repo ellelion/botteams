@@ -1110,15 +1110,18 @@ a.chip-unverified:hover {
   height: 18px;
 }
 
-/* The index search matches the connector search: a filled pill field,
-   not a hairline underline sitting on top of a row of pills. */
-.index-tools {
+/* Search + filters stick as one block on desktop. On a phone the
+   wrapper becomes contents so search can stick against #teams (the
+   listing) instead of dying when a short parent scrolls away. */
+.index-chrome {
   position: sticky;
   top: 0;
   z-index: 8;
   background: var(--page);
   padding-bottom: 8px;
   box-shadow: 0 1px 0 var(--line);
+}
+.index-tools {
   container-type: inline-size;
 }
 @container (max-width: 21rem) {
@@ -1127,7 +1130,27 @@ a.chip-unverified:hover {
   .filter-selects { flex-wrap: wrap; width: 100%; }
 }
 @media (max-width: 1023px) {
-  .index-tools { top: var(--masthead-h); }
+  /* The whole filter stack used to stick. On a phone that is a 370px
+     wall, and Tab into a team name hid the name under the search field. */
+  .index-chrome {
+    display: contents;
+  }
+  .index-tools {
+    position: static;
+    top: auto;
+    box-shadow: none;
+    padding-bottom: 0;
+  }
+  #teams .search-wrap {
+    position: sticky;
+    top: var(--masthead-h);
+    z-index: 8;
+    background: var(--page);
+    margin-top: 0;
+    padding-top: 12px;
+    padding-bottom: 8px;
+    box-shadow: 0 1px 0 var(--line);
+  }
 }
 .search-wrap {
   position: relative;
@@ -1756,8 +1779,30 @@ a.chip-unverified:hover {
 }
 .index-row,
 .idx-card,
-.idx-empty {
+.idx-empty,
+.index-name {
   scroll-margin-top: calc(var(--masthead-h, 56px) + 8px);
+}
+@media (max-width: 1023px) {
+  .index-row,
+  .idx-card,
+  .idx-empty,
+  .index-name {
+    scroll-margin-top: calc(var(--masthead-h) + 5.5rem);
+    scroll-margin-bottom: 72px;
+  }
+}
+@media (min-width: 1024px) {
+  /* Tools stick at the top of this column, not under the masthead. */
+  .wings-main-col:has(.index-tools) {
+    scroll-padding-top: 280px;
+  }
+  .index-row,
+  .idx-card,
+  .idx-empty,
+  .index-name {
+    scroll-margin-top: 280px;
+  }
 }
 
 .home-more {
@@ -4664,6 +4709,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     padding: 0 12px 0 9px;
   }
   .page-rails-main { padding-bottom: 72px; }
+  html { scroll-padding-bottom: 72px; }
+  .foot-link,
+  .foot-grok {
+    scroll-margin-bottom: 72px;
+  }
 }
 
 
