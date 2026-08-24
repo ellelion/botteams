@@ -406,9 +406,9 @@ body {
   border-color: transparent;
   background: var(--pill-fill);
   color: var(--pill-fill-ink);
-  font: 500 0.6rem/1 var(--font-geist-mono);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   white-space: nowrap;
 }
 .theme-control.theme-control-label:hover,
@@ -706,9 +706,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .team-prose h3 {
   margin-top: 1.75rem;
   color: var(--accent-text);
-  font-size: 0.6rem;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .team-prose p + p {
@@ -834,9 +834,9 @@ a.chip-unverified:hover {
   border-radius: var(--r-pill);
   background: var(--surface);
   color: var(--ink-soft);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
@@ -2155,8 +2155,8 @@ a.chip-unverified:hover {
 .cf-shelf { margin-top: 18px; }
 .cf-shelf-title {
   color: var(--accent-text);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.26em;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .cf-shelf-note {
@@ -2248,9 +2248,9 @@ a.chip-unverified:hover {
   transition: opacity var(--dur) var(--ease);
   background: var(--ink);
   color: var(--page);
-  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
 }
 .cf-browse:hover { opacity: 0.88; }
@@ -2312,9 +2312,9 @@ a.chip-unverified:hover {
   border-radius: var(--r-pill);
   background: var(--surface);
   color: var(--ink-soft);
-  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
@@ -2572,8 +2572,8 @@ a.chip-unverified:hover {
 .cz-legend {
   padding: 0;
   color: var(--accent-text);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.26em;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .cz-truth {
@@ -2607,9 +2607,9 @@ a.chip-unverified:hover {
   transition: opacity var(--dur) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
   background: var(--ink);
   color: var(--page);
-  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
 }
 .cz-btn:hover { opacity: 0.88; }
@@ -2712,9 +2712,9 @@ a.chip-unverified:hover {
   border: 0;
   background: transparent;
   color: var(--muted);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -2811,10 +2811,10 @@ html[data-theme="light"] .cz-check input:checked {
 .cz-field-label {
   display: block;
   margin-bottom: 5px;
-  color: var(--muted);
-  font: 500 0.58rem/1.4 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  color: var(--ink-soft);
+  font: 500 11px/1.4 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .cz-input {
   width: 100%;
@@ -2881,9 +2881,9 @@ html[data-theme="light"] .cz-check input:checked {
 }
 .cz-alert-title {
   color: var(--accent-text);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   margin: 0 0 7px;
 }
 .cz-alert-warn .cz-alert-title { color: var(--ink-soft); }
@@ -2932,9 +2932,9 @@ html[data-theme="light"] .cz-check input:checked {
 
 .cz-advanced summary {
   color: var(--ink-soft);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
 }
 .cz-advanced summary:hover { color: var(--accent-text); }
@@ -2983,9 +2983,9 @@ html[data-theme="light"] .cz-check input:checked {
   border-radius: var(--r-pill);
   background: var(--ink);
   color: var(--page);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
   transition: opacity var(--dur) var(--ease);
 }
@@ -3037,8 +3037,8 @@ html[data-theme="light"] .cz-check input:checked {
 .spon-stage-left {
   margin: 0 0 14px;
   color: var(--accent-text);
-  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.16em;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .spon-stage-name {
@@ -3111,9 +3111,9 @@ html[data-theme="light"] .cz-check input:checked {
 .spon-term-tag {
   margin: 0 0 8px;
   color: var(--accent-text);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .spon-term-tag-quiet { color: var(--muted); }
 .spon-term-label {
@@ -3235,9 +3235,9 @@ html[data-theme="light"] .cz-check input:checked {
     border-radius: var(--r-pill);
     background: var(--pill-fill);
     color: var(--pill-fill-ink);
-    font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+    letter-spacing: 0;
+    text-transform: none;
   }
 }
 
@@ -3271,10 +3271,10 @@ html[data-theme="light"] .cz-check input:checked {
 .spon-field {
   display: grid;
   gap: 8px;
-  color: var(--muted);
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  color: var(--ink-soft);
+  font: 500 11px/1.4 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .spon-field-top {
   display: flex;
@@ -3581,9 +3581,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   border-radius: var(--r-pill);
   background: transparent;
   color: var(--ink-soft);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
 }
 .rp-secondary { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), transform 80ms cubic-bezier(0.2, 0, 0, 1); }
@@ -4009,11 +4009,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .share-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
 .share-btn:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .rp-disclaimer {
-  color: var(--muted);
-  font: 500 0.58rem/1.5 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  font: 500 11px/1.5 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
-.rp-disclaimer { color: var(--ink-soft); }
 
 @media (max-width: 640px) {
   .share-btn { min-height: 44px; }
@@ -4021,9 +4021,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 
 .home-disclaimer {
   color: var(--ink-soft);
-  font: 500 0.6rem/1.5 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.5 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 
@@ -4516,9 +4516,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: flex;
   align-items: center;
   gap: 0.4em;
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .add-yours-arrow {
   font-size: 0.95rem;
