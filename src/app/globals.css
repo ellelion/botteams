@@ -1176,7 +1176,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .sel-button,
   .doc-jump a,
   .doc-toc-sum,
-  .chip-xai {
+  .chip-xai,
+  .row-arrow-link,
+  .cz-btn,
+  .cz-chip {
     min-height: 44px;
   }
   .hero-stat {
@@ -1507,7 +1510,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   outline: 2px solid var(--accent-text);
   outline-offset: 2px;
 }
-@media (max-width: 640px) {
+@media (max-width: 1023px) {
   .chevron { width: 44px; height: 44px; }
 }
 .index-body { padding: 4px 0 16px 0; }
