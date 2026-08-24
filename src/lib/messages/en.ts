@@ -11,6 +11,7 @@ export const en = {
     "Use them at work, in a business, or for everyday life. Copy one installer prompt. Nothing is installed on this site.",
   onRamp: "Or start with one Bot.",
   guideLink: "What is Grok Bot?",
+  guidesLink: "Guides",
   notAffiliated: "Not affiliated with xAI.",
   share: {
     copyLink: "Copy link",
@@ -24,6 +25,7 @@ export const en = {
     bots: "Grok Bots",
     docs: "Spec",
     guide: "What is Grok Bot?",
+    guides: "Guides",
     connectorsNav: "Connectors",
     api: "API",
     sponsor: "Sponsor",
@@ -396,6 +398,7 @@ export const en = {
     sponsor: "Sponsor",
     spec: "Spec",
     guide: "What is Grok Bot?",
+    guides: "Guides",
     api: "API",
     apiBots: "Bots API",
     openapi: "OpenAPI",
@@ -417,7 +420,7 @@ export const en = {
   },
   notFound: {
     kicker: "Not found",
-    body: "This page is not here. Teams live under /teams, bots under /bots.",
+    body: "This page is not here. Teams live under /teams, bots under /bots, guides under /guides.",
     back: "Back to teams",
     backBots: "Browse bots",
   },

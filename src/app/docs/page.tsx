@@ -26,6 +26,14 @@ export default function DocsPage() {
             <Link className="accent-hover underline underline-offset-2" href="/grok-bot">
               Grok Bot setup, skills, and limits
             </Link>
+            . For the click path and the installer, see{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/create-a-grok-bot">
+              create a Bot
+            </Link>{" "}
+            and{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/install-a-grok-bot-team">
+              install a team
+            </Link>
             .
           </p>
         </WingsHero>

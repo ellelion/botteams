@@ -194,7 +194,15 @@ export default function GrokBotGuidePage() {
             xAI&apos;s first-Bot example is a product-performance investigator called Piper. The useful part of that
             prompt is the stopping rule: preserve links and screenshots, separate evidence from hypotheses, never change
             production. If the job is already a roster, copy an installer from this directory. Nothing here signs in for
-            you.
+            you. The click path is on{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/create-a-grok-bot">
+              How do you create a Grok Bot?
+            </Link>
+            . The paste path is on{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/install-a-grok-bot-team">
+              How do you install a Grok Bot team?
+            </Link>
+            .
           </p>
 
           <h2 id={SECTIONS[2].id}>{SECTIONS[2].title}</h2>
@@ -215,7 +223,16 @@ export default function GrokBotGuidePage() {
             <Link className="accent-hover underline underline-offset-2" href="/connectors">
               connectors catalog
             </Link>{" "}
-            of {connectorCount} rows, last checked {CATALOG_CHECKED_ON}. Prefer a plugin when one exists.
+            of {connectorCount} rows, last checked {CATALOG_CHECKED_ON}. Prefer a plugin when one exists. The account-wide
+            rule is on{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/grok-bot-connectors">
+              How do Grok Bot connectors work?
+            </Link>
+            . The group-chat cap is on{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/grok-bot-group-chat">
+              What is a Grok Bot group chat?
+            </Link>
+            .
           </p>
 
           <h2 id={SECTIONS[3].id}>{SECTIONS[3].title}</h2>
@@ -236,7 +253,11 @@ export default function GrokBotGuidePage() {
           <p>
             Teach a task can draft a skill from a browser demonstration up to ten minutes. Audio is not recorded. Treat
             that draft as a happy path and write the failure cases yourself. Deleting a routine has no undo. Deleting a
-            Bot removes the routines it owned.
+            Bot removes the routines it owned. The longer order is on{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/grok-bot-skills-and-routines">
+              How do Grok Bot skills and routines work?
+            </Link>
+            .
           </p>
 
           <h2 id={SECTIONS[4].id}>{SECTIONS[4].title}</h2>
@@ -251,7 +272,12 @@ export default function GrokBotGuidePage() {
           />
           <p>
             The launch post also says enterprise users can join a waitlist. Legacy Privacy Mode is incompatible; Grok
-            Bot requires cloud data storage. Recheck the live docs before you change a plan.
+            Bot requires cloud data storage. Recheck the live docs before you change a plan. Plan names without dollar
+            figures are on{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/who-can-use-grok-bot">
+              Who can use Grok Bot right now?
+            </Link>
+            .
           </p>
 
           <h2 id={SECTIONS[5].id}>{SECTIONS[5].title}</h2>
@@ -292,7 +318,15 @@ export default function GrokBotGuidePage() {
           />
           <p>
             The combination we like: a Bot gathers evidence, a coding agent changes the repo, a person merges. Drafts
-            first. Approval on the irreversible step.
+            first. Approval on the irreversible step. Named 1:1 pages start at{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/grok-bot-alternatives">
+              Grok Bot alternatives
+            </Link>
+            . The shared-computer rule is on{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides/grok-bot-security">
+              How does Grok Bot security work?
+            </Link>
+            .
           </p>
 
           <h2 id={SECTIONS[6].id}>{SECTIONS[6].title}</h2>
@@ -305,7 +339,11 @@ export default function GrokBotGuidePage() {
             ))}
           </div>
           <p>
-            Related recipes on this directory: the{" "}
+            More how-to and comparison pages sit under{" "}
+            <Link className="accent-hover underline underline-offset-2" href="/guides">
+              Guides
+            </Link>
+            . Related recipes on this directory: the{" "}
             <Link className="accent-hover underline underline-offset-2" href="/teams/content-seo">
               SEO desk
             </Link>
