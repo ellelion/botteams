@@ -1578,8 +1578,11 @@ a.chip-unverified:hover {
   font-size: 1.02rem;
   font-weight: 500;
   letter-spacing: -0.02em;
+  transition: color var(--dur) var(--ease);
 }
-.index-name:hover { color: var(--accent-text); }
+.index-name:hover,
+.index-row:hover .index-name,
+.index-row:focus-within .index-name { color: var(--accent-text); }
 .index-tagline {
   margin-top: 2px;
   color: var(--ink-soft);
