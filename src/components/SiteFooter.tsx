@@ -12,7 +12,7 @@ import { site } from "@/lib/site";
  * The left pane is identity: the mark, the name, and the legal line that
  * has to travel with them. The Grok credit sits at the bottom of that
  * pane with real space above it, because it is a credit and not part of
- * our lockup. It is never beside the wings and never inside a badge.
+ * our lockup. It is never beside the mark and never inside a badge.
  *
  * The right pane is the map: what you can browse, what you can read
  * against, the company, and the rest of what Ellelion ships.
@@ -119,7 +119,7 @@ export function SiteFooter() {
         </div>
         <div className="foot-meta">
           <p className="foot-meta-note">{en.footer.notAffiliated}</p>
-          {/* Credit at the bottom of the footer, well clear of the wings. */}
+          {/* Credit at the bottom of the footer, well clear of the mark. */}
           <a
             className="foot-grok"
             href={site.grokHome}
