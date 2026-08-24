@@ -1745,7 +1745,9 @@ a.chip-unverified:focus-visible {
   display: inline-flex;
   align-items: stretch;
   gap: 0;
-  border: 1px solid var(--line, rgba(10, 10, 10, 0.16));
+  /* Same 3:1 circle as theme chrome. --line on paper is ~1.1:1, so the
+     List / Cards group used to disappear while the labels stayed. */
+  border: 1px solid var(--pill-line);
   border-radius: var(--r-pill);
   overflow: hidden;
 }
@@ -3224,7 +3226,7 @@ button.cz-link:focus-visible { color: var(--ink); }
 .cz-conn-name .connector-fallback { width: 16px; height: 16px; }
 .cz-modes {
   display: inline-flex;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--pill-line);
   border-radius: var(--r-pill);
   overflow: hidden;
 }
@@ -6554,6 +6556,10 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .pill-btn:active,
   .cz-check input:active,
   .row-arrow-link:active,
+  .cz-mode:active,
+  .home-scroll-cue:active,
+  .spon-paid-link:active,
+  .api-link:active,
   .home-more summary:active,
   .guide-index a:active,
   .guide-toc a:active,
