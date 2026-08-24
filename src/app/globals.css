@@ -150,10 +150,10 @@ body {
 }
 
 .skip-link {
-  position: absolute;
+  position: fixed;
   left: max(12px, env(safe-area-inset-left));
   top: max(8px, env(safe-area-inset-top));
-  z-index: 100;
+  z-index: 200;
   padding: 8px 14px;
   border-radius: var(--r-pill);
   background: var(--ink);
@@ -162,7 +162,8 @@ body {
   transform: translateY(-160%);
   transition: transform var(--dur) var(--ease);
 }
-.skip-link:focus {
+.skip-link:focus,
+.skip-link:focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: 3px;
   transform: none;
@@ -1167,6 +1168,11 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   .hero-stat {
     align-items: center;
     padding-inline: 6px;
+  }
+  .site-wordmark,
+  .foot-id,
+  .foot-grok {
+    min-height: 44px;
   }
 }
 @media (max-width: 639px) {
@@ -5121,9 +5127,24 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
     border-radius: 0;
     margin: 0;
   }
+  .talk-overlay-canvas .talk-head { order: 1; }
+  .talk-overlay-canvas .talk-thread {
+    order: 2;
+    flex: 1;
+    min-height: 0;
+  }
   .talk-overlay-canvas .talk-dock {
     display: flex;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    order: 3;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-top: 0.5px solid var(--talk-border);
+  }
+  .talk-overlay-canvas .talk-compose-bar {
+    order: 4;
+    height: auto;
+    min-height: 70px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .talk-overlay-close {
     top: calc(8px + env(safe-area-inset-top, 0px));
@@ -5284,7 +5305,10 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .cf-clear,
   .cf-search-clear,
   .theme-control-label,
-  .hero-stat {
+  .hero-stat,
+  .site-wordmark,
+  .foot-id,
+  .foot-grok {
     min-height: 44px;
   }
   .theme-control,
