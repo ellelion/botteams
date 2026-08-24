@@ -7,7 +7,6 @@
 # Grok Bot Teams
 
 [![CI](https://github.com/ellelion/botteams/actions/workflows/ci.yml/badge.svg)](https://github.com/ellelion/botteams/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/ellelion/botteams/actions/workflows/codeql.yml/badge.svg)](https://github.com/ellelion/botteams/actions/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-14b8a6.svg)](./LICENSE)
 
 Install a Grok Bot team, not a bot.
