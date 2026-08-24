@@ -43,7 +43,11 @@ export function WingsSplit({
           {hero}
         </div>
       </div>
-      <div className="wings-main-col relative z-10 col-start-1 row-start-2 min-w-0 pb-8 pt-0 lg:col-start-2 lg:row-start-1 lg:sticky lg:top-[var(--masthead-h)] lg:flex lg:h-[calc(100dvh-var(--masthead-h))] lg:flex-col lg:justify-start lg:overflow-y-auto lg:py-6">
+      <div
+        id="content"
+        tabIndex={-1}
+        className="wings-main-col relative z-10 col-start-1 row-start-2 min-w-0 pb-8 pt-0 lg:col-start-2 lg:row-start-1 lg:sticky lg:top-[var(--masthead-h)] lg:flex lg:h-[calc(100dvh-var(--masthead-h))] lg:flex-col lg:justify-start lg:overflow-y-auto lg:py-6"
+      >
         {children}
       </div>
     </>

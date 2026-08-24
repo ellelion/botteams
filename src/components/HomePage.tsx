@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { TeamIndex } from "@/components/home/TeamIndex";
+import { TeamIndex, TeamIndexFallback } from "@/components/home/TeamIndex";
 import { RevealText } from "@/components/home/RevealText";
 import { HeroStats } from "@/components/home/HeroStats";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
@@ -64,9 +64,9 @@ export function HomePage({ teams }: { teams: Team[] }) {
                 {en.notAffiliated}
               </p>
             </div>
-            <a href="/?kind=team" className="meta accent-hover absolute bottom-5 left-1/2 z-10 hidden lg:inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap transition-colors lg:bottom-4">
+            <Link href="/?kind=team" className="meta accent-hover absolute bottom-5 left-1/2 z-10 hidden lg:inline-flex -translate-x-1/2 items-center gap-2 whitespace-nowrap transition-colors lg:bottom-4">
               {en.home.scrollCue} <span className="cue-bob" aria-hidden>↓</span>
-            </a>
+            </Link>
           </section>
           <section className="wings-hero-extra relative z-10 mx-auto max-w-xl pb-[var(--sec-y)] pt-[var(--sec-y)] text-center hidden lg:block">
             <h2 className="text-[1.05rem] font-normal tracking-[-0.02em]" style={{ fontFamily: ledger.serif, color: ledger.ink }}>{en.home.howTitle}</h2>
@@ -124,9 +124,41 @@ export function HomePage({ teams }: { teams: Team[] }) {
         </>
       }
     >
-      <Suspense fallback={<p className="eyebrow">Loading teams</p>}>
+      <Suspense fallback={<TeamIndexFallback />}>
         <TeamIndex teams={teams} />
       </Suspense>
+      <div className="home-more lg:hidden">
+        <details>
+          <summary>{en.home.howSummary}</summary>
+          <p>{en.home.howBody}</p>
+        </details>
+        <details>
+          <summary>{en.home.faqSummary}</summary>
+          <dl>
+            {[
+              [en.home.faqWhatQ, en.home.faqWhatA],
+              [en.home.faqInstallQ, en.home.faqInstallA],
+              [en.home.faqXaiQ, en.home.faqXaiA],
+            ].map(([q, a]) => (
+              <div key={q}>
+                <dt>{q}</dt>
+                <dd>{a}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
+        <details>
+          <summary>{en.home.contributeSummary}</summary>
+          <p>{en.home.contributeBody}</p>
+          <p>
+            <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">
+              {en.home.contributeGuide}
+            </a>
+            {" · "}
+            <Link className="accent-hover underline" href="/docs">{en.home.contributeSpec}</Link>
+          </p>
+        </details>
+      </div>
     </WingsSplit>
   );
 }

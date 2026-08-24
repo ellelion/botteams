@@ -11,6 +11,7 @@ import { grokRecipeTitle } from "@/lib/grok-names";
 import { notFound } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { WatchControl } from "@/components/ConversationStage";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { Customize } from "@/components/team/Customize";
 import { ledger } from "@/lib/ledger-theme";
@@ -90,13 +91,7 @@ export default async function BotPage({ params }: { params: Promise<{ slug: stri
       hero={
         <WingsHero
           title={grokRecipeTitle(team.kind, team.name)}
-          kicker={(
-            <nav className="meta flex flex-wrap items-center justify-center gap-2" aria-label="Breadcrumb">
-              <span>{team.name}</span>
-              <span aria-hidden>/</span>
-              <Link href="/?kind=bot" className="accent-hover">{en.bot.allBots}</Link>
-            </nav>
-          )}
+          kicker={<Breadcrumb parentHref="/?kind=bot" parentLabel={en.bot.allBots} current={team.name} />}
         >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{team.tagline}</p>
           <WatchControl team={team} />

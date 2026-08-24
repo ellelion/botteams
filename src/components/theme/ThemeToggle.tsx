@@ -4,10 +4,6 @@ import { useSyncExternalStore } from "react";
 import type { Theme } from "@/lib/theme";
 import { applyThemePreference, readCurrentTheme } from "@/lib/theme-client";
 
-// The theme lives on <html data-theme>, set pre-paint by the bootstrap
-// script — an external store. useSyncExternalStore reads it without the
-// setState-in-effect mount dance and stays hydration-safe (the server
-// snapshot renders first, then React swaps in the real client value).
 const listeners = new Set<() => void>();
 
 function subscribe(listener: () => void) {
@@ -19,6 +15,23 @@ function subscribe(listener: () => void) {
 
 function getServerSnapshot(): Theme {
   return "light";
+}
+
+function SunMark() {
+  return (
+    <svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden>
+      <circle cx="9" cy="9" r="3.1" />
+      <path d="M9 2.2v1.6M9 14.2v1.6M2.2 9h1.6M14.2 9h1.6M4.1 4.1l1.1 1.1M12.8 12.8l1.1 1.1M4.1 13.9l1.1-1.1M12.8 5.2l1.1-1.1" />
+    </svg>
+  );
+}
+
+function MoonMark() {
+  return (
+    <svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M14.2 10.4A5.4 5.4 0 0 1 7.6 3.8 6.1 6.1 0 1 0 14.2 10.4z" />
+    </svg>
+  );
 }
 
 export function ThemeToggle() {
@@ -36,12 +49,13 @@ export function ThemeToggle() {
       className="theme-control"
       aria-label={label}
       title={label}
+      aria-pressed={theme === "dark"}
       onClick={() => {
         applyThemePreference(next);
         for (const listener of listeners) listener();
       }}
     >
-      <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
+      {theme === "dark" ? <SunMark /> : <MoonMark />}
     </button>
   );
 }

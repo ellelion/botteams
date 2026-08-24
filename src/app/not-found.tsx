@@ -13,10 +13,12 @@ export default function NotFound() {
         </WingsHero>
       }
     >
-      <span className="flex flex-wrap gap-3 pt-6">
+      <nav className="notfound-nav" aria-label={en.notFound.kicker}>
         <Link href="/" className="theme-control theme-control-label">{en.notFound.back}</Link>
         <Link href="/?kind=bot" className="theme-control theme-control-label">{en.notFound.backBots}</Link>
-      </span>
+        <Link href="/connectors" className="theme-control theme-control-label">{en.notFound.connectors}</Link>
+        <Link href="/docs" className="theme-control theme-control-label">{en.notFound.spec}</Link>
+      </nav>
     </WingsSplit>
   );
 }

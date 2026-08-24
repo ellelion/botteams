@@ -4,9 +4,6 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ACCENT_PALETTE, DEFAULT_ACCENT } from "@/lib/theme";
 import { applyAccentPreference, readCurrentAccent } from "@/lib/theme-client";
 
-// The accent lives in the --accent CSS variable, set pre-paint by the
-// bootstrap script — an external store, read the same way ThemeToggle
-// reads the theme (hydration-safe, no setState-in-effect).
 const listeners = new Set<() => void>();
 
 function subscribe(listener: () => void) {
@@ -29,6 +26,7 @@ export function AccentPicker() {
   );
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const swatchRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     if (!open) return;
@@ -43,17 +41,27 @@ export function AccentPicker() {
     };
     document.addEventListener("mousedown", outside);
     document.addEventListener("keydown", escape);
+    const selected = ACCENT_PALETTE.findIndex((color) => color === accent);
+    swatchRefs.current[selected >= 0 ? selected : 0]?.focus();
     return () => {
       document.removeEventListener("mousedown", outside);
       document.removeEventListener("keydown", escape);
     };
-  }, [open]);
+  }, [open, accent]);
 
   function pick(value: string) {
     applyAccentPreference(value);
     for (const listener of listeners) listener();
     setOpen(false);
     triggerRef.current?.focus();
+  }
+
+  function onSwatchKey(event: React.KeyboardEvent, index: number) {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft" && event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+    event.preventDefault();
+    const delta = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : -1;
+    const next = (index + delta + ACCENT_PALETTE.length) % ACCENT_PALETTE.length;
+    swatchRefs.current[next]?.focus();
   }
 
   return (
@@ -63,6 +71,7 @@ export function AccentPicker() {
         type="button"
         className="theme-control"
         aria-expanded={open}
+        aria-haspopup="dialog"
         aria-label="Choose accent color"
         title="Choose accent color"
         onClick={() => setOpen((value) => !value)}
@@ -70,17 +79,22 @@ export function AccentPicker() {
         <span className="theme-accent-dot" aria-hidden="true" />
       </button>
       {open && (
-        <div className="theme-accent-popover" role="group" aria-label="Choose accent color">
-          {ACCENT_PALETTE.map((value) => (
+        <div className="theme-accent-popover" role="radiogroup" aria-label="Choose accent color">
+          {ACCENT_PALETTE.map((value, index) => (
             <button
               key={value}
+              ref={(node) => {
+                swatchRefs.current[index] = node;
+              }}
               type="button"
-              aria-pressed={accent === value}
+              role="radio"
+              aria-checked={accent === value}
               aria-label={`Set accent ${value}`}
               title={value}
               className={`theme-accent-swatch${accent === value ? " is-selected" : ""}`}
               style={{ background: value }}
               onClick={() => pick(value)}
+              onKeyDown={(event) => onSwatchKey(event, index)}
             />
           ))}
         </div>

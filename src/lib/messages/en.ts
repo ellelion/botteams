@@ -28,6 +28,9 @@ export const en = {
     github: "GitHub",
     homeAria: "botteams.ai, home",
     mainAria: "Main",
+    skip: "Skip to content",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
   },
   home: {
     indexTitle: "Grok Bot Teams",
@@ -98,6 +101,22 @@ export const en = {
     sortNewest: "Newly added",
     sortName: "A to Z",
     specCta: "Team spec",
+    searchLabel: "Search teams",
+    searchPlaceholder: "Search name, job, connector, Bot",
+    searchKbd: "/",
+    clearSearch: "Clear search",
+    results: (shown: number, total: number) =>
+      shown === total
+        ? `${shown} ${shown === 1 ? "result" : "results"}`
+        : `${shown} of ${total} ${total === 1 ? "result" : "results"}`,
+    emptyTitle: (q: string) => (q ? `Nothing matches "${q}".` : "Nothing matches those filters."),
+    emptyBody: "Try another word, or clear the filters to see the whole shelf.",
+    clearFilters: "Clear filters",
+    loading: "Loading teams",
+    howSummary: "How it works",
+    faqSummary: "Questions",
+    contributeSummary: "Add a team",
+    listingView: "Listing view",
   },
   customize: {
     open: "Customize",
@@ -417,5 +436,7 @@ export const en = {
     body: "This page is not here. Teams live under /teams, bots under /bots.",
     back: "Back to teams",
     backBots: "Browse bots",
+    connectors: "Browse connectors",
+    spec: "Read the spec",
   },
 } as const;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { startTransition, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
@@ -153,6 +153,7 @@ function ListingAd({ slot, as }: { slot: SponsorSlot; as: "row" | "card" }) {
       href={sponsorHref(slot, "rail")}
       target="_blank"
       rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
+      aria-label={`${en.sponsor.listingKicker}: ${slot.name ?? "Sponsor"}`}
     >
       <span className="idx-ad-kicker">{en.sponsor.listingKicker}</span>
       <span className="idx-ad-body">
@@ -180,10 +181,56 @@ function ListingSlot({ as }: { as: "row" | "card" }) {
   );
 }
 
+const VIEW_KEY = "botteams.indexView";
+const viewListeners = new Set<() => void>();
+
+function readStoredView(): View {
+  try {
+    const stored = window.localStorage.getItem(VIEW_KEY);
+    return stored === "cards" || stored === "ledger" ? stored : "ledger";
+  } catch {
+    return "ledger";
+  }
+}
+
+function subscribeView(listener: () => void) {
+  viewListeners.add(listener);
+  window.addEventListener("storage", listener);
+  return () => {
+    viewListeners.delete(listener);
+    window.removeEventListener("storage", listener);
+  };
+}
+
+function writeView(next: View) {
+  try {
+    window.localStorage.setItem(VIEW_KEY, next);
+  } catch {
+    /* private mode */
+  }
+  for (const listener of viewListeners) listener();
+}
+
+export function TeamIndexFallback() {
+  return (
+    <div className="idx-skel" aria-busy="true" aria-live="polite">
+      <span className="sr-only">{en.home.loading}</span>
+      <div className="idx-skel-search" />
+      <div className="idx-skel-pills" />
+      <div className="idx-skel-row" />
+      <div className="idx-skel-row" />
+      <div className="idx-skel-row" />
+      <div className="idx-skel-row" />
+    </div>
+  );
+}
+
 export function TeamIndex({ teams }: { teams: Team[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const paramsString = params.toString();
+  const qParam = params.get("q") ?? "";
   const sectionParam = params.get("category") ?? params.get("section") ?? "all";
   const integrationParam = params.get("integration") ?? "all";
   const sortParam = params.get("sort") === "name" ? "name" : "newest";
@@ -194,9 +241,53 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
      filter: some Bots may be ours one day, and they will still be Bots. */
   const kindRaw = params.get("kind");
   const kindParam: "team" | "bot" | "all" = kindRaw === "bot" ? "bot" : kindRaw === "all" ? "all" : "team";
-  const [view, setView] = useState<View>("ledger");
-  const [query, setQuery] = useState("");
+  const view = useSyncExternalStore(subscribeView, readStoredView, () => "ledger");
+  const [query, setQuery] = useState(qParam);
   const [open, setOpen] = useState<string | null>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const fromSelf = useRef(false);
+
+  useEffect(() => {
+    if (fromSelf.current) {
+      fromSelf.current = false;
+      return;
+    }
+    setQuery(qParam);
+  }, [qParam]);
+
+  useEffect(() => {
+    const next = query.trim();
+    if (next === qParam) return;
+    const handle = window.setTimeout(() => {
+      fromSelf.current = true;
+      const usp = new URLSearchParams(paramsString);
+      if (!next) usp.delete("q");
+      else usp.set("q", next);
+      const qs = usp.toString();
+      startTransition(() => {
+        router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+      });
+    }, 250);
+    return () => window.clearTimeout(handle);
+  }, [query, qParam, paramsString, pathname, router]);
+
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      const el = document.activeElement;
+      const typing = el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || (el instanceof HTMLElement && el.isContentEditable);
+      if ((event.key === "k" && (event.metaKey || event.ctrlKey)) || (event.key === "/" && !typing)) {
+        event.preventDefault();
+        searchRef.current?.focus();
+        searchRef.current?.select();
+      }
+      if (event.key === "Escape" && el === searchRef.current) {
+        setQuery("");
+        searchRef.current?.blur();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   /* Everything below filters within the chosen shelf, so a category count
      never promises rows the current shelf will not show. */
@@ -276,7 +367,7 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
   /* One writer for every filter, so each one lands in the URL and the page
      stays shareable. "all" clears rather than encoding a default. */
   function setParam(key: string, next: string) {
-    const usp = new URLSearchParams(params.toString());
+    const usp = new URLSearchParams(paramsString);
     usp.delete("section");
     if (!next || next === "all" || (key === "sort" && next === "newest")) usp.delete(key);
     else usp.set(key, next);
@@ -289,7 +380,7 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
      through setParam, which treats "all" as a clear. Switching shelf also
      drops the category, which belongs to the shelf you just left. */
   function setKind(next: "team" | "bot" | "all") {
-    const usp = new URLSearchParams(params.toString());
+    const usp = new URLSearchParams(paramsString);
     usp.delete("section");
     usp.delete("category");
     if (next === "team") usp.delete("kind");
@@ -298,39 +389,123 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
   }
 
+  const categoryLabel = categoryOptions.find((option) => option.value === sectionParam)?.label;
+  const hasFilters = Boolean(query.trim()) || sectionParam !== "all" || integrationParam !== "all";
+
+  function clearFilters() {
+    setQuery("");
+    fromSelf.current = true;
+    const usp = new URLSearchParams(paramsString);
+    usp.delete("q");
+    usp.delete("category");
+    usp.delete("section");
+    usp.delete("integration");
+    const qs = usp.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    searchRef.current?.focus();
+  }
+
+  const listing = sorted.length === 0 ? (
+    <div className="idx-empty">
+      <p className="idx-empty-title">{en.home.emptyTitle(query.trim())}</p>
+      <p className="idx-empty-body">{en.home.emptyBody}</p>
+      <button type="button" className="cf-browse" onClick={clearFilters}>
+        {en.home.clearFilters}
+      </button>
+    </div>
+  ) : view === "cards" ? (
+    <div className="idx-cards">
+      {interleaveAds(sorted, houseSlots).map((row) =>
+        row.kind === "ad" ? (
+          <ListingAd key={row.key} slot={row.slot} as="card" />
+        ) : row.kind === "slot" ? (
+          <ListingSlot key={row.key} as="card" />
+        ) : (
+          <Link key={row.team.slug} href={hrefFor(row.team)} className="idx-card">
+            <span className="idx-card-cat">
+              {kindParam === "all" ? `${row.team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
+              {row.team.section}
+            </span>
+            <span className="idx-card-name">{grokRecipeTitle(row.team.kind, row.team.name)}</span>
+            <span className="idx-card-tag">{row.team.tagline}</span>
+            <span className="idx-card-foot">
+              <ConnectorRow names={row.team.connectors} size={15} />
+              <span className="idx-card-bots"><RosterShape bots={row.team.bots} rooms={row.team.rooms.length} routines={row.team.routines} /></span>
+            </span>
+          </Link>
+        ),
+      )}
+    </div>
+  ) : (
+    <div className="team-table">
+      {interleaveAds(sorted, houseSlots).map((row) =>
+        row.kind === "ad" ? (
+          <ListingAd key={row.key} slot={row.slot} as="row" />
+        ) : row.kind === "slot" ? (
+          <ListingSlot key={row.key} as="row" />
+        ) : (
+          <TeamExpandable
+            key={row.team.slug}
+            team={row.team}
+            variant="row"
+            open={open === row.team.slug}
+            onToggle={() => setOpen(open === row.team.slug ? null : row.team.slug)}
+          />
+        ),
+      )}
+    </div>
+  );
+
   return (
     <section id="teams">
       <SponsorTicker place="top" />
-      <label className="search-wrap">
-        <span className="sr-only">Search teams</span>
-        <input
-          className="search-input"
-          type="search"
-          placeholder="Search name, job, connector, Bot"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-      </label>
+      <div className="index-tools">
+        <label className="search-wrap">
+          <span className="sr-only">{en.home.searchLabel}</span>
+          <svg className="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
+          </svg>
+          <input
+            ref={searchRef}
+            className="search-input"
+            type="search"
+            placeholder={en.home.searchPlaceholder}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            autoComplete="off"
+            enterKeyHint="search"
+            aria-keyshortcuts="/ Meta+k Control+k"
+          />
+          {query ? (
+            <button type="button" className="search-clear" onClick={() => { setQuery(""); searchRef.current?.focus(); }}>
+              {en.home.clearSearch}
+            </button>
+          ) : (
+            <kbd className="search-kbd" aria-hidden>{en.home.searchKbd}</kbd>
+          )}
+        </label>
 
-      <div className="browse-pick">
-        {([
-          ["team", en.home.kindTeams, teamCount],
-          ["bot", en.home.kindBots, botCount],
-          ["all", en.home.kindAll, teams.length],
-        ] as const).map(([id, label, count]) => (
-          <button
-            key={id}
-            type="button"
-            className={`browse-pick-btn${kindParam === id ? " is-on" : ""}`}
-            aria-pressed={kindParam === id}
-            onClick={() => setKind(id)}
-          >
-            {label} <span className="browse-pick-count">{count}</span>
-          </button>
-        ))}
-      </div>
+        <div className="browse-pick" role="radiogroup" aria-label={en.home.kindLabel}>
+          {([
+            ["team", en.home.kindTeams, teamCount],
+            ["bot", en.home.kindBots, botCount],
+            ["all", en.home.kindAll, teams.length],
+          ] as const).map(([id, label, count]) => (
+            <button
+              key={id}
+              type="button"
+              role="radio"
+              aria-checked={kindParam === id}
+              className={`browse-pick-btn${kindParam === id ? " is-on" : ""}`}
+              onClick={() => setKind(id)}
+            >
+              {label} <span className="browse-pick-count">{count}</span>
+            </button>
+          ))}
+        </div>
 
-      <nav className="cat-rail" aria-label={en.home.categoriesAria}>
+        <nav className="cat-rail" aria-label={en.home.categoriesAria}>
           <ul className="cat-rail-track">
             {categoryOptions.map((option) => (
               <li key={option.value}>
@@ -349,88 +524,77 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
           </ul>
         </nav>
 
-      <div className="index-header">
-        <h2 className="section-title">
-          {kindParam === "bot" ? en.home.indexTitleBots : kindParam === "all" ? en.home.indexTitleAll : en.home.indexTitle}
-        </h2>
-        <div className="filter-bar">
-          <div className="filter-selects">
-          <Select
-            id="index-integration"
-            label={en.home.filterConnector}
-            value={integrationParam}
-            options={connectorSelectOptions}
-            onChange={(next) => setParam("integration", next)}
-          />
-          <Select
-            id="index-sort"
-            label={en.home.sortLabel}
-            value={sortParam}
-            options={sortOptions}
-            onChange={(next) => setParam("sort", next)}
-            align="end"
-          />
+        <div className="index-header">
+          <h2 className="section-title">
+            {kindParam === "bot" ? en.home.indexTitleBots : kindParam === "all" ? en.home.indexTitleAll : en.home.indexTitle}
+          </h2>
+          <div className="filter-bar">
+            <div className="filter-selects">
+              <Select
+                id="index-integration"
+                label={en.home.filterConnector}
+                value={integrationParam}
+                options={connectorSelectOptions}
+                onChange={(next) => setParam("integration", next)}
+              />
+              <Select
+                id="index-sort"
+                label={en.home.sortLabel}
+                value={sortParam}
+                options={sortOptions}
+                onChange={(next) => setParam("sort", next)}
+                align="end"
+              />
+            </div>
+            <span className="filter-views" role="radiogroup" aria-label={en.home.listingView}>
+              {VIEWS.map((v) => (
+                <button
+                  key={v.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={view === v.id}
+                  className={`filter-chip filter-chip--icon${view === v.id ? " is-on" : ""}`}
+                  aria-label={v.label}
+                  title={v.label}
+                  onClick={() => writeView(v.id)}
+                >
+                  {v.icon}
+                </button>
+              ))}
+            </span>
           </div>
-          <span className="filter-views" role="group" aria-label="Listing view">
-            {VIEWS.map((v) => (
-              <button
-                key={v.id}
-                type="button"
-                className={`filter-chip filter-chip--icon${view === v.id ? " is-on" : ""}`}
-                aria-pressed={view === v.id}
-                aria-label={v.label}
-                title={v.label}
-                onClick={() => setView(v.id)}
-              >
-                {v.icon}
+        </div>
+
+        <div className="idx-status">
+          <p className="idx-count" role="status" aria-live="polite">
+            {en.home.results(sorted.length, inSource.length)}
+          </p>
+          {hasFilters ? (
+            <div className="idx-chips">
+              {query.trim() ? (
+                <button type="button" className="idx-chip" onClick={() => setQuery("")}>
+                  {query.trim()} <span aria-hidden>×</span>
+                </button>
+              ) : null}
+              {sectionParam !== "all" && categoryLabel ? (
+                <button type="button" className="idx-chip" onClick={() => setSection("all")}>
+                  {categoryLabel} <span aria-hidden>×</span>
+                </button>
+              ) : null}
+              {integrationParam !== "all" ? (
+                <button type="button" className="idx-chip" onClick={() => setParam("integration", "all")}>
+                  {integrationParam} <span aria-hidden>×</span>
+                </button>
+              ) : null}
+              <button type="button" className="idx-chip-clear" onClick={clearFilters}>
+                {en.home.clearFilters}
               </button>
-            ))}
-          </span>
+            </div>
+          ) : null}
         </div>
       </div>
 
-      {view === "cards" ? (
-        <div className="idx-cards">
-          {interleaveAds(sorted, houseSlots).map((row) =>
-            row.kind === "ad" ? (
-              <ListingAd key={row.key} slot={row.slot} as="card" />
-            ) : row.kind === "slot" ? (
-              <ListingSlot key={row.key} as="card" />
-            ) : (
-            <Link key={row.team.slug} href={hrefFor(row.team)} className="idx-card">
-              <span className="idx-card-cat">
-                {kindParam === "all" ? `${row.team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
-                {row.team.section}
-              </span>
-              <span className="idx-card-name">{grokRecipeTitle(row.team.kind, row.team.name)}</span>
-              <span className="idx-card-tag">{row.team.tagline}</span>
-              <span className="idx-card-foot">
-                <ConnectorRow names={row.team.connectors} size={15} />
-                <span className="idx-card-bots"><RosterShape bots={row.team.bots} rooms={row.team.rooms.length} routines={row.team.routines} /></span>
-              </span>
-            </Link>
-            ),
-          )}
-        </div>
-      ) : (
-        <div className="team-table">
-          {interleaveAds(sorted, houseSlots).map((row) =>
-            row.kind === "ad" ? (
-              <ListingAd key={row.key} slot={row.slot} as="row" />
-            ) : row.kind === "slot" ? (
-              <ListingSlot key={row.key} as="row" />
-            ) : (
-            <TeamExpandable
-              key={row.team.slug}
-              team={row.team}
-              variant="row"
-              open={open === row.team.slug}
-              onToggle={() => setOpen(open === row.team.slug ? null : row.team.slug)}
-            />
-            ),
-          )}
-        </div>
-      )}
+      {listing}
     </section>
   );
 }
@@ -448,43 +612,52 @@ function TeamExpandable({
 }) {
   const prompt = installerPrompt(team);
   const shellClass = variant === "card" ? "team-card" : "index-row";
+  const bodyId = useId();
+  const title = grokRecipeTitle(team.kind, team.name);
 
   return (
     <article className={`${shellClass}${open ? " is-open" : ""}`}>
-      <div className="index-head" onClick={onToggle} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onToggle(); } }}>
+      <div className="index-head">
+        <button
+          type="button"
+          className="index-expand-hit"
+          aria-expanded={open}
+          aria-controls={bodyId}
+          aria-label={open ? `Collapse ${title}` : `Expand ${title}`}
+          onClick={onToggle}
+        />
         <div className="min-w-0 flex-1">
           <div className="index-titleline flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-            <Link href={hrefFor(team)} className="index-name" onClick={(e) => e.stopPropagation()}>
-              {grokRecipeTitle(team.kind, team.name)}
+            <Link href={hrefFor(team)} className="index-name">
+              {title}
             </Link>
-            <button type="button" className="chevron" aria-expanded={open} aria-label={open ? "Collapse team" : "Expand team"} onClick={(e) => { e.stopPropagation(); onToggle(); }}>
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+            <span className="chevron" aria-hidden>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d={open ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"} />
               </svg>
-            </button>
+            </span>
             <span className="team-card-meta"><RosterShape bots={team.bots} rooms={team.rooms.length} routines={team.routines} /></span>
           </div>
           <p className="index-tagline">{team.tagline}</p>
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
             <ConnectorRow names={team.connectors} size={16} />
-            <span className="inline-flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
+            <span className="index-chips inline-flex flex-wrap gap-1.5">
               {team.featured ? <FeaturedChip /> : null}
               {team.fromXai ? <FromXaiChip /> : null}
             </span>
           </div>
         </div>
       </div>
-        <Link
-          href={hrefFor(team)}
-          className="row-arrow row-arrow-link"
-          aria-label={`${en.home.viewFull(team.kind)}: ${grokRecipeTitle(team.kind, team.name)}`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <span className="row-arrow-text">{en.home.viewFull(team.kind)}</span>
-          <TeamArrow />
-        </Link>
+      <Link
+        href={hrefFor(team)}
+        className="row-arrow row-arrow-link"
+        aria-label={`${en.home.viewFull(team.kind)}: ${title}`}
+      >
+        <span className="row-arrow-text">{en.home.viewFull(team.kind)}</span>
+        <TeamArrow />
+      </Link>
       {open ? (
-        <div className="index-body" onClick={(e) => e.stopPropagation()}>
+        <div className="index-body" id={bodyId}>
           <ul>
             {team.agents.map((agent, i) => (
               <li key={agent.name} className="bot-row">

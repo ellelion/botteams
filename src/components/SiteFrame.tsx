@@ -3,11 +3,13 @@ import { WingsVideo } from "@/components/home/WingsVideo";
 import { PageWithRails } from "@/components/PageWithRails";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteMasthead } from "@/components/SiteMasthead";
+import { SkipLink } from "@/components/SkipLink";
 import { ledger } from "@/lib/ledger-theme";
 
 export function SiteFrame({ children }: { children: ReactNode }) {
   return (
     <div className="page-pad relative flex min-h-dvh flex-col" style={{ background: ledger.paper, color: ledger.ink }}>
+      <SkipLink />
       <SiteMasthead />
       <PageWithRails>
         <div className="relative flex min-h-0 flex-1 flex-col">

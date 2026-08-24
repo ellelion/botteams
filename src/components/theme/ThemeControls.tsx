@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export function ThemeControls() {
   return (
-    <div className="theme-controls" aria-label="Appearance controls">
+    <div className="theme-controls" role="group" aria-label="Appearance controls">
       <AccentPicker />
       <ThemeToggle />
     </div>

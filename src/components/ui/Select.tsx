@@ -153,6 +153,7 @@ export function Select({
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
         aria-label={label}
+        aria-autocomplete="none"
         onClick={() => (open ? setOpen(false) : openAt(selectedIndex))}
         onKeyDown={onKeyDown}
       >

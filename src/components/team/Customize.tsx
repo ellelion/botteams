@@ -18,6 +18,7 @@ import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 import type { Team } from "@/lib/types";
+import { useDialogChrome } from "@/lib/use-dialog-chrome";
 import {
   MODES,
   MODE_HINT,
@@ -60,6 +61,8 @@ export function Customize({
   children?: ReactNode;
 }) {
   const [sheet, setSheet] = useState<"customize" | null>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const closeSheet = useCallback(() => setSheet(null), []);
   /* Portals need a document, so nothing renders one until after hydration. */
   const [mounted, setMounted] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -93,6 +96,8 @@ export function Customize({
     }
     hydrated.current = true;
   }, [team]);
+
+  useDialogChrome({ open: sheet !== null && mounted, rootRef: sheetRef, onClose: closeSheet });
 
   const askedHits = useRef<Set<string>>(new Set());
   useEffect(() => {
@@ -575,7 +580,7 @@ export function Customize({
           <div className="rp-head-act">
             <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
             {/* Secondary on purpose. Copy is the transaction. */}
-            <button type="button" className="rp-secondary" aria-expanded={sheet !== null} onClick={openCustomize}>
+            <button type="button" className="rp-secondary" aria-expanded={sheet !== null} aria-haspopup="dialog" onClick={openCustomize}>
               {en.customize.open}
             </button>
             <ShareBar name={grokRecipeTitle(team.kind, team.name)} />
@@ -692,14 +697,14 @@ export function Customize({
           leaves the URL exactly as it was. */}
       {sheet !== null && mounted
         ? createPortal(
-        <div className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-label={en.customize.title}>
-          <button type="button" className="rp-scrim" aria-label={en.recipe.close} onClick={() => setSheet(null)} />
+        <div ref={sheetRef} className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-label={en.customize.title}>
+          <button type="button" className="rp-scrim" aria-label={en.recipe.close} onClick={closeSheet} />
           <div className="rp-sheet">
             <div className="rp-sheet-head">
               <p className="rc-h2">{en.customize.title}</p>
               <div className="rp-sheet-act">
                 <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
-                <button type="button" className="rp-secondary" onClick={() => setSheet(null)}>{en.recipe.close}</button>
+                <button type="button" className="rp-secondary" onClick={closeSheet}>{en.recipe.close}</button>
               </div>
             </div>
             <div className="rp-sheet-body">
