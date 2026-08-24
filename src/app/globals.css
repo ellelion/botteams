@@ -508,6 +508,13 @@ body {
   }
 }
 .theme-accent-swatch.is-selected { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* Opening the grid focuses the current swatch in script, which does not
+   match :focus-visible. Arrowing the same way. */
+.theme-accent-swatch:focus,
+.theme-accent-swatch:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
 
 /*
  * Entrance + status motion. CSS-only, so content is server-rendered and
@@ -1755,7 +1762,9 @@ a.chip-unverified:hover {
   list-style: none;
   font-size: 1rem;
   letter-spacing: -0.02em;
+  color: var(--ink-soft);
 }
+.home-more details[open] summary { color: var(--ink); }
 .home-more summary::-webkit-details-marker { display: none; }
 .home-more summary::after {
   content: "";
@@ -1847,7 +1856,9 @@ a.chip-unverified:hover {
   list-style: none;
   font-size: 1rem;
   letter-spacing: -0.02em;
+  color: var(--ink-soft);
 }
+.spon-faq details[open] summary { color: var(--ink); }
 .spon-faq summary::-webkit-details-marker { display: none; }
 .spon-faq summary::after {
   content: "";
@@ -3060,6 +3071,7 @@ html[data-theme="light"] .cz-check input:checked {
 .cz-advanced[open] summary::after {
   transform: translateY(3px) rotate(-135deg);
 }
+.cz-advanced[open] summary { color: var(--ink); }
 @media (prefers-reduced-motion: reduce) {
   .cz-advanced summary::after { transition: none; }
 }
@@ -3950,12 +3962,14 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   min-height: 48px;
   padding: 0 2px;
   background: var(--page);
-  color: var(--ink);
+  color: var(--ink-soft);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1rem;
   cursor: pointer;
   list-style: none;
 }
+.rp-sec[open] > .rp-sum { color: var(--ink); }
+.rp-sec[open] > .rp-sum .line-icon { color: inherit; }
 .rp-sum::-webkit-details-marker { display: none; }
 .rp-sum::after {
   content: "";
