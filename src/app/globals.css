@@ -6338,6 +6338,8 @@ html:not([data-theme="dark"]) .talk-stage {
   --talk-user: #111110;
   --talk-user-ink: #ffffff;
   --talk-border: rgba(20, 20, 20, 0.15);
+  /* #e8a33d is 2.1:1 on the paper thread. 1.4.11 is 3:1. */
+  --talk-typing-dot: #b87512;
 }
 html[data-theme="dark"] .talk-stage {
   --talk-text: #edecec;
@@ -6349,6 +6351,7 @@ html[data-theme="dark"] .talk-stage {
   --talk-user: #f2f1ef;
   --talk-user-ink: #111110;
   --talk-border: rgba(237, 236, 236, 0.1);
+  --talk-typing-dot: #e8a33d;
 }
 html[data-theme="dark"] .talk-overlay-canvas .talk-stage,
 html[data-theme="dark"] .talk-overlay-canvas .talk-main { background: #141414; }
@@ -6389,6 +6392,7 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   --talk-user: #f2f1ef;
   --talk-user-ink: #111110;
   --talk-border: rgba(237, 236, 236, 0.1);
+  --talk-typing-dot: #e8a33d;
   --talk-badge: #8fd4dc;
   --talk-badge-work: #e8b84a;
   --talk-badge-done: #5ee0a8;
@@ -6426,6 +6430,7 @@ html:not([data-theme="dark"]) .talk-stage {
   --talk-user: #111110;
   --talk-user-ink: #ffffff;
   --talk-border: rgba(20, 20, 20, 0.15);
+  --talk-typing-dot: #b87512;
   --talk-badge: #0e5963;
   --talk-badge-work: #7a4f08;
   --talk-badge-done: #166534;
@@ -6440,6 +6445,7 @@ html[data-theme="dark"] .talk-stage {
   --talk-user: #f2f1ef;
   --talk-user-ink: #111110;
   --talk-border: rgba(237, 236, 236, 0.1);
+  --talk-typing-dot: #e8a33d;
   --talk-badge: #8fd4dc;
   --talk-badge-work: #e8b84a;
   --talk-badge-done: #5ee0a8;
@@ -6749,7 +6755,7 @@ html[data-theme="dark"] .talk-stage {
   width: 8px;
   height: 8px;
   border-radius: 99px;
-  background: #e8a33d;
+  background: var(--talk-typing-dot);
   animation: talk-dot 1.3s ease-in-out infinite;
 }
 .talk-typing-dots span:nth-child(2) { animation-delay: 0.15s; }
@@ -7103,7 +7109,9 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
        overlapped by 6px. 88px (not 5.5rem) keeps that gap: Close is
        12px type, and a rem pad became 176px at 200% text and left
        the title a 56px column. Side insets keep the name out of a
-       landscape notch (16px sat under 47px). */
+       landscape notch (16px sat under 47px). Top inset was missing:
+       Replay sat at y=6 under a 47px notch (only 3px below it). */
+    padding-top: calc(6px + env(safe-area-inset-top, 0px));
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: calc(88px + env(safe-area-inset-right, 0px));
   }
