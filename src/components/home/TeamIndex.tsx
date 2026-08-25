@@ -538,8 +538,9 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
                 commit(currentQuery({ q: "" }));
                 searchRef.current?.focus();
               }}
+              aria-label={en.home.clearSearch}
             >
-              {en.home.clearSearch}
+              {en.clear}
             </button>
           ) : (
             <kbd className="search-kbd" aria-hidden>{en.home.searchKbd}</kbd>

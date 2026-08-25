@@ -178,8 +178,8 @@ export function SkillselionPicker({
             aria-describedby={listOpen ? statusId : undefined}
           />
           {q ? (
-            <button type="button" className="cz-search-clear" onClick={clearSearch}>
-              {en.customize.skillsClear}
+            <button type="button" className="cz-search-clear" onClick={clearSearch} aria-label={en.customize.skillsClear}>
+              {en.clear}
             </button>
           ) : null}
         </span>
