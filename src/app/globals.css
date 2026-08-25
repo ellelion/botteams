@@ -230,6 +230,9 @@
   align-items: center;
   min-height: 32px;
 }
+/* Desktop .wings-main-col is overflow-y:auto (overflow-x computes
+   to auto). The jump list sits flush left; a 3px outer ring lost 5px. */
+.guide-toc a:focus-visible { outline-offset: -3px; }
 .guide-quote {
   min-width: 0;
   margin: 1.35rem 0 0;
@@ -1973,7 +1976,9 @@ a.chip-unverified:focus-visible {
 .idx-colrow:hover .row-arrow-glyph { transform: translateX(2px); }
 .row-arrow-link:focus-visible {
   outline: 2px solid var(--accent-text);
-  outline-offset: 2px;
+  /* Sticky right column of the catalog grid. A 2px outer ring lost
+     its right 4px to the same column scroller as search / names. */
+  outline-offset: -3px;
   color: var(--accent-text);
 }
 .chevron {
@@ -5079,6 +5084,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   background: transparent;
 }
 .share-btn:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+/* Desktop Copy / Customize / share sit flush in the column scroller.
+   Phone already insets these inside .rp-head-act overflow-x:auto. */
+.rp-head-act .theme-control-label:focus-visible,
+.rp-head-act .rp-secondary:focus-visible,
+.rp-head-act .share-btn:focus-visible {
+  outline-offset: -3px;
+}
 .rp-disclaimer {
   color: var(--ink-soft);
   font: 500 11px/1.5 var(--font-geist-sans), system-ui, sans-serif;
@@ -5119,6 +5131,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .api-link {
   font-size: 0.88rem;
 }
+/* Same flush-left column scroller as the Grok Bot jump list. */
+.api-link:focus-visible { outline-offset: -3px; }
 .home-scroll-cue {
   min-height: 24px;
   min-width: 24px;
