@@ -7288,6 +7288,8 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .doc-toc-sum:active,
   .roster-shape-routines summary:active,
   .index-name:active,
+  .idx-card:active,
+  .index-ad:active,
   .hero-stat:active,
   .foot-link:active,
   .crumb-list a:active,
