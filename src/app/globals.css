@@ -1015,7 +1015,9 @@ a.chip-unverified:focus-visible {
 }
 .filter-selects .sel { min-width: 0; flex: 1 1 auto; }
 .filter-selects .sel-button { max-width: 100%; }
-@media (max-width: 1023px) {
+@media (max-width: 639px) {
+  /* Portrait phones. Landscape 667–844 has the width for List / Cards
+     on the same row; forcing 100% here wrapped them under the ticker. */
   .filter-selects { width: 100%; }
 }
 .filter-chip {
@@ -6070,6 +6072,38 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cf-empty,
   .cf-row {
     scroll-margin-top: calc(var(--masthead-h) + 7.5rem);
+  }
+}
+@media (max-width: 1023px) and (max-height: 480px) {
+  /* Viewport, not the 50rem page container. 932×430 (Pro Max
+     landscape) is wider than 50rem, so the nested hide left
+     manifesto + stats on and parked connector / sort off-screen. */
+  .story-beat .home-hero-manifesto,
+  .story-beat .home-hero-links,
+  .story-beat .hero-stats {
+    display: none;
+  }
+  .story-beat { padding-block: 0.2rem; }
+  .story-beat h1,
+  .story-beat.is-catalog-active h1 {
+    margin-top: 0.15rem;
+    font-size: 1.2rem;
+  }
+  /* Restate after the 1023 search pad and the 639 title hide. Connector
+     / sort sat on screen under the 56px ticker (13px at 844×390, 28px
+     at 667×375) because the section title still showed above 639 and
+     the search chrome kept 12+8 pad. Keep h1; kind and cats stay.
+     Caption + gap added 18px above the 44px triggers; the button
+     already has aria-label. */
+  .index-header .section-title { display: none; }
+  .index-header .sel-caption { display: none; }
+  .index-header .sel.has-caption { gap: 0; }
+  .filter-selects { width: auto; }
+  .browse-pick { margin-bottom: 4px; }
+  #teams .search-wrap {
+    padding-top: 6px;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
   }
 }
 /* 12rem after the last row is for a zoomed desktop frame. On a phone
