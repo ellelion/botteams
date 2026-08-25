@@ -4581,13 +4581,17 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   color: var(--ink);
 }
 .roster-shape-tip-row em {
-  font-size: 13px;
+  /* Same schedule as .rp-run-meta. 13px stayed put at 200% text
+     while the rem routine name and prompt grew, so the only visible
+     run time became the quietest line in the open tip. */
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
   color: var(--ink-soft);
   font-style: normal;
+  overflow-wrap: anywhere;
 }
 .roster-shape-tip-prompt {
   margin-top: 4px;
