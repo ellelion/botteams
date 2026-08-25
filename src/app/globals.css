@@ -1638,6 +1638,8 @@ a.chip-unverified:focus-visible {
      the 56px ticker (All sat at 659, bar at 664). */
   .search-wrap { margin-top: 10px; margin-bottom: 8px; }
   .index-header .section-title { display: none; }
+  /* Empty catalog at 667 put List / Cards 6px under the ticker. */
+  .index-header { margin-bottom: 4px; }
   .cat-rail { margin-bottom: 10px; }
   .hero-stats { margin-top: 0.5rem; }
   .search-kbd,
@@ -5987,6 +5989,20 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     line-height: 1.45;
   }
   .story-beat .hero-stats { margin-top: 0.4rem; }
+@media (max-width: 1023px) and (max-height: 480px) {
+  /* Landscape phones: 390–430px tall. Manifesto + stats hid search
+     under the 56px ticker. Keep the title; the menu has the rest. */
+  .story-beat .home-hero-manifesto,
+  .story-beat .home-hero-links,
+  .story-beat .hero-stats {
+    display: none;
+  }
+  .story-beat { padding-block: 0.2rem; }
+  .story-beat h1 {
+    margin-top: 0.15rem;
+    font-size: 1.2rem;
+  }
+}
   /* The cue sat at the bottom of a sticky hero column. After the
      split stacks, How is 32px below, so "Browse teams" is a dead
      hop before the extra copy. */
