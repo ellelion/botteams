@@ -5370,7 +5370,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cat-pill.is-on,
   .cat-pill:focus-visible,
   .cf-chip.is-on,
-  .cf-chip:focus-visible {
+  .cf-chip:focus-visible,
+  .spon-chip:focus-visible {
     outline: 2px solid Highlight;
     outline-offset: -3px;
   }
@@ -5585,6 +5586,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .spon-chip:hover,
 .spon-chip:focus-visible { border-color: var(--ink); }
+/* Bottom ticker copy is an overflow-x auto row. Skillselion / Add
+   yours fill that box, so the 3px outer ring clipped on every side. */
+.spon-chip:focus-visible { outline-offset: -3px; }
 .page-rails-main { padding-bottom: 0; }
 .index-ad,
 .idx-card.idx-ad {
