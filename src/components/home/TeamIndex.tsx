@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useOptimistic, useRef, useState, useSyncExternalStore, useTransition, type ReactNode } from "react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { SectionIcon } from "@/components/icons/LineIcons";
 import { Select, type SelectOption } from "@/components/ui/Select";
@@ -16,6 +16,8 @@ import { installerPrompt } from "@/lib/installer";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { grokDisplayBotName, grokRecipeTitle } from "@/lib/grok-names";
+import { indexQuerySearch, type IndexKind, type IndexQuery } from "@/lib/catalog-query";
+import { focusWithoutPageScroll, scrollIntoRail, useScrollEdges } from "@/lib/use-scroll-edges";
 import { type Team } from "@/lib/types";
 import { houseSlots, sponsorHref, type SponsorSlot } from "@/data/sponsors";
 import { SponsorTicker } from "@/components/SponsorTicker";
@@ -28,6 +30,7 @@ import { resolveConnector, resolveConnectors } from "@/lib/connectors";
  *            something up.
  */
 type View = "ledger" | "cards";
+type IndexFilters = Pick<IndexQuery, "kind" | "category" | "integration" | "sort">;
 
 function ViewListIcon() {
   return (
@@ -53,8 +56,8 @@ function ViewGridIcon() {
 }
 
 const VIEWS: { id: View; label: string; icon: ReactNode }[] = [
-  { id: "ledger", label: "List", icon: <ViewListIcon /> },
-  { id: "cards", label: "Cards", icon: <ViewGridIcon /> },
+  { id: "ledger", label: en.home.viewList, icon: <ViewListIcon /> },
+  { id: "cards", label: en.home.viewCards, icon: <ViewGridIcon /> },
 ];
 
 /*
@@ -153,6 +156,7 @@ function ListingAd({ slot, as }: { slot: SponsorSlot; as: "row" | "card" }) {
       href={sponsorHref(slot, "rail")}
       target="_blank"
       rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
+      aria-label={`${en.sponsor.listingKicker}: ${slot.name ?? "Sponsor"}. ${en.nav.opensNew}`}
     >
       <span className="idx-ad-kicker">{en.sponsor.listingKicker}</span>
       <span className="idx-ad-body">
@@ -180,23 +184,134 @@ function ListingSlot({ as }: { as: "row" | "card" }) {
   );
 }
 
-export function TeamIndex({ teams }: { teams: Team[] }) {
+const VIEW_KEY = "botteams.indexView";
+const viewListeners = new Set<() => void>();
+
+function readStoredView(): View {
+  try {
+    const stored = window.localStorage.getItem(VIEW_KEY);
+    return stored === "cards" || stored === "ledger" ? stored : "ledger";
+  } catch {
+    return "ledger";
+  }
+}
+
+function subscribeView(listener: () => void) {
+  viewListeners.add(listener);
+  window.addEventListener("storage", listener);
+  return () => {
+    viewListeners.delete(listener);
+    window.removeEventListener("storage", listener);
+  };
+}
+
+function writeView(next: View) {
+  try {
+    window.localStorage.setItem(VIEW_KEY, next);
+  } catch {
+    /* private mode */
+  }
+  for (const listener of viewListeners) listener();
+}
+
+export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: IndexQuery }) {
   const router = useRouter();
   const pathname = usePathname();
-  const params = useSearchParams();
-  const sectionParam = params.get("category") ?? params.get("section") ?? "all";
-  const integrationParam = params.get("integration") ?? "all";
-  const sortParam = params.get("sort") === "name" ? "name" : "newest";
+  const resultsId = useId();
   /* Three shelves, not two. Absent means our own company teams, which is
      what a visitor should land on: 56 one-Bot jobs sourced from xAI would
      otherwise be most of the first screen. */
   /* The shelf, not the source. From xAI is a badge on a card, not a
      filter: some Bots may be ours one day, and they will still be Bots. */
-  const kindRaw = params.get("kind");
-  const kindParam: "team" | "bot" | "all" = kindRaw === "bot" ? "bot" : kindRaw === "all" ? "all" : "team";
-  const [view, setView] = useState<View>("ledger");
-  const [query, setQuery] = useState("");
+  const serverFilters = useMemo<IndexFilters>(
+    () => ({
+      kind: initial.kind,
+      category: initial.category,
+      integration: initial.integration,
+      sort: initial.sort,
+    }),
+    [initial.kind, initial.category, initial.integration, initial.sort],
+  );
+  const [filters, setFilters] = useOptimistic(serverFilters, (_current, next: IndexFilters) => next);
+  const kindParam = filters.kind;
+  const sectionParam = filters.category;
+  const integrationParam = filters.integration;
+  const sortParam = filters.sort;
+  const view = useSyncExternalStore(subscribeView, readStoredView, (): View => "ledger");
+  const [query, setQuery] = useState(initial.q);
+  const [seenQ, setSeenQ] = useState(initial.q);
+  const [pushedQ, setPushedQ] = useState(initial.q);
+  if (initial.q !== seenQ) {
+    setSeenQ(initial.q);
+    if (initial.q !== pushedQ) {
+      setQuery(initial.q);
+      setPushedQ(initial.q);
+    }
+  }
   const [open, setOpen] = useState<string | null>(null);
+  const [isPending, startFilter] = useTransition();
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  function currentQuery(patch: Partial<IndexQuery> = {}): IndexQuery {
+    return {
+      q: query,
+      kind: kindParam,
+      category: sectionParam,
+      integration: integrationParam,
+      sort: sortParam,
+      ...patch,
+    };
+  }
+
+  function commit(next: IndexQuery) {
+    const normalized = { ...next, q: next.q.trim() };
+    setPushedQ(normalized.q);
+    startFilter(() => {
+      setFilters({
+        kind: normalized.kind,
+        category: normalized.category,
+        integration: normalized.integration,
+        sort: normalized.sort,
+      });
+      const qs = indexQuerySearch(normalized);
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    });
+  }
+
+  useEffect(() => {
+    const next = query.trim();
+    if (next === initial.q.trim()) return;
+    const handle = window.setTimeout(() => {
+      commit({
+        q: next,
+        kind: kindParam,
+        category: sectionParam,
+        integration: integrationParam,
+        sort: sortParam,
+      });
+    }, 250);
+    return () => window.clearTimeout(handle);
+    // commit writes the URL; the listed fields are the debounce inputs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, initial.q, kindParam, sectionParam, integrationParam, sortParam]);
+
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      const el = document.activeElement;
+      const typing = el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || (el instanceof HTMLElement && el.isContentEditable);
+      if ((event.key === "k" && (event.metaKey || event.ctrlKey)) || (event.key === "/" && !typing)) {
+        event.preventDefault();
+        searchRef.current?.focus();
+        searchRef.current?.select();
+      }
+      if (event.key === "Escape" && el === searchRef.current) {
+        setQuery("");
+        searchRef.current?.blur();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   /* Everything below filters within the chosen shelf, so a category count
      never promises rows the current shelf will not show. */
@@ -235,6 +350,8 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
     ],
     [categories, inSource.length],
   );
+  const categoriesRail = useScrollEdges<HTMLElement>(categoryOptions.length);
+  const kindRail = useScrollEdges<HTMLDivElement>();
 
   const connectorSelectOptions: SelectOption[] = useMemo(
     () => [
@@ -275,162 +392,341 @@ export function TeamIndex({ teams }: { teams: Team[] }) {
 
   /* One writer for every filter, so each one lands in the URL and the page
      stays shareable. "all" clears rather than encoding a default. */
-  function setParam(key: string, next: string) {
-    const usp = new URLSearchParams(params.toString());
-    usp.delete("section");
-    if (!next || next === "all" || (key === "sort" && next === "newest")) usp.delete(key);
-    else usp.set(key, next);
-    const qs = usp.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  function setParam(key: "category" | "integration" | "sort", next: string) {
+    if (key === "sort") {
+      commit(currentQuery({ sort: next === "name" ? "name" : "newest" }));
+      return;
+    }
+    if (key === "category") {
+      commit(currentQuery({ category: next || "all" }));
+      return;
+    }
+    commit(currentQuery({ integration: next || "all" }));
   }
   const setSection = (next: string) => setParam("category", next);
 
   /* "all" means everything here, not "no filter", so this cannot go
      through setParam, which treats "all" as a clear. Switching shelf also
      drops the category, which belongs to the shelf you just left. */
-  function setKind(next: "team" | "bot" | "all") {
-    const usp = new URLSearchParams(params.toString());
-    usp.delete("section");
-    usp.delete("category");
-    if (next === "team") usp.delete("kind");
-    else usp.set("kind", next);
-    const qs = usp.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  function setKind(next: IndexKind) {
+    commit(currentQuery({ kind: next, category: "all" }));
   }
+
+  const categoryLabel = categoryOptions.find((option) => option.value === sectionParam)?.label;
+  const hasFilters = Boolean(query.trim()) || sectionParam !== "all" || integrationParam !== "all";
+  const onlyQuery = Boolean(query.trim()) && sectionParam === "all" && integrationParam === "all";
+
+  function clearFilters() {
+    setQuery("");
+    commit(currentQuery({ q: "", category: "all", integration: "all" }));
+    searchRef.current?.focus();
+  }
+
+  const listing = sorted.length === 0 ? (
+    <div className={`idx-empty${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
+      <p className="idx-empty-title">{en.home.emptyTitle(query.trim())}</p>
+      <p className="idx-empty-body">{onlyQuery ? en.home.emptyBodySearch : en.home.emptyBodyFilters}</p>
+      <nav className="notfound-nav" aria-label={en.home.emptyNav}>
+        <button type="button" className="cf-browse" onClick={clearFilters}>
+          {onlyQuery ? en.home.clearSearch : en.home.clearFilters}
+        </button>
+        {kindParam !== "all" ? (
+          <Link href="/?kind=all" className="theme-control theme-control-label">
+            {en.home.emptySeeAll}
+          </Link>
+        ) : null}
+        <Link href="/guides" className="theme-control theme-control-label">
+          {en.home.emptyGuides}
+        </Link>
+      </nav>
+    </div>
+  ) : view === "cards" ? (
+    <div className={`idx-cards${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
+      {interleaveAds(sorted, houseSlots).map((row) =>
+        row.kind === "ad" ? (
+          <ListingAd key={row.key} slot={row.slot} as="card" />
+        ) : row.kind === "slot" ? (
+          <ListingSlot key={row.key} as="card" />
+        ) : (
+          <Link key={row.team.slug} href={hrefFor(row.team)} className="idx-card">
+            <span className="idx-card-cat">
+              {kindParam === "all" ? `${row.team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
+              {row.team.section}
+            </span>
+            <span className="idx-card-name">{grokRecipeTitle(row.team.kind, row.team.name)}</span>
+            {row.team.featured || row.team.fromXai ? (
+              <span className="idx-card-chips">
+                {row.team.featured ? <FeaturedChip /> : null}
+                {row.team.fromXai ? <FromXaiChip as="span" /> : null}
+              </span>
+            ) : null}
+            <span className="idx-card-tag">{row.team.tagline}</span>
+            <span className="idx-card-foot">
+              <ConnectorRow names={row.team.connectors} size={15} />
+              <span className="idx-card-bots"><RosterShape bots={row.team.bots} rooms={row.team.rooms.length} routines={row.team.routines} allowTip={false} /></span>
+            </span>
+          </Link>
+        ),
+      )}
+    </div>
+  ) : (
+    <div className={`team-table${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
+      {interleaveAds(sorted, houseSlots).map((row) =>
+        row.kind === "ad" ? (
+          <ListingAd key={row.key} slot={row.slot} as="row" />
+        ) : row.kind === "slot" ? (
+          <ListingSlot key={row.key} as="row" />
+        ) : (
+          <TeamExpandable
+            key={row.team.slug}
+            team={row.team}
+            variant="row"
+            open={open === row.team.slug}
+            onToggle={() => setOpen(open === row.team.slug ? null : row.team.slug)}
+          />
+        ),
+      )}
+    </div>
+  );
 
   return (
     <section id="teams">
       <SponsorTicker place="top" />
-      <label className="search-wrap">
-        <span className="sr-only">Search teams</span>
-        <input
-          className="search-input"
-          type="search"
-          placeholder="Search name, job, connector, Bot"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-      </label>
+      <div className="index-chrome">
+        <form
+          className="search-wrap"
+          action="/"
+          method="get"
+          role="search"
+          onSubmit={(event) => {
+            event.preventDefault();
+            commit(currentQuery({ q: query }));
+          }}
+        >
+          {kindParam !== "team" ? <input type="hidden" name="kind" value={kindParam} /> : null}
+          {sectionParam !== "all" ? <input type="hidden" name="category" value={sectionParam} /> : null}
+          {integrationParam !== "all" ? <input type="hidden" name="integration" value={integrationParam} /> : null}
+          {sortParam === "name" ? <input type="hidden" name="sort" value="name" /> : null}
+          <label className="search-field">
+            <span className="sr-only">{en.home.searchLabel(kindParam)}</span>
+            <svg className="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
+            </svg>
+            <input
+              ref={searchRef}
+              className="search-input"
+              type="search"
+              name="q"
+              placeholder={en.home.searchPlaceholder}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              enterKeyHint="search"
+              aria-keyshortcuts="/ Meta+k Control+k"
+              aria-describedby={resultsId}
+            />
+          </label>
+          {query ? (
+            <button
+              type="button"
+              className="search-clear"
+              onClick={() => {
+                setQuery("");
+                commit(currentQuery({ q: "" }));
+                searchRef.current?.focus();
+              }}
+              aria-label={en.home.clearSearch}
+            >
+              {en.clear}
+            </button>
+          ) : (
+            <kbd className="search-kbd" aria-hidden>{en.home.searchKbd}</kbd>
+          )}
+        </form>
 
-      <div className="browse-pick">
-        {([
-          ["team", en.home.kindTeams, teamCount],
-          ["bot", en.home.kindBots, botCount],
-          ["all", en.home.kindAll, teams.length],
-        ] as const).map(([id, label, count]) => (
-          <button
-            key={id}
-            type="button"
-            className={`browse-pick-btn${kindParam === id ? " is-on" : ""}`}
-            aria-pressed={kindParam === id}
-            onClick={() => setKind(id)}
-          >
-            {label} <span className="browse-pick-count">{count}</span>
-          </button>
-        ))}
-      </div>
+        <div className="index-tools">
+        <div
+          ref={kindRail}
+          className="browse-pick scroll-fade"
+          role="radiogroup"
+          aria-label={en.home.kindLabel}
+          onKeyDown={(event) => {
+            const ids: IndexKind[] = ["team", "bot", "all"];
+            const index = ids.indexOf(kindParam);
+            let next = index;
+            if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % ids.length;
+            else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + ids.length) % ids.length;
+            else if (event.key === "Home") next = 0;
+            else if (event.key === "End") next = ids.length - 1;
+            else return;
+            event.preventDefault();
+            setKind(ids[next]);
+            const node = event.currentTarget.querySelector<HTMLElement>(`[data-kind="${ids[next]}"]`);
+            if (node) {
+              focusWithoutPageScroll(node);
+              scrollIntoRail(event.currentTarget, node);
+            }
+          }}
+        >
+          {([
+            ["team", en.home.kindTeams, teamCount],
+            ["bot", en.home.kindBots, botCount],
+            ["all", en.home.kindAll, teams.length],
+          ] as const).map(([id, label, count]) => (
+            <button
+              key={id}
+              type="button"
+              role="radio"
+              data-kind={id}
+              tabIndex={kindParam === id ? 0 : -1}
+              aria-checked={kindParam === id}
+              className={`browse-pick-btn${kindParam === id ? " is-on" : ""}`}
+              onClick={() => setKind(id)}
+            >
+              {label} <span className="browse-pick-count">{count}</span>
+            </button>
+          ))}
+        </div>
 
-      <nav className="cat-rail" aria-label={en.home.categoriesAria}>
-          <ul className="cat-rail-track">
+        <nav
+          ref={categoriesRail}
+          className="cat-rail scroll-fade"
+          role="radiogroup"
+          aria-label={en.home.categoriesAria(kindParam)}
+          onKeyDown={(event) => {
+            const ids = categoryOptions.map((option) => option.value);
+            const index = Math.max(0, ids.indexOf(sectionParam));
+            let next = index;
+            if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % ids.length;
+            else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + ids.length) % ids.length;
+            else if (event.key === "Home") next = 0;
+            else if (event.key === "End") next = ids.length - 1;
+            else return;
+            event.preventDefault();
+            setSection(ids[next]);
+            const node = event.currentTarget.querySelector<HTMLElement>(`[data-category="${ids[next]}"]`);
+            if (node) {
+              focusWithoutPageScroll(node);
+              scrollIntoRail(event.currentTarget, node);
+            }
+          }}
+        >
+          <div className="cat-rail-track">
             {categoryOptions.map((option) => (
-              <li key={option.value}>
-                <button
-                  type="button"
-                  className={`cat-pill${sectionParam === option.value ? " is-on" : ""}`}
-                  aria-pressed={sectionParam === option.value}
-                  onClick={() => setSection(option.value)}
-                >
-                  <span className="cat-pill-icon" aria-hidden>{option.icon}</span>
-                  <span className="cat-pill-name">{option.label}</span>
-                  <span className="cat-pill-count">{option.count}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-      <div className="index-header">
-        <h2 className="section-title">
-          {kindParam === "bot" ? en.home.indexTitleBots : kindParam === "all" ? en.home.indexTitleAll : en.home.indexTitle}
-        </h2>
-        <div className="filter-bar">
-          <div className="filter-selects">
-          <Select
-            id="index-integration"
-            label={en.home.filterConnector}
-            value={integrationParam}
-            options={connectorSelectOptions}
-            onChange={(next) => setParam("integration", next)}
-          />
-          <Select
-            id="index-sort"
-            label={en.home.sortLabel}
-            value={sortParam}
-            options={sortOptions}
-            onChange={(next) => setParam("sort", next)}
-            align="end"
-          />
-          </div>
-          <span className="filter-views" role="group" aria-label="Listing view">
-            {VIEWS.map((v) => (
               <button
-                key={v.id}
+                key={option.value}
                 type="button"
-                className={`filter-chip filter-chip--icon${view === v.id ? " is-on" : ""}`}
-                aria-pressed={view === v.id}
-                aria-label={v.label}
-                title={v.label}
-                onClick={() => setView(v.id)}
+                role="radio"
+                data-category={option.value}
+                tabIndex={sectionParam === option.value ? 0 : -1}
+                aria-checked={sectionParam === option.value}
+                className={`cat-pill${sectionParam === option.value ? " is-on" : ""}`}
+                onClick={() => setSection(option.value)}
               >
-                {v.icon}
+                <span className="cat-pill-icon" aria-hidden>{option.icon}</span>
+                <span className="cat-pill-name">{option.label}</span>
+                <span className="cat-pill-count">{option.count}</span>
               </button>
             ))}
-          </span>
+          </div>
+        </nav>
+
+        <div className="index-header">
+          <h2 className="section-title">
+            {kindParam === "bot" ? en.home.indexTitleBots : kindParam === "all" ? en.home.indexTitleAll : en.home.indexTitle}
+          </h2>
+          <div className="filter-bar">
+            <div className="filter-selects">
+              <Select
+                id="index-integration"
+                label={en.home.filterConnector}
+                caption={en.home.filterConnectorShort}
+                value={integrationParam}
+                options={connectorSelectOptions}
+                onChange={(next) => setParam("integration", next)}
+              />
+              <Select
+                id="index-sort"
+                label={en.home.sortLabel(kindParam)}
+                caption={en.home.sortShort}
+                value={sortParam}
+                options={sortOptions}
+                onChange={(next) => setParam("sort", next)}
+                align="end"
+              />
+            </div>
+            <span
+              className="filter-views"
+              role="radiogroup"
+              aria-label={en.home.listingView}
+              onKeyDown={(event) => {
+                const ids = VIEWS.map((item) => item.id);
+                const index = Math.max(0, ids.indexOf(view));
+                let next = index;
+                if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % ids.length;
+                else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + ids.length) % ids.length;
+                else if (event.key === "Home") next = 0;
+                else if (event.key === "End") next = ids.length - 1;
+                else return;
+                event.preventDefault();
+                writeView(ids[next]);
+                event.currentTarget.querySelector<HTMLElement>(`[data-view="${ids[next]}"]`)?.focus();
+              }}
+            >
+              {VIEWS.map((v) => (
+                <button
+                  key={v.id}
+                  type="button"
+                  role="radio"
+                  data-view={v.id}
+                  tabIndex={view === v.id ? 0 : -1}
+                  aria-checked={view === v.id}
+                  className={`filter-chip filter-chip--icon${view === v.id ? " is-on" : ""}`}
+                  onClick={() => writeView(v.id)}
+                >
+                  {v.icon}
+                  <span>{v.label}</span>
+                </button>
+              ))}
+            </span>
+          </div>
+        </div>
+
+        <div className={`idx-status${isPending ? " is-pending" : ""}`}>
+          <p className="idx-count" id={resultsId} role="status" aria-live="polite" aria-busy={isPending}>
+            {en.home.results(sorted.length, inSource.length)}
+            {isPending ? <span className="idx-updating"> · {en.home.updating}</span> : null}
+          </p>
+          {hasFilters ? (
+            <div className="idx-chips">
+              {query.trim() ? (
+                <button type="button" className="idx-chip" aria-label={en.home.removeFilter(query.trim())} onClick={() => { setQuery(""); commit(currentQuery({ q: "" })); }}>
+                  {query.trim()} <span aria-hidden>×</span>
+                </button>
+              ) : null}
+              {sectionParam !== "all" && categoryLabel ? (
+                <button type="button" className="idx-chip" aria-label={en.home.removeFilter(categoryLabel)} onClick={() => setSection("all")}>
+                  {categoryLabel} <span aria-hidden>×</span>
+                </button>
+              ) : null}
+              {integrationParam !== "all" ? (
+                <button type="button" className="idx-chip" aria-label={en.home.removeFilter(integrationParam)} onClick={() => setParam("integration", "all")}>
+                  {integrationParam} <span aria-hidden>×</span>
+                </button>
+              ) : null}
+              <button type="button" className="idx-chip-clear" onClick={clearFilters}>
+                {onlyQuery ? en.home.clearSearch : en.home.clearFilters}
+              </button>
+            </div>
+          ) : null}
+        </div>
         </div>
       </div>
 
-      {view === "cards" ? (
-        <div className="idx-cards">
-          {interleaveAds(sorted, houseSlots).map((row) =>
-            row.kind === "ad" ? (
-              <ListingAd key={row.key} slot={row.slot} as="card" />
-            ) : row.kind === "slot" ? (
-              <ListingSlot key={row.key} as="card" />
-            ) : (
-            <Link key={row.team.slug} href={hrefFor(row.team)} className="idx-card">
-              <span className="idx-card-cat">
-                {kindParam === "all" ? `${row.team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
-                {row.team.section}
-              </span>
-              <span className="idx-card-name">{grokRecipeTitle(row.team.kind, row.team.name)}</span>
-              <span className="idx-card-tag">{row.team.tagline}</span>
-              <span className="idx-card-foot">
-                <ConnectorRow names={row.team.connectors} size={15} />
-                <span className="idx-card-bots"><RosterShape bots={row.team.bots} rooms={row.team.rooms.length} routines={row.team.routines} /></span>
-              </span>
-            </Link>
-            ),
-          )}
-        </div>
-      ) : (
-        <div className="team-table">
-          {interleaveAds(sorted, houseSlots).map((row) =>
-            row.kind === "ad" ? (
-              <ListingAd key={row.key} slot={row.slot} as="row" />
-            ) : row.kind === "slot" ? (
-              <ListingSlot key={row.key} as="row" />
-            ) : (
-            <TeamExpandable
-              key={row.team.slug}
-              team={row.team}
-              variant="row"
-              open={open === row.team.slug}
-              onToggle={() => setOpen(open === row.team.slug ? null : row.team.slug)}
-            />
-            ),
-          )}
-        </div>
-      )}
+      {listing}
     </section>
   );
 }
@@ -448,16 +744,25 @@ function TeamExpandable({
 }) {
   const prompt = installerPrompt(team);
   const shellClass = variant === "card" ? "team-card" : "index-row";
+  const bodyId = useId();
+  const title = grokRecipeTitle(team.kind, team.name);
 
   return (
     <article className={`${shellClass}${open ? " is-open" : ""}`}>
-      <div className="index-head" onClick={onToggle} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onToggle(); } }}>
+      <div className="index-head">
         <div className="min-w-0 flex-1">
-          <div className="index-titleline flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-            <Link href={hrefFor(team)} className="index-name" onClick={(e) => e.stopPropagation()}>
-              {grokRecipeTitle(team.kind, team.name)}
+          <div className="index-titleline flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            <Link href={hrefFor(team)} className="index-name">
+              {title}
             </Link>
-            <button type="button" className="chevron" aria-expanded={open} aria-label={open ? "Collapse team" : "Expand team"} onClick={(e) => { e.stopPropagation(); onToggle(); }}>
+            <button
+              type="button"
+              className="chevron"
+              aria-expanded={open}
+              aria-controls={bodyId}
+              aria-label={open ? en.home.collapse(title) : en.home.expand(title)}
+              onClick={onToggle}
+            >
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
                 <path d={open ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"} />
               </svg>
@@ -467,24 +772,23 @@ function TeamExpandable({
           <p className="index-tagline">{team.tagline}</p>
           <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
             <ConnectorRow names={team.connectors} size={16} />
-            <span className="inline-flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
+            <span className="index-chips inline-flex flex-wrap gap-1.5">
               {team.featured ? <FeaturedChip /> : null}
               {team.fromXai ? <FromXaiChip /> : null}
             </span>
           </div>
         </div>
       </div>
-        <Link
-          href={hrefFor(team)}
-          className="row-arrow row-arrow-link"
-          aria-label={`${en.home.viewFull(team.kind)}: ${grokRecipeTitle(team.kind, team.name)}`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <span className="row-arrow-text">{en.home.viewFull(team.kind)}</span>
-          <TeamArrow />
-        </Link>
+      <Link
+        href={hrefFor(team)}
+        className="row-arrow row-arrow-link"
+        aria-label={`${en.home.viewFull(team.kind)}: ${title}`}
+      >
+        <span className="row-arrow-text">{en.home.viewFull(team.kind)}</span>
+        <TeamArrow />
+      </Link>
       {open ? (
-        <div className="index-body" onClick={(e) => e.stopPropagation()}>
+        <div className="index-body" id={bodyId}>
           <ul>
             {team.agents.map((agent, i) => (
               <li key={agent.name} className="bot-row">

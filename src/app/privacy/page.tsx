@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Block, PageShell } from "@/components/PageShell";
+import { Block, PageJump, PageShell } from "@/components/PageShell";
+import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -16,6 +17,21 @@ export default function PrivacyPage() {
       title="Privacy"
       lead={`What this site does with data today, not what a template says it might. ${site.company} is the operator. If any of this changes, this page changes with it.`}
     >
+      <PageJump
+        items={[
+          "Who is responsible",
+          "No account, no cookies, first-party analytics",
+          "What your browser keeps",
+          "What the server sees",
+          "If you buy a rail slot",
+          "Who else processes data",
+          "How long we keep it",
+          "Your rights",
+          "Links off this site",
+          "Children",
+          "Contact",
+        ]}
+      />
       <Block title="Who is responsible">
         <p>
           {site.company} is the controller for the processing described here. Email{" "}
@@ -44,6 +60,7 @@ export default function PrivacyPage() {
             href="https://openpanel.dev"
             rel="nofollow noopener noreferrer"
             target="_blank"
+            aria-label={`OpenPanel. ${en.nav.opensNew}`}
           >
             OpenPanel
           </a>
@@ -87,6 +104,7 @@ export default function PrivacyPage() {
             href="https://stripe.com/privacy"
             rel="nofollow noopener noreferrer"
             target="_blank"
+            aria-label={`Stripe privacy policy. ${en.nav.opensNew}`}
           >
             Stripe&apos;s privacy policy
           </a>
@@ -145,7 +163,7 @@ export default function PrivacyPage() {
           Connector marks, sponsor rows, and every link to xAI&apos;s docs point at other people&apos;s sites. Once you
           click, you are on their infrastructure and under their privacy policy, not this one. Outbound{" "}
           <Link className="accent-hover underline" href="/sponsor">
-            rail
+            sponsor rail
           </Link>{" "}
           links carry a plain campaign tag in the URL so we can tell where a click came from. That tag identifies the
           placement, not you.

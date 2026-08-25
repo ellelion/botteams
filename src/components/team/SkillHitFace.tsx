@@ -11,14 +11,26 @@ export function SkillHitFace({
   hit,
   live,
   extra,
+  pending = false,
+  failed = false,
+  compact = false,
 }: {
   hit: SkillselionHit;
   live?: SkillselionHit;
   extra?: string;
+  pending?: boolean;
+  failed?: boolean;
+  /* Search hits live inside a listbox option. Links there both nest
+     interactives and add the skill on the way out. The picked row keeps them. */
+  compact?: boolean;
 }) {
   const face = live ?? hit;
-  const waiting = !live && face.installs === 0 && face.stars === 0;
   const who = authorHref(face);
+  const counts = failed
+    ? en.customize.skillsCountsFail
+    : pending
+      ? en.customize.skillsCountsLoading
+      : en.customize.skillsMeta(fmtCount(face.installs), fmtCount(face.stars));
   return (
     <span className="cz-skill-face">
       {face.avatarUrl ? (
@@ -32,21 +44,29 @@ export function SkillHitFace({
           {face.author ? (
             <span className="cz-hint">
               {" "}
-              by{" "}
-              <a className="cz-link" href={who} target="_blank" rel="noreferrer">
-                {face.author}
-              </a>
+              {en.customize.skillsBy}{" "}
+              {compact ? (
+                face.author
+              ) : (
+                <a className="cz-link" href={who} target="_blank" rel="noopener noreferrer" aria-label={`${face.author}. ${en.nav.opensNew}`}>
+                  {face.author}
+                </a>
+              )}
             </span>
           ) : null}
         </span>
         {face.summary ? <p className="cz-bot-persona">{face.summary}</p> : null}
-        <p className="cz-hint">
-          {waiting ? "…" : en.customize.skillsMeta(fmtCount(face.installs), fmtCount(face.stars))}
+        <p className={failed ? "cz-hint is-fail" : "cz-hint"}>
+          {counts}
           {extra ? ` · ${extra}` : null}
-          {" · "}
-          <a className="cz-link" href={face.url} target="_blank" rel="noreferrer">
-            {en.customize.skillsView}
-          </a>
+          {compact ? null : (
+            <>
+              {" · "}
+              <a className="cz-link" href={face.url} target="_blank" rel="noopener noreferrer" aria-label={`${en.customize.skillsView}. ${en.nav.opensNew}`}>
+                {en.customize.skillsView}
+              </a>
+            </>
+          )}
         </p>
       </span>
     </span>

@@ -54,7 +54,7 @@ export const compareGuides: Guide[] = [
           },
           {
             type: "quote",
-            text: "Works directly on your computer — Claude reads and writes local files without requiring manual uploads or downloads.",
+            text: "Works directly on your computer. Claude reads and writes local files without requiring manual uploads or downloads.",
             source: 'claude.com/docs/cowork/overview, "Key capabilities"',
           },
         ],

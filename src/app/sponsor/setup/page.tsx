@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { SetupForm } from "@/components/sponsor/SetupForm";
 import { ledger } from "@/lib/ledger-theme";
@@ -12,6 +13,7 @@ import {
 import { isRailSessionMeta } from "@/lib/rail";
 import { stripe } from "@/lib/stripe";
 import { en } from "@/lib/messages/en";
+import { site } from "@/lib/site";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -21,15 +23,6 @@ export const metadata: Metadata = {
   description: "Submit the tool for the botteams.ai side rail.",
   robots: { index: false, follow: false },
 };
-
-const GUIDELINES = [
-  "Digital products only.",
-  "Public URL, not a shortener, not a competing Grok Bot team or bot directory.",
-  "No crypto, no trading signals, no lead-generation.",
-  "Title 28 characters or fewer. Short description 52 or fewer. Plain, like the directory.",
-  "A simple mark (png, svg, webp, or jpg). Not a landing screenshot, not a person photo, not a watermarked stock ad.",
-  "An automated review checks that list, up to three times. After that, our team will review your listing and get back to you shortly.",
-];
 
 async function loadSession(sessionId: string) {
   if (!databaseUrl() || !process.env.STRIPE_SECRET_KEY) {
@@ -69,11 +62,15 @@ export default async function SponsorSetupPage({
 }) {
   const { session_id: sessionId = "" } = await searchParams;
   const state = await loadSession(sessionId.trim());
+  const mail = `mailto:${site.email}?subject=${encodeURIComponent("Listing setup")}`;
 
   return (
     <WingsSplit
       hero={
-        <WingsHero title={en.sponsor.setupTitle}>
+        <WingsHero
+          title={en.sponsor.setupTitle}
+          kicker={<Breadcrumb parentHref="/sponsor" parentLabel={en.nav.sponsor} current={en.sponsor.setupTitle} />}
+        >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             {en.sponsor.setupLead}
           </p>
@@ -83,36 +80,58 @@ export default async function SponsorSetupPage({
     >
 
         {state.kind === "unconfigured" ? (
-          <p className="measure mt-8 text-[0.9rem]" style={{ color: ledger.inkMuted }}>
-            Setup is not configured on this host.
-          </p>
+          <div className="idx-empty">
+            <p className="idx-empty-title">{en.sponsor.setupOffTitle}</p>
+            <p className="idx-empty-body">{en.sponsor.setupOffBody}</p>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupBack}>
+              <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+            </nav>
+          </div>
         ) : null}
 
         {state.kind === "missing" || state.kind === "unpaid" ? (
-          <p className="measure mt-8 text-[0.9rem]" style={{ color: ledger.inkMuted }}>
-            {en.sponsor.setupMissing}{" "}
-            <Link className="accent-hover underline" href="/sponsor">
-              {en.sponsor.setupBack}
-            </Link>
-          </p>
+          <div className="idx-empty">
+            <p className="idx-empty-title">{en.sponsor.setupMissingTitle}</p>
+            <p className="idx-empty-body">{en.sponsor.setupMissing}</p>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupBack}>
+              <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+            </nav>
+          </div>
         ) : null}
 
         {state.kind === "expired" ? (
-          <p className="measure mt-8 text-[0.9rem]" style={{ color: ledger.inkMuted }}>
-            {en.sponsor.setupExpired}
-          </p>
+          <div className="idx-empty">
+            <p className="idx-empty-title">{en.sponsor.setupExpiredTitle}</p>
+            <p className="idx-empty-body">{en.sponsor.setupExpired}</p>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupExpiredTitle}>
+              <a className="theme-control theme-control-label" href={mail}>{en.sponsor.mailCta}</a>
+              <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+            </nav>
+          </div>
         ) : null}
 
         {state.kind === "live" ? (
-          <p className="spon-paid mt-8" role="status">
-            {en.sponsor.setupLive}
-          </p>
+          <div>
+            <p className="spon-paid mt-8" role="status">
+              {en.sponsor.setupLive}
+            </p>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupNext}>
+              <Link href="/" className="theme-control theme-control-label">{en.sponsor.setupSeeDir}</Link>
+              <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+            </nav>
+          </div>
         ) : null}
 
         {state.kind === "human" ? (
-          <p className="spon-paid mt-8" role="status">
-            {en.sponsor.setupHuman}
-          </p>
+          <div>
+            <p className="spon-paid mt-8" role="status">
+              {en.sponsor.setupHuman}
+            </p>
+            <nav className="notfound-nav" aria-label={en.sponsor.setupNext}>
+              <a className="theme-control theme-control-label" href={mail}>{en.sponsor.mailCta}</a>
+              <Link href="/sponsor" className="theme-control theme-control-label">{en.sponsor.setupBack}</Link>
+            </nav>
+          </div>
         ) : null}
 
         {state.kind === "open" ? (
@@ -122,7 +141,7 @@ export default async function SponsorSetupPage({
                 {en.sponsor.guidelinesTitle}
               </h2>
               <ul className="mt-4">
-                {GUIDELINES.map((rule) => (
+                {en.sponsor.guidelines.map((rule) => (
                   <li key={rule} className="hairline-row measure py-3 text-[0.88rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
                     {rule}
                   </li>

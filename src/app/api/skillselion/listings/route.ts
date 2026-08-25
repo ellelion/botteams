@@ -16,9 +16,17 @@ function listingUrl(base: string, id: string): string {
 }
 
 async function pull(base: string, id: string, headers: HeadersInit): Promise<unknown | null> {
-  const res = await fetch(listingUrl(base, id), { headers, cache: "no-store" });
-  if (!res.ok) return null;
-  return res.json();
+  try {
+    const res = await fetch(listingUrl(base, id), {
+      headers,
+      cache: "no-store",
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }
 
 async function fetchOne(id: string, headers: HeadersInit): Promise<SkillselionHit | null> {

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   type Campaign,
   houseSlots,
@@ -6,6 +8,7 @@ import {
 } from "@/data/sponsors";
 import { HideNextIndicator } from "@/components/HideNextIndicator";
 import { en } from "@/lib/messages/en";
+import { useScrollEdges } from "@/lib/use-scroll-edges";
 
 function Chip({
   slot,
@@ -21,7 +24,7 @@ function Chip({
       href={sponsorHref(slot, "rail")}
       target="_blank"
       rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
-      style={{ height: 20, fontSize: "0.58rem", padding: "0 6px 0 5px" }}
+      aria-label={`${name}. ${en.nav.opensNew}`}
     >
       {slot.mark ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -40,17 +43,11 @@ function ChipRow({
   campaign: Campaign;
 }) {
   const base = slots.length ? slots : houseSlots;
+  const rail = useScrollEdges<HTMLDivElement>(base.length);
   return (
     <div
-      className="spon-mq-copy"
-      style={{
-        flex: "0 1 auto",
-        minWidth: 0,
-        justifyContent: "center",
-        overflowX: "auto",
-        gap: 6,
-        paddingRight: 0,
-      }}
+      ref={rail}
+      className="spon-mq-copy scroll-fade"
     >
       {base.map((slot, i) => (
         <Chip key={`${slot.id}-${i}`} slot={slot} campaign={campaign} />
@@ -58,7 +55,6 @@ function ChipRow({
       <a
         className="spon-chip spon-chip-add"
         href="/sponsor"
-        style={{ height: 20, fontSize: "0.58rem", padding: "0 6px" }}
       >
         {en.sponsor.addYours}
       </a>

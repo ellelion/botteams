@@ -23,7 +23,7 @@ export type RejectKey = (typeof REJECT_KEYS)[number];
 
 export const REJECT_COPY: Record<RejectKey, string> = {
   not_a_tool: "This has to be a real tool a Grok Bot could use, not a general ad.",
-  competing_directory: "We do not take competing Grok Bot team or bot directories.",
+  competing_directory: "We do not take competing Grok Bot team or Bot directories.",
   crypto_or_signals: "No crypto, and no trading signals.",
   lead_gen: "No lead-generation.",
   bad_url: "Use a public URL, not a shortener.",
@@ -60,6 +60,45 @@ const SHORTENERS = new Set([
 
 export function buyerReasons(reasons: RejectKey[]): string[] {
   return reasons.map((key) => REJECT_COPY[key]);
+}
+
+export type SetupField = "title" | "line" | "href" | "image";
+
+const COPY_TO_KEY = new Map<string, RejectKey>(
+  (Object.entries(REJECT_COPY) as [RejectKey, string][]).map(([key, copy]) => [copy, key]),
+);
+
+const FIELD_FOR_REASON: Record<RejectKey, SetupField[]> = {
+  title_too_long: ["title"],
+  line_too_long: ["line"],
+  bad_url: ["href"],
+  image_not_a_mark: ["image"],
+  missing_field: ["title", "line", "href", "image"],
+  copy_not_plain: ["title", "line"],
+  not_a_tool: [],
+  competing_directory: [],
+  crypto_or_signals: [],
+  lead_gen: [],
+};
+
+export function fieldsForBuyerReasons(reasons: string[]): Set<SetupField> {
+  const fields = new Set<SetupField>();
+  for (const text of reasons) {
+    const key = COPY_TO_KEY.get(text);
+    if (!key) continue;
+    for (const field of FIELD_FOR_REASON[key]) fields.add(field);
+  }
+  return fields;
+}
+
+export function buyerReasonForField(reasons: string[], field: SetupField): string | undefined {
+  for (const text of reasons) {
+    const key = COPY_TO_KEY.get(text);
+    if (!key) continue;
+    const mapped = FIELD_FOR_REASON[key];
+    if (mapped.length === 1 && mapped[0] === field) return text;
+  }
+  return undefined;
 }
 
 export function filterRejectKeys(values: unknown): RejectKey[] {
@@ -170,7 +209,7 @@ function buildPrompt(input: ReviewInput): string {
     "Do not invent keys.",
     "",
     "A catalog of skills, MCP, APIs, or agent products counts as a tool. Only reject not_a_tool for unrelated consumer ads (shoes, food, generic SaaS with no agent use). Skillselion, Agent Plugins Directory, and similar operator tools pass.",
-    "Reject competing Grok Bot team or bot directories (competing_directory).",
+    "Reject competing Grok Bot team or Bot directories (competing_directory).",
     "Reject crypto, trading signals (crypto_or_signals), and lead-generation (lead_gen).",
     "Destination must be a public http or https URL, not a shortener (bad_url). A host without a scheme is fine.",
     "Title max 28. Line max 52. Use copy_not_plain only for spam, all-caps shouting, or emoji stuffing. Normal product names and one-liners pass.",
