@@ -1461,7 +1461,9 @@ a.chip-unverified:focus-visible {
 .search-input:focus,
 .search-input:focus-visible {
   outline: 2px solid var(--accent-text);
-  outline-offset: 2px;
+  /* Desktop .wings-main-col is overflow-y:auto (overflow-x computes
+     to auto). The field is flush; a 2px outer ring lost both 4px. */
+  outline-offset: -3px;
   background: var(--surface-elevated);
 }
 .search-input::-webkit-search-cancel-button { appearance: none; }
@@ -2612,7 +2614,8 @@ a.chip-unverified:focus-visible {
 .cf-input:focus,
 .cf-input:focus-visible {
   outline: 2px solid var(--accent-text);
-  outline-offset: 2px;
+  /* Same flush column scroller as catalog search. */
+  outline-offset: -3px;
   background: var(--surface-elevated);
 }
 .cf-input::-webkit-search-cancel-button { appearance: none; }
