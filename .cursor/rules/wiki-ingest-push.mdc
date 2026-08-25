@@ -1,13 +1,13 @@
 ---
-description: After durable work, ingest the wiki and push icidab/ellelion-wiki.
+description: After durable work, ingest the wiki and push ellelion/ellelion-wiki.
 alwaysApply: true
 ---
 
 # Wiki ingest + push
 
-The knowledge layer is `icidab/ellelion-wiki`, not this repo. Durable knowledge (decision + rationale, market fact, learning, status change) must be ingested there **and pushed**. A Cloud VM is discarded; an unpushed wiki commit dies with it.
+The knowledge layer is `ellelion/ellelion-wiki`, not this repo. Durable knowledge (decision + rationale, market fact, learning, status change) must be ingested there **and pushed**. A Cloud VM is discarded; an unpushed wiki commit dies with it.
 
-1. Resolve the wiki checkout: `~/Desktop/root/wiki`, sibling `ellelion-wiki`, or `gh repo clone icidab/ellelion-wiki "$HOME/wiki"`.
+1. Resolve the wiki checkout: `~/Desktop/root/wiki`, sibling `ellelion-wiki`, or `gh repo clone ellelion/ellelion-wiki "$HOME/wiki"`.
 2. Update pages, bump `updated:`, add one `log.md` line. Schema: that repo's `CLAUDE.md`.
 3. Commit **in the wiki repo only**, then `git push origin HEAD` (or `scripts/push-main.sh`). Do not finish while the wiki is `ahead` of origin.
 4. If nothing was durable, write that in the reply (`no ingest: …`). Do not skip in silence.
