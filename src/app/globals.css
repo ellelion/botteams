@@ -5661,6 +5661,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .index-ad:focus-visible .idx-ad-name,
 .idx-card.idx-ad:hover .idx-ad-name,
 .idx-card.idx-ad:focus-visible .idx-ad-name { color: var(--accent-text); }
+/* Ledger ads are full-bleed in the column scroller. A 3px outer ring
+   lost 5px on both sides; cards already inset via .idx-card. */
+.index-ad:focus-visible { outline-offset: -3px; }
 .index-ad-open { border-bottom-style: dashed; }
 .idx-ad-kicker {
   display: block;
