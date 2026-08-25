@@ -5304,12 +5304,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cat-pill.is-on,
   .filter-chip.is-on,
   .cz-chip.is-on,
-  .filter-views .filter-chip--icon.is-on,
   .cf-chip.is-on,
   .theme-accent-swatch.is-selected,
   .talk-rail-row.is-on,
   .talk-dock-item.is-on,
-  .cz-mode.is-on,
   .site-menu-link.is-current,
   .site-masthead-nav a.is-current,
   .foot-link[aria-current="page"],
@@ -5317,6 +5315,15 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cz-skill-hits .cz-skill-opt.is-active {
     outline: 2px solid Highlight;
     outline-offset: 2px;
+  }
+  /* Same overflow:hidden clip as color mode. An outer Highlight ring
+     on Read / List vanished on the flush edges. */
+  .cz-mode.is-on,
+  .cz-mode:focus-visible,
+  .filter-views .filter-chip--icon.is-on,
+  .filter-views .filter-chip--icon:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: -3px;
   }
   /* Guide compare stacks and quotes use --line, which vanishes when
      backgrounds are ignored. Masthead current is colour-only. */
