@@ -1,0 +1,17 @@
+---
+description: Use Ellelion's read-only Google keyword tool for SEO, AEO, and GEO demand research.
+alwaysApply: true
+---
+
+# Google keyword research
+
+When a task includes keyword discovery, target-query selection, content planning, a content brief,
+or country/language demand comparison, load the `google-keyword-research` skill and run
+`ellelion-keywords doctor`. Use the API only when `ready` is true. If the command is missing, run
+`$HOME/wiki/scripts/install-agent-tooling.sh` or the equivalent script in
+`~/Desktop/root/wiki`. In a cloud agent, run `$HOME/wiki/scripts/hydrate-agent-secrets.sh` first.
+
+Use this only for SEO/AEO/GEO research on Ellelion-owned sites. Never create or modify ads,
+campaigns, budgets, billing, audiences, conversions, permissions, or remarketing. Skip the keyword
+call for a purely technical fix whose target query is already known. Canonical state:
+`$HOME/wiki/shared/google-ads-keyword-api.md`.
