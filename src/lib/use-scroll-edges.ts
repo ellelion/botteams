@@ -41,6 +41,23 @@ export function cssZoom(): number {
   return Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
 }
 
+/* env() is CSS px. getBoundingClientRect is painted (× zoom). */
+export function safeAreaCss(): { top: number; right: number; bottom: number; left: number } {
+  const el = document.createElement("div");
+  el.style.cssText =
+    "position:absolute;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)";
+  document.body.appendChild(el);
+  const cs = getComputedStyle(el);
+  const out = {
+    top: Number.parseFloat(cs.paddingTop) || 0,
+    right: Number.parseFloat(cs.paddingRight) || 0,
+    bottom: Number.parseFloat(cs.paddingBottom) || 0,
+    left: Number.parseFloat(cs.paddingLeft) || 0,
+  };
+  el.remove();
+  return out;
+}
+
 /* Phone ticker / sponsor dock cover the bottom of the viewport.
    A popover that treats innerHeight as the floor opens into that
    strip: the bar stays painted on top while isolate() makes it
