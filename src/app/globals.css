@@ -521,6 +521,16 @@ body:has(.theme-accent-popover) .site-masthead {
   border-radius: var(--r-pill);
   transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
+/* Hamburger is on when the masthead is under 68rem. The 34px
+   icon buttons sat next to that 44px menu because this base
+   rule used to win the earlier container bump. Labels stay
+   auto-width. */
+@container (max-width: 68rem) {
+  .theme-control:not(.theme-control-label) {
+    width: 44px;
+    height: 44px;
+  }
+}
 .theme-control:hover,
 .theme-control:focus-visible { border-color: var(--ink); background: var(--surface-elevated); }
 .theme-accent-dot { width: 13px; height: 13px; border-radius: var(--r-pill); background: var(--accent); }
