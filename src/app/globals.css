@@ -1206,10 +1206,13 @@ a.chip-unverified:focus-visible {
   color: var(--ink-soft);
   font-weight: 500;
   width: 28%;
-  font-size: 13px;
+  /* Field names next to rem cells. 13px stayed put at 200% text
+     while 0.95rem answers grew to 30px on the /docs 2-col tables. */
+  font-size: 0.78rem;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 .spec-table code {
   font-family: var(--font-geist-mono), ui-monospace, monospace;
