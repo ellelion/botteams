@@ -4992,6 +4992,14 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     flex: 0 0 auto;
     width: auto;
   }
+  /* overflow-x:auto makes overflow-y compute to auto. Copy sits flush
+     to the left, so the 3px outer ring lost its left 5px. Same inset
+     as .cz-modes / List. */
+  .rp-head-act .theme-control-label:focus-visible,
+  .rp-head-act .rp-secondary:focus-visible,
+  .rp-head-act .share-btn:focus-visible {
+    outline-offset: -3px;
+  }
   .rp-sheet { width: 100%; border-left: 0; }
 @media (prefers-reduced-motion: no-preference) {
   .rp-sheet { animation-name: rp-sheet-up; }
@@ -5351,7 +5359,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cz-mode.is-on,
   .cz-mode:focus-visible,
   .filter-views .filter-chip--icon.is-on,
-  .filter-views .filter-chip--icon:focus-visible {
+  .filter-views .filter-chip--icon:focus-visible,
+  .rp-head-act .theme-control-label:focus-visible,
+  .rp-head-act .rp-secondary:focus-visible,
+  .rp-head-act .share-btn:focus-visible {
     outline: 2px solid Highlight;
     outline-offset: -3px;
   }
