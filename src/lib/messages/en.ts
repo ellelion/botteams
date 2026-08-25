@@ -21,6 +21,9 @@ export const en = {
   entity: site.entity,
   verified: "Verified",
   notVerified: "Not verified",
+  /* In-field control. The long “Clear search” label is aria-label;
+     at 200% text it blew an 8rem pad and left the query 0px wide. */
+  clear: "Clear",
   verifiedHint: "A group chat holds two to six Bots.",
   nav: {
     teams: "Grok Bot Teams",

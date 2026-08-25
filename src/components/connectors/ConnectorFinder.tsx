@@ -354,8 +354,8 @@ export function ConnectorFinder({
             />
           </label>
           {query ? (
-            <button type="button" className="cf-search-clear" onClick={() => clearSearchOnly()}>
-              {en.connectors.clearSearch}
+            <button type="button" className="cf-search-clear" onClick={() => clearSearchOnly()} aria-label={en.connectors.clearSearch}>
+              {en.clear}
             </button>
           ) : (
             <kbd className="cf-kbd" aria-hidden>/</kbd>
