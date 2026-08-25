@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { botMarkStyle, botUiKind } from "@/lib/bot-icon";
@@ -9,7 +9,27 @@ import { en } from "@/lib/messages/en";
 import type { ConversationTurn, Team } from "@/lib/types";
 import { useDialogChrome } from "@/lib/use-dialog-chrome";
 
-const YOU_KEYS = new Set(["you", "itzik", "itzik dabush", "founder"]);
+const YOU_KEYS = new Set(["you", "founder"]);
+const EMPTY_TURNS: ConversationTurn[] = [];
+const EMPTY_TURNS_BY_BOT: Record<string, ConversationTurn[]> = {};
+const WATCH_STATE_EVENT = "botteams:watch-state";
+
+function subscribeToWatchState(callback: () => void) {
+  window.addEventListener("hashchange", callback);
+  window.addEventListener(WATCH_STATE_EVENT, callback);
+  return () => {
+    window.removeEventListener("hashchange", callback);
+    window.removeEventListener(WATCH_STATE_EVENT, callback);
+  };
+}
+
+function watchState(): boolean {
+  return window.location.hash === "#watch";
+}
+
+function notifyWatchState() {
+  window.dispatchEvent(new Event(WATCH_STATE_EVENT));
+}
 
 function isYouTurn(turn: ConversationTurn): boolean {
   if (turn.role === "user") return true;
@@ -66,7 +86,7 @@ export function WatchControl({ team }: { team: Team }) {
 }
 
 function WatchOverlay({ team }: { team: Team }) {
-  const [open, setOpen] = useState(false);
+  const open = useSyncExternalStore(subscribeToWatchState, watchState, () => false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const overlayId = useId();
@@ -74,26 +94,15 @@ function WatchOverlay({ team }: { team: Team }) {
   const dialogTitle = team.kind === "bot" ? en.team.watchLabelBot : en.team.watchLabel;
 
   const openWatch = useCallback(() => {
-    setOpen(true);
-    if (typeof window !== "undefined") history.replaceState(null, "", "#watch");
+    history.replaceState(null, "", "#watch");
+    notifyWatchState();
   }, []);
 
   const closeWatch = useCallback(() => {
-    setOpen(false);
-    if (typeof window === "undefined") return;
     if (window.location.hash === "#watch") {
       history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+      notifyWatchState();
     }
-  }, []);
-
-  useEffect(() => {
-    const onHash = () => setOpen(window.location.hash === "#watch");
-    window.addEventListener("hashchange", onHash);
-    const boot = window.setTimeout(onHash, 0);
-    return () => {
-      window.clearTimeout(boot);
-      window.removeEventListener("hashchange", onHash);
-    };
   }, []);
 
   useDialogChrome({ open, rootRef: overlayRef, onClose: closeWatch });
@@ -142,8 +151,8 @@ export function ConversationStage({ team }: { team: Team }) {
 }
 
 function ConversationStageLive({ team }: { team: Team }) {
-  const turns = team.conversation ?? [];
-  const byBot = team.conversationByBot ?? {};
+  const turns = team.conversation ?? EMPTY_TURNS;
+  const byBot = team.conversationByBot ?? EMPTY_TURNS_BY_BOT;
 
   const rootRef = useRef<HTMLElement | null>(null);
   const threadRef = useRef<HTMLDivElement | null>(null);
@@ -206,7 +215,7 @@ function ConversationStageLive({ team }: { team: Team }) {
       io.disconnect();
       el.removeEventListener("talk-play", onPlay);
     };
-  }, [start, turns.length]);
+  }, [start, turns.length, script.length]);
 
   useEffect(() => {
     if (!playing) return;

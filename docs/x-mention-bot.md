@@ -33,6 +33,6 @@ when a handle exists.
 
 ## Before building
 
-Itzik has to name the handle. The site copy, the contribute modal, and the
+The maintainer has to name the handle. The site copy, the contribute modal, and the
 CONTRIBUTING section all reference it, so they ship together or not at all.
 Do not use another directory's handle in placeholder copy.

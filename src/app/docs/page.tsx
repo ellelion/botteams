@@ -9,7 +9,7 @@ import { APD_HOME, STRIPE_BEST_PRACTICES, XAI_DOCS, XAI_USE_CASE_GALLERY, site }
 
 export const metadata: Metadata = {
   title: "Team spec",
-  description: "Ellelion recipe format for Grok Bot company teams. Maps onto the Grok Bot nouns xAI documents: Bot, group chat, routine, profile. Not an xAI file format.",
+  description: "Ellelion recipe format for Grok Bot teams and bots. Maps onto the Grok Bot nouns xAI documents: Bot, group chat, routine, profile. Not an xAI file format.",
   alternates: { canonical: `${site.url}/docs` },
 };
 
@@ -43,6 +43,13 @@ export default function DocsPage() {
             </Link>
             .
           </p>
+          <p className="mt-3 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+            Editors and tools can use the{" "}
+            <a className="accent-hover underline underline-offset-2" href="/schema/team.schema.json">
+              public JSON Schema
+            </a>
+            . Pull requests run this schema plus the semantic checks in the repository.
+          </p>
         </WingsHero>
       }
     >
@@ -51,11 +58,14 @@ export default function DocsPage() {
         <table className="spec-table mt-4">
           <caption className="sr-only">Recipe fields</caption>
           <tbody>
+            <tr><th scope="row"><code>$schema</code></th><td>Optional editor hint. Use <code>https://botteams.ai/schema/team.schema.json</code>.</td></tr>
+            <tr><th scope="row"><code>slug</code></th><td>Lowercase URL key. Must equal the markdown filename.</td></tr>
             <tr><th scope="row"><code>name</code></th><td>Team title on the directory.</td></tr>
             <tr><th scope="row"><code>tagline</code></th><td>One line for the job of the team.</td></tr>
-            <tr><th scope="row"><code>bots</code></th><td>Count of Bots in the team. Must match the bots list length.</td></tr>
-            <tr><th scope="row"><code>section</code></th><td>Sidebar section name the human creates in Grok Bot.</td></tr>
-            <tr><th scope="row"><code>status</code></th><td><code>team</code> (installable team) or <code>example</code> (format demo).</td></tr>
+            <tr><th scope="row"><code>bots</code></th><td>Count of Bots in the recipe. Must match the <code>agents</code> list length.</td></tr>
+            <tr><th scope="row"><code>section</code></th><td>Closed directory category. On a team, it is also the suggested sidebar section.</td></tr>
+            <tr><th scope="row"><code>kind</code></th><td><code>team</code> (two to six Bots and a group chat) or <code>bot</code> (one Bot and no group chat).</td></tr>
+            <tr><th scope="row"><code>status</code></th><td><code>installable</code> (ready to run) or <code>example</code> (format demo).</td></tr>
             <tr><th scope="row"><code>connectors</code></th><td>Account-wide connectors this team expects already connected. Union of per-Bot lists.</td></tr>
             <tr><th scope="row">Bots list <code>agents</code></th><td>Each Bot: <code>name</code> + <code>persona</code> (the job). Optional <code>icon</code>, <code>connectors</code> (subset of the team list), <code>reuse</code>.</td></tr>
             <tr><th scope="row">Group chats <code>rooms</code></th><td>Each group chat: <code>name</code> + <code>members</code> (Bot names). Visible label is Group chat.</td></tr>
@@ -113,8 +123,8 @@ export default function DocsPage() {
         <p className="measure mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           A <strong>From xAI</strong> chip means the job is our write-up of one xAI publishes in its{" "}
           <a className="accent-hover underline underline-offset-2" href={XAI_USE_CASE_GALLERY} rel="nofollow noopener noreferrer">Grok Bot use-case gallery</a>.
-          It is sourcing and nothing more. It is not a certification, it is not Verified, and xAI does not review or
-          endorse anything on this directory. The title and the category are theirs. The Bot, the connectors, the modes and the
+          It is sourcing and nothing more. It is not a certification, it is not Verified, and xAI does not review or endorse
+          anything on this directory. The title and the category are theirs. The Bot, the connectors, the modes and the
           standing instructions are ours.
         </p>
 

@@ -1,0 +1,5 @@
+# Every public change needs the final maintainer's review.
+* @icidab
+
+# Keep the ownership rule itself protected by the same owner.
+/.github/CODEOWNERS @icidab

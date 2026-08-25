@@ -4,11 +4,15 @@ import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
+const Ajv2020 = require("ajv/dist/2020").default;
 const matter = require("gray-matter");
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const teamsDir = path.join(root, "teams");
 const botsDir = path.join(root, "bots");
+const schemaPath = path.join(root, "public/schema/team.schema.json");
+const schema = JSON.parse(fs.readFileSync(schemaPath, "utf8"));
+const validateRecipe = new Ajv2020({ allErrors: true, strict: true }).compile(schema);
 
 /* xAI documents a per-Bot cap of 50 routines, keeping the 20 most recent
    runs of each. Zero routines is fine. There is no documented team-level
@@ -19,17 +23,7 @@ const REQUIRED = ["slug", "name", "tagline", "section", "status", "kind", "conne
 /* Closed category list. A team file may only use a section that already
    exists, so the index chips and the API `category` filter stay a known
    set instead of growing a typo into a new category. Add here first. */
-const CATEGORIES = new Set([
-  "Agency", "Bookkeeping", "Community", "Content", "Creator", "Customer success",
-  "Data", "Design", "Engineering", "Events", "Founder OS", "Helpdesk", "Hiring",
-  "Infrastructure", "Investor updates", "Knowledge", "Legal", "Onboarding",
-  "Partnerships", "Product", "Recruiting", "Research", "Revenue", "Sales",
-  "Support", "Workplace",
-  /* Gallery categories, kept exactly as xAI spells them so a From xAI
-     recipe files where its source filed it. */
-  "General", "Customer Success & Support", "Recruiting & People",
-  "Operations & Finance", "Life & Leverage", "Marketing",
-]);
+const CATEGORIES = new Set(schema.properties.section.enum);
 
 const seenSlugs = new Set();
 const seenUrls = new Set();
@@ -42,6 +36,16 @@ function fail(message) {
 
 function isNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function schemaErrors(errors) {
+  return (errors || []).map((error) => {
+    const location = error.instancePath || "front matter";
+    const extra = error.keyword === "additionalProperties"
+      ? ` (${error.params.additionalProperty})`
+      : "";
+    return `${location} ${error.message}${extra}`;
+  }).join("; ");
 }
 
 function listDir(dir, kind) {
@@ -65,6 +69,9 @@ for (const { file, dir, kind: folderKind } of entries) {
   }
   const data = parsed.data;
   const slug = path.basename(file, ".md");
+  if (!validateRecipe(data)) {
+    fail(`${file}: schema: ${schemaErrors(validateRecipe.errors)}`);
+  }
   for (const key of REQUIRED) {
     if (data[key] === undefined || data[key] === null || data[key] === "") fail(file + ": missing " + key);
   }
@@ -89,11 +96,14 @@ for (const { file, dir, kind: folderKind } of entries) {
 
   if (!Array.isArray(data.connectors)) fail(file + ": connectors must be an array");
   const teamConnectors = new Set((data.connectors || []).map((name) => String(name)));
+  const agentNames = new Set();
   if (!Array.isArray(data.agents) || data.agents.length === 0) fail(file + ": agents must be a non-empty array");
   else {
     if (data.agents.length !== bots) fail(file + ": bots count must equal agents length");
     data.agents.forEach((agent, i) => {
       if (!isNonEmptyString(agent?.name) || !isNonEmptyString(agent?.persona)) fail(file + ": agents[" + i + "] needs name and persona");
+      if (agentNames.has(agent?.name)) fail(file + ': duplicate agent name "' + agent.name + '"');
+      if (isNonEmptyString(agent?.name)) agentNames.add(agent.name);
       if (agent.brings !== undefined && !isNonEmptyString(agent.brings)) fail(file + ": agents[" + i + "].brings must be a short sentence when set");
       if (agent.connectors !== undefined) {
         if (!Array.isArray(agent.connectors)) fail(file + ": agents[" + i + "].connectors must be an array");
@@ -106,9 +116,17 @@ for (const { file, dir, kind: folderKind } of entries) {
   const rooms = data.rooms === undefined ? [] : data.rooms;
   if (!Array.isArray(rooms)) fail(file + ": rooms must be an array when present");
   else {
+    const roomNames = new Set();
     rooms.forEach((room, i) => {
       if (!isNonEmptyString(room?.name) || !Array.isArray(room?.members)) fail(file + ": rooms[" + i + "] needs name and members[]");
-      else if (room.members.length < 2 || room.members.length > 6) fail(file + ": rooms[" + i + "] must have two to six Bots");
+      else {
+        if (roomNames.has(room.name)) fail(file + ': duplicate room name "' + room.name + '"');
+        roomNames.add(room.name);
+        if (room.members.length < 2 || room.members.length > 6) fail(file + ": rooms[" + i + "] must have two to six Bots");
+        for (const member of room.members) {
+          if (!agentNames.has(member)) fail(file + ': rooms[' + i + '] names unknown Bot "' + member + '"');
+        }
+      }
     });
     /* The two shapes, enforced. A bot with a group chat or a team without
        one is the bug this whole split exists to stop. */
@@ -118,6 +136,8 @@ for (const { file, dir, kind: folderKind } of entries) {
       if (Array.isArray(data.agents) && data.agents.length !== 1) fail(file + ": a bot has exactly one agent");
     } else if (rooms.length === 0) {
       fail(file + ": a team needs a group chat of two to six Bots");
+    } else if (bots + rooms.length > 50) {
+      fail(file + ": Bots plus group chats must stay within the account cap of 50");
     }
   }
   if (!Array.isArray(data.routines)) fail(file + ": routines must be an array");
@@ -125,8 +145,12 @@ for (const { file, dir, kind: folderKind } of entries) {
     /* xAI's cap is per owning Bot, so count per owner rather than per
        file. Nothing documents a cap on the file as a whole. */
     const perOwner = new Map();
-    for (const routine of data.routines) {
+    const routineNames = new Set();
+    for (const [i, routine] of data.routines.entries()) {
       const owner = String(routine?.owner ?? "");
+      if (routineNames.has(routine?.name)) fail(file + ': duplicate routine name "' + routine.name + '"');
+      if (isNonEmptyString(routine?.name)) routineNames.add(routine.name);
+      if (isNonEmptyString(owner) && !agentNames.has(owner)) fail(file + ': routines[' + i + '] names unknown owner "' + owner + '"');
       perOwner.set(owner, (perOwner.get(owner) ?? 0) + 1);
     }
     for (const [owner, n] of perOwner) {

@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://botteams.ai/schema/team.schema.json",
+  "title": "botteams.ai recipe",
+  "description": "The public schema for team and bot Markdown front matter on botteams.ai.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "slug",
+    "name",
+    "tagline",
+    "bots",
+    "section",
+    "kind",
+    "status",
+    "connectors",
+    "agents",
+    "routines"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://botteams.ai/schema/team.schema.json"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "name": { "$ref": "#/$defs/nonEmptyString" },
+    "tagline": { "$ref": "#/$defs/nonEmptyString" },
+    "bots": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 6
+    },
+    "section": {
+      "enum": [
+        "Agency",
+        "Bookkeeping",
+        "Community",
+        "Content",
+        "Creator",
+        "Customer success",
+        "Data",
+        "Design",
+        "Engineering",
+        "Events",
+        "Founder OS",
+        "Helpdesk",
+        "Hiring",
+        "Infrastructure",
+        "Investor updates",
+        "Knowledge",
+        "Legal",
+        "Onboarding",
+        "Partnerships",
+        "Product",
+        "Recruiting",
+        "Research",
+        "Revenue",
+        "Sales",
+        "Support",
+        "Workplace",
+        "General",
+        "Customer Success & Support",
+        "Recruiting & People",
+        "Operations & Finance",
+        "Life & Leverage",
+        "Marketing"
+      ]
+    },
+    "kind": {
+      "enum": ["team", "bot"]
+    },
+    "status": {
+      "enum": ["installable", "example"]
+    },
+    "featured": { "type": "boolean" },
+    "added_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?Z$"
+    },
+    "connectors": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    },
+    "connector_modes": {
+      "type": "object",
+      "propertyNames": { "pattern": "\\S" },
+      "additionalProperties": {
+        "enum": ["read", "draft", "ask"]
+      }
+    },
+    "agents": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/agent" }
+    },
+    "rooms": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/room" }
+    },
+    "routines": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/routine" }
+    },
+    "skills": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    },
+    "suggest": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/nonEmptyString" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["text"],
+            "properties": {
+              "text": { "$ref": "#/$defs/nonEmptyString" },
+              "on": { "type": "boolean" }
+            }
+          }
+        ]
+      }
+    },
+    "from_xai": { "const": true },
+    "contributor": { "$ref": "#/$defs/nonEmptyString" },
+    "contributor_url": { "$ref": "#/$defs/httpUrl" },
+    "scouted_by": { "$ref": "#/$defs/nonEmptyString" },
+    "added_via": { "$ref": "#/$defs/httpUrl" },
+    "url": { "$ref": "#/$defs/httpUrl" },
+    "integration_urls": {
+      "type": "object",
+      "propertyNames": { "pattern": "\\S" },
+      "additionalProperties": { "$ref": "#/$defs/httpUrl" }
+    },
+    "conversation": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/message" }
+    },
+    "conversation_bots": {
+      "type": "object",
+      "propertyNames": { "pattern": "\\S" },
+      "additionalProperties": {
+        "type": "array",
+        "items": { "$ref": "#/$defs/message" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "kind": { "const": "team" } },
+        "required": ["kind"]
+      },
+      "then": {
+        "required": ["rooms"],
+        "properties": {
+          "bots": { "type": "integer", "minimum": 2, "maximum": 6 },
+          "agents": { "type": "array", "minItems": 2, "maxItems": 6 },
+          "rooms": { "type": "array", "minItems": 1 }
+        }
+      },
+      "else": {
+        "properties": {
+          "bots": { "type": "integer", "const": 1 },
+          "agents": { "type": "array", "minItems": 1, "maxItems": 1 },
+          "rooms": { "type": "array", "maxItems": 0 }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "httpUrl": {
+      "type": "string",
+      "pattern": "^https?://"
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "persona"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "persona": { "$ref": "#/$defs/nonEmptyString" },
+        "brings": { "$ref": "#/$defs/nonEmptyString" },
+        "icon": { "$ref": "#/$defs/nonEmptyString" },
+        "reuse": { "type": "boolean" },
+        "connectors": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "room": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "members"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "members": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "routine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "owner", "schedule", "prompt"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "owner": { "$ref": "#/$defs/nonEmptyString" },
+        "schedule": { "$ref": "#/$defs/nonEmptyString" },
+        "prompt": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["speaker", "text"],
+      "properties": {
+        "speaker": { "$ref": "#/$defs/nonEmptyString" },
+        "speakerKey": { "$ref": "#/$defs/nonEmptyString" },
+        "role": { "enum": ["user", "assistant"] },
+        "text": { "$ref": "#/$defs/nonEmptyString" },
+        "checks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "fromBots": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["keys", "text"],
+          "properties": {
+            "keys": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/nonEmptyString" }
+            },
+            "text": { "$ref": "#/$defs/nonEmptyString" }
+          }
+        }
+      }
+    }
+  }
+}

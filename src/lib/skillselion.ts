@@ -18,7 +18,7 @@ export type SkillScope = "team" | (string & {});
 export type SkillPick = SkillselionHit & { use: SkillUse; scope: string };
 
 export const SKILLSELION_SITE = "https://skillselion.com";
-export const SKILLSELION_LISTINGS = "https://prism-api-itzik.fly.dev/api/listings";
+export const SKILLSELION_LISTINGS = "https://skillselion.com/api/upstream/listings";
 export const SKILLSELION_MCP = "https://skillselion.com/skillselion-mcp";
 
 const GH_OWNER = /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/;
