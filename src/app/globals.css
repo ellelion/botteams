@@ -7105,7 +7105,15 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .spon-faq summary:active,
   .cz-advanced summary:active,
   .rp-sum:active,
-  .doc-toc-sum:active {
+  .doc-toc-sum:active,
+  .roster-shape-routines summary:active,
+  .index-name:active,
+  .hero-stat:active,
+  .foot-link:active,
+  .crumb-list a:active,
+  .wings-crumb a:active,
+  .cf-row-teams:active,
+  .site-masthead-nav a:active {
     transform: scale(0.96);
   }
 }
