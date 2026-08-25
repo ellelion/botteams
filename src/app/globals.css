@@ -6263,9 +6263,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   }
   .index-header .sel-caption { display: none; }
   .index-header .sel.has-caption { gap: 0; }
-  /* Same search tightness as landscape. A notched 360×640 already
-     hid stats; the 34px home-indicator ticker then parked List /
-     Cards 13px under the bar. 390×844 stays above 760. */
+  /* After the results line and wrap gap went, the 44px name still
+     sat 2.5px in the 90px bar. Search pad 6+4 was the last 6px.
+     390×844 stays above 760. */
   #teams .search-wrap {
     padding-top: 2px;
     padding-bottom: 2px;
