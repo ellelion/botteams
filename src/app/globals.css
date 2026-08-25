@@ -6080,7 +6080,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
      manifesto + stats on and parked connector / sort off-screen. */
   .story-beat .home-hero-manifesto,
   .story-beat .home-hero-links,
-  .story-beat .hero-stats {
+  .story-beat .hero-stats,
+  /* WingsHero ledes are plain <p>s, not the home manifesto class.
+     Connectors search sat 33px under the ticker at 667×375; API
+     “On this page” sat 27px under. Keep h1 and the crumb. */
+  .story-beat p {
     display: none;
   }
   .story-beat { padding-block: 0.2rem; }
@@ -6088,6 +6092,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .story-beat.is-catalog-active h1 {
     margin-top: 0.15rem;
     font-size: 1.2rem;
+  }
+  .cf-search {
+    padding-top: 6px;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
   }
   /* Restate after the 1023 search pad and the 639 title hide. Connector
      / sort sat on screen under the 56px ticker (13px at 844×390, 28px
