@@ -3805,10 +3805,22 @@ html[data-theme="light"] .cz-check input:checked {
 .spon-off .theme-control-label,
 .idx-empty .theme-control-label,
 .cf-empty .theme-control-label,
-.notfound-nav .theme-control-label {
+.notfound-nav .theme-control-label,
+.idx-empty .cf-browse,
+.cf-empty .cf-browse,
+.notfound-nav .cf-browse {
   font-size: 0.88rem;
   letter-spacing: -0.01em;
   min-height: 44px;
+  /* 0.88rem + nowrap + min-width:0 clipped “Browse connectors”
+     (242 vs 236) and “See teams and Bots” (248 vs 236) at 320
+     when html is 200%. Copy chrome stays 11px nowrap on purpose. */
+  height: auto;
+  padding-block: 10px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.25;
 }
 
 .spon-stage-sec {
