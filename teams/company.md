@@ -124,9 +124,9 @@ conversation:
     text: what's going on with our website, botteams.ai
   - speaker: Product Grok Bot
     speakerKey: Company · Product
-    text: Company pack is the open feature. Watch is still local. listings and the footer are in. I didn't close the rest.
+    text: Company team is the open feature. Watch is still local. listings and the footer are in. I didn't close the rest.
     checks:
-      - "Notion → Company pack open"
+      - "Notion → Company team open"
       - "Watch → local only · not prod"
   - speaker: Coding Grok Bot
     speakerKey: Company · Coding
@@ -146,12 +146,12 @@ conversation:
       - "Gmail → 1 draft · 0 sent"
   - speaker: Product Grok Bot
     speakerKey: Company · Product
-    text: Product has Company pack still open. Coding kept Watch off prod.
+    text: Product has Company team still open. Coding kept Watch off prod.
     fromBots:
       keys:
         - Company · Product
         - Company · Coding
-      text: Product has Company pack still open. Coding kept Watch off prod.
+      text: Product has Company team still open. Coding kept Watch off prod.
   - speaker: You
     role: user
     text: keep going. nothing ships without me.
@@ -162,7 +162,7 @@ conversation_bots:
       text: what's actually open on botteams.ai
     - speaker: Product Grok Bot
       speakerKey: Company · Product
-      text: three opens. Company pack, Watch fidelity, domain pointing. I parked the rest. Thursday 30m is on Calendar.
+      text: three opens. Company team, Watch fidelity, domain pointing. I parked the rest. Thursday 30m is on Calendar.
       checks:
         - "Notion → 3 opens · rest parked"
         - "Calendar → Thursday 30m"
@@ -171,7 +171,7 @@ conversation_bots:
       text: Watch stays local
     - speaker: Product Grok Bot
       speakerKey: Company · Product
-      text: marked it local. pack is still the ship.
+      text: marked it local. the team is still the ship.
   Company · Coding:
     - speaker: You
       role: user

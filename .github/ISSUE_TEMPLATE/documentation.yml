@@ -1,0 +1,25 @@
+name: Documentation correction
+description: Report documentation that is wrong, missing, or different from the website.
+title: "[Docs]: "
+labels: ["documentation"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Documentation location
+      placeholder: README.md, CONTRIBUTING.md, or https://botteams.ai/docs
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong
+      description: Quote only the smallest relevant part and link to the current source when possible.
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Suggested correction
+    validations:
+      required: true

@@ -4392,6 +4392,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 16px; }
   .foot-col ul { margin-top: 6px; }
   .foot-col li > .foot-link { white-space: normal; }
+  /* Keep the longest Ellelion domain and its outbound mark inside the
+     two-column phone grid. Hit target stays 44. */
+  .foot-col:last-child .foot-link { gap: 6px; font-size: 0.72rem; }
   .foot-link { min-height: 44px; }
   .foot-legal { max-width: none; }
   .foot-meta { flex-direction: column; align-items: flex-start; gap: 14px; }
