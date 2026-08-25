@@ -1638,7 +1638,6 @@ a.chip-unverified:focus-visible {
      the 56px ticker (All sat at 659, bar at 664). */
   .search-wrap { margin-top: 10px; margin-bottom: 8px; }
   .index-header .section-title { display: none; }
-  .cat-rail { margin-bottom: 10px; }
   .hero-stats { margin-top: 0.5rem; }
   .search-kbd,
   .cf-kbd { display: none; }
@@ -6020,9 +6019,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     box-shadow: none;
     padding-bottom: 0;
   }
-  /* Restate after the base 12px. Empty catalog at 667 put List /
-     Cards 6px under the ticker. */
+  /* Restate after the base 12px / 16px. Empty catalog at 667 put
+     List / Cards 6px under the ticker. */
   .index-header { margin-bottom: 4px; }
+  .cat-rail { margin-bottom: 2px; }
   #teams .search-wrap {
     position: sticky;
     top: var(--masthead-h);
