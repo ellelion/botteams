@@ -3353,11 +3353,14 @@ button.cz-link:focus-visible { color: var(--ink); }
   justify-content: center;
   min-width: 0;
   min-height: 30px;
-  padding: 0 11px;
+  height: auto;
+  padding: 8px 11px;
   border: 0;
   background: transparent;
   color: var(--ink-soft);
-  font: 500 11px/1.25 var(--font-geist-sans), system-ui, sans-serif;
+  /* Visible name of the mode, not Copy chrome. 11px stayed put at
+     200% text while .cz-input grew to 32px in the same sheet. */
+  font: 500 0.78rem/1.25 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
   cursor: pointer;
@@ -3711,7 +3714,7 @@ html[data-theme="light"] .cz-check input:checked {
   .cz-skill-scope { width: 100%; }
   .cz-skill-scope .sel-button { width: 100%; max-width: none; }
   .cz-modes { width: 100%; }
-  .cz-mode { flex: 1; padding: 0 6px; }
+  .cz-mode { flex: 1; padding-inline: 6px; }
   .cz-members { gap: 2px 14px; }
 }
 
@@ -3892,9 +3895,12 @@ html[data-theme="light"] .cz-check input:checked {
 .spon-live-kicker {
   margin: 22px 0 0;
   color: var(--ink-soft);
-  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  /* Sentence over the live rail, not a 0.6rem uppercase kicker.
+     11px stayed put at 200% text while the names below grew. */
+  font: 500 0.78rem/1.35 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
+  overflow-wrap: anywhere;
 }
 .spon-live {
   margin: 10px 0 0;
