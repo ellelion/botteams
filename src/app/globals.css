@@ -4630,6 +4630,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   box-sizing: border-box;
   min-width: min(16rem, 70vw);
   max-width: min(24rem, calc(100vw - 2rem));
+  max-height: min(20rem, 56vh);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--ink) 28%, transparent) transparent;
   padding: 16px 18px;
   /* Overlay, not an in-flow card. --pill-line is the 3:1 edge. */
   border: 1px solid var(--pill-line);
