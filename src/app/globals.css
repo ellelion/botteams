@@ -1855,6 +1855,11 @@ a.chip-unverified:focus-visible {
   background: var(--surface);
   color: var(--ink);
 }
+/* Same clip as .cz-modes: overflow:hidden + a 3px outer ring ate List. */
+.filter-views .filter-chip--icon:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: -3px;
+}
 
 .index-row {
   display: grid;
@@ -3259,8 +3264,13 @@ a.chip-unverified:focus-visible {
   background: transparent;
 }
 .cz-btn:focus-visible,
-.cz-chip:focus-visible,
-.cz-mode:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.cz-chip:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+/* The mode group clips to the pill. An outer 2px ring was painted
+   then cut off on Read / Ask (flush to the hidden edge). */
+.cz-mode:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: -3px;
+}
 .cz-link {
   display: inline-flex;
   align-items: center;
