@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Block, PageShell } from "@/components/PageShell";
+import { Block, PageJump, PageShell } from "@/components/PageShell";
+import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -16,7 +17,21 @@ export default function TermsPage() {
       title="Terms"
       lead="These terms are an agreement between you and Ellelion LLC for using botteams.ai. Using the site, or paying for a rail slot, means you agree. If you do not, do not use the site and do not pay."
     >
-      <Block title="Who we are">
+      <PageJump
+        items={[
+          "Who you are dealing with",
+          "You must be 18",
+          "The directory",
+          "Paid rail slots",
+          "What we do not sell",
+          "Acceptable use",
+          "As is",
+          "Changes",
+          "Law",
+          "Contact",
+        ]}
+      />
+      <Block title="Who you are dealing with">
         <p>
           {site.company} operates {site.name}. Email{" "}
           <a className="accent-hover underline" href={`mailto:${site.email}`}>
@@ -34,7 +49,7 @@ export default function TermsPage() {
       <Block title="The directory">
         <p>
           This is a public directory of Grok Bot teams and Bots. Every recipe in{" "}
-          <a className="accent-hover underline" href={site.github} rel="noopener noreferrer" target="_blank">
+          <a className="accent-hover underline" href={site.github} rel="noopener noreferrer" target="_blank" aria-label={`ellelion/botteams. ${en.nav.opensNew}`}>
             ellelion/botteams
           </a>{" "}
           is MIT licensed. Copy it, change it, ship it. Keep the copyright notice. You do not need our permission.
@@ -55,7 +70,7 @@ export default function TermsPage() {
         <p>
           Paying on{" "}
           <Link className="accent-hover underline" href="/sponsor">
-            /sponsor
+            sponsor placement
           </Link>{" "}
           buys a marked listing on the side rail and the listing row for the term you choose: $1,500 for one month, $4,000
           for three months, $7,500 for six months. One-time. Card on Stripe. It is advertising. It is not Verified, not a
@@ -82,7 +97,7 @@ export default function TermsPage() {
       <Block title="Acceptable use">
         <p>
           Do not use the site to break the law, to probe it, or to submit a listing that is not a digital tool a Bot
-          could use. No crypto, no trading signals, no lead-generation, no competing Grok Bot team or bot directory on
+          could use. No crypto, no trading signals, no lead-generation, no competing Grok Bot team or Bot directory on
           the rail.
         </p>
         <p>

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { PageJump } from "@/components/PageShell";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
+import { en } from "@/lib/messages/en";
 import { DEFAULT_LIMIT, MAX_LIMIT } from "@/lib/api-teams";
 import { PARAMS } from "@/lib/openapi";
 import { listBots, listTeams } from "@/lib/teams";
@@ -27,14 +30,18 @@ export default function ApiDocsPage() {
   return (
     <WingsSplit
       hero={
-        <WingsHero title="API">
+        <WingsHero
+          title="API"
+          kicker={<Breadcrumb parentHref="/" parentLabel={en.nav.directory} current={en.nav.api} />}
+        >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             Every team on this directory is readable as JSON. No key, no account, no rate limit worth mentioning. CORS is open,
-            so a browser or an agent can call it directly. {teamCount} teams and {botCount} bots today.
+            so a browser or an agent can call it directly. {teamCount} teams and {botCount} Bots today.
           </p>
         </WingsHero>
       }
     >
+        <PageJump items={["Endpoints", "Machine contract", "Parameters", "Examples", "Sync", "Team shape"]} />
         <p className="measure mt-2 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
           Two shapes, two collections. A <strong>team</strong> is a recipe with a group chat: two to six named Bots, standing
           routines, and the connectors the account needs first. A <strong>bot</strong> is a recipe with one Bot and no group
@@ -43,20 +50,22 @@ export default function ApiDocsPage() {
         </p>
 
         <section className="mt-12 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Endpoints</h2>
+          <h2 id="endpoints" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Endpoints</h2>
           <dl className="mt-4">
             {[
-              ["GET /api/teams", "Teams only: two to six Bots in one group chat. Items arrive under a teams key."],
-              ["GET /api/bots", "Bots only: one Bot, no group chat. Same filters and cursor contract. Items arrive under a bots key."],
-              ["GET /openapi.json", "The same contract as OpenAPI 3.1, built from the types the routes return."],
-            ].map(([route, note]) => (
+              ["/api/teams", "GET /api/teams", "Teams only: two to six Bots in one group chat. Items arrive under a teams key."],
+              ["/api/bots", "GET /api/bots", "Bots only: one Bot, no group chat. Same filters and cursor contract. Items arrive under a bots key."],
+              ["/openapi.json", "GET /openapi.json", "The same contract as OpenAPI 3.1, built from the types the routes return."],
+            ].map(([href, route, note]) => (
               <div key={route} className="hairline-row py-3">
-                <dt className="text-[0.82rem]" style={{ fontFamily: ledger.mono, color: ledger.ink }}>{route}</dt>
+                <dt className="text-[0.82rem]" style={{ fontFamily: ledger.mono, color: ledger.ink }}>
+                  <a className="api-link accent-hover" href={href}>{route}</a>
+                </dt>
                 <dd className="mt-1 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{note}</dd>
               </div>
             ))}
           </dl>
-          <p className="measure mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+          <p className="measure mt-4 text-[0.84rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             There is no per-item endpoint. <code style={{ fontFamily: ledger.mono }}>/api/teams/&lt;slug&gt;</code> and{" "}
             <code style={{ fontFamily: ledger.mono }}>/api/bots/&lt;slug&gt;</code> both return 404 by design. Filter the
             collection instead.
@@ -64,30 +73,31 @@ export default function ApiDocsPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Machine contract</h2>
+          <h2 id="machine-contract" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Machine contract</h2>
           <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             OpenAPI 3.1, generated from the same types this endpoint returns rather than written alongside them, so it
             cannot drift from the response. Defaults on this page and in the document come from one list.
           </p>
           <p className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.8rem]">
-            <a className="accent-hover underline" href="/openapi.json">Download OpenAPI 3.1 (JSON)</a>
-            <a className="accent-hover underline" href="/openapi.yaml">YAML</a>
+            <a className="api-link accent-hover underline" href="/openapi.json">Download OpenAPI 3.1 (JSON)</a>
+            <a className="api-link accent-hover underline" href="/openapi.yaml">Download OpenAPI 3.1 (YAML)</a>
           </p>
-          <p className="measure mt-3 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+          <p className="measure mt-3 text-[0.84rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             Default limit {DEFAULT_LIMIT}, maximum {MAX_LIMIT}. Values outside the range clamp rather than error.
           </p>
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Parameters</h2>
+          <h2 id="parameters" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Parameters</h2>
           <table className="spec-table mt-4">
+            <caption className="sr-only">Query parameters</caption>
             <tbody>
               {/* Read from the same list the OpenAPI document is built
                   from, so this table cannot describe a parameter the spec
                   does not, or miss one it does. */}
               {PARAMS.map((p) => (
                 <tr key={p.name}>
-                  <th><code>{p.name}</code></th>
+                  <th scope="row"><code>{p.name}</code></th>
                   <td>{p.description}</td>
                 </tr>
               ))}
@@ -96,7 +106,7 @@ export default function ApiDocsPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Examples</h2>
+          <h2 id="examples" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Examples</h2>
           <pre className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
             <code>{[
               `# five teams that expect Stripe`,
@@ -118,7 +128,7 @@ export default function ApiDocsPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Sync</h2>
+          <h2 id="sync" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Sync</h2>
           <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
             Cursor mode walks oldest first, so a team added after your last sync always lands after your cursor. A page
             never shifts underneath you. Start at <code style={{ fontFamily: ledger.mono }}>cursor=start</code>, store{" "}
@@ -140,7 +150,7 @@ export default function ApiDocsPage() {
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Team shape</h2>
+          <h2 id="team-shape" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Team shape</h2>
           <pre className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
             <code>{[
               `{`,
@@ -166,7 +176,7 @@ export default function ApiDocsPage() {
               `}`,
             ].join("\n")}</code>
           </pre>
-          <p className="measure mt-4 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+          <p className="measure mt-4 text-[0.84rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             <code style={{ fontFamily: ledger.mono }}>addedAt</code> is the date stated in the team file and nothing else.
             It is never inferred and never invented. A file that does not state one reports null and sorts last.
           </p>

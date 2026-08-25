@@ -1,11 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { botMarkStyle, botUiKind } from "@/lib/bot-icon";
 import { grokDisplayBotName, grokRecipeTitle, grokRoomName } from "@/lib/grok-names";
+import { CUSTOMIZE_HASH_KEY } from "@/lib/customize";
+import { en } from "@/lib/messages/en";
 import type { ConversationTurn, Team } from "@/lib/types";
+import { useDialogChrome } from "@/lib/use-dialog-chrome";
 
 const YOU_KEYS = new Set(["you", "founder"]);
 const EMPTY_TURNS: ConversationTurn[] = [];
@@ -25,6 +28,11 @@ function watchState(): boolean {
   return window.location.hash === "#watch";
 }
 
+function hasCustomizeHash(): boolean {
+  const raw = window.location.hash.replace(/^#/, "");
+  return raw.startsWith(CUSTOMIZE_HASH_KEY) && raw.length > CUSTOMIZE_HASH_KEY.length;
+}
+
 function notifyWatchState() {
   window.dispatchEvent(new Event(WATCH_STATE_EVENT));
 }
@@ -39,14 +47,6 @@ function isYouTurn(turn: ConversationTurn): boolean {
 function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function relTime(stepsAgo: number): string {
-  if (stepsAgo <= 0) return "now";
-  if (stepsAgo === 1) return "12s";
-  if (stepsAgo === 2) return "36s";
-  if (stepsAgo < 8) return `${stepsAgo}m`;
-  return `${stepsAgo + 3}m`;
 }
 
 function shortBot(name: string): string {
@@ -92,57 +92,64 @@ export function WatchControl({ team }: { team: Team }) {
 }
 
 function WatchOverlay({ team }: { team: Team }) {
-  const open = useSyncExternalStore(subscribeToWatchState, watchState, () => false);
-  const label = team.kind === "bot" ? "Watch this Bot" : "Watch this team";
+  const hashOpen = useSyncExternalStore(subscribeToWatchState, watchState, () => false);
+  const [held, setHeld] = useState(false);
+  const open = hashOpen || held;
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+  const overlayId = useId();
+  const label = team.kind === "bot" ? en.team.watchBot : en.team.watchTeam;
+  const dialogTitle = team.kind === "bot" ? en.team.watchLabelBot : en.team.watchLabel;
 
   const openWatch = useCallback(() => {
+    /* A stock page can use #watch. A Customize share is already #c=…
+       and replacing it threw the recipe away on Close. */
+    if (hasCustomizeHash()) {
+      setHeld(true);
+      return;
+    }
     history.replaceState(null, "", "#watch");
     notifyWatchState();
   }, []);
 
   const closeWatch = useCallback(() => {
+    setHeld(false);
     if (window.location.hash === "#watch") {
       history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
       notifyWatchState();
     }
   }, []);
 
-  useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeWatch();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open, closeWatch]);
+  useDialogChrome({ open, rootRef: overlayRef, onClose: closeWatch });
 
   return (
     <>
-      <a
+      <button
+        type="button"
         className="talk-watch-btn"
-        href="#watch"
-        onClick={(e) => {
-          e.preventDefault();
-          openWatch();
-        }}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls={open ? overlayId : undefined}
+        onClick={openWatch}
       >
         {label}
-      </a>
+      </button>
       {open && typeof document !== "undefined"
         ? createPortal(
             <div
+              id={overlayId}
+              ref={overlayRef}
               className="talk-overlay"
               role="dialog"
               aria-modal="true"
-              aria-label={`${team.kind === "bot" ? "Bot" : "Team"} conversation`}
-              onClick={closeWatch}
+              aria-labelledby={titleId}
             >
-              <div className="talk-overlay-canvas" onClick={(e) => e.stopPropagation()}>
+              <button type="button" className="talk-overlay-scrim" tabIndex={-1} aria-label={en.recipe.close} onClick={closeWatch} />
+              <div className="talk-overlay-canvas">
+                <h2 id={titleId} className="sr-only">{dialogTitle}</h2>
+                <button type="button" className="talk-overlay-close" onClick={closeWatch}>
+                  {en.recipe.close}
+                </button>
                 <ConversationStage team={team} />
               </div>
             </div>,
@@ -176,18 +183,26 @@ function ConversationStageLive({ team }: { team: Team }) {
   const solo = view !== null ? agents[view] : null;
   const soloName = solo ? grokDisplayBotName(solo.name) : "";
   const headTitle = solo ? soloName : roomLabel;
-  const composer = solo
-    ? `Message ${soloName}`
-    : `Message ${team.rooms[0] ? grokRoomName(team.rooms[0].name) : team.name}`;
 
   const script = useMemo(() => {
     if (view === null) return turns;
     const agent = agents[view];
     if (!agent) return turns;
-    return byBot[agent.name] ?? [];
-  }, [turns, view, agents, byBot]);
+    const own = byBot[agent.name];
+    if (own && own.length > 0) return own;
+    /* One-Bot recipes generate `conversation`, not conversation_bots.
+       `?? []` left Watch on /bots/applicant-sheet-screen with an empty
+       thread and no typing line. */
+    if (team.kind === "bot") return turns;
+    return [];
+  }, [turns, view, agents, byBot, team.kind]);
 
   const start = useCallback(() => {
+    if (script.length === 0) {
+      setShown(0);
+      setPlaying(false);
+      return;
+    }
     if (reduceRef.current) {
       setShown(script.length);
       setPlaying(false);
@@ -206,8 +221,14 @@ function ConversationStageLive({ team }: { team: Team }) {
     el.addEventListener("talk-play", onPlay);
 
     if (reduceRef.current) {
-      setShown(script.length);
-      return () => el.removeEventListener("talk-play", onPlay);
+      const id = window.setTimeout(() => {
+        setShown(script.length);
+        setPlaying(false);
+      }, 0);
+      return () => {
+        window.clearTimeout(id);
+        el.removeEventListener("talk-play", onPlay);
+      };
     }
 
     const io = new IntersectionObserver(
@@ -218,11 +239,13 @@ function ConversationStageLive({ team }: { team: Team }) {
     );
     io.observe(el);
 
-    if (typeof window !== "undefined" && window.location.hash === "#watch") {
-      start();
-    }
+    /* Hash and IO callbacks, not the effect body: setState-in-effect
+       failed quality on the empty-state start() change. */
+    const hashTimer =
+      window.location.hash === "#watch" ? window.setTimeout(() => start(), 0) : 0;
 
     return () => {
+      if (hashTimer) window.clearTimeout(hashTimer);
       io.disconnect();
       el.removeEventListener("talk-play", onPlay);
     };
@@ -246,7 +269,8 @@ function ConversationStageLive({ team }: { team: Team }) {
   }, [shown, view]);
 
   useEffect(() => {
-    start();
+    const id = window.setTimeout(() => start(), 0);
+    return () => window.clearTimeout(id);
   }, [view, start]);
 
   const visible = script.slice(0, shown);
@@ -255,28 +279,19 @@ function ConversationStageLive({ team }: { team: Team }) {
   return (
     <section id="watch" ref={rootRef} className="talk-stage" aria-label={`${roomLabel} conversation`}>
       <div className="talk-body">
-      <aside className="talk-rail" aria-label="Teammates">
-        <div className="talk-rail-head">
-          <div className="talk-chrome" aria-hidden>
+      <aside className="talk-rail" aria-label={en.team.watchTeammates}>
+        <div className="talk-rail-head" aria-hidden>
+          <div className="talk-chrome">
             <span className="talk-dot" />
             <span className="talk-dot" />
             <span className="talk-dot" />
           </div>
-          <span className="talk-new-agent" aria-hidden>
-            <span className="talk-new-plus">+</span>
-          </span>
-        </div>
-        <div className="talk-rail-search" aria-hidden>
-          <span className="talk-search-ico">⌕</span>
-          Search
         </div>
         <div className="talk-rail-list">
           {agents.map((agent, i) => {
             const name = grokDisplayBotName(agent.name);
             const own = byBot[agent.name] ?? [];
             const snippet = lastSnippet(own, own.length, agent.name, name);
-            const lastIdx = [...visible].reverse().findIndex((t) => t.speakerKey === agent.name || t.speaker === name);
-            const ago = lastIdx === -1 ? 0 : lastIdx;
             const selected = view === i;
             const typingHere = selected && typing;
             return (
@@ -285,15 +300,13 @@ function ConversationStageLive({ team }: { team: Team }) {
                 type="button"
                 className={`talk-rail-row talk-var-${botUiKind(agent.name, agent.persona)}${selected ? " is-on" : ""}`}
                 style={botMarkStyle(i, agent.name, agent.persona)}
+                aria-pressed={selected}
                 onClick={() => setView(i)}
               >
                 <GrokBotMark size={32} animate={typingHere} style={botMarkStyle(i, agent.name, agent.persona)} />
                 <span className="talk-rail-meta">
-                  <span className="talk-rail-topline">
-                    <span className="talk-rail-name">{name}</span>
-                    <span className="talk-rail-time">{snippet ? relTime(ago) : ""}</span>
-                  </span>
-                  <span className="talk-rail-snip">{typingHere ? "Typing…" : snippet || agent.persona}</span>
+                  <span className="talk-rail-name">{name}</span>
+                  <span className="talk-rail-snip">{typingHere ? en.team.watchTyping : snippet || agent.persona}</span>
                 </span>
               </button>
             );
@@ -302,6 +315,7 @@ function ConversationStageLive({ team }: { team: Team }) {
             <button
               type="button"
               className={`talk-rail-row talk-rail-room${view === null ? " is-on" : ""}`}
+              aria-pressed={view === null}
               onClick={() => setView(null)}
             >
               <span className="talk-stack" aria-hidden>
@@ -310,40 +324,41 @@ function ConversationStageLive({ team }: { team: Team }) {
                 ))}
               </span>
               <span className="talk-rail-meta">
-                <span className="talk-rail-topline">
-                  <span className="talk-rail-name">{roomLabel}</span>
-                  <span className="talk-rail-time">{visible.length ? "now" : ""}</span>
-                </span>
-                <span className="talk-rail-snip">{view === null && typing ? "Typing…" : (turns.filter((t) => !isYouTurn(t)).at(-1)?.text ?? "group chat")}</span>
+                <span className="talk-rail-name">{roomLabel}</span>
+                <span className="talk-rail-snip">{view === null && typing ? en.team.watchTyping : (turns.filter((t) => !isYouTurn(t)).at(-1)?.text ?? en.team.watchGroup)}</span>
               </span>
             </button>
           ) : null}
         </div>
         <div className="talk-you" aria-hidden>
-          <span className="talk-you-av">Y</span>
-          <span>You</span>
+          <span className="talk-you-av">{en.team.watchYouMark}</span>
+          <span>{en.team.watchYou}</span>
         </div>
       </aside>
 
       <div className="talk-main">
         <header className="talk-head">
-          <h2 className="talk-head-title">{headTitle}</h2>
+          <h3 className="talk-head-title">{headTitle}</h3>
+          <button type="button" className="talk-replay" onClick={start}>
+            {en.team.watchReplay}
+          </button>
         </header>
 
-        <div className="talk-dock" aria-label="Open a Bot or the group chat">
+        <div className="talk-dock" aria-label={en.team.watchDock}>
           {hasGroup ? (
             <button
               type="button"
               className={`talk-dock-item${view === null ? " is-on" : ""}`}
+              aria-pressed={view === null}
               onClick={() => setView(null)}
-              title={roomLabel}
+              aria-label={`${en.team.watchGroup}, ${roomLabel}`}
             >
               <span className="talk-stack talk-stack-sm">
                 {agents.slice(0, 3).map((agent, i) => (
                   <GrokBotMark key={agent.name} size={12} style={botMarkStyle(i, agent.name, agent.persona)} />
                 ))}
               </span>
-              <span>group chat</span>
+              <span>{en.team.watchGroup}</span>
             </button>
           ) : null}
           {agents.map((agent, i) => (
@@ -352,8 +367,9 @@ function ConversationStageLive({ team }: { team: Team }) {
               type="button"
               className={`talk-dock-item talk-var-${botUiKind(agent.name, agent.persona)}${view === i ? " is-on" : ""}`}
               style={botMarkStyle(i, agent.name, agent.persona)}
+              aria-pressed={view === i}
               onClick={() => setView(i)}
-              title={grokDisplayBotName(agent.name)}
+              aria-label={grokDisplayBotName(agent.name)}
             >
               <GrokBotMark size={22} animate={view === i} style={botMarkStyle(i, agent.name, agent.persona)} />
               <span>{grokDisplayBotName(agent.name).replace(" Grok Bot", "")}</span>
@@ -361,7 +377,24 @@ function ConversationStageLive({ team }: { team: Team }) {
           ))}
         </div>
 
-        <div className="talk-thread talk-thread-swap" key={view === null ? "group" : `bot-${view}`} ref={threadRef}>
+        <div
+          className="talk-thread talk-thread-swap"
+          key={view === null ? "group" : `bot-${view}`}
+          ref={threadRef}
+          tabIndex={0}
+          aria-label={en.team.watchThread}
+        >
+          {view !== null && script.length === 0 ? (
+            <div className="talk-empty" role="status">
+              <p className="talk-empty-title">{en.team.watchNoOneToOne}</p>
+              {hasGroup ? (
+                <button type="button" className="talk-empty-go" onClick={() => setView(null)}>
+                  {en.team.watchOpenGroup}
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+
           {visible.map((turn, i) => {
             const agentIdx = Math.max(
               0,
@@ -404,10 +437,10 @@ function ConversationStageLive({ team }: { team: Team }) {
               return (
                 <article key={`frombots-${i}`} className="talk-frombots">
                   <p className="talk-frombots-kicker">
-                    Messages from{" "}
+                    {en.team.watchFrom}{" "}
                     {faces.map((agent, fi) => (
                       <span key={agent.name}>
-                        {fi > 0 ? " and " : ""}
+                        {fi > 0 ? ` ${en.team.watchAnd} ` : ""}
                         <TalkMention name={agent.name} persona={agent.persona} index={fi} />
                       </span>
                     ))}
@@ -436,14 +469,14 @@ function ConversationStageLive({ team }: { team: Team }) {
                   </div>
                   <div className={`talk-card talk-computer ${done ? "is-done" : "is-work"}`}>
                     <div className="talk-card-top">
-                      <span className="talk-card-title">Computer</span>
-                      <span className="talk-card-badge"><i />{done ? "Done" : "Working"}</span>
+                      <span className="talk-card-title">{en.team.watchComputer}</span>
+                      <span className="talk-card-badge"><i />{done ? en.team.watchDone : en.team.watchWorking}</span>
                     </div>
-                    <p className="talk-card-copy">{turn.working.detail}</p>
+                    {turn.working.detail ? <p className="talk-card-copy">{turn.working.detail}</p> : null}
                     {checks.length ? (
-                      <ul className="talk-check talk-check-compact">
+                      <ul className="talk-check talk-check-compact" aria-label={en.team.watchReceipts}>
                         {checks.map((c) => (
-                          <li key={c}>{c}</li>
+                          <li key={c} className="is-on">{c}</li>
                         ))}
                       </ul>
                     ) : null}
@@ -451,11 +484,13 @@ function ConversationStageLive({ team }: { team: Team }) {
                 </article>
               );
             }
+            const receipts = (turn.checks ?? []).slice(0, 4);
             return (
               <article
                 key={`${turn.speaker}-${i}`}
                 className={`talk-entry talk-row talk-var-${kind}${you ? " is-you" : ""}${mine ? " is-focus" : ""}${stack ? " is-stack" : ""}`}
                 style={you ? undefined : botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)}
+                aria-label={you ? en.team.watchYou : undefined}
               >
                 <div className="talk-avatar" aria-hidden>
                   {stack || you ? null : <GrokBotMark size={26} style={botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)} />}
@@ -463,25 +498,31 @@ function ConversationStageLive({ team }: { team: Team }) {
                 <div className="talk-bubble">
                   {stack || hideWho ? null : <p className="talk-bubble-who">{turn.speaker}</p>}
                   <p className="talk-bubble-text">{turn.text}</p>
+                  {receipts.length ? (
+                    <ul className="talk-check talk-check-compact" aria-label={en.team.watchReceipts}>
+                      {receipts.map((c) => (
+                        <li key={c} className="is-on">{c}</li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
               </article>
             );
           })}
 
           {typing ? (
-            <div className="talk-typing" aria-hidden>
-              <span /><span /><span />
+            <div className="talk-typing" role="status" aria-live="polite">
+              <span className="talk-typing-dots" aria-hidden="true">
+                <span /><span /><span />
+              </span>
+              <span className="talk-typing-label">{en.team.watchTyping}</span>
             </div>
           ) : null}
         </div>
 
-        <div className="talk-compose-bar">
-          <div className="talk-composer" aria-hidden>
-            <span className="talk-plus" aria-hidden>+</span>
-            <span className="talk-composer-ph">{composer.replace(/^\+\s*/, "")}</span>
-            <span className="talk-mic" aria-hidden />
-          </div>
-        </div>
+        <p className="talk-compose-bar" role="note">
+          <span className="talk-composer-ph">{en.team.watchReplayHint}</span>
+        </p>
       </div>
       </div>
     </section>

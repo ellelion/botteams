@@ -1,7 +1,8 @@
 "use client";
 
-import { grokBotName, grokDisplayBotName, grokMemberName, grokRecipeTitle } from "@/lib/grok-names";
-import { Children, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { grokDisplayBotName, grokMemberName, grokRecipeTitle } from "@/lib/grok-names";
+import { Children, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
 import { createPortal } from "react-dom";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
@@ -19,10 +20,14 @@ import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { site } from "@/lib/site";
 import type { Team } from "@/lib/types";
+import { useCopyFeedback } from "@/lib/use-copy-feedback";
+import { useDialogChrome } from "@/lib/use-dialog-chrome";
+import { cssZoom, useScrollEdges } from "@/lib/use-scroll-edges";
 import {
   MODES,
   MODE_HINT,
   MODE_LABEL,
+  CUSTOMIZE_HASH_KEY,
   buildPrompt,
   check,
   decodeState,
@@ -46,8 +51,40 @@ import {
  *   them points at Settings, then Plugins, which is the switch that exists.
  */
 
-const HASH_KEY = "c=";
-
+function pinOpenRecipe(section: HTMLDetailsElement) {
+  if (!section.open) return;
+  const pin = () => {
+    const head = document.querySelector(".rp-head");
+    const col = section.closest(".wings-main-col");
+    const scale = cssZoom();
+    const bar = (head?.getBoundingClientRect().height ?? 0) / scale;
+    const sum = section.querySelector(".rp-sum") ?? section;
+    const scroller =
+      col instanceof HTMLElement && getComputedStyle(col).overflowY !== "visible"
+        ? col
+        : null;
+    if (scroller) {
+      const next =
+        (sum.getBoundingClientRect().top - scroller.getBoundingClientRect().top) / scale +
+        scroller.scrollTop -
+        bar -
+        32;
+      scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
+      return;
+    }
+    const offset = (head?.getBoundingClientRect().bottom ?? 0) / scale + 8;
+    const top = sum.getBoundingClientRect().top / scale + window.scrollY - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+  };
+  /* Exclusive close settles in 2 frames at 100% and several more
+     at CSS zoom 200%. Pin each frame until the page height stops
+     moving the summary. */
+  const chase = (left: number) => {
+    pin();
+    if (left > 1) window.requestAnimationFrame(() => chase(left - 1));
+  };
+  window.requestAnimationFrame(() => chase(16));
+}
 
 export function Customize({
   team,
@@ -61,16 +98,37 @@ export function Customize({
   children?: ReactNode;
 }) {
   const [sheet, setSheet] = useState<"customize" | null>(null);
+  const sheetId = useId();
+  const overwriteTitleId = useId();
+  const overwriteBodyId = useId();
+  const modeHintId = useId();
+  const roomNameErrorId = useId();
+  const roomSizeErrorId = useId();
+  const alsoHintId = useId();
+  const botNameErrorBase = useId();
+  const botNoteHintBase = useId();
+  const promptEditLabelId = useId();
+  const promptEditHintId = useId();
+  const promptEditEditedId = useId();
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const overwriteRef = useRef<HTMLDivElement>(null);
+  const overwriteRestoreRef = useRef<HTMLElement | null>(null);
+  const closeSheet = useCallback(() => setSheet(null), []);
   /* Portals need a document, so nothing renders one until after hydration. */
   const [mounted, setMounted] = useState(false);
   const [editing, setEditing] = useState(false);
   const [state, setState] = useState<CustomState>(() => defaultState(team));
-  const [shared, setShared] = useState(false);
+  const { copied: shared, failed: shareFail, copyText } = useCopyFeedback();
+  const { copied: saved, failed: saveFail, pulse: pulseSave } = useCopyFeedback();
   const [liveHits, setLiveHits] = useState<Record<string, SkillselionHit>>({});
+  const [resolvedHits, setResolvedHits] = useState<Record<string, true>>({});
+  const [listingsFailed, setListingsFailed] = useState(false);
+  const [listingsNonce, setListingsNonce] = useState(0);
 
   /* A recipe change while a hand-edited prompt exists parks here until the
      human says which one wins. */
   const [pending, setPending] = useState<(() => void) | null>(null);
+  const closeOverwrite = useCallback(() => setPending(null), []);
   const hydrated = useRef(false);
 
   /* A shared link carries its edits in the hash, so it never reaches the
@@ -83,8 +141,8 @@ export function Customize({
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     const raw = window.location.hash.replace(/^#/, "");
-    if (raw.startsWith(HASH_KEY)) {
-      const payload = raw.slice(HASH_KEY.length);
+    if (raw.startsWith(CUSTOMIZE_HASH_KEY)) {
+      const payload = raw.slice(CUSTOMIZE_HASH_KEY.length);
       if (payload) {
         /* Once, on mount. The server cannot see the hash, so reading it
            any earlier would render one recipe and hydrate another. */
@@ -95,29 +153,71 @@ export function Customize({
     hydrated.current = true;
   }, [team]);
 
+  useDialogChrome({ open: sheet !== null && mounted, paused: Boolean(pending), rootRef: sheetRef, onClose: closeSheet });
+  useDialogChrome({
+    open: Boolean(pending) && mounted,
+    rootRef: overwriteRef,
+    onClose: closeOverwrite,
+    restoreFromRef: overwriteRestoreRef,
+  });
+  const actionsRail = useScrollEdges<HTMLDivElement>();
+
   const askedHits = useRef<Set<string>>(new Set());
   useEffect(() => {
     if (!mounted) return;
     const ids = [...new Set(state.skillPicks.map((p) => p.id).filter(Boolean))];
-    const missing = ids.filter((id) => !liveHits[id] && !askedHits.current.has(id));
+    const missing = ids.filter((id) => !liveHits[id] && !resolvedHits[id] && !askedHits.current.has(id));
     if (missing.length === 0) return;
-    for (const id of missing) askedHits.current.add(id);
+    const asked = askedHits.current;
+    for (const id of missing) asked.add(id);
     let cancelled = false;
-    fetch(`/api/skillselion/listings?ids=${missing.map(encodeURIComponent).join(",")}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((body: { skills?: SkillselionHit[] } | null) => {
-        if (cancelled || !body?.skills) return;
+    const ac = new AbortController();
+    const cap = window.setTimeout(() => ac.abort(), 10_000);
+    fetch(`/api/skillselion/listings?ids=${missing.map(encodeURIComponent).join(",")}`, { signal: ac.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error("listings failed");
+        return res.json() as Promise<{ skills?: SkillselionHit[] }>;
+      })
+      .then((body) => {
+        if (cancelled) return;
         setLiveHits((prev) => {
           const next = { ...prev };
           for (const hit of body.skills ?? []) next[hit.id] = hit;
           return next;
         });
+        setResolvedHits((prev) => {
+          const next = { ...prev };
+          for (const id of missing) next[id] = true;
+          return next;
+        });
       })
-      .catch(() => {});
+      .catch(() => {
+        if (cancelled) return;
+        for (const id of missing) asked.delete(id);
+        setListingsFailed(true);
+      })
+      .finally(() => window.clearTimeout(cap));
     return () => {
       cancelled = true;
+      ac.abort();
+      /* React remounts this effect in development. Keep the ids askable
+         or a cancelled first flight leaves every row pending forever. */
+      for (const id of missing) asked.delete(id);
     };
-  }, [mounted, state.skillPicks, liveHits]);
+  }, [mounted, state.skillPicks, liveHits, resolvedHits, listingsNonce]);
+
+  function retryListings() {
+    askedHits.current.clear();
+    setResolvedHits({});
+    setListingsFailed(false);
+    setListingsNonce((n) => n + 1);
+  }
+
+  function skillCounts(id: string): { pending: boolean; failed: boolean } {
+    if (liveHits[id] || resolvedHits[id]) return { pending: false, failed: false };
+    if (listingsFailed) return { pending: false, failed: true };
+    return { pending: true, failed: false };
+  }
 
 
 
@@ -125,8 +225,19 @@ export function Customize({
   useEffect(() => {
     if (!hydrated.current) return;
     const payload = encodeState(team, state);
-    const next = payload ? `#${HASH_KEY}${payload}` : window.location.pathname + window.location.search;
-    window.history.replaceState(null, "", next);
+    if (payload) {
+      const next = `#${CUSTOMIZE_HASH_KEY}${payload}`;
+      if (window.location.hash !== next) {
+        window.history.replaceState(null, "", next);
+      }
+      return;
+    }
+    const hash = window.location.hash.replace(/^#/, "");
+    /* A stock recipe used to write pathname+search on every mount, which
+       stripped #watch before Watch hydrated. Deep links never opened. */
+    if (hash.startsWith(CUSTOMIZE_HASH_KEY)) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
   }, [team, state]);
 
   const resolved = useMemo(() => resolve(team, state), [team, state]);
@@ -143,8 +254,11 @@ export function Customize({
      throwing the rewrite away. */
   const guard = useCallback(
     (change: () => void) => {
-      if (state.override !== null) setPending(() => change);
-      else change();
+      if (state.override !== null) {
+        overwriteRestoreRef.current =
+          document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        setPending(() => change);
+      } else change();
     },
     [state.override],
   );
@@ -187,23 +301,22 @@ export function Customize({
   }
 
   async function copyShareLink() {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setShared(true);
-      window.setTimeout(() => setShared(false), 2000);
-    } catch {
-      setShared(false);
-    }
+    await copyText(window.location.href);
   }
 
   function download() {
-    const blob = new Blob([toMarkdown(team, state)], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${team.slug}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
+    try {
+      const blob = new Blob([toMarkdown(team, state)], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${team.slug}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+      pulseSave("ok");
+    } catch {
+      pulseSave("fail");
+    }
   }
 
   /* The page hands us several sibling sections. Key them once so the
@@ -225,7 +338,7 @@ export function Customize({
         </div>
       ) : null}
       {verdict.warnings.length > 0 ? (
-        <div className="cz-alert cz-alert-warn">
+        <div className="cz-alert cz-alert-warn" role="status">
           <p className="cz-alert-title">{en.customize.warn}</p>
           <ul>{verdict.warnings.map((w) => <li key={w}>{w}</li>)}</ul>
           <p className="cz-alert-foot">{en.customize.copyAnyway}</p>
@@ -234,43 +347,64 @@ export function Customize({
     </>
   );
 
+  const hasConnectors = team.connectors.length > 0;
+  const connectorsEmpty = (
+    <div className="rc-empty-block">
+      <p className="rc-empty">{en.recipe.noConnectors}</p>
+      <p className="cz-hint">{en.recipe.noConnectorsHint}</p>
+      <Link href="/guides/grok-bot-connectors" className="rp-secondary mt-3">
+        {en.recipe.noConnectorsGuide}
+      </Link>
+    </div>
+  );
   const connectorsPart = (
     <div className="rc-connectors">
-      <h2 className="rc-h2">{en.team.connectFirst}</h2>
+      <h2 className="rc-h2">{hasConnectors ? en.team.connectFirst : en.recipe.secConnectors}</h2>
       <div className="mt-3">
-        <ConnectorRow names={team.connectors} labeled size={18} />
+        {hasConnectors ? <ConnectorRow names={team.connectors} labeled size={18} /> : connectorsEmpty}
       </div>
-      <div className="mt-4 grid gap-2 text-[0.82rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
+      <div className="mt-4 grid gap-2 text-[0.84rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
         {solo ? <p>{en.xai.soloNote}</p> : null}
-        <p>{en.team.connectorsNote}</p>
+        {hasConnectors ? <p>{en.team.connectorsNote}</p> : null}
         <p>{en.team.installNote}</p>
       </div>
     </div>
   );
 
-  const overwritePart = pending ? (
-      <div className="cz-alert cz-alert-stop" role="alertdialog" aria-label={en.customize.overwriteTitle}>
-        <p className="cz-alert-title">{en.customize.overwriteTitle}</p>
-        <p>{en.customize.overwriteBody}</p>
-        <div className="cz-alert-actions">
-          <button
-            type="button"
-            className="cz-btn"
-            onClick={() => {
-              const run = pending;
-              setPending(null);
-              setState((prev) => ({ ...prev, override: null }));
-              run();
-            }}
-          >
-            {en.customize.overwriteGo}
-          </button>
-          <button type="button" className="cz-btn cz-btn-quiet" onClick={() => setPending(null)}>
-            {en.customize.overwriteKeep}
-          </button>
+  const overwritePart = pending && mounted ? createPortal(
+      <div
+        ref={overwriteRef}
+        className="cz-overwrite"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby={overwriteTitleId}
+        aria-describedby={overwriteBodyId}
+      >
+        <button type="button" className="cz-overwrite-scrim" tabIndex={-1} aria-label={en.customize.overwriteKeep} onClick={closeOverwrite} />
+        <div className="cz-overwrite-card cz-alert cz-alert-stop">
+          <h3 id={overwriteTitleId} className="cz-alert-title">{en.customize.overwriteTitle}</h3>
+          <p id={overwriteBodyId}>{en.customize.overwriteBody}</p>
+          <div className="cz-alert-actions">
+            <button type="button" className="cz-btn cz-btn-quiet" onClick={closeOverwrite}>
+              {en.customize.overwriteKeep}
+            </button>
+            <button
+              type="button"
+              className="cz-btn"
+              onClick={() => {
+                const run = pending;
+                setPending(null);
+                setState((prev) => ({ ...prev, override: null }));
+                run();
+              }}
+            >
+              {en.customize.overwriteGo}
+            </button>
+          </div>
         </div>
-      </div>
-  ) : null;
+      </div>,
+      document.body,
+    ) : null;
 
   const panelPart = editing ? (
       <div className="cz-panel mt-8">
@@ -280,6 +414,7 @@ export function Customize({
           <span className="cz-hint">{en.customize.resetHint}</span>
         </div>
 
+        {hasConnectors ? (
         <fieldset className="cz-group">
           <legend className="cz-legend">{en.customize.connectors}</legend>
           <p className="cz-truth">{en.customize.connectorTruth}</p>
@@ -304,19 +439,26 @@ export function Customize({
                         type="button"
                         className={`cz-mode${mode === m ? " is-on" : ""}`}
                         aria-pressed={mode === m}
-                        title={MODE_HINT[m]}
+                        aria-describedby={`${modeHintId}-${m}`}
                         onClick={() => patch({ modes: { ...state.modes, [connector]: m } })}
                       >
                         {MODE_LABEL[m]}
                       </button>
                     ))}
                   </span>
+                  <p className="cz-hint cz-mode-hint">{MODE_HINT[mode]}</p>
                 </li>
               );
             })}
           </ul>
+          <div className="sr-only">
+            {MODES.map((m) => (
+              <p key={m} id={`${modeHintId}-${m}`}>{MODE_HINT[m]}</p>
+            ))}
+          </div>
           {readish.length > 0 ? <p className="cz-hint mt-3">{en.customize.pluginsNote(readish.join(", "))}</p> : null}
         </fieldset>
+        ) : null}
 
         <fieldset className="cz-group">
           <legend className="cz-legend">{en.customize.bots}</legend>
@@ -324,6 +466,15 @@ export function Customize({
           <ul className="cz-list">
             {team.agents.map((agent, i) => {
               const on = isOn(state, agent.name);
+              const resolvedAgent = resolved.agents.find((row) => row.source.name === agent.name);
+              const blankName = on && !resolvedAgent?.name;
+              const clashName = Boolean(
+                on &&
+                  resolvedAgent?.name &&
+                  resolved.agents.filter((row) => row.name.toLowerCase() === resolvedAgent.name.toLowerCase()).length > 1,
+              );
+              const nameErrorId = `${botNameErrorBase}-${i}`;
+              const noteHintId = `${botNoteHintBase}-${i}`;
               return (
                 <li key={agent.name} className={`cz-bot${on ? "" : " is-off"}`}>
                   <div className="cz-bot-top">
@@ -342,9 +493,16 @@ export function Customize({
                         value={state.names[agent.name] ?? grokMemberName(team.name, agent.name)}
                         disabled={!on}
                         onChange={(e) => patch({ names: { ...state.names, [agent.name]: e.target.value } })}
+                        aria-invalid={blankName || clashName || undefined}
+                        aria-describedby={blankName || clashName ? nameErrorId : undefined}
                       />
                     </label>
                   </div>
+                  {blankName || clashName ? (
+                    <p id={nameErrorId} className="cz-hint" role="alert">
+                      {blankName ? en.customize.botNameNeeded : en.customize.botNameClash}
+                    </p>
+                  ) : null}
                   <p className="cz-bot-persona">{agent.persona}</p>
                   {agent.reuse ? <p className="cz-hint">{en.customize.reuseNote}</p> : null}
                   {agent.connectors.length > 0 ? (
@@ -359,8 +517,9 @@ export function Customize({
                         placeholder={en.customize.botNotePlaceholder}
                         value={state.notes[agent.name] ?? ""}
                         onChange={(e) => patch({ notes: { ...state.notes, [agent.name]: e.target.value } })}
+                        aria-describedby={noteHintId}
                       />
-                      <span className="cz-hint">{en.customize.botNoteHint}</span>
+                      <span id={noteHintId} className="cz-hint">{en.customize.botNoteHint}</span>
                     </label>
                   ) : null}
                 </li>
@@ -370,7 +529,7 @@ export function Customize({
         </fieldset>
 
         {solo ? null : (
-        <fieldset className="cz-group">
+        <fieldset className="cz-group" aria-invalid={resolved.members.length < 2 || resolved.members.length > 6 ? true : undefined} aria-describedby={resolved.members.length < 2 || resolved.members.length > 6 ? roomSizeErrorId : undefined}>
           <legend className="cz-legend">{en.customize.room}</legend>
           <label className="cz-field">
             <span className="cz-field-label">{en.customize.roomName}</span>
@@ -379,7 +538,12 @@ export function Customize({
               className="cz-input"
               value={state.roomName}
               onChange={(e) => patch({ roomName: e.target.value })}
+              aria-invalid={!resolved.roomName || undefined}
+              aria-describedby={!resolved.roomName ? roomNameErrorId : undefined}
             />
+            {!resolved.roomName ? (
+              <p id={roomNameErrorId} className="cz-hint" role="alert">{en.customize.roomNameNeeded}</p>
+            ) : null}
           </label>
           <p className="cz-field-label mt-4">
             {en.customize.roomMembers} · {en.customize.roomRule}{" "}
@@ -387,6 +551,9 @@ export function Customize({
               {en.customize.roomCount(resolved.members.length)}
             </span>
           </p>
+          {resolved.members.length < 2 || resolved.members.length > 6 ? (
+            <p id={roomSizeErrorId} className="cz-hint" role="alert">{en.customize.roomSizeNeeded}</p>
+          ) : null}
           <ul className="cz-members">
             {team.agents.filter((a) => isOn(state, a.name)).map((agent) => (
               <li key={agent.name}>
@@ -409,6 +576,9 @@ export function Customize({
           picks={state.skillPicks}
           agents={team.agents}
           liveHits={liveHits}
+          listingsFailed={listingsFailed}
+          skillCounts={skillCounts}
+          onRetryListings={retryListings}
           onChange={(skillPicks) => patch({ skillPicks })}
         />
 
@@ -438,9 +608,10 @@ export function Customize({
               placeholder={en.customize.alsoPlaceholder}
               value={state.free}
               onChange={(e) => patch({ free: e.target.value })}
+              aria-describedby={alsoHintId}
             />
           </label>
-          <p className="cz-hint">{en.customize.alsoNoSecrets}</p>
+          <p id={alsoHintId} className="cz-hint">{en.customize.alsoNoSecrets}</p>
         </fieldset>
 
         <fieldset className="cz-group">
@@ -455,12 +626,18 @@ export function Customize({
           </label>
           <p className="cz-hint">{en.customize.installedHint}</p>
           <div className="cz-actions mt-4">
-            <button type="button" className="cz-btn cz-btn-quiet" onClick={copyShareLink}>
-              {shared ? en.customize.shared : en.customize.share}
+            <button type="button" className={`cz-btn cz-btn-quiet${shareFail ? " is-copy-fail" : ""}`} onClick={copyShareLink}>
+              {shareFail ? en.customize.shareFail : shared ? en.customize.shared : en.customize.share}
             </button>
-            <button type="button" className="cz-btn cz-btn-quiet" onClick={download}>
-              {en.customize.download}
+            <span className="sr-only" role="status" aria-live="polite">
+              {shareFail ? en.customize.shareFail : shared ? en.customize.shared : ""}
+            </span>
+            <button type="button" className={`cz-btn cz-btn-quiet${saveFail ? " is-copy-fail" : ""}`} onClick={download}>
+              {saveFail ? en.customize.saveFail : saved ? en.customize.saving : en.customize.download}
             </button>
+            <span className="sr-only" role="status" aria-live="polite">
+              {saveFail ? en.customize.saveFail : saved ? en.customize.saving : ""}
+            </span>
           </div>
         </fieldset>
       </div>
@@ -516,13 +693,17 @@ export function Customize({
         {en.team.promptTitle}
       </h2>
       <div className="cz-actions">
-        <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
+        <CopyInstallerButton
+          text={verdict.canCopy ? prompt : ""}
+          disabled={!verdict.canCopy}
+          disabledReason={verdict.errors[0]}
+        />
       </div>
       <details className="cz-advanced mt-4">
-        <summary>{en.customize.advanced}</summary>
-        <p className="cz-hint mt-2">{en.customize.advancedHint}</p>
+        <summary id={promptEditLabelId}>{en.customize.advanced}</summary>
+        <p id={promptEditHintId} className="cz-hint mt-2">{en.customize.advancedHint}</p>
         {state.override !== null ? (
-          <p className="cz-hint mt-2">
+          <p id={promptEditEditedId} className="cz-hint mt-2">
             {en.customize.advancedEdited}{" "}
             <button type="button" className="cz-link" onClick={() => setState((p) => ({ ...p, override: null }))}>
               {en.customize.advancedRegenerate}
@@ -532,8 +713,11 @@ export function Customize({
         <textarea
           className="cz-input cz-prompt-edit mt-3"
           rows={14}
+          spellCheck={false}
           value={prompt}
           onChange={(e) => setState((p) => ({ ...p, override: e.target.value }))}
+          aria-labelledby={promptEditLabelId}
+          aria-describedby={state.override !== null ? `${promptEditHintId} ${promptEditEditedId}` : promptEditHintId}
         />
       </details>
       <pre className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
@@ -567,30 +751,41 @@ export function Customize({
 
   return (
     <div className="rp">
+      <div className="rp-head-id">
+        <p className="rp-name">{grokRecipeTitle(team.kind, team.name)}</p>
+        <p className="rp-job">{team.tagline}</p>
+      </div>
       <header className="rp-head">
-        <div className="rp-head-row">
-          <div className="rp-head-id">
-            <h1 className="rp-name">{grokRecipeTitle(team.kind, team.name)}</h1>
-            <p className="rp-job">{team.tagline}</p>
-          </div>
-          <div className="rp-head-act">
-            <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
-            {/* Secondary on purpose. Copy is the transaction. */}
-            <button type="button" className="rp-secondary" aria-expanded={sheet !== null} onClick={openCustomize}>
-              {en.customize.open}
-            </button>
-            <ShareBar name={grokRecipeTitle(team.kind, team.name)} />
-          </div>
+        <div
+          ref={actionsRail}
+          className="rp-head-act scroll-fade"
+        >
+          <CopyInstallerButton
+            text={verdict.canCopy ? prompt : ""}
+            disabled={!verdict.canCopy}
+            disabledReason={verdict.errors[0]}
+          />
+          {/* Secondary on purpose. Copy is the transaction. */}
+          <button
+            type="button"
+            className="rp-secondary"
+            aria-expanded={sheet !== null}
+            aria-haspopup="dialog"
+            aria-controls={sheet !== null ? sheetId : undefined}
+            onClick={openCustomize}
+          >
+            {en.customize.open}
+          </button>
+          <ShareBar name={grokRecipeTitle(team.kind, team.name)} />
         </div>
-        {team.fromXai ? (
-          <div className="rp-head-chips">
-            <FromXaiChip />
-          </div>
-        ) : null}
       </header>
+      {team.fromXai ? (
+        <div className="rp-head-chips">
+          <FromXaiChip />
+        </div>
+      ) : null}
 
       {verdictPart}
-      {overwritePart}
 
       {/* The roster, visible without a click. Inline actions land on these
           chips later; today they are honest labels. */}
@@ -626,30 +821,45 @@ export function Customize({
             fourth mystery tab. */}
         <div className="rp-connectors">
           <span className="rp-room-label">{en.recipe.secConnectors}</span>
-          <ConnectorRow names={team.connectors} labeled size={18} />
+          {hasConnectors ? (
+            <ConnectorRow names={team.connectors} labeled size={18} />
+          ) : connectorsEmpty}
         </div>
       </section>
 
+      {/* Native exclusive accordion. Opening one section closes the
+          others so sticky titles cannot stack into a wall on a phone. */}
       <div className="rp-acc">
-        <details className="rp-sec" open>
+        <details className="rp-sec" name="recipe" open onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
           <summary className="rp-sum"><RecipeSecIcon name="job" /><span className="rp-sum-lab">{en.recipe.secJob}</span></summary>
           <div className="rp-secbody">
             {rosterPart}
           </div>
         </details>
 
-        <details className="rp-sec">
+        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
           <summary className="rp-sum">
             <RecipeSecIcon name="routines" />
             <span className="rp-sum-lab">{en.recipe.secRoutines}</span>
             <span className="rp-count">{resolved.routines.length}</span>
           </summary>
           <div className="rp-secbody">
-            {resolved.routines.length > 0 ? routinesPart : <p className="rc-empty">{en.recipe.noRoutines}</p>}
+            {resolved.routines.length > 0 ? routinesPart : (
+              <div className="rc-empty-block">
+                <p className="rc-empty">{en.recipe.noRoutines}</p>
+                <p className="cz-hint">{en.recipe.noRoutinesHint}</p>
+                <Link
+                  href={solo ? "/guides/create-a-grok-bot" : "/guides/install-a-grok-bot-team"}
+                  className="rp-secondary mt-3"
+                >
+                  {solo ? en.recipe.noRoutinesBotGuide : en.recipe.noRoutinesGuide}
+                </Link>
+              </div>
+            )}
           </div>
         </details>
 
-        <details className="rp-sec">
+        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
           <summary className="rp-sum">
             <RecipeSecIcon name="skills" />
             <span className="rp-sum-lab">{en.customize.skills}</span>
@@ -657,31 +867,56 @@ export function Customize({
           </summary>
           <div className="rp-secbody">
             {state.skillPicks.length > 0 ? (
-              <ul className="cz-list">
-                {state.skillPicks.map((pick) => (
-                  <li key={`${pick.id}::${pick.scope}`} className="hairline-row">
-                    <SkillHitFace
-                      hit={pick}
-                      live={liveHits[pick.id]}
-                      extra={pick.use === "install" ? en.customize.skillsInstall : en.customize.skillsFetch}
-                    />
-                  </li>
-                ))}
+              <>
+              <ul className="cz-list" aria-busy={state.skillPicks.some((pick) => skillCounts(pick.id).pending) || undefined}>
+                {state.skillPicks.map((pick) => {
+                  const counts = skillCounts(pick.id);
+                  return (
+                    <li key={`${pick.id}::${pick.scope}`} className="hairline-row">
+                      <SkillHitFace
+                        hit={pick}
+                        live={liveHits[pick.id]}
+                        pending={counts.pending}
+                        failed={counts.failed}
+                        extra={pick.use === "install" ? en.customize.skillsInstall : en.customize.skillsFetch}
+                      />
+                    </li>
+                  );
+                })}
               </ul>
+              {listingsFailed ? (
+                <div className="cz-skill-status" role="alert">
+                  <p className="cz-hint">{en.customize.skillsCountsFail}</p>
+                  <button type="button" className="cz-btn cz-btn-quiet" onClick={retryListings}>
+                    {en.customize.skillsRetry}
+                  </button>
+                </div>
+              ) : null}
+              </>
             ) : team.skills.length > 0 ? (
               <ul className="cz-list">{team.skills.map((name) => <li key={name} className="hairline-row">{name}</li>)}</ul>
             ) : (
-              <p className="rc-empty">{en.customize.skillsLead}</p>
+              <div className="rc-empty-block">
+                <p className="rc-empty">{en.recipe.noSkills}</p>
+                <p className="cz-hint">{en.recipe.noSkillsHint}</p>
+                <button type="button" className="rp-secondary mt-3" onClick={openCustomize}>
+                  {en.customize.open}
+                </button>
+              </div>
             )}
           </div>
         </details>
 
-        <details className="rp-sec">
-          <summary className="rp-sum"><RecipeSecIcon name="notes" /><span className="rp-sum-lab">{en.recipe.secNotes}</span></summary>
+        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
+          <summary className="rp-sum">
+            <RecipeSecIcon name="notes" />
+            <span className="rp-sum-lab">{en.recipe.secNotes}</span>
+            <span className="rp-count">{notes.length}</span>
+          </summary>
           <div className="rp-secbody">{notes.length > 0 ? notes : <p className="rc-empty">{en.recipe.noNotes}</p>}</div>
         </details>
 
-        <details className="rp-sec">
+        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
           <summary className="rp-sum"><RecipeSecIcon name="installer" /><span className="rp-sum-lab">{en.recipe.secInstaller}</span></summary>
           <div className="rp-secbody">
             <p className="rp-note">{en.team.installNote}</p>
@@ -697,16 +932,22 @@ export function Customize({
 
       {/* Customize: a mode over the page, not a different page. Closing it
           leaves the URL exactly as it was. */}
+      {overwritePart}
+
       {sheet !== null && mounted
         ? createPortal(
-        <div className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-label={en.customize.title}>
-          <button type="button" className="rp-scrim" aria-label={en.recipe.close} onClick={() => setSheet(null)} />
+        <div id={sheetId} ref={sheetRef} className="rp-sheet-wrap" role="dialog" aria-modal="true" aria-labelledby={`${sheetId}-title`}>
+          <button type="button" className="rp-scrim" tabIndex={-1} aria-label={en.recipe.close} onClick={closeSheet} />
           <div className="rp-sheet">
             <div className="rp-sheet-head">
-              <p className="rc-h2">{en.customize.title}</p>
+              <h2 id={`${sheetId}-title`} className="rc-h2">{en.customize.title}</h2>
               <div className="rp-sheet-act">
-                <CopyInstallerButton text={verdict.canCopy ? prompt : ""} disabled={!verdict.canCopy} />
-                <button type="button" className="rp-secondary" onClick={() => setSheet(null)}>{en.recipe.close}</button>
+                <CopyInstallerButton
+              text={verdict.canCopy ? prompt : ""}
+              disabled={!verdict.canCopy}
+              disabledReason={verdict.errors[0]}
+            />
+                <button type="button" className="rp-secondary" onClick={closeSheet}>{en.recipe.close}</button>
               </div>
             </div>
             <div className="rp-sheet-body">

@@ -1,25 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { en } from "@/lib/messages/en";
+import { useCopyFeedback } from "@/lib/use-copy-feedback";
 
 export function ShareBar({ name, className = "" }: { name: string; className?: string }) {
-  const [href, setHref] = useState("");
+  const { copied, failed, copyText } = useCopyFeedback();
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHref(window.location.href);
-  }, []);
+  function currentHref() {
+    return window.location.href;
+  }
 
-  const text = `${en.h1}\n\n${name}\n\n${en.notAffiliated}`;
-  const intent = href
-    ? `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(href)}`
-    : "";
+  async function copyLink() {
+    await copyText(currentHref());
+  }
 
-  if (!intent) return null;
+  function postOnX(event: React.MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+    const text = `${en.h1}\n\n${name}\n\n${en.notAffiliated}`;
+    const intent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(currentHref())}`;
+    window.open(intent, "_blank", "noopener,noreferrer");
+  }
+
+  const copyLabel = failed ? en.team.copyFail : copied ? en.share.copied : en.share.copyLink;
+
   return (
     <div className={`share-bar share-bar--inline ${className}`.trim()}>
-      <a className="share-btn" href={intent} target="_blank" rel="noopener noreferrer">
+      <button type="button" className={`share-btn${failed ? " is-copy-fail" : ""}`} onClick={copyLink}>
+        {copyLabel}
+      </button>
+      <span className="sr-only" role="status" aria-live="polite">
+        {copied || failed ? copyLabel : ""}
+      </span>
+      <a className="share-btn" href="https://twitter.com/intent/tweet" target="_blank" rel="noopener noreferrer" onClick={postOnX} aria-label={`${en.share.postOnX}. ${en.nav.opensNew}`}>
         {en.share.postOnX}
       </a>
     </div>

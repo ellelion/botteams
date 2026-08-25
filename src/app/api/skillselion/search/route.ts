@@ -19,9 +19,17 @@ function listingUrl(base: string, q: string): URL {
 }
 
 async function pull(base: string, q: string, headers: HeadersInit): Promise<unknown | null> {
-  const res = await fetch(listingUrl(base, q), { headers, cache: "no-store" });
-  if (!res.ok) return null;
-  return res.json();
+  try {
+    const res = await fetch(listingUrl(base, q), {
+      headers,
+      cache: "no-store",
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
 }
 
 export async function GET(req: Request) {

@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { resolveConnectors } from "@/lib/connectors";
+import { en } from "@/lib/messages/en";
 
 export function ConnectorRow({
   names,
@@ -16,7 +17,7 @@ export function ConnectorRow({
   // letter fallback stay the same size without repeating the number per item.
   const style = { "--connector-size": `${size}px` } as CSSProperties;
   return (
-    <ul className="connector-row" style={style} aria-label="Connectors already on the account">
+    <ul className="connector-row" style={style} aria-label={en.team.connectors}>
       {marks.map((mark) => (
         <li key={mark.slug || mark.name} className="connector-item">
           {mark.src ? (
