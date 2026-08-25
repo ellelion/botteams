@@ -8,8 +8,8 @@ governance.
 
 - `@icidab` is the code owner and final reviewer. Pull requests from other
   accounts need this account's approval before merge. GitHub does not permit
-  authors to approve their own pull requests, so a self-authored pull request
-  uses the review-only bypass described below.
+  authors to approve their own pull requests. This maintainer account has the
+  direct-push and ruleset bypass described below.
 - `@skillselion` is the brand automation and repository administration account.
   It can prepare branches, workflows, and settings. It cannot approve its own
   pull requests and it is not a code owner.
@@ -28,27 +28,29 @@ decision.
 
 ## Merge policy
 
-Two active rulesets protect `main`:
+Three active rulesets protect `main`:
 
-- **Main checks and integrity** has no bypass. It requires strict status checks,
-  linear history, and blocks deletion and force pushes.
+- **Main integrity** has no bypass. It requires linear history and blocks branch
+  deletion and force pushes.
+- **Main required checks** requires strict schema, documentation, lint, build,
+  dependency, and CodeQL status checks. `@icidab` has always-bypass access.
 - **Main reviews** requires a pull request and approval. `@icidab` has
-  pull-request-only bypass for this ruleset, so it cannot push directly to
-  `main`.
+  always-bypass access and may push directly to `main`.
 
-A change must:
+A contributor change must:
 
 1. Use a pull request.
 2. Pass schema, documentation, lint, build, dependency, and CodeQL checks.
 3. Be up to date with `main`.
 4. Resolve all review conversations.
-5. Receive approval from `@icidab` after the latest reviewable push, unless
-   `@icidab` authored the pull request and uses the recorded review bypass.
+5. Receive approval from `@icidab` after the latest reviewable push.
 6. Use a squash merge.
 
-Direct pushes, branch deletion, force pushes, and merges with failed or missing
-checks are blocked for every account. Changes to this file, `CODEOWNERS`,
-workflows, or either ruleset follow the same process.
+The `@icidab` maintainer account may push directly to `main` or bypass the
+pull-request and required-check rules. CI still runs after a direct push.
+Direct pushes remain blocked for every other account. Branch deletion, force
+pushes, and nonlinear history are blocked for every account. Changes to this
+file, `CODEOWNERS`, workflows, or a ruleset must keep this policy accurate.
 
 ## Releases
 
@@ -61,4 +63,5 @@ request.
 
 Security reports follow [SECURITY.md](./SECURITY.md). A private security fix may
 stay non-public while it is being prepared, but the final change still needs
-maintainer review and the normal automated checks before release.
+maintainer review. Normal contributor checks apply unless `@icidab` uses the
+recorded maintainer bypass.
