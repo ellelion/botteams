@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { en } from "@/lib/messages/en";
 import { ACCENT_PALETTE, DEFAULT_ACCENT } from "@/lib/theme";
 import { applyAccentPreference, readCurrentAccent } from "@/lib/theme-client";
 import { useDialogChrome } from "@/lib/use-dialog-chrome";
+import { cssZoom } from "@/lib/use-scroll-edges";
 
 function accentName(hex: string): string {
   return (en.theme.accents as Record<string, string>)[hex] ?? hex;
@@ -33,6 +34,7 @@ export function AccentPicker() {
   );
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
   const swatchRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const close = useCallback(() => setOpen(false), []);
   const initialSwatch = useCallback(
@@ -41,6 +43,58 @@ export function AccentPicker() {
   );
 
   useDialogChrome({ open, rootRef: wrapRef, onClose: close, getInitialFocus: initialSwatch });
+
+  /* `right: 0` hangs the 222px phone grid 22px past a 320 frame
+     (trigger at x=200). Under 1.4.12 the 1023 masthead wraps and
+     the trigger sits at x=16, so the same rule hangs 162px. Place
+     in the viewport, zoom-aware, same contract as Select. */
+  useLayoutEffect(() => {
+    if (!open) return;
+    const popNode = popoverRef.current;
+    const triggerNode = triggerRef.current;
+    if (!popNode || !triggerNode) return;
+    const pop = popNode;
+    const trigger = triggerNode;
+
+    function place() {
+      const box = trigger.getBoundingClientRect();
+      const zoom = cssZoom();
+      const pad = 8;
+      const paintedW = pop.offsetWidth * zoom;
+      let left = box.right - paintedW;
+      if (left < pad) left = pad;
+      if (left + paintedW > window.innerWidth - pad) {
+        left = Math.max(pad, window.innerWidth - pad - paintedW);
+      }
+      const spaceBelow = window.innerHeight - box.bottom - pad;
+      const spaceAbove = box.top - pad;
+      pop.style.maxHeight = "";
+      const cssCap = Number.parseFloat(getComputedStyle(pop).maxHeight);
+      const cap = Number.isFinite(cssCap) && cssCap > 0 ? cssCap : Math.min(320, Math.floor((window.innerHeight * 0.5) / zoom));
+      const available = Math.max(spaceBelow, spaceAbove) / zoom;
+      pop.style.maxHeight = `${Math.max(120, Math.floor(Math.min(available, cap)))}px`;
+      const height = pop.offsetHeight * zoom;
+      const openUp = spaceBelow < height && spaceAbove > spaceBelow;
+      pop.style.position = "fixed";
+      pop.style.left = `${left / zoom}px`;
+      pop.style.right = "auto";
+      pop.style.top = `${(openUp ? box.top - height - pad : box.bottom + pad) / zoom}px`;
+    }
+
+    place();
+    const ro = new ResizeObserver(place);
+    ro.observe(pop);
+    window.addEventListener("resize", place);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", place);
+      pop.style.position = "";
+      pop.style.left = "";
+      pop.style.right = "";
+      pop.style.top = "";
+      pop.style.maxHeight = "";
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -107,7 +161,7 @@ export function AccentPicker() {
         </span>
       </button>
       {open && (
-        <div id={popoverId} className="theme-accent-popover" role="dialog" aria-modal="true" aria-label={en.theme.chooseAccent}>
+        <div ref={popoverRef} id={popoverId} className="theme-accent-popover" role="dialog" aria-modal="true" aria-label={en.theme.chooseAccent}>
           <div role="radiogroup" aria-label={en.theme.chooseAccent}>
             {ACCENT_PALETTE.map((value, index) => (
               <button
