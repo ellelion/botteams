@@ -411,10 +411,11 @@ html:not([data-theme="dark"]) .wings-mark {
   flex-direction: column;
   /* Nine 44px rows overflow a landscape phone and 200% zoom. Cap to
      the remaining viewport so Sponsor and GitHub stay reachable. */
-  max-height: var(--menu-max-h, calc(100dvh - var(--masthead-h, 56px)));
+  max-height: calc(var(--menu-max-h, calc(100dvh - var(--masthead-h, 56px))) - env(safe-area-inset-bottom, 0px));
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+  scroll-padding-bottom: env(safe-area-inset-bottom, 0px);
   padding: 6px 16px calc(14px + env(safe-area-inset-bottom, 0px));
   background: var(--page);
   /* Adjacent to the 26% ink scrim, not bare paper. --pill-line sinks. */
@@ -6168,6 +6169,27 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   }
   .index-header .sel-caption { display: none; }
   .index-header .sel.has-caption { gap: 0; }
+  /* Same search tightness as landscape. A notched 360×640 already
+     hid stats; the 34px home-indicator ticker then parked List /
+     Cards 13px under the bar. 390×844 stays above 760. */
+  #teams .search-wrap {
+    padding-top: 6px;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+  }
+  .browse-pick { margin-bottom: 4px; }
+}
+@media (max-width: 1023px) and (max-height: 480px) {
+  /* After the 760 restatement. Landscape only had +14 above a 56px
+     bar; 21px of home indicator put List / Cards under it. */
+  .story-beat { padding-block: 0; }
+  .cf-search,
+  #teams .search-wrap {
+    padding-top: 4px;
+    padding-bottom: 2px;
+    margin-bottom: 0;
+  }
+  .browse-pick { margin-bottom: 0; }
 }
 /* 12rem after the last row is for a zoomed desktop frame. On a phone
    it left 192px of empty catalog before the footer. */
