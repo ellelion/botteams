@@ -4628,12 +4628,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   line-height: 1.25;
 }
 .rp-chip-note {
-  font-size: 13px;
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
   color: var(--ink-soft);
+  overflow-wrap: anywhere;
 }
 .rp-room { margin-top: 14px; color: var(--ink-soft); font-size: 0.86rem; line-height: 1.5; }
 .rp-room-name { margin: 4px 0 8px; color: var(--ink); font-size: 0.92rem; }
@@ -4662,12 +4663,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 
 .rp-room-label {
   display: block;
-  font-size: 13px;
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
   color: var(--ink-soft);
+  overflow-wrap: anywhere;
 }
 .rp-connectors { margin-top: 22px; }
 .rp-connectors .rp-room-label { margin-bottom: 12px; }
@@ -4723,7 +4725,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   align-items: baseline;
   gap: 12px;
   margin-top: 6px;
-  font-size: 13px;
+  /* Owner + cadence are the schedule, not Copy chrome. 13px stayed
+     put at 200% text while .rp-name (rem) grew past it. */
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
@@ -4732,7 +4736,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .rp-run-owner { min-width: 0; overflow-wrap: anywhere; }
 .rp-run-k { margin-right: 0.25em; }
-.rp-run-cadence { flex: none; text-align: right; white-space: nowrap; }
+.rp-run-cadence {
+  flex: none;
+  text-align: right;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 
 .rp-acc { margin-top: 28px; border-top: 1px solid var(--line-strong); }
 .rp-sec { border-bottom: 1px solid var(--line); }
