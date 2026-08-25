@@ -1691,6 +1691,9 @@ a.chip-unverified:focus-visible {
 }
 .browse-pick-btn:hover,
 .browse-pick-btn:focus-visible { color: var(--ink); background: var(--surface-elevated); }
+/* Always a scrollport. Flush Teams / All lost the 3px outer ring
+   on every side once overflow-x:auto computed overflow-y to auto. */
+.browse-pick-btn:focus-visible { outline-offset: -3px; }
 .browse-pick-btn.is-on { color: var(--page); background: var(--ink); }
 .browse-pick-btn.is-on:hover,
 .browse-pick-btn.is-on:focus-visible { color: var(--page); background: var(--ink); }
@@ -1753,7 +1756,8 @@ a.chip-unverified:focus-visible {
 }
 .cat-pill:hover,
 .cat-pill:focus-visible { color: var(--ink); background: var(--surface-elevated); }
-.cat-pill:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+/* Track pad is 2px; the 2px outer ring still clipped All on the left. */
+.cat-pill:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -3px; }
 .cat-pill.is-on {
   color: var(--page);
   background: var(--ink);
@@ -2669,7 +2673,8 @@ a.chip-unverified:focus-visible {
 }
 .cf-chip:hover:not(:disabled),
 .cf-chip:focus-visible:not(:disabled) { color: var(--ink); background: var(--surface-elevated); }
-.cf-chip:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+/* Same flush scrollport as .browse-pick. Built in sat on the clip edge. */
+.cf-chip:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -3px; }
 .cf-chip:disabled,
 .cf-chip:disabled .cf-count {
   color: var(--muted);
@@ -5338,11 +5343,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     border: 1px solid ButtonText;
     filter: none;
   }
-  .browse-pick-btn.is-on,
-  .cat-pill.is-on,
   .filter-chip.is-on,
   .cz-chip.is-on,
-  .cf-chip.is-on,
   .theme-accent-swatch.is-selected,
   .talk-rail-row.is-on,
   .talk-dock-item.is-on,
@@ -5362,7 +5364,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .filter-views .filter-chip--icon:focus-visible,
   .rp-head-act .theme-control-label:focus-visible,
   .rp-head-act .rp-secondary:focus-visible,
-  .rp-head-act .share-btn:focus-visible {
+  .rp-head-act .share-btn:focus-visible,
+  .browse-pick-btn.is-on,
+  .browse-pick-btn:focus-visible,
+  .cat-pill.is-on,
+  .cat-pill:focus-visible,
+  .cf-chip.is-on,
+  .cf-chip:focus-visible {
     outline: 2px solid Highlight;
     outline-offset: -3px;
   }
