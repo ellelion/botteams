@@ -1243,9 +1243,12 @@ a.chip-unverified:focus-visible {
     display: block;
     margin-bottom: 2px;
     color: var(--ink-soft);
-    font: 500 11px/1.3 var(--font-geist-sans), system-ui, sans-serif;
+    /* Column names next to rem cells. 11px stayed put at 200% text
+       while the answers grew, so the label became the quietest line. */
+    font: 500 0.78rem/1.3 var(--font-geist-sans), system-ui, sans-serif;
     letter-spacing: 0;
     text-transform: none;
+    overflow-wrap: anywhere;
   }
   .spec-table th[scope="row"] {
     color: var(--ink);
@@ -1284,9 +1287,10 @@ a.chip-unverified:focus-visible {
     display: block;
     margin-bottom: 2px;
     color: var(--ink-soft);
-    font: 500 11px/1.3 var(--font-geist-sans), system-ui, sans-serif;
+    font: 500 0.78rem/1.3 var(--font-geist-sans), system-ui, sans-serif;
     letter-spacing: 0;
     text-transform: none;
+    overflow-wrap: anywhere;
   }
   .spec-table th[scope="row"] {
     color: var(--ink);
@@ -1294,7 +1298,7 @@ a.chip-unverified:focus-visible {
     font-weight: 500;
   }
 }
-/* Guide compare tables live in the half-width wings column (~586px
+/* Guide compare tables live in the half-width wings column (~586px)
    on a 1280 screen, never wider than --w-measure). Three prose
    columns stay cramped there, so they always use the labeled stack.
    The spec table on /docs keeps the 639 viewport cut above. */
@@ -1323,9 +1327,10 @@ a.chip-unverified:focus-visible {
   display: block;
   margin-bottom: 2px;
   color: var(--ink-soft);
-  font: 500 11px/1.3 var(--font-geist-sans), system-ui, sans-serif;
+  font: 500 0.78rem/1.3 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
+  overflow-wrap: anywhere;
 }
 /* The criterion is the heading of each stacked block. Ink-soft 13px
    made Unit of work the same colour and size as the answers. */
@@ -3492,9 +3497,12 @@ html[data-theme="light"] .cz-check input:checked {
   display: block;
   margin-bottom: 5px;
   color: var(--ink-soft);
-  font: 500 11px/1.4 var(--font-geist-sans), system-ui, sans-serif;
+  /* Visible name of the field, not Copy chrome. 11px stayed put at
+     200% text while .cz-input (0.88rem) grew past it. */
+  font: 500 0.84rem/1.4 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
+  overflow-wrap: anywhere;
 }
 .cz-input {
   width: 100%;
@@ -4105,17 +4113,22 @@ html[data-theme="light"] .cz-check input:checked {
   display: grid;
   gap: 8px;
   color: var(--ink-soft);
-  font: 500 11px/1.4 var(--font-geist-sans), system-ui, sans-serif;
+  /* Visible name of the field. 11px stayed put at 200% text while
+     .spon-count (0.72rem) grew louder than “Short description”. */
+  font: 500 0.84rem/1.4 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
+  overflow-wrap: anywhere;
 }
 .spon-field-top {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px 12px;
 }
 .spon-count {
+  flex: none;
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0;
