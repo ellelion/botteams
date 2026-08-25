@@ -466,8 +466,10 @@ function ConversationStageLive({ team }: { team: Team }) {
 
           {typing ? (
             <div className="talk-typing" role="status" aria-live="polite">
-              <span className="sr-only">{en.team.watchTyping}</span>
-              <span aria-hidden /><span aria-hidden /><span aria-hidden />
+              <span className="talk-typing-dots" aria-hidden="true">
+                <span /><span /><span />
+              </span>
+              <span className="talk-typing-label">{en.team.watchTyping}</span>
             </div>
           ) : null}
         </div>
