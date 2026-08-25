@@ -5193,6 +5193,14 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   cursor: pointer;
 }
 .share-btn { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
+/* Restated after .share-btn / .cz-btn color. The early pair at the
+   Copy pill lost to those later single-class rules, so a failed Copy
+   link stayed ink-soft until hover. Touch never got the orange. */
+.share-btn.is-copy-fail,
+.cz-btn.is-copy-fail {
+  color: var(--beta);
+  border-color: var(--beta);
+}
 .share-btn:hover,
 .share-btn:focus-visible { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
 .share-btn.is-copy-fail:hover,
