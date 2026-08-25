@@ -10,14 +10,30 @@ import { XAI_USE_CASE_GALLERY } from "@/lib/site";
  * a seal of approval, and it links to xAI's own gallery so a reader can
  * check the source for themselves.
  */
-export function FromXaiChip({ className = "" }: { className?: string }) {
+export function FromXaiChip({
+  className = "",
+  as = "a",
+}: {
+  className?: string;
+  /* A span when the chip sits inside another link, so we do not nest <a>. */
+  as?: "a" | "span";
+}) {
+  const cls = `chip chip-xai ${className}`.trim();
+  if (as === "span") {
+    return (
+      <span className={cls}>
+        {en.xai.chip}
+        <span className="sr-only">. {en.xai.chipTitle}</span>
+      </span>
+    );
+  }
   return (
     <a
-      className={`chip chip-xai ${className}`}
+      className={cls}
       href={XAI_USE_CASE_GALLERY}
       target="_blank"
       rel="noopener noreferrer"
-      title={en.xai.chipTitle}
+      aria-label={`${en.xai.chip}. ${en.xai.chipTitle} ${en.nav.opensNew}`}
     >
       {en.xai.chip}
     </a>

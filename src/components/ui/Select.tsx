@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { cssZoom, overlayFloor } from "@/lib/use-scroll-edges";
 
 /*
  * A listbox we own.
@@ -29,23 +30,30 @@ export type SelectOption = {
 export function Select({
   id,
   label,
+  caption,
   value,
   options,
   onChange,
   className = "",
   align = "start",
+  bare = false,
 }: {
   id?: string;
   /* Read to screen readers, and used as the fallback button text. */
   label: string;
+  caption?: string;
   value: string;
   options: SelectOption[];
   onChange: (next: string) => void;
   className?: string;
   align?: "start" | "end";
+  /* Trigger only. Use next to Install / Fetch when a caption would not fit. */
+  bare?: boolean;
 }) {
   const auto = useId();
   const listId = `${id ?? auto}-list`;
+  const captionId = `${id ?? auto}-caption`;
+  const shownCaption = caption ?? label;
   const [open, setOpen] = useState(false);
   const selectedIndex = Math.max(0, options.findIndex((o) => o.value === value));
   const [active, setActive] = useState(selectedIndex);
@@ -56,21 +64,82 @@ export function Select({
 
   const current = useMemo(() => options[selectedIndex], [options, selectedIndex]);
 
-  /* Close on anything that is not us: outside pointer, or Escape anywhere. */
+  /* Close on anything that is not us: outside pointer, or Escape anywhere.
+     Capture Escape so a parent dialog (Customize, menu) does not close too. */
   useEffect(() => {
     if (!open) return;
     function onPointer(e: PointerEvent) {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     }
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(false);
+      buttonRef.current?.focus();
+    }
     document.addEventListener("pointerdown", onPointer);
-    return () => document.removeEventListener("pointerdown", onPointer);
+    document.addEventListener("keydown", onKey, true);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("keydown", onKey, true);
+    };
   }, [open]);
 
-  /* Keep the active option in view, including when type-ahead jumps far. */
+  /* Keep the active option in the list pane. scrollIntoView also moves
+     ancestor pages, and at CSS zoom that threw the catalog off-screen. */
   useEffect(() => {
     if (!open) return;
-    listRef.current?.querySelector<HTMLElement>('[data-active="true"]')?.scrollIntoView({ block: "nearest" });
+    const list = listRef.current;
+    const el = list?.querySelector<HTMLElement>('[data-active="true"]');
+    if (!list || !el) return;
+    const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom);
+    const scale = Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
+    const pane = list.getBoundingClientRect();
+    const row = el.getBoundingClientRect();
+    if (row.bottom > pane.bottom) list.scrollTop += (row.bottom - pane.bottom) / scale;
+    else if (row.top < pane.top) list.scrollTop -= (pane.top - row.top) / scale;
   }, [open, active]);
+
+  /* Open upward when the list would run off the bottom of the viewport.
+     Layout first, then again if icons change the height. */
+  useLayoutEffect(() => {
+    if (!open) return;
+    const listEl = listRef.current;
+    const rootEl = rootRef.current;
+    if (!listEl || !rootEl) return;
+    const list = listEl;
+    const root = rootEl;
+    function place() {
+      const box = root.getBoundingClientRect();
+      const scale = cssZoom();
+      const gap = 8 * scale;
+      const spaceBelow = overlayFloor() - box.bottom - gap;
+      const spaceAbove = box.top - gap;
+      /* getBoundingClientRect is painted px; max-height is pre-zoom CSS. */
+      const available = Math.max(0, Math.max(spaceBelow, spaceAbove) / scale);
+      /* Match the stylesheet cap (19rem, or the remaining viewport on a
+         phone) so leftover space above the button cannot become a
+         full-screen menu. 120 won when 1.4.12 left ~112px above the
+         ticker, so the list sat in the bar. */
+      list.style.maxHeight = "";
+      const cssCap = Number.parseFloat(getComputedStyle(list).maxHeight);
+      const cap = Number.isFinite(cssCap) && cssCap > 0 ? cssCap : Math.min(304, Math.floor(window.innerHeight * 0.5 / scale));
+      list.style.maxHeight = `${Math.max(0, Math.floor(Math.min(available, cap)))}px`;
+      const height = list.offsetHeight;
+      list.classList.toggle("is-up", spaceBelow < height * scale && spaceAbove > spaceBelow);
+    }
+    place();
+    const ro = new ResizeObserver(place);
+    ro.observe(list);
+    window.addEventListener("resize", place);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", place);
+      listEl.style.maxHeight = "";
+      listEl.classList.remove("is-up");
+    };
+  }, [open]);
 
   function openAt(index: number) {
     setActive(index);
@@ -109,6 +178,7 @@ export function Select({
     switch (e.key) {
       case "Escape":
         e.preventDefault();
+        e.stopPropagation();
         setOpen(false);
         buttonRef.current?.focus();
         break;
@@ -142,7 +212,8 @@ export function Select({
   }
 
   return (
-    <div className={`sel ${className}`.trim()} ref={rootRef}>
+    <div className={`sel${bare ? "" : " has-caption"} ${className}`.trim()} ref={rootRef}>
+      {bare ? null : <span className="sel-caption" id={captionId}>{shownCaption}</span>}
       <button
         ref={buttonRef}
         id={id}
@@ -152,7 +223,9 @@ export function Select({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
+        aria-activedescendant={open ? `${listId}-${active}` : undefined}
         aria-label={label}
+        aria-autocomplete="none"
         onClick={() => (open ? setOpen(false) : openAt(selectedIndex))}
         onKeyDown={onKeyDown}
       >
@@ -170,8 +243,6 @@ export function Select({
           className={`sel-list${align === "end" ? " is-end" : ""}`}
           role="listbox"
           aria-label={label}
-          aria-activedescendant={`${listId}-${active}`}
-          tabIndex={-1}
         >
           {options.map((option, i) => {
             const isSelected = option.value === value;

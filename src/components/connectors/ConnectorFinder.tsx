@@ -1,10 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useOptimistic, useRef, useState, useTransition } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { CategoryIcon } from "@/components/icons/LineIcons";
+import { connectorQuerySearch, type ConnectorFinderQuery } from "@/lib/catalog-query";
 import { en } from "@/lib/messages/en";
+import { focusWithoutPageScroll, scrollIntoRail, useScrollEdges } from "@/lib/use-scroll-edges";
 
 /*
  * Finding one connector in 306.
@@ -20,8 +23,7 @@ import { en } from "@/lib/messages/en";
  * worse than either.
  *
  * The one thing windowing costs is browser find-in-page over rows that are
- * not mounted. The search field is the answer to that, and it is focused
- * on arrival.
+ * not mounted. The search field is the answer to that, and slash focuses it.
  */
 
 export type FinderEntry = {
@@ -33,9 +35,10 @@ export type FinderEntry = {
   aliases: string[];
 };
 
-/* Row height has to be a constant for windowing to know where it is, so
-   rows are one line with the name ellipsised rather than wrapping. */
-const ROW = 52;
+/* Row height has to be a constant for windowing to know where it is.
+   Two lines fit a spaced name at 320; a one-line ellipsis clipped
+   "Google Calendar" when letter-spacing was 0.12em. */
+const ROW = 72;
 /* Below this, a plain list is cheaper than the machinery. */
 const WINDOW_FROM = 60;
 
@@ -67,9 +70,9 @@ function score(entry: FinderEntry, q: string): number {
   return 3;
 }
 
-function Row({ entry }: { entry: FinderEntry }) {
+function Row({ entry, locked = false }: { entry: FinderEntry; locked?: boolean }) {
   return (
-    <li className="cf-row" style={{ height: ROW }}>
+    <li className="cf-row" style={locked ? { height: ROW } : undefined}>
       <span className="cf-row-id">
         <ConnectorRow names={[entry.name]} size={18} />
         <span className="cf-row-name">{entry.name}</span>
@@ -147,7 +150,7 @@ function WindowedList({ items }: { items: FinderEntry[] }) {
           className="cf-list"
           style={{ position: "absolute", insetInline: 0, transform: `translateY(${startRow * ROW}px)` }}
         >
-          {slice.map((e) => <Row key={e.slug} entry={e} />)}
+          {slice.map((e) => <Row key={e.slug} entry={e} locked />)}
         </ul>
       </div>
     </div>
@@ -157,19 +160,92 @@ function WindowedList({ items }: { items: FinderEntry[] }) {
 export function ConnectorFinder({
   entries,
   categories,
+  query: initial,
 }: {
   entries: FinderEntry[];
   categories: string[];
+  query: ConnectorFinderQuery;
 }) {
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<string | null>(null);
-  const [builtInOnly, setBuiltInOnly] = useState(false);
-  const [browseAll, setBrowseAll] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const resultsId = useId();
+  type FinderFilters = Omit<ConnectorFinderQuery, "q">;
+  const serverFilters = useMemo<FinderFilters>(
+    () => ({
+      category: initial.category,
+      builtin: initial.builtin,
+      all: initial.all,
+    }),
+    [initial.category, initial.builtin, initial.all],
+  );
+  const [filters, setFilters] = useOptimistic(serverFilters, (_current, next: FinderFilters) => next);
+  const category = filters.category;
+  const builtInOnly = filters.builtin;
+  const browseAll = filters.all;
+  const [query, setQuery] = useState(initial.q);
+  const [seenQ, setSeenQ] = useState(initial.q);
+  const [pushedQ, setPushedQ] = useState(initial.q);
+  if (initial.q !== seenQ) {
+    setSeenQ(initial.q);
+    if (initial.q !== pushedQ) {
+      setQuery(initial.q);
+      setPushedQ(initial.q);
+    }
+  }
   const searchRef = useRef<HTMLInputElement>(null);
+  const chipsRail = useScrollEdges<HTMLDivElement>(categories.length);
+  const [isPending, startFilter] = useTransition();
+  const [resume, setResume] = useState<FinderFilters>(serverFilters);
 
-  /* Focused on arrival, because typing is the intended first move. */
+  function commit(next: ConnectorFinderQuery) {
+    const normalized = next.q.trim()
+      ? { q: next.q.trim(), category: null, builtin: false, all: false }
+      : { ...next, q: "" };
+    setPushedQ(normalized.q);
+    startFilter(() => {
+      setFilters({ category: normalized.category, builtin: normalized.builtin, all: normalized.all });
+      const qs = connectorQuerySearch(normalized);
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    });
+  }
+
+  const reset = () => {
+    setQuery("");
+    setResume({ category: null, builtin: false, all: false });
+    commit({ q: "", category: null, builtin: false, all: false });
+    searchRef.current?.focus();
+  };
+
+  const clearSearchOnly = (opts?: { blur?: boolean }) => {
+    setQuery("");
+    commit({ q: "", category: resume.category, builtin: resume.builtin, all: resume.all });
+    if (opts?.blur) searchRef.current?.blur();
+    else searchRef.current?.focus();
+  };
+
+  const canResume = Boolean(resume.category || resume.builtin || resume.all);
+
   useEffect(() => {
-    searchRef.current?.focus({ preventScroll: true });
+    const next = query.trim();
+    if (next === initial.q.trim()) return;
+    const handle = window.setTimeout(() => {
+      commit({
+        q: next,
+        category,
+        builtin: builtInOnly,
+        all: browseAll,
+      });
+    }, 250);
+    return () => window.clearTimeout(handle);
+    // commit writes the URL; the listed fields are the debounce inputs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, initial.q, category, builtInOnly, browseAll]);
+
+  /* Focus only when the URL already asked for a search, so a first visit
+     keeps keyboard order at the skip link and the masthead. */
+  useEffect(() => {
+    if (initial.q) searchRef.current?.focus({ preventScroll: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -182,13 +258,13 @@ export function ConnectorFinder({
         searchRef.current?.select();
       }
       if (e.key === "Escape" && typing) {
-        setQuery("");
-        searchRef.current?.blur();
+        e.preventDefault();
+        clearSearchOnly({ blur: true });
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [resume]);
 
   const q = norm(query);
 
@@ -229,50 +305,95 @@ export function ConnectorFinder({
     return [];
   }, [mode, searched, entries, category]);
 
-  const reset = useCallback(() => {
-    setQuery("");
-    setCategory(null);
-    setBuiltInOnly(false);
-    setBrowseAll(false);
-    searchRef.current?.focus();
-  }, []);
-
   function pickCategory(next: string) {
-    setCategory((prev) => (prev === next ? null : next));
-    setBuiltInOnly(false);
-    setBrowseAll(false);
+    const categoryNext = category === next ? null : next;
+    setQuery("");
+    commit({ q: "", category: categoryNext, builtin: false, all: false });
   }
 
   return (
     <div className="cf">
       {/* Search and chips stay put while a long list moves under them. */}
       <div className={mode === "all" ? "cf-bar is-bare" : "cf-bar"}>
-        <label className="cf-search">
-          <span className="sr-only">{en.connectors.searchLabel}</span>
-          <svg className="cf-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
-            <circle cx="11" cy="11" r="7" />
-            <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
-          </svg>
-          <input
-            ref={searchRef}
-            type="search"
-            className="cf-input"
-            placeholder={en.connectors.searchPlaceholder}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            autoComplete="off"
-          />
-          <kbd className="cf-kbd" aria-hidden>/</kbd>
-        </label>
+        <form
+          className="cf-search"
+          action="/connectors"
+          method="get"
+          role="search"
+          onSubmit={(event) => {
+            event.preventDefault();
+            commit({ q: query, category, builtin: builtInOnly, all: browseAll });
+          }}
+        >
+          <label className="cf-search-field">
+            <span className="sr-only">{en.connectors.searchLabel}</span>
+            <svg className="cf-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-3.5-3.5" strokeLinecap="round" />
+            </svg>
+            <input
+              ref={searchRef}
+              type="search"
+              name="q"
+              className="cf-input"
+              placeholder={en.connectors.searchPlaceholder}
+              value={query}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (!query.trim() && next.trim()) {
+                  setResume({ category, builtin: builtInOnly, all: browseAll });
+                }
+                setQuery(next);
+              }}
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              enterKeyHint="search"
+              aria-keyshortcuts="/ Meta+k Control+k"
+              aria-describedby={resultsId}
+            />
+          </label>
+          {query ? (
+            <button type="button" className="cf-search-clear" onClick={() => clearSearchOnly()} aria-label={en.connectors.clearSearch}>
+              {en.clear}
+            </button>
+          ) : (
+            <kbd className="cf-kbd" aria-hidden>/</kbd>
+          )}
+        </form>
 
-        <div className="cf-chips">
+        <div
+          ref={chipsRail}
+          className="cf-chips scroll-fade"
+          onKeyDown={(event) => {
+            if (event.key !== "Tab") return;
+            const chips = [...event.currentTarget.querySelectorAll<HTMLElement>(".cf-chip:not([disabled])")];
+            const index = chips.indexOf(event.target as HTMLElement);
+            if (index < 0) return;
+            const next = chips[index + (event.shiftKey ? -1 : 1)];
+            if (!next) return;
+            event.preventDefault();
+            focusWithoutPageScroll(next);
+            scrollIntoRail(event.currentTarget, next);
+          }}
+          onFocus={(event) => {
+            const chip = event.target;
+            if (chip instanceof HTMLElement && chip.classList.contains("cf-chip")) {
+              scrollIntoRail(event.currentTarget, chip);
+            }
+          }}
+        >
           <button
             type="button"
             className={`cf-chip${builtInOnly ? " is-on" : ""}`}
             aria-pressed={builtInOnly}
-            onClick={() => { setBuiltInOnly((v) => !v); setCategory(null); setBrowseAll(false); }}
+            onClick={() => {
+              const next = !builtInOnly;
+              setQuery("");
+              commit({ q: "", category: null, builtin: next, all: false });
+            }}
           >
-            <CategoryIcon name="Built in" className="cf-chip-icon" />
+            <CategoryIcon name={en.connectors.builtInLabel} className="cf-chip-icon" />
             {en.connectors.builtInLabel}
             <span className="cf-count">{builtInTotal}</span>
           </button>
@@ -297,15 +418,17 @@ export function ConnectorFinder({
         </div>
       </div>
 
-      <p className="cf-summary" role="status" aria-live="polite">
+      <p className="cf-summary" id={resultsId} role="status" aria-live="polite" aria-busy={isPending}>
         {mode === "shelf"
           ? en.connectors.shelfSummary(entries.length)
           : en.connectors.summary(list.length, entries.length)}
+        {isPending ? <span className="cf-updating"> {en.connectors.updating}</span> : null}
         {mode !== "shelf" ? (
           <button type="button" className="cf-clear" onClick={reset}>{en.connectors.backToShelf}</button>
         ) : null}
       </p>
 
+      <div className={`cf-results${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
       {mode === "shelf" ? (
         <>
           <section className="cf-shelf">
@@ -318,7 +441,10 @@ export function ConnectorFinder({
             <PlainList items={builtIns} />
           </section>
           <div className="cf-more">
-            <button type="button" className="cf-browse" onClick={() => setBrowseAll(true)}>
+            <button type="button" className="cf-browse" onClick={() => {
+              setQuery("");
+              commit({ q: "", category: null, builtin: false, all: true });
+            }}>
               {en.connectors.browseAll(entries.length)}
             </button>
             <p className="cf-shelf-note">{en.connectors.browseAllNote}</p>
@@ -328,13 +454,28 @@ export function ConnectorFinder({
         <div className="cf-empty">
           <p className="cf-empty-title">{en.connectors.emptyTitle(query)}</p>
           <p className="cf-empty-body">{en.connectors.emptyBody}</p>
-          <button type="button" className="cf-browse" onClick={reset}>{en.connectors.backToShelf}</button>
+          <nav className="notfound-nav" aria-label={en.connectors.emptyNav}>
+            {mode === "search" ? (
+              <button type="button" className="cf-browse" onClick={() => clearSearchOnly()}>
+                {en.connectors.clearSearch}
+              </button>
+            ) : null}
+            {mode !== "search" || canResume ? (
+              <button type="button" className={mode === "search" ? "theme-control theme-control-label" : "cf-browse"} onClick={reset}>
+                {en.connectors.backToShelf}
+              </button>
+            ) : null}
+            <Link href="/guides/grok-bot-connectors" className="theme-control theme-control-label">
+              {en.connectors.emptyGuide}
+            </Link>
+          </nav>
         </div>
       ) : list.length > WINDOW_FROM ? (
         <WindowedList items={list} />
       ) : (
         <PlainList items={list} />
       )}
+      </div>
     </div>
   );
 }

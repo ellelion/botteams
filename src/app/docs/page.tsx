@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { PageJump } from "@/components/PageShell";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { ledger } from "@/lib/ledger-theme";
+import { en } from "@/lib/messages/en";
 import { APD_HOME, STRIPE_BEST_PRACTICES, XAI_DOCS, XAI_USE_CASE_GALLERY, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -14,14 +17,18 @@ export default function DocsPage() {
   return (
     <WingsSplit
       hero={
-        <WingsHero title="Team spec">
+        <WingsHero
+          title="Team spec"
+          kicker={<Breadcrumb parentHref="/" parentLabel={en.nav.directory} current={en.nav.docs} />}
+        >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             This is Ellelion&apos;s recipe format for a company team. It is not an xAI file format. xAI did not author these teams. The YAML below is ours. The nouns it maps onto are xAI&apos;s, documented by them.
           </p>
           <p className="meta mt-3">
-            Verified on <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
+            {en.docs.limitsCheckedOn}{" "}
+            <time dateTime={site.verifiedOn}>{site.verifiedOn}</time>
           </p>
-          <p className="mt-3 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkFaint }}>
+          <p className="mt-3 text-[0.85rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             For Grok Bot setup, skills, and limits, see{" "}
             <Link className="accent-hover underline underline-offset-2" href="/grok-bot">
               Grok Bot setup, skills, and limits
@@ -46,33 +53,35 @@ export default function DocsPage() {
         </WingsHero>
       }
     >
-        <h2 className="mt-2 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Fields</h2>
+        <PageJump items={["Fields", "Published limits", "Two shapes", "From xAI", "Verified", "Install notes"]} />
+        <h2 id="fields" className="mt-2 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Fields</h2>
         <table className="spec-table mt-4">
+          <caption className="sr-only">Recipe fields</caption>
           <tbody>
-            <tr><th><code>$schema</code></th><td>Optional editor hint. Use <code>https://botteams.ai/schema/team.schema.json</code>.</td></tr>
-            <tr><th><code>slug</code></th><td>Lowercase URL key. Must equal the markdown filename.</td></tr>
-            <tr><th><code>name</code></th><td>Team title on the directory.</td></tr>
-            <tr><th><code>tagline</code></th><td>One line for the job of the team.</td></tr>
-            <tr><th><code>bots</code></th><td>Count of Bots in the recipe. Must match the <code>agents</code> list length.</td></tr>
-            <tr><th><code>section</code></th><td>Closed directory category. On a team, it is also the suggested sidebar section.</td></tr>
-            <tr><th><code>kind</code></th><td><code>team</code> (two to six Bots and a group chat) or <code>bot</code> (one Bot and no group chat).</td></tr>
-            <tr><th><code>status</code></th><td><code>installable</code> (ready to run) or <code>example</code> (format demo).</td></tr>
-            <tr><th><code>connectors</code></th><td>Account-wide connectors this team expects already connected. Union of per-Bot lists.</td></tr>
-            <tr><th>Bots list <code>agents</code></th><td>Each Bot: <code>name</code> + <code>persona</code> (the job). Optional <code>icon</code>, <code>connectors</code> (subset of the team list), <code>reuse</code>.</td></tr>
-            <tr><th>Group chats <code>rooms</code></th><td>Each group chat: <code>name</code> + <code>members</code> (Bot names). Visible label is Group chat.</td></tr>
-            <tr><th><code>routines</code></th><td><code>name</code>, owner Bot, <code>schedule</code>, <code>prompt</code>. A routine is owned by one Bot.</td></tr>
-            <tr><th><code>skills</code></th><td>Optional. Named later. Skills cannot be attached at Bot create time.</td></tr>
+            <tr><th scope="row"><code>$schema</code></th><td>Optional editor hint. Use <code>https://botteams.ai/schema/team.schema.json</code>.</td></tr>
+            <tr><th scope="row"><code>slug</code></th><td>Lowercase URL key. Must equal the markdown filename.</td></tr>
+            <tr><th scope="row"><code>name</code></th><td>Team title on the directory.</td></tr>
+            <tr><th scope="row"><code>tagline</code></th><td>One line for the job of the team.</td></tr>
+            <tr><th scope="row"><code>bots</code></th><td>Count of Bots in the recipe. Must match the <code>agents</code> list length.</td></tr>
+            <tr><th scope="row"><code>section</code></th><td>Closed directory category. On a team, it is also the suggested sidebar section.</td></tr>
+            <tr><th scope="row"><code>kind</code></th><td><code>team</code> (two to six Bots and a group chat) or <code>bot</code> (one Bot and no group chat).</td></tr>
+            <tr><th scope="row"><code>status</code></th><td><code>installable</code> (ready to run) or <code>example</code> (format demo).</td></tr>
+            <tr><th scope="row"><code>connectors</code></th><td>Account-wide connectors this team expects already connected. Union of per-Bot lists.</td></tr>
+            <tr><th scope="row">Bots list <code>agents</code></th><td>Each Bot: <code>name</code> + <code>persona</code> (the job). Optional <code>icon</code>, <code>connectors</code> (subset of the team list), <code>reuse</code>.</td></tr>
+            <tr><th scope="row">Group chats <code>rooms</code></th><td>Each group chat: <code>name</code> + <code>members</code> (Bot names). Visible label is Group chat.</td></tr>
+            <tr><th scope="row"><code>routines</code></th><td><code>name</code>, owner Bot, <code>schedule</code>, <code>prompt</code>. A routine is owned by one Bot.</td></tr>
+            <tr><th scope="row"><code>skills</code></th><td>Optional. Named later. Skills cannot be attached at Bot create time.</td></tr>
           </tbody>
         </table>
 
-        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Published limits we map to</h2>
+        <h2 id="published-limits" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Published limits we map to</h2>
         <ul className="measure mt-4 space-y-3 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           <li>
             <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.overview} rel="nofollow noopener noreferrer">Bot definition</a>: In the Docs and in the Grok Bot app, a Bot = a single persistent, named agent or one AI teammate.
           </li>
           <li>
             A Bot has a name, a job, its own conversation, and working context. Create via New chat, then Create new agent, then Edit Profile (name, title, description, avatar). Cited from the{" "}
-            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.bots} rel="nofollow noopener noreferrer">Bots</a> doc.
+            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.bots} rel="nofollow noopener noreferrer" aria-label="xAI Bots documentation">Bots</a> doc.
           </li>
           <li>
             Group chat is created by selecting{" "}
@@ -80,36 +89,37 @@ export default function DocsPage() {
           </li>
           <li>
             Account cap: <strong>50 Bots and group chats combined</strong>, from the{" "}
-            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.bots} rel="nofollow noopener noreferrer">Bots</a> doc.
+            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.bots} rel="nofollow noopener noreferrer" aria-label="xAI Bots documentation">Bots</a> doc.
           </li>
           <li>
             A{" "}
-            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.routines} rel="nofollow noopener noreferrer">routine</a>
+            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.routines} rel="nofollow noopener noreferrer" aria-label="xAI routines documentation">routine</a>
             {" "}tells one Bot when to run a workflow. One Bot can own <strong>up to 50 routines</strong>, and Grok Bot keeps the
             20 most recent runs of each. There is no documented cap on a team as a whole, so this directory does not invent one.
           </li>
         </ul>
 
-        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Two shapes</h2>
+        <h2 id="two-shapes" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Two shapes</h2>
         <p className="measure mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           A <strong>bot</strong> is one Bot doing one job. A <strong>team</strong> is two to six Bots in one group chat. They
           are different files in different folders, and the directory never adds them up into a single count, because a recipe
           with no group chat is not a team.
         </p>
         <table className="spec-table mt-5">
+          <caption className="sr-only">Bot recipes versus team recipes</caption>
           <tbody>
-            <tr><th /><th>bots/</th><th>teams/</th></tr>
-            <tr><th><code>kind</code></th><td><code>bot</code></td><td><code>team</code></td></tr>
-            <tr><th><code>bots</code></th><td>Always 1</td><td>2 to 6, matching <code>agents</code></td></tr>
-            <tr><th><code>agents</code></th><td>Exactly one</td><td>One per Bot</td></tr>
-            <tr><th><code>rooms</code></th><td>Forbidden. Empty or absent</td><td>Required. Each holds 2 to 6 Bots</td></tr>
-            <tr><th><code>routines</code></th><td>0 to 50 per owning Bot</td><td>0 to 50 per owning Bot</td></tr>
-            <tr><th>Verified</th><td>Never</td><td>When the roster fits the limits</td></tr>
-            <tr><th>URL</th><td><code>/bots/&lt;slug&gt;</code></td><td><code>/teams/&lt;slug&gt;</code></td></tr>
+            <tr><th scope="col"><span className="sr-only">Field</span></th><th scope="col">bots/</th><th scope="col">teams/</th></tr>
+            <tr><th scope="row"><code>kind</code></th><td data-label="bots/"><code>bot</code></td><td data-label="teams/"><code>team</code></td></tr>
+            <tr><th scope="row"><code>bots</code></th><td data-label="bots/">Always 1</td><td data-label="teams/">2 to 6, matching <code>agents</code></td></tr>
+            <tr><th scope="row"><code>agents</code></th><td data-label="bots/">Exactly one</td><td data-label="teams/">One per Bot</td></tr>
+            <tr><th scope="row"><code>rooms</code></th><td data-label="bots/">Forbidden. Empty or absent</td><td data-label="teams/">Required. Each holds 2 to 6 Bots</td></tr>
+            <tr><th scope="row"><code>routines</code></th><td data-label="bots/">0 to 50 per owning Bot</td><td data-label="teams/">0 to 50 per owning Bot</td></tr>
+            <tr><th scope="row">Verified</th><td data-label="bots/">Never</td><td data-label="teams/">When the roster fits the limits</td></tr>
+            <tr><th scope="row">URL</th><td data-label="bots/"><code>/bots/&lt;slug&gt;</code></td><td data-label="teams/"><code>/teams/&lt;slug&gt;</code></td></tr>
           </tbody>
         </table>
 
-        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>From xAI</h2>
+        <h2 id="from-xai" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>From xAI</h2>
         <p className="measure mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           A <strong>From xAI</strong> chip means the job is our write-up of one xAI publishes in its{" "}
           <a className="accent-hover underline underline-offset-2" href={XAI_USE_CASE_GALLERY} rel="nofollow noopener noreferrer">Grok Bot use-case gallery</a>.
@@ -118,7 +128,7 @@ export default function DocsPage() {
           standing instructions are ours.
         </p>
 
-        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Verified</h2>
+        <h2 id="verified" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Verified</h2>
         <p className="measure mt-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           Verified exists for teams only. A team is Verified when it has at least one group chat, every group chat holds two
           to six Bots, the Bot count matches the roster, and Bots plus group chats stay under the account cap of 50.
@@ -129,7 +139,7 @@ export default function DocsPage() {
           counted as teams.
         </p>
 
-        <h2 className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Install notes</h2>
+        <h2 id="install-notes" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Install notes</h2>
         <div className="measure mt-4 space-y-4 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           <p>A team is one markdown file under teams/, and a bot is one under bots/, both with YAML frontmatter. GitHub is the CMS. There are no accounts and no connector API on this site.</p>
           <p>A bot installer creates one Bot and its routines. It never asks for a group chat or a sidebar section, because neither means anything for a single Bot.</p>

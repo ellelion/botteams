@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { BuySlot } from "@/components/sponsor/BuySlot";
 import { PaidNotice } from "@/components/sponsor/PaidNotice";
 import { RAIL_PLANS } from "@/lib/rail";
 import { railCheckoutReady } from "@/lib/stripe";
 import { getRailInventory } from "@/lib/rail-inventory";
-import { ledger, ledgerOg } from "@/lib/ledger-theme";
+import { ledger } from "@/lib/ledger-theme";
 import { SPONSOR_SLOTS_TOTAL, houseSlots, sponsorHref } from "@/data/sponsors";
 import { CATALOG_CHECKED_ON, CONNECTOR_CATALOG } from "@/lib/connectors";
 import { en } from "@/lib/messages/en";
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
 
 const ACCEPT = [
   "Digital products only.",
-  "Public URL, not a shortener, not a competing Grok Bot team or bot directory.",
+  "Public URL, not a shortener, not a competing Grok Bot team or Bot directory.",
   "No crypto, no trading signals, no lead-generation for either.",
 ];
 
@@ -40,7 +41,7 @@ const NEED = [
 ];
 
 const RULES = [
-  "No competing directories of Grok Bot teams or bots.",
+  "No competing directories of Grok Bot teams or Bots.",
   "No crypto, no trading signals, no lead-generation for either.",
   "The tool has to be something a Bot could use. This is not general display advertising.",
   "We may edit the one-liner after it is live, so it reads like the rest of the directory.",
@@ -70,13 +71,16 @@ export default async function SponsorPage() {
   return (
     <WingsSplit
       hero={
-        <WingsHero title={en.sponsor.pageH1}>
+        <WingsHero
+          title={en.sponsor.pageH1}
+          kicker={<Breadcrumb parentHref="/" parentLabel={en.nav.directory} current={en.nav.sponsor} />}
+        >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             {en.sponsor.answer(teamCount, botCount, SPONSOR_SLOTS_TOTAL, HOUSE_COUNT, open, STATS_AS_OF)}
           </p>
           <p className="home-disclaimer mt-5">{en.notAffiliated}</p>
-          <a className="theme-control theme-control-label spon-hero-cta" href="#buy">
-            {en.sponsor.buyHeroCta}
+          <a className="theme-control theme-control-label spon-hero-cta" href={canBuy ? "#buy" : mail}>
+            {canBuy ? en.sponsor.buyHeroCta : en.sponsor.mailCta}
           </a>
         </WingsHero>
       }
@@ -100,7 +104,7 @@ export default async function SponsorPage() {
           <h2 id="spon-facts" className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
             {en.sponsor.factsTitle}
           </h2>
-          <dl className="mt-5 grid grid-cols-2 gap-x-8 gap-y-8 min-[900px]:grid-cols-4 min-[900px]:gap-x-10">
+          <dl className="spon-facts">
             {[
               { label: "Teams", value: String(teamCount), note: en.sponsor.factTeams(teamCount) },
               { label: "Bots", value: String(botCount), note: en.sponsor.factBots(botCount, fromXai) },
@@ -114,21 +118,14 @@ export default async function SponsorPage() {
                 value: String(connectors),
                 note: en.sponsor.factConnectors(connectors, CATALOG_CHECKED_ON),
               },
-            ].map((fact, i) => (
-              <div
-                key={fact.label}
-                className={`min-w-0${i > 0 ? " min-[900px]:border-l min-[900px]:border-solid min-[900px]:pl-8" : " min-[900px]:pr-2"}`}
-                style={i > 0 ? { borderColor: ledger.hairline } : undefined}
-              >
+            ].map((fact) => (
+              <div key={fact.label} className="spon-fact">
                 <dt className="sr-only">{fact.label}</dt>
                 <dd className="m-0 min-w-0">
-                  <strong
-                    className="block text-[clamp(1.55rem,3.2vw,2.15rem)] font-medium leading-none tracking-[-0.04em]"
-                    style={{ fontFamily: ledger.serif, color: ledger.ink }}
-                  >
+                  <strong className="spon-fact-value" style={{ fontFamily: ledger.serif, color: ledger.ink }}>
                     {fact.value}
                   </strong>
-                  <span className="mt-2 block text-[0.75rem] leading-snug pr-1" style={{ color: ledger.inkSoft }}>
+                  <span className="spon-fact-note" style={{ color: ledger.inkSoft }}>
                     {fact.note}
                   </span>
                 </dd>
@@ -152,10 +149,11 @@ export default async function SponsorPage() {
               ) : open <= 0 ? (
                 <BuySlot soldOut />
               ) : (
-                <p className="spon-fine">
-                  Card checkout is not switched on yet. Mail{" "}
-                  <a className="accent-hover underline" href={mail}>{site.email}</a> and we will invoice you.
-                </p>
+                <div className="spon-off">
+                  <p className="spon-off-title">{en.sponsor.checkoutOffTitle}</p>
+                  <p className="spon-off-body">{en.sponsor.checkoutOffBody}</p>
+                  <a className="theme-control theme-control-label" href={mail}>{en.sponsor.mailCta}</a>
+                </div>
               )}
             </div>
             <div className="spon-stage-offer">
@@ -183,6 +181,7 @@ export default async function SponsorPage() {
                       target="_blank"
                       rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
                       style={{ fontFamily: ledger.serif, letterSpacing: "-0.03em" }}
+                      aria-label={`${slot.name}. ${en.nav.opensNew}`}
                     >
                       {slot.mark ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -240,40 +239,23 @@ export default async function SponsorPage() {
           <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
             {en.sponsor.faqTitle}
           </h2>
-          <ul className="mt-5 flex flex-col gap-3">
+          <div className="spon-faq">
             {faqs.map((item) => (
-              <li
-                key={item.q}
-                className="px-6 py-6 sm:px-7 sm:py-7"
-                style={{
-                  background: ledgerOg.paperDeep,
-                  borderRadius: "var(--r-card)",
-                  boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.06)",
-                }}
-              >
-                <p
-                  className="text-[1.05rem] font-semibold leading-snug tracking-[-0.02em]"
-                  style={{ color: ledgerOg.ink }}
-                >
-                  {item.q}
-                </p>
-                <p
-                  className="mt-2.5 text-[0.92rem] leading-relaxed"
-                  style={{ color: ledgerOg.inkSoft }}
-                >
-                  {item.a}
-                </p>
-              </li>
+              <details key={item.q} name="sponsor-faq">
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
             ))}
-          </ul>
+          </div>
         </section>
 
         <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Enquire</h2>
+          <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>{en.sponsor.enquireTitle}</h2>
           <p className="measure mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkMuted }}>
-            The listing is bought above. Mail {site.company} at{" "}
-            <a className="accent-hover underline" href={mail}>{site.email}</a> if you have a question first. We will tell
-            you what the traffic actually is.
+            {canBuy ? `${en.sponsor.enquireBought} ` : null}
+            Mail {site.company} at{" "}
+            <a className="accent-hover underline" href={mail}>{site.email}</a>
+            {canBuy ? en.sponsor.enquireAskAfter : en.sponsor.enquireAskSlotAfter}
           </p>
           <p className="mt-6 text-[0.72rem]" style={{ color: ledger.inkFaint }}>
             <time dateTime={STATS_AS_OF_ISO}>{en.sponsor.updated(STATS_AS_OF)}</time>

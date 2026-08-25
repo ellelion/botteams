@@ -1,6 +1,7 @@
 import {
   ACCENT_STORAGE_KEY,
   DEFAULT_ACCENT,
+  DEFAULT_THEME,
   THEME_STORAGE_KEY,
   type Theme,
   accentTextFor,
@@ -11,8 +12,8 @@ import {
 } from "@/lib/theme";
 
 export function readCurrentTheme(): Theme {
-  if (typeof document === "undefined") return "light";
-  return normalizeTheme(document.documentElement.dataset.theme) ?? "light";
+  if (typeof document === "undefined") return DEFAULT_THEME;
+  return normalizeTheme(document.documentElement.dataset.theme) ?? DEFAULT_THEME;
 }
 
 export function readCurrentAccent(): string {

@@ -17,7 +17,7 @@ export const howtoGuides: Guide[] = [
         blocks: [
           {
             type: "p",
-            text: "A team on this site is one markdown file. Front matter names the Bots, the group chat, the routines, and the connectors the account needs first. The site turns that file into one installer prompt. A bot file is the same shape with one Bot and no group chat. The [team spec](/docs) is the format.",
+            text: "A team on this site is one markdown file. Front matter names the Bots, the group chat, the routines, and the connectors the account needs first. The site turns that file into one installer prompt. A Bot file is the same shape with one Bot and no group chat. The [team spec](/docs) is the format.",
           },
           {
             type: "p",
@@ -284,7 +284,7 @@ export const howtoGuides: Guide[] = [
         blocks: [
           {
             type: "quote",
-            text: "A routine tells one Bot when to run a workflow—on a schedule or, where supported, after an event.",
+            text: "A routine tells one Bot when to run a workflow, on a schedule or, where supported, after an event.",
             source: 'docs.x.ai/grok-bot/skills-routines-and-automations, "Skills and routines"',
           },
           {
@@ -436,15 +436,15 @@ export const howtoGuides: Guide[] = [
     headline: "What is a Grok Bot group chat?",
     description:
       "A Grok Bot team on this directory is two to six named Bots in one group chat, plus standing routines. Account cap: 50 Bots and group chats combined. 24 August 2026.",
-    hero: "A group chat is two to six Grok Bots in one conversation. On this directory a team is that chat plus standing routines. A bot is one Bot and no chat. The published account cap is 50 Bots and group chats combined. A second Bot is still not a security boundary.",
+    hero: "A group chat is two to six Grok Bots in one conversation. On this directory a team is that chat plus standing routines. A one-Bot recipe is one Bot and no chat. The published account cap is 50 Bots and group chats combined. A second Bot is still not a security boundary.",
     sections: [
       {
         id: "team-versus-bot",
-        title: "What is a team versus a bot?",
+        title: "What is a team versus a Bot?",
         blocks: [
           {
             type: "p",
-            text: "xAI documents group chat as selecting two to six Bots. This directory uses that noun. A team file lives under /teams and always has a room. A bot file lives under /bots and never does. We never add the two counts into one 'teams' number, because a recipe with no group chat is not a team.",
+            text: "xAI documents group chat as selecting two to six Bots. This directory uses that noun. A team file lives under /teams and always has a room. A Bot file lives under /bots and never does. We never add the two counts into one 'teams' number, because a recipe with no group chat is not a team.",
           },
           {
             type: "p",

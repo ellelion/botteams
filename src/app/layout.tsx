@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
@@ -16,6 +16,15 @@ import { DEFAULT_THEME, createThemeBootstrapScript, themeColorFor } from "@/lib/
  * it, or pass anything off as it. Geist is the closest legal neighbour:
  * same grotesque skeleton, same tight display tracking.
  */
+/* Edge-to-edge on notched phones so env(safe-area-inset-*) is live.
+   Without cover those insets stay 0 and the ticker / skip / menu pads
+   never fire on iOS Safari. */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: site.title, template: `%s · ${site.name}` },

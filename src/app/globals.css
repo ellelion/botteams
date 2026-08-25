@@ -38,7 +38,13 @@
      hairline outline in the ink colour. */
   --pill-fill: #ffffff;
   --pill-fill-ink: #0a0a0a;
-  --pill-line: rgba(255, 255, 255, 0.32);
+  /* Outline pills and icon-only chrome. Alpha 0.32 white sank to
+     ~2.5:1 on paper and ~2.45:1 on elevated. 1.4.11 needs 3:1
+     against page, card, and elevated: the Accent trigger is four
+     mint dots (2.4:1 on paper, worse for yellow) so the circle is
+     the control. A solid, not alpha, so the line does not sink on
+     a lighter plane. */
+  --pill-line: #6a6a6a;
   --parchment: var(--page);
   --parchment-deep: var(--surface);
   --ink-muted: var(--ink-soft);
@@ -87,19 +93,22 @@
   --surface-elevated: #ebebed;
   --ink: #0a0a0a;
   --ink-soft: #3f3f46;
-  --muted: #71717a;
-  --muted-strong: #52525b;
+  --muted: #5a5a63;
+  --muted-strong: #3f3f46;
   --line: #e4e4e7;
   --line-strong: #c7c7cc;
   --leader: #d4d4d8;
   --accent: #54b9a6;
-  --accent-text: #3a7c6f;
+  --accent-text: #336a60;
   --on-accent: #0a0a0a;
-  --status-live: #15803d;
-  --beta: #c2410c;
+  --status-live: #166534;
+  --beta: #9a3412;
   --pill-fill: #0a0a0a;
   --pill-fill-ink: #ffffff;
-  --pill-line: rgba(10, 10, 10, 0.28);
+  /* 0.28 black on paper was ~1.9:1. #808089 holds 3:1 on paper,
+     card, and elevated without using --muted (that is a 7:1
+     sentence). */
+  --pill-line: #808089;
   /* Paper white, pale grey card. Not cream, and not a second beige. */
   --card: #f4f4f6;
   --shadow-float: 0 24px 64px -12px rgba(10, 10, 10, 0.16), 0 0 0 1px rgba(10, 10, 10, 0.06);
@@ -107,6 +116,9 @@
 
 :root {
   --masthead-h: 62px;
+  --view-w: 100vw;
+  --view-h: 100dvh;
+  --menu-max-h: calc(100dvh - var(--masthead-h));
 }
 
 /* The canvas is painted on body, not only on the page wrapper, so
@@ -114,9 +126,16 @@
    the user agent's white. */
 /* One padding scale for every page frame. It was 24/40/64, and the 64
    was 128px of empty gutter on a 1280 screen that the catalog wanted. */
-.page-pad { padding-inline: 16px; }
-@media (min-width: 640px) { .page-pad { padding-inline: 24px; } }
-@media (min-width: 1024px) { .page-pad { padding-inline: 32px; } }
+.page-pad {
+  container: page / inline-size;
+  padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
+}
+@media (min-width: 640px) {
+  .page-pad { padding-inline: max(24px, env(safe-area-inset-left)) max(24px, env(safe-area-inset-right)); }
+}
+@media (min-width: 1024px) {
+  .page-pad { padding-inline: max(32px, env(safe-area-inset-left)) max(32px, env(safe-area-inset-right)); }
+}
 
 .wrap-data,
 .wrap-prose {
@@ -134,12 +153,14 @@
    moving between the two does not slide the heading sideways. */
 .wrap-prose { max-width: var(--w-prose); margin-inline: 0; }
 /* Paragraph inside a data page. Never the page, only the sentence. */
-.measure { max-width: var(--w-measure); }
+.measure { max-width: var(--w-measure); overflow-wrap: anywhere; }
 
 /* Long-form guide. Sentence-case headings. team-prose uppercases H2s
    for recipe notes; a query heading cannot survive that. */
 .guide-prose {
   max-width: var(--w-measure);
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: var(--ink-soft);
   font-size: 0.95rem;
   line-height: 1.65;
@@ -156,7 +177,12 @@
   letter-spacing: -0.02em;
   text-transform: none;
 }
-.guide-prose h2:first-child {
+/* :first-child also matched every section heading, so mid-article
+   breaks collapsed to 4px. Limit this to the first heading in the
+   column: after the on-this-page list, or the first cluster. */
+.guide-prose > h2:first-child,
+.guide-prose > .guide-toc + h2,
+.guide-prose > section:first-of-type > h2 {
   margin-top: 0.25rem;
 }
 .guide-prose h3 {
@@ -190,8 +216,25 @@
 }
 .guide-prose .guide-toc {
   margin: 1.25rem 0 0;
+  padding-left: 0;
+  list-style: none;
 }
+/* min-height is ignored on inline links. Same box as the spec jump list.
+   Keep these selectors plain so the 44px restatements win. /guides
+   titles are the articles, not words in a sentence. The alternatives
+   chooser “Read” column is a destination list too, not a sentence. */
+.guide-toc a,
+.guide-index a,
+.guide-prose .spec-table a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+}
+/* Desktop .wings-main-col is overflow-y:auto (overflow-x computes
+   to auto). The jump list sits flush left; a 3px outer ring lost 5px. */
+.guide-toc a:focus-visible { outline-offset: -3px; }
 .guide-quote {
+  min-width: 0;
   margin: 1.35rem 0 0;
   padding: 0.15rem 0 0.15rem 1rem;
   border-left: 1px solid var(--line-strong);
@@ -217,11 +260,40 @@
   margin-top: 0.25rem;
 }
 
-html { background: var(--page); }
+html { background: var(--page); scroll-padding-top: calc(var(--masthead-h) + 10px); }
 body {
   background: var(--page);
   color: var(--ink);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.skip-link {
+  position: fixed;
+  left: max(12px, env(safe-area-inset-left));
+  top: max(8px, env(safe-area-inset-top));
+  z-index: 200;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  background: var(--ink);
+  color: var(--page);
+  font-size: 0.85rem;
+  /* -160% left 21px of the 44px control on screen when top is the
+     47px notch inset (47 − 0.6×44). Park it fully above the inset. */
+  transform: translateY(calc(-100% - max(8px, env(safe-area-inset-top, 0px)) - 8px));
+  transition: transform var(--dur) var(--ease);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+  transform: none;
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
 }
 
 .site-masthead {
@@ -239,16 +311,50 @@ body {
   color: var(--muted);
   font-size: 0.9375rem;
   letter-spacing: -0.005em;
+  /* No hairline. A 1px rule under the wordmark read as a second bar.
+     Forced-colors still paints an edge so the sticky chrome stays findable. */
+  container-type: inline-size;
 }
 
-.site-masthead a:hover { color: var(--ink); }
+.site-masthead a:hover,
+.site-masthead a:focus-visible { color: var(--ink); }
+.site-masthead-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  min-width: 24px;
+  flex: none;
+  white-space: nowrap;
+}
+.site-masthead-nav a.is-current {
+  color: var(--ink);
+}
+.site-nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
 
 .site-wordmark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   flex: none;
   white-space: nowrap;
   color: var(--ink);
 }
 .site-wordmark-text { font-weight: 500; letter-spacing: -0.012em; }
+.wings-mark { border-radius: 0; }
+/* The ellelion tile is #fcfcfb. On light paper that fill is ~1:1, so
+   the square disappears and only the strokes remain. --pill-line is
+   the 3:1 hairline used for other page-on-page chrome. Dark paper
+   already sees the white tile. */
+html:not([data-theme="dark"]) .wings-mark {
+  box-shadow: 0 0 0 1px var(--pill-line);
+}
 
 .site-masthead-actions {
   display: flex;
@@ -283,7 +389,8 @@ body {
   cursor: pointer;
 }
 
-.site-menu-button:hover { border-color: var(--ink); background: var(--surface-elevated); }
+.site-menu-button:hover,
+.site-menu-button:focus-visible { border-color: var(--ink); background: var(--surface-elevated); }
 
 .site-menu-scrim {
   position: fixed;
@@ -291,7 +398,7 @@ body {
   z-index: 28;
   border: 0;
   padding: 0;
-  background: color-mix(in srgb, var(--page) 55%, transparent);
+  background: color-mix(in oklab, var(--ink) 26%, transparent);
   cursor: pointer;
 }
 
@@ -303,9 +410,28 @@ body {
   z-index: 29;
   display: flex;
   flex-direction: column;
-  padding: 6px 16px 14px;
+  /* Nine 44px rows overflow a landscape phone and 200% zoom. Cap to
+     the remaining viewport so Sponsor and GitHub stay reachable. */
+  max-height: calc(var(--menu-max-h, calc(100dvh - var(--masthead-h, 56px))) - env(safe-area-inset-bottom, 0px));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding: 6px max(16px, env(safe-area-inset-right, 0px)) calc(14px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
   background: var(--page);
-  border-bottom: 1px solid var(--line);
+  /* Adjacent to the 26% ink scrim, not bare paper. --pill-line sinks. */
+  border-bottom: 1px solid var(--ink);
+}
+/* Menu sheet and accent popover are position:fixed but still inside
+   the masthead stacking context (z-index 30). The ticker and sponsor
+   dock are later siblings at 30 / 45, so Spec / API / Sponsor sat
+   under the bar on landscape, and accent swatches sat in the 56px
+   strip while isolate() made the chips inert (tap changed the
+   accent). Lift the bar while either dialog is open; stay below
+   Customize (80) and Watch (400). */
+body:has(.site-menu [role="dialog"]) .site-masthead,
+body:has(.theme-accent-popover) .site-masthead {
+  z-index: 50;
 }
 
 .site-menu-link {
@@ -318,22 +444,38 @@ body {
   letter-spacing: -0.012em;
 }
 
-.site-menu-link:hover { color: var(--accent-text); }
+.site-menu-link::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  flex: none;
+}
+.site-menu-link:hover,
+.site-menu-link:focus-visible { color: var(--accent-text); }
+.site-menu-link.is-current,
+.site-menu-link.is-current:hover,
+.site-menu-link.is-current:focus-visible { color: var(--ink); font-weight: 500; }
+.site-menu-link.is-current::before { background: var(--accent-text); }
 
-@media (max-width: 720px) {
+@media (max-width: 1023px) {
   :root {
-    --masthead-h: 56px;
+    --masthead-h: calc(56px + env(safe-area-inset-top, 0px));
     --sec-y: 2rem;
   }
 
   .site-masthead {
-    height: 56px;
-    min-height: 56px;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: calc(56px + env(safe-area-inset-top));
     gap: 12px;
-    padding-top: 0;
+    padding-top: env(safe-area-inset-top);
     padding-bottom: 0;
     font-size: 0.875rem;
   }
+  .site-menu-button { width: 44px; height: 44px; }
+  .theme-control { width: 44px; height: 44px; }
 
   .site-masthead-actions { gap: 8px; }
   .site-masthead-nav { display: none; }
@@ -342,11 +484,25 @@ body {
   .theme-controls { gap: 8px; }
 }
 
-@media (min-width: 721px) {
-  .site-menu { display: none !important; }
+@media (min-width: 1024px) {
+  .site-menu { display: none; }
+}
+/* Text zoom does not shrink the viewport. At 200% a 1280 screen still
+   matches (min-width: 1024px). rem here follows the root size, so a
+   68rem bar is 1088px at 100% and 2176px at 200%. 45rem left the
+   nowrap Teams…Sponsor row on a 960px 1024-frame masthead. 1.4.12
+   letter-spacing then blew the page 55px and the bar 87px. 34rem
+   (1088px at 200%) was too short for the 1280 row at default
+   tracking; 68rem still hides that row under 200% text. */
+@container (max-width: 68rem) {
+  .site-masthead-nav { display: none; }
+  .site-menu { display: block; }
+  .site-menu-button { width: 44px; height: 44px; }
+  .theme-control { width: 44px; height: 44px; }
 }
 
-:where(a, button):focus-visible {
+:where(a, button):focus-visible,
+:where(input, select, textarea, summary):focus-visible {
   outline: 2px solid var(--accent-text);
   outline-offset: 3px;
 }
@@ -367,23 +523,56 @@ body {
   border-radius: var(--r-pill);
   transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.theme-control:hover { border-color: var(--ink); background: var(--surface-elevated); }
+/* Hamburger is on when the masthead is under 68rem. The 34px
+   icon buttons sat next to that 44px menu because this base
+   rule used to win the earlier container bump. Labels stay
+   auto-width. */
+@container (max-width: 68rem) {
+  .theme-control:not(.theme-control-label) {
+    width: 44px;
+    height: 44px;
+  }
+}
+.theme-control:hover,
+.theme-control:focus-visible { border-color: var(--ink); background: var(--surface-elevated); }
 .theme-accent-dot { width: 13px; height: 13px; border-radius: var(--r-pill); background: var(--accent); }
+.theme-accent-mark {
+  display: grid;
+  grid-template-columns: 6px 6px;
+  gap: 2px;
+  width: 14px;
+  height: 14px;
+}
+.theme-accent-mark i {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--accent);
+}
+.theme-accent-mark i:nth-child(2) { opacity: 0.72; }
+.theme-accent-mark i:nth-child(3) { opacity: 0.48; }
+.theme-accent-mark i:nth-child(4) { opacity: 0.28; }
+.theme-accent-popover [role="radiogroup"] {
+  display: grid;
+  grid-template-columns: inherit;
+  gap: inherit;
+}
 .theme-accent-popover {
   position: absolute; top: calc(100% + 8px); right: 0; z-index: 80;
-  display: grid; grid-template-columns: repeat(6, 22px); gap: 6px;
-  padding: 10px; border: 0;
+  display: grid; grid-template-columns: repeat(6, 28px); gap: 6px;
+  padding: 10px; border: 1px solid var(--pill-line);
   border-radius: var(--r-inner);
-  background: var(--surface-elevated);
-  box-shadow: var(--shadow-float);
+  background: var(--page);
   animation: sel-in var(--dur) var(--ease);
 }
 .theme-accent-swatch {
-  width: 22px; height: 22px; padding: 0; border: 1px solid var(--line-strong);
+  width: 28px; height: 28px; padding: 0; border: 1px solid var(--pill-line);
   border-radius: var(--r-pill);
-  cursor: pointer; transition: transform var(--dur) var(--ease);
+  cursor: pointer; transition: border-color var(--dur) var(--ease);
 }
-.theme-accent-swatch:hover { transform: scale(1.12); }
+.theme-accent-swatch:hover,
+.theme-accent-swatch:focus-visible { border-color: var(--ink); }
 
 /* Text CTA variant: same chrome as .theme-control, auto width so labels
    like "Copy installer prompt" are a real button, not a 34px square. */
@@ -397,21 +586,63 @@ body {
   border-color: transparent;
   background: var(--pill-fill);
   color: var(--pill-fill-ink);
-  font: 500 0.6rem/1 var(--font-geist-mono);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   white-space: nowrap;
 }
 .theme-control.theme-control-label:hover,
-.theme-control-label:hover {
+.theme-control.theme-control-label:focus-visible,
+.theme-control-label:hover,
+.theme-control-label:focus-visible {
   /* No colour change on hover. Orange is a rare moment of emphasis,
      not the state of every button under a cursor. */
   filter: brightness(0.88);
   border-color: transparent;
 }
-.theme-control-label { transition: filter var(--dur) var(--ease), transform 150ms cubic-bezier(0.2, 0, 0, 1); }
+.theme-control-label { transition: filter var(--dur) var(--ease), transform var(--dur) var(--ease); }
 .theme-control-label:active { transform: scale(0.96); }
-.rp-secondary { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), transform 150ms cubic-bezier(0.2, 0, 0, 1); }
+.theme-control-label.is-copy-fail {
+  /* Inset orange on the filled pill is ~2.3:1. The label already says
+     "Copy failed"; the ring sits on the page so the state is 3:1. */
+  box-shadow:
+    0 0 0 2px var(--page),
+    0 0 0 4px var(--beta);
+}
+.share-btn.is-copy-fail,
+.cz-btn.is-copy-fail {
+  color: var(--beta);
+  border-color: var(--beta);
+}
+.theme-control.theme-control-label:disabled,
+.theme-control-label:disabled,
+.theme-control-label.is-copy-blocked,
+.theme-control-label[aria-disabled="true"] {
+  /* Opacity 0.45 composited the filled pill into the page. Light
+     label-on-fill fell to 3.16:1 while the control stayed clickable. */
+  opacity: 1;
+  cursor: not-allowed;
+  filter: none;
+  transform: none;
+  background: var(--surface);
+  color: var(--ink-soft);
+  border-color: var(--line-strong);
+}
+.theme-control-label.is-copy-blocked:hover,
+.theme-control-label.is-copy-blocked:focus-visible,
+.theme-control-label[aria-disabled="true"]:hover,
+.theme-control-label[aria-disabled="true"]:focus-visible {
+  filter: none;
+  background: var(--surface);
+  color: var(--ink-soft);
+  border-color: var(--line-strong);
+}
+.theme-control-label.is-copy-blocked.is-copy-fail,
+.theme-control-label[aria-disabled="true"].is-copy-fail {
+  color: var(--beta);
+  border-color: var(--beta);
+}
+.rp-secondary { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), transform var(--dur) var(--ease); }
 .rp-secondary:active { transform: scale(0.96); }
 
 /* Phone-sized controls. Must live AFTER the base .theme-control rule above:
@@ -419,22 +650,68 @@ body {
    masthead's height, which --masthead-h mirrors. */
 @media (max-width: 640px) {
   .theme-control {
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
   }
 
   .theme-control.theme-control-label,
   .theme-control-label {
     width: auto;
-    height: 34px;
+    height: 44px;
     padding: 0 14px;
   }
-
+}
+@media (max-width: 1023px) {
+  .theme-accent-swatch {
+    width: 44px;
+    height: 44px;
+  }
   .theme-accent-popover {
-    grid-template-columns: repeat(4, 22px);
+    grid-template-columns: repeat(4, 44px);
+    gap: 8px;
+    /* Same remaining-viewport token as the phone menu. 20rem wins at
+       100%. Subtract 8px so the 8px gap under the trigger stays on
+       the glass at CSS zoom. */
+    max-height: min(20rem, calc(var(--menu-max-h, calc(100dvh - var(--masthead-h))) - 8px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  /* Label pills are more specific than .theme-control, so the 44px
+     masthead rule above cannot enlarge Copy / Sponsor / 404. */
+  .theme-control.theme-control-label,
+  .theme-control-label {
+    width: auto;
+    height: 44px;
+    min-height: 44px;
+    padding: 0 14px;
+  }
+}
+@media (pointer: coarse) {
+  .theme-control {
+    width: 44px;
+    height: 44px;
+  }
+  .theme-control.theme-control-label,
+  .theme-control-label {
+    height: 44px;
+  }
+  .theme-accent-swatch {
+    width: 44px;
+    height: 44px;
+  }
+  .theme-accent-popover {
+    grid-template-columns: repeat(4, 44px);
+    gap: 8px;
   }
 }
 .theme-accent-swatch.is-selected { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* Opening the grid focuses the current swatch in script, which does not
+   match :focus-visible. Arrowing the same way. */
+.theme-accent-swatch:focus,
+.theme-accent-swatch:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
 
 /*
  * Entrance + status motion. CSS-only, so content is server-rendered and
@@ -475,22 +752,7 @@ body {
   }
 }
 
-@keyframes cue-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(5px);
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
-  .cue-bob {
-    display: inline-block;
-    animation: cue-bob 1.7s ease-in-out infinite;
-  }
-
   @supports (animation-timeline: view()) {
     .story-reveal {
       animation: ledger-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -646,13 +908,27 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .team-prose h3 {
   margin-top: 1.75rem;
   color: var(--accent-text);
-  font-size: 0.6rem;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .team-prose p + p {
   margin-top: 1rem;
+}
+.team-prose a,
+a.accent-hover {
+  overflow-wrap: anywhere;
+}
+a.accent-hover:hover,
+a.accent-hover:focus-visible {
+  color: var(--accent-text);
+}
+/* Masthead stays ink on hover. Mint there would be a second brand colour
+   on every Teams / Spec / Sponsor pass. */
+.site-masthead a.accent-hover:hover,
+.site-masthead a.accent-hover:focus-visible {
+  color: var(--ink);
 }
 .team-prose a {
   text-decoration: underline;
@@ -675,12 +951,17 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 
 .installer-prompt {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
   max-height: 24rem;
   overflow: auto;
   border: 0;
   border-radius: var(--r-inner);
   background: var(--card);
 }
+/* Long installer lines stay on one line. The pre is the scrollport. */
 /* The contribute sample is a whole team file, and the point of showing it
    is that it is short. A scrollbar on twenty lines makes it look long. */
 .installer-prompt.is-whole {
@@ -706,13 +987,21 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   background: var(--surface);
   color: var(--muted);
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
-  font-size: 0.55rem;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1;
   white-space: nowrap;
 }
 .chip-verified { color: var(--status-live); }
+a.chip-verified:hover,
+a.chip-verified:focus-visible,
+a.chip-unverified:hover,
+a.chip-unverified:focus-visible {
+  color: var(--ink);
+  background: var(--surface-elevated);
+}
 .chip-featured {
   gap: 5px;
   border: 1px solid var(--accent-text);
@@ -729,9 +1018,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 /* Sourcing, not endorsement, so it reads as a citation rather than a
    seal: no fill, no accent, just a bordered label that links out. */
 .chip-xai { color: var(--ink-soft); }
-.chip-xai:hover { color: var(--ink); background: var(--surface-elevated); }
+.chip-xai:hover,
+.chip-xai:focus-visible { color: var(--ink); background: var(--surface-elevated); }
 /* The only chip that is a link, so the only one that needs a thumb. */
-@media (max-width: 640px) { .chip-xai { min-height: 34px; } }
 .chip-beta {
   color: var(--beta);
   letter-spacing: 0.16em;
@@ -753,7 +1042,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .filter-selects .sel { min-width: 0; flex: 1 1 auto; }
 .filter-selects .sel-button { max-width: 100%; }
-@media (max-width: 720px) {
+@media (max-width: 639px) {
+  /* Portrait phones. Landscape 667–844 has the width for List / Cards
+     on the same row; forcing 100% here wrapped them under the ticker. */
   .filter-selects { width: 100%; }
 }
 .filter-chip {
@@ -765,9 +1056,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-radius: var(--r-pill);
   background: var(--surface);
   color: var(--ink-soft);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
@@ -777,11 +1068,13 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   color: var(--page);
   background: var(--ink);
 }
-.filter-chip:hover {
+.filter-chip:hover,
+.filter-chip:focus-visible {
   color: var(--ink);
   background: var(--surface-elevated);
 }
-.filter-chip.is-on:hover { color: var(--page); background: var(--ink); opacity: 0.88; }
+.filter-chip.is-on:hover,
+.filter-chip.is-on:focus-visible { color: var(--page); background: var(--ink); opacity: 0.88; }
 
 .team-grid {
   display: grid;
@@ -830,6 +1123,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--line);
+  padding-top: 4px;
 }
 
 /* Connector marks: a logo bound to its own name, repeated across a row.
@@ -844,12 +1138,16 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   gap: 5px 15px;
   margin: 0;
   padding: 0;
+  min-width: 0;
+  max-width: 100%;
   list-style: none;
 }
 .connector-item {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
+  max-width: 100%;
 }
 /* Logos ship at mixed aspect ratios, so every mark gets the same square
    box and is contained inside it. That keeps the left edges aligned when
@@ -880,7 +1178,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-size: 0.78rem;
   line-height: 1.25;
   color: var(--ink-soft);
-  white-space: nowrap;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .meta {
@@ -899,6 +1199,14 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-bottom: 8px;
+}
+/* Docs, sponsor, about, and the other data pages used a 0.6rem / 0.26em
+   utility trio for H2s. That is 9.6px with tracking so wide the words
+   fall apart. Match the recipe eyebrow. */
+.text-\[0\.6rem\].uppercase.tracking-\[0\.26em\],
+.text-\[0\.62rem\].uppercase.tracking-\[0\.3em\] {
+  font-size: 11px;
+  letter-spacing: 0.12em;
 }
 
 .section-title {
@@ -931,16 +1239,145 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   color: var(--ink-soft);
   font-weight: 500;
   width: 28%;
-  font-size: 13px;
+  /* Field names next to rem cells. 13px stayed put at 200% text
+     while 0.95rem answers grew to 30px on the /docs 2-col tables. */
+  font-size: 0.78rem;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
+  overflow-wrap: anywhere;
 }
+.spec-table td { min-width: 0; overflow-wrap: anywhere; }
 .spec-table code {
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.85em;
   letter-spacing: 0;
   text-transform: none;
+  /* `$schema` cites the full team.schema.json URL. Nowrap mono
+     pushed /docs 32px past a 320 frame. */
+  overflow-wrap: anywhere;
+}
+@media (max-width: 639px) {
+  .spec-table,
+  .spec-table thead,
+  .spec-table tbody {
+    display: block;
+    width: 100%;
+  }
+  .spec-table tr {
+    display: grid;
+    gap: 6px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .spec-table tr:has(> th[scope="col"]) { display: none; }
+  .spec-table th,
+  .spec-table td {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+  .spec-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    color: var(--ink-soft);
+    /* Column names next to rem cells. 11px stayed put at 200% text
+       while the answers grew, so the label became the quietest line. */
+    font: 500 0.78rem/1.3 var(--font-geist-sans), system-ui, sans-serif;
+    letter-spacing: 0;
+    text-transform: none;
+    overflow-wrap: anywhere;
+  }
+  .spec-table th[scope="row"] {
+    color: var(--ink);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+}
+/* 639px is the layout viewport. CSS zoom leaves that at 1280 while
+   the docs column shrinks to ~177px, so the same stack has to follow
+   the column. rem in @container tracks the root. */
+.wings-main-col { container-type: inline-size; }
+@container (max-width: 24rem) {
+  .idx-cards { grid-template-columns: minmax(0, 1fr); }
+  .spec-table,
+  .spec-table thead,
+  .spec-table tbody {
+    display: block;
+    width: 100%;
+  }
+  .spec-table tr {
+    display: grid;
+    gap: 6px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .spec-table tr:has(> th[scope="col"]) { display: none; }
+  .spec-table th,
+  .spec-table td {
+    display: block;
+    width: auto;
+    padding: 0;
+    border: 0;
+  }
+  .spec-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    color: var(--ink-soft);
+    font: 500 0.78rem/1.3 var(--font-geist-sans), system-ui, sans-serif;
+    letter-spacing: 0;
+    text-transform: none;
+    overflow-wrap: anywhere;
+  }
+  .spec-table th[scope="row"] {
+    color: var(--ink);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+}
+/* Guide compare tables live in the half-width wings column (~586px)
+   on a 1280 screen, never wider than --w-measure). Three prose
+   columns stay cramped there, so they always use the labeled stack.
+   The spec table on /docs keeps the 639 viewport cut above. */
+.guide-prose .spec-table,
+.guide-prose .spec-table thead,
+.guide-prose .spec-table tbody {
+  display: block;
+  width: 100%;
+}
+.guide-prose .spec-table tr {
+  display: grid;
+  gap: 6px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.guide-prose .spec-table tr:has(> th[scope="col"]) { display: none; }
+.guide-prose .spec-table th,
+.guide-prose .spec-table td {
+  display: block;
+  width: auto;
+  padding: 0;
+  border: 0;
+}
+.guide-prose .spec-table td[data-label]::before {
+  content: attr(data-label);
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ink-soft);
+  font: 500 0.78rem/1.3 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  overflow-wrap: anywhere;
+}
+/* The criterion is the heading of each stacked block. Ink-soft 13px
+   made Unit of work the same colour and size as the answers. */
+.guide-prose .spec-table th[scope="row"] {
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .stats-strip {
@@ -968,32 +1405,292 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   height: 18px;
 }
 
-/* The index search matches the connector search: a filled pill field,
-   not a hairline underline sitting on top of a row of pills. */
-.search-wrap { display: block; margin-top: 16px; margin-bottom: 14px; }
-@media (max-width: 639px) {
-  .search-wrap { margin-top: 32px; margin-bottom: 8px; }
-  .index-header .section-title { display: none; }
-  .cat-rail { margin-bottom: 10px; }
-  .hero-stats { margin-top: 0.5rem; }
+/* Search + filters stick as one block on desktop. On a phone the
+   wrapper becomes contents so search can stick against #teams (the
+   listing) instead of dying when a short parent scrolls away. */
+.index-chrome {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  background: var(--page);
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 0 var(--pill-line);
 }
-
+.index-tools {
+  container-type: inline-size;
+}
+@container (max-width: 21rem) {
+  /* 200% text on a phone. rem follows the root, so Connector / Sort
+     wrap instead of letting Newly added widen the page. */
+  .filter-selects { flex-wrap: wrap; width: 100%; }
+}
+@media (max-width: 1023px) {
+  /* The whole filter stack used to stick. On a phone that is a 370px
+     wall, and Tab into a team name hid the name under the search field. */
+  .index-chrome {
+    display: contents;
+  }
+  .index-tools {
+    position: static;
+    top: auto;
+    box-shadow: none;
+    padding-bottom: 0;
+  }
+  #teams .search-wrap {
+    position: sticky;
+    top: var(--masthead-h);
+    z-index: 8;
+    background: var(--page);
+    margin-top: 0;
+    padding-top: 12px;
+    padding-bottom: 8px;
+    box-shadow: 0 1px 0 var(--pill-line);
+  }
+}
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+  margin-bottom: 14px;
+}
+.search-field {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 0;
+  bottom: 0;
+  margin-block: auto;
+  height: 16px;
+  /* Same step as the hint. Muted sat a contrast step below the
+     placeholder after that field became the visible name. */
+  color: var(--ink-soft);
+  pointer-events: none;
+}
 .search-input {
   width: 100%;
-  min-height: 44px;
-  padding: 0 16px;
+  /* Same height as connector search. This is the catalog's primary
+     field; 44px is the AA floor, 48px is the recommended touch size. */
+  min-height: 48px;
+  padding: 0 88px 0 40px;
   border: 0;
   border-radius: var(--r-pill);
   background: var(--card);
   color: var(--ink);
-  font: 400 0.85rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  /* Same type as connector search. This is the catalog's primary field,
+     not quiet chrome, so it should not sit smaller than /connectors. */
+  font: 400 0.95rem/1 var(--font-geist-sans), system-ui, sans-serif;
   transition: background var(--dur) var(--ease);
 }
-.search-input::placeholder { color: var(--muted); }
-.search-input:focus {
-  outline: 1px solid var(--accent);
-  outline-offset: -1px;
+/* The only visible name of the field (the <label> is sr-only).
+   --muted on --card is 4.66:1 in dark; --ink-soft matches connector
+   search and keeps the hint a step below filled type. */
+.search-input:not(:placeholder-shown) { padding-right: 104px; }
+.search-input::placeholder { color: var(--ink-soft); opacity: 1; }
+.search-input:focus,
+.search-input:focus-visible {
+  outline: 2px solid var(--accent-text);
+  /* Desktop .wings-main-col is overflow-y:auto (overflow-x computes
+     to auto). The field is flush; a 2px outer ring lost both 4px. */
+  outline-offset: -3px;
   background: var(--surface-elevated);
+}
+.search-input::-webkit-search-cancel-button { appearance: none; }
+.search-kbd {
+  position: absolute;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-inner);
+  color: var(--muted);
+  font: 500 0.66rem/1 var(--font-geist-mono), ui-monospace, monospace;
+  pointer-events: none;
+}
+.search-wrap:focus-within .search-kbd { display: none; }
+.search-clear {
+  position: absolute;
+  right: 8px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--accent-text);
+  font: 500 0.72rem/1 var(--font-geist-sans), system-ui, sans-serif;
+  cursor: pointer;
+}
+.search-clear:hover,
+.search-clear:focus-visible { color: var(--ink); }
+@media (pointer: coarse) {
+  .search-kbd { display: none; }
+  /* 12px, not 16: under WCAG 1.4.12 the hint is already the width of
+     the 320 field, and the slash key is hidden on coarse pointers. */
+  .search-input { padding-right: 12px; }
+  .search-input:not(:placeholder-shown) { padding-right: 104px; }
+  .search-clear,
+  .browse-pick-btn,
+  .idx-chip,
+  .idx-chip-clear,
+  .cat-pill,
+  .sel-button,
+  .filter-views .filter-chip--icon,
+  .row-arrow-link,
+  .rp-secondary,
+  .cz-btn,
+  .cz-mode,
+  .cz-check,
+  .cz-chip,
+  .share-btn,
+  .talk-watch-btn,
+  .talk-overlay-close,
+  .spon-cta,
+  .foot-link,
+  .doc-jump a,
+  .guide-toc a,
+  .guide-index a,
+  .guide-prose .spec-table a,
+  a.chip,
+  .cf-chip,
+  .cf-browse,
+  .cf-clear,
+  .theme-control-label,
+  .cz-advanced summary,
+  .roster-shape-routines-sum,
+  button.cz-link,
+  p.cz-hint a.cz-link,
+  .spon-paid a,
+  .crumb-list a,
+  .wings-crumb a,
+  .home-hero-manifesto a,
+  .home-hero-links a,
+  .api-link,
+  .hairline-row > a,
+  .index-name {
+    min-height: 44px;
+  }
+  .theme-control {
+    width: 44px;
+    height: 44px;
+  }
+  .theme-control.theme-control-label,
+  .theme-control-label {
+    width: auto;
+    height: auto;
+    min-height: 44px;
+  }
+  .site-menu-button {
+    width: 44px;
+    height: 44px;
+  }
+  .filter-views .filter-chip--icon { width: auto; min-width: 44px; }
+}
+@media (max-width: 1023px) {
+  /* iOS Safari zooms the page when a focused field is under 16px. */
+  .search-input,
+  .cf-input,
+  .spon-input,
+  .spon-file,
+  .cz-input {
+    font-size: 1rem;
+  }
+  .cz-input { min-height: 44px; }
+  .sel-option { min-height: 44px; }
+  .sel-list { max-height: min(19rem, var(--menu-max-h, 50dvh)); }
+  /* An iPad with a trackpad reports pointer: fine. The stacked layout
+     still needs a thumb-sized control. Keep this list in step with the
+     late (pointer: coarse) restatement at the bottom of the file. */
+  .search-clear,
+  .browse-pick-btn,
+  .idx-chip,
+  .idx-chip-clear,
+  .cat-pill,
+  .hero-stat,
+  .cf-chip,
+  .cf-browse,
+  .cf-clear,
+  .cf-search-clear,
+  .cz-search-clear,
+  .sel-button,
+  .filter-views .filter-chip--icon,
+  .doc-jump a,
+  .guide-toc a,
+  .guide-index a,
+  .guide-prose .spec-table a,
+  .doc-toc-sum,
+  a.chip,
+  .row-arrow-link,
+  .rp-secondary,
+  .cz-btn,
+  .cz-mode,
+  .cz-check,
+  .cz-chip,
+  .share-btn,
+  .talk-watch-btn,
+  .talk-overlay-close,
+  .talk-dock-item,
+  .spon-cta,
+  .foot-link,
+  .theme-control-label,
+  .cz-skill-scope .sel-button,
+  .cz-advanced summary,
+  .roster-shape-routines-sum,
+  button.cz-link,
+  p.cz-hint a.cz-link,
+  .spon-paid a,
+  .crumb-list a,
+  .wings-crumb a,
+  .home-hero-manifesto a,
+  .home-hero-links a,
+  .api-link,
+  .hairline-row > a,
+  .index-name {
+    min-height: 44px;
+  }
+  .filter-views .filter-chip--icon { width: auto; min-width: 44px; }
+  .hero-stat {
+    align-items: center;
+    padding-inline: 6px;
+  }
+  .site-wordmark,
+  .foot-id,
+  .foot-grok {
+    min-height: 44px;
+  }
+}
+@media (max-width: 639px) {
+  /* 32px plus the phone hero used to land the category rail under
+     the 56px ticker (All sat at 659, bar at 664). */
+  .search-wrap { margin-top: 10px; margin-bottom: 8px; }
+  .index-header .section-title { display: none; }
+  .hero-stats { margin-top: 0.5rem; }
+  .search-kbd,
+  .cf-kbd { display: none; }
+}
+@media (max-width: 1023px) {
+  .story-beat.is-catalog-active {
+    padding-block: 0.35rem;
+    min-height: 0;
+  }
+  .story-beat.is-catalog-active .os-badge,
+  .story-beat.is-catalog-active .home-hero-manifesto {
+    display: none;
+  }
+  .story-beat.is-catalog-active h1 {
+    margin-top: 0.2rem;
+    font-size: 1.35rem;
+  }
+  .story-beat.is-catalog-active .hero-stats {
+    margin-top: 0.45rem;
+  }
 }
 
 /* ── Browsing 26 categories ───────────────────────────────────────────
@@ -1005,7 +1702,15 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   align-items: center;
   gap: 12px;
   margin: 0 0 12px;
+  min-width: 0;
+  /* Always a scrollport. At CSS zoom the column goes phone-narrow
+     while the viewport stays 1280, so the 560px wrap never applies
+     and Teams / Bots / All pushed the catalog 6px past the pane. */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
 }
+.browse-pick::-webkit-scrollbar { display: none; }
 .browse-pick-label {
   font-size: 13px;
   font-weight: 500;
@@ -1015,24 +1720,33 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   color: var(--ink-soft);
 }
 .browse-pick-btn {
-  min-height: 30px;
+  min-height: 36px;
   padding: 0 13px;
   border: 0;
   border-radius: var(--r-pill);
   background: var(--surface);
   color: var(--ink-soft);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
-.browse-pick-btn:hover { color: var(--ink); background: var(--surface-elevated); }
+.browse-pick-btn:hover,
+.browse-pick-btn:focus-visible { color: var(--ink); background: var(--surface-elevated); }
+/* Always a scrollport. Flush Teams / All lost the 3px outer ring
+   on every side once overflow-x:auto computed overflow-y to auto. */
+.browse-pick-btn:focus-visible { outline-offset: -3px; }
 .browse-pick-btn.is-on { color: var(--page); background: var(--ink); }
+.browse-pick-btn.is-on:hover,
+.browse-pick-btn.is-on:focus-visible { color: var(--page); background: var(--ink); }
 .browse-pick-count {
   margin-left: 3px;
   font-variant-numeric: tabular-nums;
-  opacity: .65;
+  color: var(--muted);
+}
+.browse-pick-btn.is-on .browse-pick-count {
+  color: inherit;
 }
 @media (max-width: 560px) {
   /* Two rows of controls on a phone rather than one that scrolls off. */
@@ -1043,12 +1757,23 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cat-rail {
   margin: 0 0 16px;
   /* Bleed the scroll edges into the page gutter so a clipped pill reads
-     as "more this way" rather than as a broken row. */
+     as "more this way" rather than as a broken row. Fade is applied only
+     on the side that still has overflow. */
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 22px), transparent);
-          mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 22px), transparent);
+}
+.scroll-fade.has-end {
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 28px), transparent);
+          mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 28px), transparent);
+}
+.scroll-fade.has-start {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px, #000 100%);
+          mask-image: linear-gradient(90deg, transparent, #000 28px, #000 100%);
+}
+.scroll-fade.has-start.has-end {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent);
 }
 .cat-rail::-webkit-scrollbar { display: none; }
 .cat-rail-track {
@@ -1061,7 +1786,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 34px;
+  min-height: 40px;
   padding: 0 14px;
   border: 0;
   border-radius: var(--r-pill);
@@ -1072,18 +1797,21 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   cursor: pointer;
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.cat-pill:hover { color: var(--ink); background: var(--surface-elevated); }
-.cat-pill:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.cat-pill:hover,
+.cat-pill:focus-visible { color: var(--ink); background: var(--surface-elevated); }
+/* Track pad is 2px; the 2px outer ring still clipped All on the left. */
+.cat-pill:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -3px; }
 .cat-pill.is-on {
   color: var(--page);
   background: var(--ink);
 }
-.cat-pill.is-on:hover { color: var(--page); background: var(--ink); opacity: 0.88; }
+.cat-pill.is-on:hover,
+.cat-pill.is-on:focus-visible { color: var(--page); background: var(--ink); opacity: 0.88; }
 .cat-pill-icon { display: inline-flex; width: 15px; height: 15px; flex: none; opacity: .85; }
 .cat-pill-icon .line-icon { width: 15px; height: 15px; color: currentColor; }
 .cat-pill-count {
-  color: var(--muted);
-  font-size: 0.66rem;
+  color: var(--ink-soft);
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 .cat-pill.is-on .cat-pill-count { color: var(--page); opacity: .7; }
@@ -1110,7 +1838,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   cursor: pointer;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
-.cat-tile:hover { background: var(--surface-elevated); color: var(--ink); }
+.cat-tile:hover,
+.cat-tile:focus-visible { background: var(--surface-elevated); color: var(--ink); }
 .cat-tile:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .cat-tile.is-on { background: var(--ink); color: var(--page); }
 .cat-tile.is-on .cat-tile-icon,
@@ -1144,31 +1873,42 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: inline-flex;
   align-items: stretch;
   gap: 0;
-  border: 1px solid var(--line, rgba(10, 10, 10, 0.16));
-  border-radius: 6px;
+  /* Same 3:1 circle as theme chrome. --line on paper is ~1.1:1, so the
+     List / Cards group used to disappear while the labels stayed. */
+  border: 1px solid var(--pill-line);
+  border-radius: var(--r-pill);
   overflow: hidden;
 }
 .filter-views .filter-chip--icon {
-  min-height: 30px;
-  width: 32px;
-  padding: 0;
+  min-height: 36px;
+  width: auto;
+  min-width: 36px;
+  padding: 0 12px;
+  gap: 6px;
   justify-content: center;
   border-radius: 0;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
   background: transparent;
   color: var(--ink-soft);
 }
 .filter-views .filter-chip--icon + .filter-chip--icon {
-  border-left: 1px solid var(--line, rgba(10, 10, 10, 0.16));
+  border-left: 1px solid var(--pill-line);
 }
 .filter-views .filter-chip--icon.is-on {
   background: var(--ink);
   color: var(--page);
 }
-.filter-views .filter-chip--icon:hover:not(.is-on) {
+.filter-views .filter-chip--icon:hover:not(.is-on),
+.filter-views .filter-chip--icon:focus-visible:not(.is-on) {
   background: var(--surface);
   color: var(--ink);
+}
+/* Same clip as .cz-modes: overflow:hidden + a 3px outer ring ate List. */
+.filter-views .filter-chip--icon:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: -3px;
 }
 
 .index-row {
@@ -1178,26 +1918,47 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   column-gap: 10px;
   padding: 13px 0;
   border-bottom: 1px solid var(--line);
+  content-visibility: auto;
+  /* Rows paint 113-141px. 92 left a hole under the phone ticker when
+     a tablet fling hit the old estimated end and the list then grew. */
+  contain-intrinsic-size: auto 140px;
+}
+/* Paint containment on a skipped row clips the hover tip. */
+.index-row:hover,
+.index-row:focus-within {
+  content-visibility: visible;
 }
 .index-head {
   grid-column: 1;
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  cursor: pointer;
   padding-inline: 0;
 }
-.index-body { grid-column: 1; }
+.index-body { grid-column: 1; position: relative; z-index: 1; }
 .index-name {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 100%;
+  min-height: 24px;
+  overflow-wrap: anywhere;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1.02rem;
   font-weight: 500;
   letter-spacing: -0.02em;
+  transition: color var(--dur) var(--ease);
 }
-.index-name:hover { color: var(--accent-text); }
+.index-name:hover,
+.index-row:hover .index-name,
+.index-row:focus-within .index-name { color: var(--accent-text); }
+/* Desktop .wings-main-col is overflow-y:auto, so overflow-x computes
+   to auto. Names sit flush left; a 3px outer ring lost 3px. */
+.index-name:focus-visible { outline-offset: -3px; }
 .index-tagline {
   margin-top: 2px;
-  color: var(--muted);
+  color: var(--ink-soft);
   font-size: 0.78rem;
   line-height: 1.45;
   overflow: visible;
@@ -1218,7 +1979,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   grid-column: 2;
   grid-row: 1 / span 8;
   position: sticky;
-  top: 10px;
+  /* Below the phone search field. Desktop restates this to sit under
+     the catalog chrome (search + filters) inside the column. */
+  top: calc(var(--masthead-h) + 72px);
   z-index: 2;
   width: auto;
   height: auto;
@@ -1239,29 +2002,54 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   color: var(--ink-soft);
   white-space: nowrap;
 }
-.index-row:hover .row-arrow-text { color: var(--accent-text); }
+.index-row:hover .row-arrow-text,
+.index-row:focus-within .row-arrow-text,
+.row-arrow-link:focus-visible .row-arrow-text { color: var(--accent-text); }
 .row-arrow-glyph { transition: transform var(--dur) var(--ease); }
 .index-row:hover .row-arrow,
+.index-row:focus-within .row-arrow,
 .idx-colrow:hover .row-arrow { color: var(--accent-text); }
 .index-row:hover .row-arrow-glyph,
+.index-row:focus-within .row-arrow-glyph,
+.row-arrow-link:focus-visible .row-arrow-glyph,
 .idx-colrow:hover .row-arrow-glyph { transform: translateX(2px); }
 .row-arrow-link:focus-visible {
   outline: 2px solid var(--accent-text);
-  outline-offset: 2px;
+  /* Sticky right column of the catalog grid. A 2px outer ring lost
+     its right 4px to the same column scroller as search / names. */
+  outline-offset: -3px;
   color: var(--accent-text);
 }
 .chevron {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
-  margin-top: 2px;
+  width: 32px;
+  height: 32px;
+  margin: 0;
   border: 0;
+  border-radius: var(--r-pill);
   background: transparent;
   color: var(--muted);
   cursor: pointer;
   flex: none;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.chevron:hover,
+.chevron:focus-visible,
+.index-row:hover .chevron,
+.index-row:focus-within .chevron,
+.team-card:hover .chevron,
+.team-card:focus-within .chevron {
+  color: var(--ink);
+  background: var(--surface-elevated);
+}
+.chevron:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+@media (max-width: 1023px) {
+  .chevron { width: 44px; height: 44px; }
 }
 .index-body { padding: 4px 0 16px 0; }
 .index-copy {
@@ -1301,9 +2089,333 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+  /* Pin to the containing block. Left:auto uses the static position,
+     which inside a nowrap share row sat at 520px and widened the page
+     when text was at 200 percent. */
+  left: 0;
+  top: 0;
 }
+
+.idx-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 2px 0 10px;
+}
+.idx-count {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+.idx-status.is-pending .idx-count { color: var(--ink-soft); }
+.idx-updating,
+.cf-updating {
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+/* 0.62 dropped ink-soft taglines to 3.5:1 on paper. 0.78 keeps
+   the stale-list signal and holds a 4.5:1 floor on both themes. */
+.idx-empty.is-pending,
+.idx-cards.is-pending,
+.team-table.is-pending { opacity: 0.78; }
+@media (prefers-reduced-motion: reduce) {
+  .idx-empty.is-pending,
+  .idx-cards.is-pending,
+  .team-table.is-pending { opacity: 1; }
+}
+.idx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.idx-chip,
+.idx-chip-clear {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.idx-chip-clear {
+  background: transparent;
+  color: var(--accent-text);
+  text-decoration: underline;
+}
+.idx-chip:hover,
+.idx-chip:focus-visible { background: var(--surface-elevated); }
+.idx-chip-clear:hover,
+.idx-chip-clear:focus-visible { color: var(--ink); }
+.idx-empty {
+  margin-top: 18px;
+  padding: 36px 24px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-card);
+  text-align: center;
+}
+.idx-empty-title {
+  font-size: 1rem;
+  /* A one-token query ("zzzznosuchteamzzzz") at 200% text is 342px
+     in a 238px card and widened the page 63px. Sponsor-off already
+     wraps its title. */
+  overflow-wrap: anywhere;
+}
+.idx-empty-body {
+  margin: 8px auto 16px;
+  max-width: 34rem;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.index-row,
+.idx-card,
+.idx-empty,
+.index-name {
+  scroll-margin-top: calc(var(--masthead-h, 56px) + 8px);
+}
+@media (max-width: 1023px) {
+  .index-row,
+  .idx-card,
+  .idx-empty,
+  .index-name,
+  .index-ad,
+  .index-row .chevron,
+  .roster-shape-routines-sum,
+  .index-row a.chip {
+    scroll-margin-top: calc(var(--masthead-h) + 5.5rem);
+    scroll-margin-bottom: 80px;
+  }
+  /* Filters and query chips are not sticky. Tab after a long list
+     used to park them under the search field. */
+  .browse-pick-btn,
+  .cat-pill,
+  .filter-views .filter-chip--icon,
+  .index-tools .sel-button,
+  .idx-chip,
+  .idx-chip-clear,
+  .cf-chip,
+  .cf-clear {
+    scroll-margin-top: calc(var(--masthead-h) + 5rem);
+  }
+}
+@media (min-width: 1024px) {
+  /* Tools stick at the top of this column, not under the masthead.
+     Put the offset on the column scroller. A matching scroll-margin
+     on the name also moves the document and yanks the sticky column
+     off the viewport. */
+  .wings-main-col:has(.index-tools) {
+    padding-top: 0;
+    /* 320 clears search + filters + a chip row. 280 left the arrow
+       two pixels under the chips. */
+    scroll-padding-top: 320px;
+  }
+  .wings-main-col:has(.index-tools) #teams {
+    padding-top: 1.5rem;
+  }
+  /* Keep "View team" under the sticky chrome while an expanded row
+     is read, instead of sliding it under search + filters. */
+  .row-arrow-link {
+    top: 320px;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Restate after the desktop top. A later position: relative used to
+     beat the earlier static rule and offset the arrow by 10px. */
+  .row-arrow-link {
+    position: static;
+    top: auto;
+  }
+}
+
+.home-more {
+  margin-top: 2.25rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--line);
+}
+.home-more details { border-bottom: 1px solid var(--line); }
+.home-more summary {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  color: var(--ink-soft);
+}
+.home-more details[open] summary { color: var(--ink); }
+.home-more summary:hover,
+.home-more summary:focus-visible { color: var(--accent-text); }
+.home-more summary:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.home-more summary::-webkit-details-marker { display: none; }
+.home-more summary::after {
+  content: "";
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--muted-strong);
+  border-bottom: 1.5px solid var(--muted-strong);
+  transform: rotate(45deg);
+  transition: transform var(--dur) var(--ease);
+}
+.home-more details[open] summary::after {
+  transform: translateY(3px) rotate(-135deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-more summary::after { transition: none; }
+}
+.home-more details p,
+.home-more details dl {
+  padding: 0 0 16px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.home-more dt { color: var(--ink); font-weight: 500; }
+.home-more dd { margin: 6px 0 14px; }
+
+.doc-toc { margin: 4px 0 22px; }
+.doc-toc-fold { border: 0; }
+.doc-toc-sum {
+  display: none;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent-text);
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+  list-style: none;
+}
+.doc-toc-sum::-webkit-details-marker { display: none; }
+.doc-toc-sum::after {
+  content: "";
+  margin-left: auto;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform var(--dur) var(--ease);
+}
+.doc-toc-fold[open] .doc-toc-sum::after {
+  transform: translateY(2px) rotate(-135deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .doc-toc-sum::after { transition: none; }
+}
+.doc-toc-sum:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.doc-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 0.78rem;
+}
+.doc-jump a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--ink-soft);
+  /* Same mark as the guide TOC. Without an underline these read as
+     muted words until hover, so On this page looked inert. */
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+@media (max-width: 1023px) {
+  /* Stacked Wings already spent the first screen on the hero. A wrap of
+     44px jump links would push the first heading off the page. */
+  .doc-toc-sum { display: flex; }
+  .doc-toc-fold:not([open]) .doc-jump { display: none; }
+  .doc-jump { gap: 4px 14px; }
+}
+.wings-main-col :is(h2, h3, section)[id] {
+  scroll-margin-top: calc(var(--masthead-h, 56px) + 12px);
+}
+
+.spon-faq { margin-top: 8px; }
+.spon-faq details { border-bottom: 1px solid var(--line); }
+.spon-faq summary {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  color: var(--ink-soft);
+}
+.spon-faq details[open] summary { color: var(--ink); }
+.spon-faq summary:hover,
+.spon-faq summary:focus-visible { color: var(--accent-text); }
+.spon-faq summary:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.spon-faq summary::-webkit-details-marker { display: none; }
+.spon-faq summary::after {
+  content: "";
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--muted-strong);
+  border-bottom: 1.5px solid var(--muted-strong);
+  transform: rotate(45deg);
+  transition: transform var(--dur) var(--ease);
+}
+.spon-faq details[open] summary::after {
+  transform: translateY(3px) rotate(-135deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .spon-faq summary::after { transition: none; }
+}
+.spon-faq details p {
+  padding: 0 0 16px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.crumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+.crumb-list li:not(:last-child)::after {
+  content: "/";
+  margin-left: 8px;
+  color: var(--line-strong);
+}
+.crumb-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+.crumb-list [aria-current="page"] { color: var(--ink-soft); }
+
+.notfound-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 24px;
+  justify-content: center;
+}
+.idx-empty .notfound-nav,
+.cf-empty .notfound-nav { padding-top: 8px; }
 
 /* Grok Bot face mark. Silhouette is xAI's, used to identify the product
    this shelf serves. --fg follows the site accent so faces stay in
@@ -1378,10 +2490,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 
 .bot-tag {
-  color: var(--muted);
-  font: 500 0.52rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  color: var(--ink-soft);
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 
@@ -1395,7 +2507,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-weight: 500;
 }
 .copy-btn:hover,
-.pill-btn:hover {
+.copy-btn:focus-visible,
+.pill-btn:hover,
+.pill-btn:focus-visible {
   background: var(--accent);
   color: var(--on-accent);
 }
@@ -1452,20 +2566,79 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   gap: 12px;
   padding: 12px 0 10px;
   background: var(--page);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--pill-line);
 }
 /* Browse all puts a bordered scroll box directly under the bar, and the
    two edges stacked into a double rule. */
 .cf-bar.is-bare { border-bottom: 0; }
+/* A windowed catalog has its own scroller. Sticking the bar on the
+   page then lets Tab land a row under the search field. */
+.cf:has(.cf-scroll) .cf-bar {
+  position: static;
+  top: auto;
+}
+@media (max-width: 1023px) {
+  /* Same as the catalog: only search sticks. Wrapped chips were a
+     230px wall, and Tab into a team count hid the link under them.
+     Search position is restated after the relative default. */
+  .cf-bar { display: contents; }
+}
+@media (min-width: 1024px) {
+  /* The listing column is already under the masthead. top: 56px plus
+     24px column padding parked the bar 86px down and left a strip of
+     chips in the gap. */
+  .wings-main-col:has(.cf-bar) {
+    padding-top: 0;
+    /* Search + one chip row. Wrapped chips used to need 250px+ and
+       still lost. */
+    scroll-padding-top: 148px;
+  }
+  .wings-main-col .cf-bar { top: 0; }
+  /* Offset lives on the column. A matching document scroll-margin
+     yanks the sticky column off the viewport. */
+  .cf-shelf .cf-row-teams,
+  .cf-results > .cf-list .cf-row-teams,
+  .cf-browse,
+  .cf-empty {
+    scroll-margin-top: 0;
+  }
+}
 .cf-search {
   position: relative;
   display: flex;
   align-items: center;
 }
+@media (max-width: 1023px) {
+  /* Restate after the relative default. Same specificity, later wins. */
+  .cf-search {
+    position: sticky;
+    top: var(--masthead-h);
+    z-index: 20;
+    background: var(--page);
+    padding-top: 12px;
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 0 var(--pill-line);
+  }
+  .cf:has(.cf-scroll) .cf-search {
+    position: static;
+    top: auto;
+    box-shadow: none;
+  }
+}
+.cf-search-field {
+  position: relative;
+  display: block;
+  width: 100%;
+}
 .cf-search-icon {
   position: absolute;
   left: 13px;
-  color: var(--muted);
+  top: 0;
+  bottom: 0;
+  margin-block: auto;
+  height: 16px;
+  color: var(--ink-soft);
   pointer-events: none;
 }
 .cf-input {
@@ -1480,13 +2653,39 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-size: 0.95rem;
   transition: background var(--dur) var(--ease);
 }
+.cf-input:not(:placeholder-shown) { padding-right: 104px; }
 .cf-input::placeholder { color: var(--ink-soft); }
-.cf-input:focus {
-  outline: 1px solid var(--accent);
-  outline-offset: -1px;
+.cf-input:focus,
+.cf-input:focus-visible {
+  outline: 2px solid var(--accent-text);
+  /* Same flush column scroller as catalog search. */
+  outline-offset: -3px;
   background: var(--surface-elevated);
 }
-.cf-input::-webkit-search-cancel-button { filter: invert(0.6); }
+.cf-input::-webkit-search-cancel-button { appearance: none; }
+.cf-search-clear {
+  position: absolute;
+  right: 8px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--accent-text);
+  font: 500 0.72rem/1 var(--font-geist-sans), system-ui, sans-serif;
+  cursor: pointer;
+}
+.cf-search-clear:hover,
+.cf-search-clear:focus-visible { color: var(--ink); }
+.cf-search:focus-within .cf-kbd { display: none; }
+@media (pointer: coarse) {
+  .cf-kbd { display: none; }
+  /* Same as catalog search: the slash key is gone, so do not keep
+     52px of empty right padding. A 200% hint needs that room. */
+  .cf-input { padding-right: 12px; }
+  .cf-input:not(:placeholder-shown) { padding-right: 104px; }
+  .cf-search-clear { min-height: 44px; }
+}
 .cf-kbd {
   position: absolute;
   right: 14px;
@@ -1504,9 +2703,13 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 .cf-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
 }
+.cf-chips::-webkit-scrollbar { display: none; }
 .cf-chip {
   display: inline-flex;
   align-items: center;
@@ -1522,31 +2725,28 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   cursor: pointer;
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.cf-chip:hover:not(:disabled) { color: var(--ink); background: var(--surface-elevated); }
-.cf-chip:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-.cf-chip:disabled { opacity: .4; cursor: default; }
+.cf-chip:hover:not(:disabled),
+.cf-chip:focus-visible:not(:disabled) { color: var(--ink); background: var(--surface-elevated); }
+/* Same flush scrollport as .browse-pick. Built in sat on the clip edge. */
+.cf-chip:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -3px; }
+.cf-chip:disabled,
+.cf-chip:disabled .cf-count {
+  color: var(--muted);
+  opacity: 1;
+  cursor: default;
+}
 .cf-chip.is-on {
   background: var(--ink);
   color: var(--page);
 }
-.cf-chip.is-on:hover:not(:disabled) { background: var(--ink); color: var(--page); opacity: 0.88; }
+.cf-chip.is-on:hover:not(:disabled),
+.cf-chip.is-on:focus-visible:not(:disabled) { background: var(--ink); color: var(--page); opacity: 0.88; }
 .cf-chip-icon { width: 14px; height: 14px; flex: none; opacity: .82; }
-@media (max-width: 720px) {
-  .cf-chips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
-            mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
-  }
-  .cf-chips::-webkit-scrollbar { display: none; }
-  .cf-chip { flex: none; white-space: nowrap; min-height: 32px; }
-}
+.cf-chip { flex: none; white-space: nowrap; }
 .cf-chip.is-on .cf-chip-icon { opacity: 1; }
 .cf-count {
-  color: var(--muted);
-  font-size: 0.68rem;
+  color: var(--ink-soft);
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 .cf-chip.is-on .cf-count { color: var(--page); opacity: .7; }
@@ -1569,17 +2769,19 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-decoration: underline;
   cursor: pointer;
 }
+.cf-clear:hover,
+.cf-clear:focus-visible { color: var(--ink); }
 
 .cf-shelf { margin-top: 18px; }
 .cf-shelf-title {
   color: var(--accent-text);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.26em;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .cf-shelf-note {
   margin-top: 7px;
-  color: var(--muted);
+  color: var(--ink-soft);
   font-size: 0.78rem;
   line-height: 1.55;
 }
@@ -1588,31 +2790,27 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   margin-top: 6px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  column-gap: 40px;
-}
-@media (min-width: 900px) {
-  .cf-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .cf-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: 0 2px;
+  min-height: 52px;
+  padding: 10px 2px;
   border-bottom: 1px solid var(--line);
   box-sizing: border-box;
 }
 .cf-row-id {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 9px;
   min-width: 0;
 }
 .cf-row-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
   font-size: 0.9rem;
+  line-height: 1.35;
 }
 .cf-flag {
   flex: none;
@@ -1620,19 +2818,39 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border: 0;
   border-radius: var(--r-pill);
   background: var(--surface-elevated);
-  color: var(--muted);
-  font: 500 0.55rem/1.4 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  color: var(--ink-soft);
+  font: 500 11px/1.4 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .cf-row-teams {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  min-width: 24px;
   color: var(--accent-text);
   font-size: 0.76rem;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.cf-row-teams:hover { text-decoration: underline; }
+.cf-row-teams:hover,
+.cf-row-teams:focus-visible { text-decoration: underline; }
+/* Same column scroller as catalog cards. “View the full team” sits
+   2px from the pane; an outer 2px ring lost the right edge. */
+.cf-row-teams:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -3px; }
+/* Shelf and short lists live in the page scroller, under the sticky
+   search bar. Windowed rows stay inside .cf-scroll, so they must not
+   inherit this offset or the inner list grows a 200px hole. */
+@media (max-width: 1023px) {
+  .cf-shelf .cf-row-teams,
+  .cf-results > .cf-list .cf-row-teams,
+  .cf-browse,
+  .cf-empty {
+    scroll-margin-top: calc(var(--masthead-h) + 9rem);
+  }
+}
 .cf-row-quiet {
   flex: none;
   color: var(--muted);
@@ -1659,21 +2877,26 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-top: 1px solid var(--line);
 }
 .cf-browse {
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 20px;
   border: 1px solid var(--ink);
   border-radius: var(--r-pill);
   transition: opacity var(--dur) var(--ease);
   background: var(--ink);
   color: var(--page);
-  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 0.88rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  text-transform: none;
   cursor: pointer;
 }
-.cf-browse:hover { opacity: 0.88; }
+.cf-browse:hover,
+.cf-browse:focus-visible { opacity: 0.88; }
 .cf-browse:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 
+.cf-results.is-pending { opacity: 0.78; }
+@media (prefers-reduced-motion: reduce) {
+  .cf-results.is-pending { opacity: 1; }
+}
 .cf-empty {
   margin-top: 26px;
   padding: 40px 28px;
@@ -1681,13 +2904,17 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-radius: var(--r-card);
   text-align: center;
 }
-.cf-empty-title { font-size: 1rem; }
+.cf-empty-title {
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
 .cf-empty-body {
   margin: 8px auto 16px;
   max-width: 34rem;
-  color: var(--muted);
+  color: var(--ink-soft);
   font-size: 0.84rem;
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 430px) {
@@ -1703,6 +2930,18 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
    The popup a native <select> cannot give us: our paper, our hairlines,
    our type, and a connector mark beside each option. */
 .sel { position: relative; }
+.sel.has-caption {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+}
+.sel-caption {
+  padding-inline: 4px;
+  color: var(--ink-soft);
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+}
+.sel.has-caption .sel-button { max-width: 100%; width: 100%; }
 .sel-button {
   display: inline-flex;
   align-items: center;
@@ -1714,13 +2953,14 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-radius: var(--r-pill);
   background: var(--surface);
   color: var(--ink-soft);
-  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-.sel-button:hover { color: var(--ink); background: var(--surface-elevated); }
+.sel-button:hover,
+.sel-button:focus-visible { color: var(--ink); background: var(--surface-elevated); }
 .sel-button.is-open { color: var(--ink); background: var(--surface-elevated); }
 .sel-button:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .sel-value {
@@ -1753,13 +2993,15 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 6px;
-  border: 0;
+  /* Page on page. --line is ~1.1:1 on paper, so the menu used to
+     vanish except for the options. Same 3:1 hairline as the pills. */
+  border: 1px solid var(--pill-line);
   border-radius: var(--r-inner);
-  background: var(--surface-elevated);
-  box-shadow: var(--shadow-float);
+  background: var(--page);
   animation: sel-in var(--dur) var(--ease);
 }
 .sel-list.is-end { left: auto; right: 0; }
+.sel-list.is-up { top: auto; bottom: calc(100% + 6px); }
 /* Fade and sit. A menu that travels reads as a thing being thrown at
    the reader; this one is simply there. */
 @keyframes sel-in {
@@ -1781,19 +3023,26 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   line-height: 1.2;
   cursor: pointer;
 }
-.sel-option[data-active="true"] { background: var(--surface); color: var(--ink); }
+.sel-option[data-active="true"] {
+  background: var(--surface-elevated);
+  color: var(--ink);
+  /* Keyboard cursor and hover share this. --surface on --page is ~1:1,
+     so the only honest mark is the same mint inset the rest of the
+     site uses for focus. Inset so a scrolling list does not clip it. */
+  box-shadow: inset 0 0 0 2px var(--accent-text);
+}
 .sel-option.is-selected { color: var(--ink); }
 .sel-tick { display: inline-flex; width: 12px; flex: none; color: var(--accent-text); }
 .sel-label {
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 .sel-count {
   flex: none;
-  color: var(--muted);
-  font-size: 0.68rem;
+  color: var(--ink-soft);
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1827,7 +3076,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   min-height: 44px;
   transition: background var(--dur) var(--ease);
 }
-.idx-colrow:hover { background: var(--surface); }
+.idx-colrow:hover,
+.idx-colrow:focus-visible { background: var(--surface); }
 .idx-colcell {
   display: flex;
   flex-direction: column;
@@ -1871,48 +3121,72 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 .idx-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
-  gap: 16px;
+  /* min(258px, 100%) so a 177px zoomed column does not grow a 258px track.
+     Viewport media at 720px never sees CSS zoom: the layout viewport stays
+     1280 while .wings-main-col shrinks. */
+  grid-template-columns: repeat(auto-fill, minmax(min(258px, 100%), 1fr));
+  gap: 22px;
+  padding-top: 4px;
 }
 .idx-card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 28px 26px 24px;
+  gap: 10px;
+  padding: 36px 32px 32px;
   border: 0;
   border-radius: var(--r-card);
   background: var(--card);
   color: inherit;
-  transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
+  transition: background var(--dur) var(--ease);
 }
-.idx-card:hover { background: var(--surface-elevated); transform: translateY(-2px); }
+.idx-card:hover,
+.idx-card:focus-visible { background: var(--surface-elevated); }
+.idx-card:hover .idx-card-name,
+.idx-card:focus-visible .idx-card-name {
+  color: var(--accent-text);
+}
+/* Cards fill the column. home-split is overflow:clip at lg, and the
+   column is overflow-y:auto, so a 3px outer ring on the right card
+   lost all 5px of the focus mark. */
+.idx-card:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -3px; }
 .idx-card-cat {
   color: var(--accent-text);
-  font: 500 0.52rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .idx-card-name {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  transition: color var(--dur) var(--ease);
+}
+.idx-card-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 .idx-card-tag {
-  color: var(--muted);
+  color: var(--ink-soft);
   font-size: 0.76rem;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 .idx-card-foot {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
   margin-top: auto;
-  padding-top: 4px;
+  padding-top: 12px;
 }
-.idx-card-bots { color: var(--muted); font-size: 0.66rem; font-variant-numeric: tabular-nums; }
+.idx-card-bots {
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
 
 @media (max-width: 720px) {
   /* Category and count drop out before the connectors do: at this width
@@ -1943,6 +3217,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   gap: 10px 12px;
 }
 .cz-panel {
+  min-width: 0;
   padding: 18px 0 4px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -1960,6 +3235,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   margin-top: 12px;
 }
 .cz-group {
+  /* Fieldset min-content is the nowrap mode row. At 200% that row is
+     wider than the sheet and the pane grows 8px past the glass. */
+  min-width: 0;
   margin-top: 22px;
   padding-top: 16px;
   border: 0;
@@ -1968,22 +3246,52 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cz-legend {
   padding: 0;
   color: var(--accent-text);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.26em;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .cz-truth {
   margin-top: 10px;
   color: var(--ink-soft);
-  font-size: 0.8rem;
+  /* Same size as empty bodies. Leads and the sold-out line are
+     “what to do next”, not chrome. */
+  font-size: 0.84rem;
   line-height: 1.6;
 }
+.cz-truth a { color: inherit; }
 .cz-hint {
   display: block;
   margin-top: 6px;
-  color: var(--muted);
+  color: var(--ink-soft);
   font-size: 0.74rem;
   line-height: 1.5;
+}
+.cz-hint[role="alert"],
+.cz-hint.is-fail,
+.cz-skill-status[role="alert"] .cz-hint {
+  color: var(--beta);
+  font-size: 0.84rem;
+}
+/* Searching / nothing-matched are the live status, not a field caption. */
+.cz-hint[role="status"] {
+  font-size: 0.84rem;
+}
+.cz-skill-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 10px;
+}
+.cz-skill-status .cz-hint {
+  margin-top: 0;
+  font-size: 0.84rem;
+}
+.rc-empty-block .rp-secondary,
+.cz-skill-status .cz-btn {
+  font-size: 0.88rem;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 .cz-list { margin-top: 12px; }
 
@@ -1995,29 +3303,54 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   transition: opacity var(--dur) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
   background: var(--ink);
   color: var(--page);
-  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
 }
-.cz-btn:hover { opacity: 0.88; }
-/* Ghost: a hairline until it is wanted, then it fills. */
+.cz-btn:hover,
+.cz-btn:focus-visible { opacity: 0.88; }
+/* Ghost: a hairline until it is wanted, then it fills. Idle
+   color is :not(fail) so it cannot beat the fail token. A later
+   restated .cz-btn.is-copy-fail pair was merged back to the early
+   rule, then this quiet color won at rest. Focus-visible still
+   painted beta, so a click looked fixed. */
 .cz-btn-quiet {
   background: transparent;
-  border-color: var(--pill-line);
-  color: var(--ink-soft);
   opacity: 1;
 }
-.cz-btn-quiet:hover {
+.cz-btn-quiet:not(.is-copy-fail) {
+  border-color: var(--pill-line);
+  color: var(--ink-soft);
+}
+.cz-btn.cz-btn-quiet.is-copy-fail {
+  color: var(--beta);
+  border-color: var(--beta);
+}
+.cz-btn-quiet:hover,
+.cz-btn-quiet:focus-visible {
   opacity: 1;
   color: var(--ink);
   border-color: var(--ink);
   background: var(--surface-elevated);
 }
+.cz-btn-quiet.is-copy-fail:hover,
+.cz-btn-quiet.is-copy-fail:focus-visible {
+  color: var(--beta);
+  border-color: var(--beta);
+  background: transparent;
+}
 .cz-btn:focus-visible,
-.cz-chip:focus-visible,
-.cz-mode:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.cz-chip:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+/* The mode group clips to the pill. An outer 2px ring was painted
+   then cut off on Read / Ask (flush to the hidden edge). */
+.cz-mode:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: -3px;
+}
 .cz-link {
+  display: inline-flex;
+  align-items: center;
   border: 0;
   padding: 0;
   background: none;
@@ -2026,6 +3359,10 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   text-decoration: underline;
   cursor: pointer;
 }
+a.cz-link:hover,
+a.cz-link:focus-visible,
+button.cz-link:hover,
+button.cz-link:focus-visible { color: var(--ink); }
 
 /* Connector modes. A segmented control rather than a select: three fixed
    choices that are worth reading side by side. */
@@ -2051,7 +3388,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-radius: 50%;
   flex: none;
   object-fit: cover;
-  background: var(--paper-2, #eee);
+  background: var(--surface);
 }
 .cz-skill-face .cz-field-grow {
   display: flex;
@@ -2062,8 +3399,24 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .cz-skill-face .cz-conn-name { display: block; line-height: 1.25; }
 .cz-skill-face .cz-bot-persona { margin-top: 0; }
+.cz-skill-tools {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
 .cz-skill-scope { display: inline-flex; align-items: center; }
-.cz-skill-scope .cz-input { width: auto; min-width: 8rem; padding: 4px 8px; font-size: 0.78rem; }
+.cz-skill-scope .sel-button {
+  width: auto;
+  max-width: 14rem;
+  min-width: 8rem;
+  min-height: 30px;
+  text-transform: none;
+  letter-spacing: 0;
+  font: 500 0.78rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
+}
 .cz-conn-name {
   display: inline-flex;
   align-items: center;
@@ -2074,33 +3427,88 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cz-conn-name .connector-fallback { width: 16px; height: 16px; }
 .cz-modes {
   display: inline-flex;
-  border: 1px solid var(--line-strong);
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+  border: 1px solid var(--pill-line);
   border-radius: var(--r-pill);
   overflow: hidden;
 }
 .cz-mode {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
   min-height: 30px;
-  padding: 0 11px;
+  height: auto;
+  padding: 8px 11px;
   border: 0;
   background: transparent;
-  color: var(--muted);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  color: var(--ink-soft);
+  /* Visible name of the mode, not Copy chrome. 11px stayed put at
+     200% text while .cz-input grew to 32px in the same sheet. */
+  font: 500 0.78rem/1.25 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
-  white-space: nowrap;
+  /* Phone equal-flex (≤430) plus nowrap clipped “Ask before send”
+     by 18px at 320 under 1.4.12. The group’s overflow:hidden hid it
+     from pageOff. Same wrap as roster chips. */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
-.cz-mode + .cz-mode { border-left: 1px solid var(--line-strong); }
-.cz-mode:hover { color: var(--ink); }
+.cz-mode + .cz-mode { border-left: 1px solid var(--pill-line); }
+.cz-mode:hover,
+.cz-mode:focus-visible { color: var(--ink); }
 .cz-mode.is-on { background: var(--ink); color: var(--page); }
+.cz-mode.is-on:hover,
+.cz-mode.is-on:focus-visible { background: var(--ink); color: var(--page); }
+.cz-mode-hint {
+  flex: 1 1 100%;
+  margin-top: 0;
+}
+.cz-skill-hits .cz-skill-opt {
+  cursor: pointer;
+  border-radius: var(--r-inner);
+  padding-inline: 8px;
+  margin-inline: -8px;
+}
+.cz-skill-hits .cz-skill-opt.is-active {
+  background: color-mix(in oklab, var(--accent-text) 8%, var(--surface));
+  /* Same job as the select cursor: an 8% mint wash on charcoal is not a
+     mark you can follow with the arrow keys. */
+  box-shadow: inset 0 0 0 2px var(--accent-text);
+}
+.cz-skill-hits .cz-bot-top { align-items: flex-start; }
+.cz-skill-hits .cz-skill-opt .cz-btn {
+  pointer-events: none;
+  background: transparent;
+  border-color: var(--pill-line);
+  color: var(--ink-soft);
+}
+.cz-skill-hits .cz-skill-opt.is-active .cz-btn {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--page);
+}
+.cz-skill-hits .cz-bot-persona {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-/* Roster rows. A Bot that is off stays on the page, greyed, so turning it
-   back on is one click and nothing is lost. */
+/* Roster rows. A Bot that is off stays on the page, quieter, so turning
+   it back on is one click and nothing is lost. Opacity 0.5 on the whole
+   row painted light-theme type at ~3.7:1 and faded the checkbox with it. */
 .cz-bot {
   padding: 12px 0;
   border-bottom: 1px solid var(--line);
 }
-.cz-bot.is-off { opacity: 0.5; }
+/* Name only. Persona and hint stay ink-soft so an off Bot is quieter
+   than an on one without dropping the description to --muted. */
+.cz-bot.is-off { color: var(--ink-soft); }
 .cz-bot-top {
   display: flex;
   align-items: center;
@@ -2115,18 +3523,54 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cz-check {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  /* Icon-only roster toggles were a 16px box. 2.5.8 is 24. */
+  min-width: 24px;
+  min-height: 24px;
   cursor: pointer;
 }
 .cz-check input {
+  appearance: none;
   width: 16px;
   height: 16px;
-  accent-color: var(--accent-text);
+  margin: 0;
+  flex: none;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px 10px;
   cursor: pointer;
+}
+.cz-check input:checked {
+  background-color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%230a0a0a' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' d='M3.2 8.2l3.2 3.2 6.4-6.4'/%3E%3C/svg%3E");
+}
+html[data-theme="light"] .cz-check input:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' d='M3.2 8.2l3.2 3.2 6.4-6.4'/%3E%3C/svg%3E");
+}
+.cz-check input:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
 }
 .cz-check-row {
   min-height: 32px;
+  justify-content: flex-start;
   font-size: 0.85rem;
+}
+@media (pointer: coarse), (max-width: 1023px) {
+  .cz-check {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .cz-check input {
+    width: 20px;
+    height: 20px;
+    background-size: 12px 12px;
+  }
+  .cz-check-row { min-height: 44px; }
 }
 .cz-members {
   display: flex;
@@ -2142,10 +3586,13 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .cz-field-label {
   display: block;
   margin-bottom: 5px;
-  color: var(--muted);
-  font: 500 0.58rem/1.4 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  color: var(--ink-soft);
+  /* Visible name of the field, not Copy chrome. 11px stayed put at
+     200% text while .cz-input (0.88rem) grew past it. */
+  font: 500 0.84rem/1.4 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  overflow-wrap: anywhere;
 }
 .cz-input {
   width: 100%;
@@ -2158,9 +3605,38 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-family: inherit;
   font-size: 0.88rem;
 }
-.cz-input::placeholder { color: var(--muted); }
-.cz-input:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 1px; }
-.cz-input:disabled { opacity: 0.55; cursor: not-allowed; }
+.cz-input::placeholder { color: var(--ink-soft); opacity: 1; }
+.cz-input::-webkit-search-cancel-button { appearance: none; }
+.cz-search-wrap { position: relative; display: block; }
+.cz-search-wrap .cz-input:not(:placeholder-shown) { padding-right: 104px; }
+.cz-search-clear {
+  position: absolute;
+  right: 8px;
+  top: 0;
+  bottom: 0;
+  margin-block: auto;
+  height: fit-content;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--accent-text);
+  font: 500 0.72rem/1 var(--font-geist-sans), system-ui, sans-serif;
+  cursor: pointer;
+}
+.cz-search-clear:hover,
+.cz-search-clear:focus-visible { color: var(--ink); }
+.cz-input:focus,
+.cz-input:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+/* Off-roster Bot names live in this field. Opacity faded the name.
+   ink-soft stays a step below filled type and keeps AA room on --card
+   (muted on dark card is 4.66:1). */
+.cz-input:disabled {
+  color: var(--ink-soft);
+  opacity: 1;
+  cursor: not-allowed;
+}
 .cz-textarea { min-height: 82px; line-height: 1.55; resize: vertical; }
 .cz-prompt-edit {
   font-family: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, monospace;
@@ -2188,12 +3664,14 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   cursor: pointer;
   transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.cz-chip:hover { color: var(--ink); background: var(--surface-elevated); }
+.cz-chip:hover,
+.cz-chip:focus-visible { color: var(--ink); background: var(--surface-elevated); }
 .cz-chip.is-on {
   background: var(--ink);
   color: var(--page);
 }
-.cz-chip.is-on:hover { color: var(--page); opacity: 0.88; }
+.cz-chip.is-on:hover,
+.cz-chip.is-on:focus-visible { color: var(--page); opacity: 0.88; }
 
 .cz-alert {
   margin-top: 14px;
@@ -2201,7 +3679,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border: 1px solid var(--line-strong);
   border-radius: var(--r-inner);
   background: var(--card);
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   line-height: 1.6;
 }
 /* Severity reads from the title and a faint wash, not a slab of colour
@@ -2212,37 +3690,118 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .cz-alert-title {
   color: var(--accent-text);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  margin-bottom: 7px;
+  font: 560 0.95rem/1.35 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  margin: 0 0 8px;
 }
 .cz-alert-warn .cz-alert-title { color: var(--ink-soft); }
 .cz-alert ul { color: var(--ink-soft); }
 .cz-alert li + li { margin-top: 5px; }
-.cz-alert-foot { margin-top: 7px; color: var(--muted); font-size: 0.76rem; }
+.cz-alert-foot { margin-top: 7px; color: var(--ink-soft); font-size: 0.84rem; }
 .cz-alert-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 11px;
 }
+.cz-alert-actions .cz-btn:focus,
+.cz-alert-actions .cz-btn:focus-visible,
+.rp-sheet-act .theme-control:focus,
+.rp-sheet-act .theme-control:focus-visible,
+.rp-sheet-act .rp-secondary:focus,
+.rp-sheet-act .rp-secondary:focus-visible,
+.site-menu [role="dialog"] a:focus,
+.site-menu [role="dialog"] a:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
 
-.cz-advanced summary {
-  color: var(--ink-soft);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+/* Overwrite sits above Customize. Keep is first so focus lands on the
+   action that does not throw the rewrite away. */
+.cz-overwrite {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(24px + env(safe-area-inset-top, 0px)) max(20px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));
+}
+.cz-overwrite-scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: color-mix(in oklab, var(--ink) 26%, transparent);
   cursor: pointer;
 }
-.cz-advanced summary:hover { color: var(--accent-text); }
+.cz-overwrite-card {
+  position: relative;
+  width: min(28rem, 100%);
+  margin: 0;
+  animation: cz-overwrite-in var(--dur) var(--ease);
+}
+/* The 26% ink scrim lifts dark paper and sinks light paper toward
+   mid-grey. --pill-line holds 3:1 on the page, not on that wash.
+   A stop dialog has to read as a panel, so the edge is ink. */
+.cz-overwrite-card.cz-alert-stop {
+  border-color: var(--ink);
+}
+.cz-overwrite .cz-btn {
+  font-size: 0.88rem;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+@keyframes cz-overwrite-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cz-overwrite-card { animation: none; }
+}
+
+.cz-advanced summary {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  color: var(--ink-soft);
+  font: 500 0.88rem/1.4 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  cursor: pointer;
+  list-style: none;
+}
+.cz-advanced summary::-webkit-details-marker { display: none; }
+.cz-advanced summary::after {
+  content: "";
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--muted-strong);
+  border-bottom: 1.5px solid var(--muted-strong);
+  transform: rotate(45deg);
+  transition: transform var(--dur) var(--ease);
+}
+.cz-advanced[open] summary::after {
+  transform: translateY(3px) rotate(-135deg);
+}
+.cz-advanced[open] summary { color: var(--ink); }
+@media (prefers-reduced-motion: reduce) {
+  .cz-advanced summary::after { transition: none; }
+}
+.cz-advanced summary:hover,
+.cz-advanced summary:focus-visible { color: var(--ink); }
 
 @media (max-width: 430px) {
   /* The mode control is the only thing wide enough to push Copy off the
      screen, so it gets its own line before anything else gives way. */
   .cz-conn { flex-direction: column; align-items: flex-start; }
+  .cz-skill-tools { width: 100%; }
+  .cz-skill-scope { width: 100%; }
+  .cz-skill-scope .sel-button { width: 100%; max-width: none; }
   .cz-modes { width: 100%; }
-  .cz-mode { flex: 1; padding: 0 6px; }
+  .cz-mode { flex: 1; padding-inline: 6px; }
   .cz-members { gap: 2px 14px; }
 }
 
@@ -2272,19 +3831,20 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 38px;
+  min-height: 44px;
   padding: 0 18px;
   border: 0;
   border-radius: var(--r-pill);
   background: var(--ink);
   color: var(--page);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 0.88rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  text-transform: none;
   cursor: pointer;
   transition: opacity var(--dur) var(--ease);
 }
-.spon-cta:hover { opacity: 0.88; }
+.spon-cta:hover,
+.spon-cta:focus-visible { opacity: 0.88; }
 .spon-cta:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .spon-cta:disabled { opacity: 0.55; cursor: default; }
 .spon-cta-ghost {
@@ -2292,15 +3852,86 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   color: var(--ink);
   box-shadow: inset 0 0 0 1px var(--pill-line);
 }
-.spon-cta-ghost:hover { opacity: 1; background: var(--surface-elevated); }
+.spon-cta-ghost:hover,
+.spon-cta-ghost:focus-visible { opacity: 1; background: var(--surface-elevated); }
 .spon-cta-out { flex: none; }
+
+.spon-off {
+  margin-top: 18px;
+  padding: 22px 24px;
+  border-radius: var(--r-card);
+  background: var(--card);
+}
+.spon-off-title { font-size: 1rem; overflow-wrap: anywhere; }
+.spon-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px 32px;
+  margin-top: 1.25rem;
+}
+.spon-fact { min-width: 0; }
+.spon-fact-value {
+  display: block;
+  font-size: clamp(1.55rem, 3.2vw, 2.15rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+.spon-fact-note {
+  display: block;
+  margin-top: 8px;
+  /* These are sentences under the counts, not fine print. Same size
+     as empty bodies and the checkout-off line on this page. */
+  font-size: 0.84rem;
+  line-height: 1.35;
+  padding-right: 4px;
+  overflow-wrap: anywhere;
+}
+.spon-off-body {
+  margin-top: 8px;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.6;
+  max-width: var(--w-measure);
+}
+.spon-off .theme-control { margin-top: 16px; }
 
 .spon-hero-cta {
   margin-top: 22px;
 }
+.spon-hero-cta.theme-control-label,
+.spon-off .theme-control-label,
+.spon-error-block .theme-control-label {
+  font-size: 0.88rem;
+  letter-spacing: -0.01em;
+  min-height: 44px;
+}
 .spon-ask-cta {
   margin-top: 28px;
   min-height: 44px;
+}
+.spon-ask-cta.theme-control-label,
+.spon-off .theme-control-label,
+.spon-error-block .theme-control-label,
+.idx-empty .theme-control-label,
+.cf-empty .theme-control-label,
+.notfound-nav .theme-control-label,
+.idx-empty .cf-browse,
+.cf-empty .cf-browse,
+.notfound-nav .cf-browse {
+  font-size: 0.88rem;
+  letter-spacing: -0.01em;
+  min-height: 44px;
+  /* 0.88rem + nowrap + min-width:0 clipped “Browse connectors”
+     (242 vs 236) and “See teams and Bots” (248 vs 236) at 320
+     when html is 200%. Copy chrome stays 11px nowrap on purpose. */
+  height: auto;
+  padding-block: 10px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.25;
 }
 
 .spon-stage-sec {
@@ -2316,8 +3947,8 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .spon-stage-left {
   margin: 0 0 14px;
   color: var(--accent-text);
-  font: 500 0.62rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.16em;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .spon-stage-name {
@@ -2326,6 +3957,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 .spon-stage-body {
   margin: 10px 0 0;
@@ -2351,10 +3983,13 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .spon-live-kicker {
   margin: 22px 0 0;
-  color: var(--muted);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  color: var(--ink-soft);
+  /* Sentence over the live rail, not a 0.6rem uppercase kicker.
+     11px stayed put at 200% text while the names below grew. */
+  font: 500 0.78rem/1.35 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  overflow-wrap: anywhere;
 }
 .spon-live {
   margin: 10px 0 0;
@@ -2390,9 +4025,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .spon-term-tag {
   margin: 0 0 8px;
   color: var(--accent-text);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
 }
 .spon-term-tag-quiet { color: var(--muted); }
 .spon-term-label {
@@ -2425,9 +4060,17 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 .spon-error {
   margin-top: 10px;
-  color: var(--accent-text);
-  font-size: 0.8rem;
+  padding: 12px 14px;
+  border-radius: var(--r-inner);
+  background: color-mix(in srgb, var(--beta) 12%, transparent);
+  color: var(--beta);
+  font-size: 0.88rem;
+  line-height: 1.5;
 }
+.spon-error a { color: inherit; }
+.spon-error-block { margin-top: 10px; }
+.spon-error-block .spon-error { margin-top: 0; }
+.spon-error-block .theme-control { margin-top: 12px; }
 
 .spon-steps {
   display: grid;
@@ -2465,7 +4108,20 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 
 .spon-dock { display: none; }
 
-@media (min-width: 860px) {
+/* Viewport 900px used to 4-up these in the 586px wings column
+   (117px cells, 113px-tall notes). Follow the column, not the window. */
+@container (min-width: 48rem) {
+  .spon-facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px 40px;
+  }
+  .spon-fact + .spon-fact {
+    border-left: 1px solid var(--line);
+    padding-left: 2rem;
+  }
+  .spon-fact:first-child { padding-right: 0.5rem; }
+  /* Same 860px window query split the buy stage in that 586px
+     column (231px offer, 106px surface cells). */
   .spon-stage {
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     gap: 8px 32px;
@@ -2480,7 +4136,9 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 }
 @media (max-width: 859px) {
   .wings-main-col:has(.spon-dock) {
-    padding-bottom: 80px;
+    /* Dock is 10+44+10 plus the home indicator (98 on a 34px inset).
+       80px left the last block under that bar. */
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   }
   body:has(.spon-dock) .spon-mq--bottom {
     display: none;
@@ -2497,10 +4155,12 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    min-height: 56px;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    min-height: calc(56px + env(safe-area-inset-bottom, 0px));
+    /* Full-bleed bar. 16px sides sat the slot line at 16 (in the
+       47px landscape notch) and Buy a slot at 651 (past 646). */
+    padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
     background: var(--page);
-    box-shadow: 0 -1px 0 var(--line);
+    box-shadow: 0 -1px 0 var(--pill-line);
     color: var(--ink-soft);
     font-size: 0.78rem;
     text-decoration: none;
@@ -2509,14 +4169,14 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
     flex: none;
     display: inline-flex;
     align-items: center;
-    min-height: 36px;
+    min-height: 44px;
     padding: 0 14px;
     border-radius: var(--r-pill);
     background: var(--pill-fill);
     color: var(--pill-fill-ink);
-    font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font: 500 0.88rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
+    letter-spacing: -0.01em;
+    text-transform: none;
   }
 }
 
@@ -2527,13 +4187,22 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   border-radius: var(--r-inner);
   background: var(--surface-elevated);
   color: var(--ink-soft);
-  font-size: 0.82rem;
+  /* Same size as empty bodies and customize alerts. This line is a
+     status recovery, not chrome. */
+  font-size: 0.84rem;
   line-height: 1.6;
+}
+.spon-paid a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: inherit;
 }
 .spon-paid-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-height: 24px;
 }
 .spon-mark {
   width: 18px;
@@ -2550,10 +4219,36 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .spon-field {
   display: grid;
   gap: 8px;
-  color: var(--muted);
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  color: var(--ink-soft);
+  /* Visible name of the field. 11px stayed put at 200% text while
+     .spon-count (0.72rem) grew louder than “Short description”. */
+  font: 500 0.84rem/1.4 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  overflow-wrap: anywhere;
+}
+.spon-field-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+.spon-count {
+  flex: none;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.72rem;
+}
+.spon-field.is-full .spon-count { color: var(--accent-text); }
+.spon-field-hint {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
 }
 .spon-input,
 .spon-file {
@@ -2571,14 +4266,27 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .spon-file { padding-block: 12px; }
 .spon-input::placeholder { color: var(--ink-soft); }
 .spon-input:focus,
-.spon-file:focus {
-  outline: 1px solid var(--accent);
-  outline-offset: -1px;
+.spon-file:focus,
+.spon-input:focus-visible,
+.spon-file:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
   background: var(--surface-elevated);
+}
+.spon-input[aria-invalid="true"],
+.spon-file[aria-invalid="true"] {
+  box-shadow: inset 0 0 0 1px var(--beta);
+}
+.spon-field-error {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--beta);
 }
 .spon-reasons {
   margin-top: 12px;
-  color: var(--accent-text);
+  color: var(--beta);
   font-size: 0.85rem;
   line-height: 1.55;
 }
@@ -2608,13 +4316,15 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
 .foot-inner {
   max-width: none;
   margin: 0;
-  padding: 72px 0 56px;
+  padding: 72px 0 calc(56px + env(safe-area-inset-bottom));
 }
 .foot-cols {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.3fr);
   gap: 40px 48px;
+  min-width: 0;
 }
+.foot-col { min-width: 0; }
 .foot-col-title {
   /* x.ai mobile: sentence-case group titles, not tracked caps. */
   color: color-mix(in srgb, var(--ink) 70%, transparent);
@@ -2634,10 +4344,17 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   line-height: 1.5;
   transition: color var(--dur) var(--ease);
 }
-/* A domain reads as one word. It may run to the edge of its column, but
-   it never breaks in the middle. */
-.foot-col li > .foot-link { white-space: nowrap; }
-.foot-link:hover { color: var(--accent-text); }
+/* Wrap when the column is too narrow (200% text, a long label). A
+   nowrap domain used to push the page 172px past the viewport. */
+.foot-col li > .foot-link {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.foot-link:hover,
+.foot-link:focus-visible { color: var(--accent-text); }
+.foot-link[aria-current="page"],
+.foot-link[aria-current="page"]:hover,
+.foot-link[aria-current="page"]:focus-visible { color: var(--ink); font-weight: 500; }
 .foot-link:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .foot-legal {
   margin-top: 18px;
@@ -2656,6 +4373,16 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
   gap: 40px 64px;
   align-items: start;
+  container-type: inline-size;
+}
+@container (max-width: 70rem) {
+  /* 17rem of identity plus a 4-col map left ~112px tracks at 1024.
+     50rem only caught text-zoom / a 640 frame. 70rem also catches
+     the 960px pane beside the lockup. */
+  .foot-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px 24px;
+  }
 }
 .foot-identity {
   display: flex;
@@ -2680,6 +4407,7 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-height: 24px;
   color: var(--ink);
   font-size: 0.95rem;
 }
@@ -2702,14 +4430,16 @@ html:not([data-theme="dark"]) .wings-video img.wings-poster {
   letter-spacing: 0.1em;
   transition: color var(--dur) var(--ease);
 }
-.foot-grok:hover { color: var(--ink); }
+.foot-grok:hover,
+.foot-grok:focus-visible { color: var(--ink); }
 .foot-grok:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 4px; }
 .foot-mark-grok { width: 20px; height: 20px; flex: none; }
 .foot-mark-text { white-space: nowrap; }
 
 /* Leaves the site. Same icon on every row that does. */
 .foot-out { flex: none; opacity: 0.55; }
-.foot-link:hover .foot-out { opacity: 1; }
+.foot-link:hover .foot-out,
+.foot-link:focus-visible .foot-out { opacity: 1; }
 
 /* One artwork file per background. Never a filter, never a fill swap. */
 .grok-mark-on-dark { display: none; }
@@ -2721,17 +4451,26 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .foot-panes { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .foot-meta { margin-top: 36px; padding-top: 22px; }
 }
-@media (max-width: 720px) {
+@media (max-width: 1279px) {
+  /* 1024 to 1279 still matches the 4-col default. Identity takes
+     17rem, so the map was four 112px tracks. Keep the 44px / dock
+     padding in the 1023 block so desktop chrome stays 26px rows. */
+  .foot-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px 24px;
+  }
+}
+@media (max-width: 1023px) {
   /* Same 2-column map x.ai uses on a phone. Do not collapse to one
-     tall list of 44px rows. */
-  .foot-inner { padding: 40px 0 64px; }
+     tall list of 44px rows. A 4-column nowrap map overflows at 820. */
+  .foot-inner { padding: 40px 0 calc(80px + env(safe-area-inset-bottom, 0px)); }
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 16px; }
   .foot-col ul { margin-top: 6px; }
   .foot-col li > .foot-link { white-space: normal; }
   /* Keep the longest Ellelion domain and its outbound mark inside the
-     two-column phone grid. */
+     two-column phone grid. Hit target stays 44. */
   .foot-col:last-child .foot-link { gap: 6px; font-size: 0.72rem; }
-  .foot-link { min-height: 26px; }
+  .foot-link { min-height: 44px; }
   .foot-legal { max-width: none; }
   .foot-meta { flex-direction: column; align-items: flex-start; gap: 14px; }
 }
@@ -2749,7 +4488,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
    accordion with its title always on screen, which horizontal tabs
    cannot promise: a quarter of people never open one and decide the
    content is missing. */
-.rp-main { max-width: var(--w-data); }
+.rp-main {
+  min-width: 0;
+  max-width: var(--w-data);
+}
 /* Everything on a recipe page that is a sentence rather than a row. */
 .rp-job,
 .rp-note,
@@ -2768,28 +4510,44 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   line-height: 1.4;
   overflow: visible;
 }
+/* Toolbar only. Identity lives above this so a desktop H1 cannot
+   become a 300px sticky wall over Routines. Parent is .rp, which
+   includes the roster and accordion, so the bar can stick for the
+   whole recipe. */
 .rp-head {
   position: sticky;
-  top: 0;
+  top: var(--masthead-h);
   z-index: 26;
-  padding: 12px 0 12px;
+  padding: 10px 0;
   background: var(--page);
-  border-bottom: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--pill-line);
   box-shadow: 0 -32px 0 0 var(--page);
 }
-.rp-head-row {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
+@media (min-width: 1024px) {
+  /* The listing column is already under the masthead. Its 24px
+     padding left a strip of scrolling Routines between the nav and
+     Copy. Drop the padding so the bar sits flush. */
+  .rp-head { top: 0; }
+  .wings-main-col:has(.rp-head) {
+    padding-top: 0;
+    scroll-padding-top: 96px;
+  }
+  .wings-main-col:has(.rp-head) .rp-head-id {
+    padding-top: 1.5rem;
+  }
 }
-.rp-head-id { min-width: 0; width: 100%; }
+.rp-head-id {
+  min-width: 0;
+  width: 100%;
+  margin-bottom: 14px;
+}
 .rp-name {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: clamp(1.55rem, 3vw, 2.25rem);
   font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 1.08;
+  overflow-wrap: anywhere;
 }
 .rp-job {
   margin-top: 5px;
@@ -2808,19 +4566,23 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 /* Secondary next to Copy, so the primary action reads as the primary. */
 .rp-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 40px;
   padding: 0 15px;
   border: 1px solid var(--pill-line);
   border-radius: var(--r-pill);
   background: transparent;
   color: var(--ink-soft);
-  font: 500 0.6rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
 }
-.rp-secondary { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
-.rp-secondary:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
+.rp-secondary { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.rp-secondary:hover,
+.rp-secondary:focus-visible { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
 .rp-secondary:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
 .rp-head-chips {
   display: flex;
@@ -2831,6 +4593,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .roster-shape {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   font-size: 13px;
@@ -2854,62 +4617,130 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   transform-origin: 50% 80%;
 }
 .roster-shape-stack .grok-bot-mark:first-child { margin-left: 0; }
-.roster-shape-stack:hover .grok-bot-mark,
-.roster-shape-stack:focus-within .grok-bot-mark {
-  animation: roster-face-jump 420ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
-}
-.roster-shape-stack:hover .grok-bot-mark:nth-child(2),
-.roster-shape-stack:focus-within .grok-bot-mark:nth-child(2) { animation-delay: 45ms; }
-.roster-shape-stack:hover .grok-bot-mark:nth-child(3),
-.roster-shape-stack:focus-within .grok-bot-mark:nth-child(3) { animation-delay: 90ms; }
-.roster-shape-stack:hover .grok-bot-mark:nth-child(4),
-.roster-shape-stack:focus-within .grok-bot-mark:nth-child(4) { animation-delay: 135ms; }
-@keyframes roster-face-jump {
-  0% { transform: translateY(0); }
-  45% { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .roster-shape-stack:hover .grok-bot-mark,
-  .roster-shape-stack:focus-within .grok-bot-mark { animation: none; }
-}
 .roster-shape-n { font-variant-numeric: tabular-nums; }
 .roster-shape-routines {
   position: relative;
-  cursor: default;
+  display: inline;
+}
+.roster-shape-routines-sum {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  line-height: inherit;
+  cursor: help;
+  transition: color var(--dur) var(--ease);
+}
+.roster-shape-routines-sum:hover,
+.roster-shape-routines-sum:focus-visible {
+  color: var(--accent-text);
 }
 .roster-shape-tip {
+  /* Parked tips used opacity/visibility, so a 16rem card still
+     widened a 390 page (~114px past the installer-prompt fix). */
   display: none;
+  flex-direction: column;
+  gap: 10px;
   position: absolute;
   left: 0;
   top: calc(100% + 8px);
   z-index: 20;
-  min-width: 16rem;
-  max-width: 24rem;
-  padding: 10px 12px;
-  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
-  border-radius: 10px;
-  background: var(--page);
-  box-shadow: var(--shadow-float);
+  box-sizing: border-box;
+  min-width: min(16rem, 70vw);
+  max-width: min(24rem, calc(100vw - 2rem));
+  max-height: min(20rem, 56vh);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--ink) 28%, transparent) transparent;
+  padding: 16px 18px;
+  /* Overlay, not an in-flow card. --pill-line is the 3:1 edge. */
+  border: 1px solid var(--pill-line);
+  border-radius: var(--r-inner);
+  background: var(--card);
   text-transform: none;
   letter-spacing: 0;
   white-space: normal;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+/* Bridge the 8px gap so the tip stays while the pointer moves into it. */
+.roster-shape-tip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 10px;
 }
 .roster-shape-routines:hover .roster-shape-tip,
-.roster-shape-routines:focus-within .roster-shape-tip { display: flex; flex-direction: column; gap: 8px; }
+.roster-shape-routines:focus-within .roster-shape-tip {
+  display: flex;
+  pointer-events: auto;
+}
+/* Centered team hero: the count sits mid-column, so left:0 of the
+   word still ran ~114px past 390. Park the open card in the extra
+   band (full 22rem story column), not off the last word. Opens
+   downward: opening up put the first run under the masthead. */
+.wings-hero-extra {
+  position: relative;
+}
+.wings-hero-extra .roster-shape-routines {
+  position: static;
+}
+.wings-hero-extra .roster-shape-tip {
+  left: 0;
+  right: 0;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+}
+@media (max-width: 40rem) {
+  .roster-shape-tip {
+    min-width: 0;
+    width: min(16rem, calc(100vw - 2rem));
+    max-width: min(24rem, calc(100vw - 2rem));
+  }
+  .wings-hero-extra .roster-shape-tip,
+  .index-row .roster-shape-tip {
+    width: auto;
+  }
+  /* List rows put the count on the right of a short name. left:0 of
+     that word ran 53px past 390. The head is already the column. */
+  .index-row .roster-shape-routines {
+    position: static;
+  }
+  .index-row .roster-shape-tip {
+    left: 0;
+    right: 0;
+    min-width: 0;
+    max-width: 100%;
+  }
+}
 .roster-shape-tip-row { display: flex; flex-direction: column; gap: 2px; }
 .roster-shape-tip-row strong {
   font: 500 0.78rem/1.25 var(--font-geist-sans), system-ui, sans-serif;
   color: var(--ink);
 }
 .roster-shape-tip-row em {
-  font-size: 13px;
+  /* Same schedule as .rp-run-meta. 13px stayed put at 200% text
+     while the rem routine name and prompt grew, so the only visible
+     run time became the quietest line in the open tip. */
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
   color: var(--ink-soft);
   font-style: normal;
+  overflow-wrap: anywhere;
 }
 .roster-shape-tip-prompt {
   margin-top: 4px;
@@ -2921,7 +4752,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .rp-chips,
 .rp-room-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* 10rem tracks collapse via min(100%) when the zoomed column is 177px.
+     A later unscoped 3-col rule used to override the early @container. */
+  grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
   gap: 14px 20px;
   margin-top: 12px;
   padding: 0;
@@ -2931,6 +4764,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  max-width: 100%;
   justify-self: start;
   min-height: 40px;
   min-width: 0;
@@ -2940,14 +4774,23 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   background: var(--card);
   font-size: 0.88rem;
 }
-.rp-chip-name { min-width: 0; white-space: nowrap; }
+.rp-chip-name {
+  min-width: 0;
+  /* nowrap + ellipsis hid “Findability Grok Bot” under WCAG 1.4.12
+     (165px needed, 127px track). Phone already wrapped; desktop
+     must too, or bookmarklet spacing clips the roster. */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}
 .rp-chip-note {
-  font-size: 13px;
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
   color: var(--ink-soft);
+  overflow-wrap: anywhere;
 }
 .rp-room { margin-top: 14px; color: var(--ink-soft); font-size: 0.86rem; line-height: 1.5; }
 .rp-room-name { margin: 4px 0 8px; color: var(--ink); font-size: 0.92rem; }
@@ -2960,10 +4803,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   gap: 4px;
 }
 .rp-room-bot-name {
+  min-width: 0;
   color: var(--ink);
   font-size: 0.88rem;
   font-weight: 500;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 .rp-room-bot-line {
   color: var(--ink-soft);
@@ -2974,12 +4819,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 
 .rp-room-label {
   display: block;
-  font-size: 13px;
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
   color: var(--ink-soft);
+  overflow-wrap: anywhere;
 }
 .rp-connectors { margin-top: 22px; }
 .rp-connectors .rp-room-label { margin-bottom: 12px; }
@@ -3009,7 +4855,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   }
 }
 
-.rp-note { margin-top: 12px; color: var(--muted); font-size: 0.8rem; line-height: 1.6; }
+.rp-note {
+  margin-top: 12px;
+  color: var(--ink-soft);
+  /* Same sentence as the Customize install note, which is already 0.84. */
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
 .rc-h2 {
   color: var(--accent-text);
   font-size: 11px;
@@ -3017,7 +4869,16 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.rc-empty { margin-top: 14px; color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+.rc-empty { margin-top: 14px; color: var(--ink-soft); font-size: 0.88rem; line-height: 1.6; }
+.rc-empty-block { margin-top: 14px; }
+.rc-empty-block .rc-empty { margin-top: 0; }
+.rc-empty-block .cz-hint {
+  margin-top: 6px;
+  /* Same sentence as catalog / connector empty bodies. The helper
+     0.74 stayed on “what to do next” while .rc-empty sat at 0.88. */
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+}
 
 /* The accordion. Titles always visible, Job open, the rest closed. */
 .rp-run-meta {
@@ -3026,16 +4887,23 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   align-items: baseline;
   gap: 12px;
   margin-top: 6px;
-  font-size: 13px;
+  /* Owner + cadence are the schedule, not Copy chrome. 13px stayed
+     put at 200% text while .rp-name (rem) grew past it. */
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
   color: var(--ink-soft);
 }
-.rp-run-owner { min-width: 0; }
+.rp-run-owner { min-width: 0; overflow-wrap: anywhere; }
 .rp-run-k { margin-right: 0.25em; }
-.rp-run-cadence { flex: none; text-align: right; white-space: nowrap; }
+.rp-run-cadence {
+  flex: none;
+  text-align: right;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 
 .rp-acc { margin-top: 28px; border-top: 1px solid var(--line-strong); }
 .rp-sec { border-bottom: 1px solid var(--line); }
@@ -3044,20 +4912,20 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
-  /* Sticky titles, thin enough not to stack into a wall with the
-     header above them. */
-  position: sticky;
-  top: 4.75rem;
-  z-index: 15;
+  /* In flow. Exclusive <details name> already prevents a stack, and
+     a sticky title under the copy bar was a second wall on desktop. */
+  position: static;
   min-height: 48px;
   padding: 0 2px;
   background: var(--page);
-  color: var(--ink);
+  color: var(--ink-soft);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1rem;
   cursor: pointer;
   list-style: none;
 }
+.rp-sec[open] > .rp-sum { color: var(--ink); }
+.rp-sec[open] > .rp-sum .line-icon { color: inherit; }
 .rp-sum::-webkit-details-marker { display: none; }
 .rp-sum::after {
   content: "";
@@ -3071,14 +4939,28 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .rp-sec[open] > .rp-sum::after { transform: rotate(-135deg) translate(-3px, -3px); }
 @media (prefers-reduced-motion: reduce) { .rp-sum::after { transition: none; } }
-.rp-sum:hover { color: var(--accent-text); }
-.rp-sum:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.rp-sum:hover,
+.rp-sum:focus-visible { color: var(--accent-text); }
+.rp-sum:focus-visible {
+  outline: 2px solid var(--accent-text);
+  /* Full-bleed in the column scroller. A 2px outer ring lost 4px
+     a side on Job / Routines / Skills / Notes. */
+  outline-offset: -3px;
+}
 .rp-sum .line-icon { width: 16px; height: 16px; flex: none; color: var(--muted); }
-.rp-sum:hover .line-icon { color: inherit; }
-.rp-sum-lab { flex: 0 1 auto; white-space: nowrap; }
-.rp-sum:has(.rp-count) { display: grid; grid-template-columns: 16px 5.5rem 1.15rem minmax(0,1fr) auto; column-gap: 8px; align-items: center; }
+.rp-sum:hover .line-icon,
+.rp-sum:focus-visible .line-icon { color: inherit; }
+.rp-sum-lab {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+/* Label column used to be 5.5rem. "Routines" is already 88px once
+   letter-spacing is 0.12em, so 1.4.12 clipped the word into the count. */
+.rp-sum:has(.rp-count) { display: grid; grid-template-columns: 16px max-content minmax(1.15rem, auto) minmax(0,1fr) auto; column-gap: 8px; align-items: center; }
 .rp-sum:has(.rp-count) > .line-icon { grid-column: 1; }
-.rp-sum:has(.rp-count) > .rp-sum-lab { grid-column: 2; overflow: hidden; text-overflow: ellipsis; }
+.rp-sum:has(.rp-count) > .rp-sum-lab { grid-column: 2; overflow: visible; }
 .rp-sum:has(.rp-count)::after { grid-column: 5; margin-left: 0; }
 .rp-count {
   grid-column: 3;
@@ -3088,6 +4970,39 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   font: 500 0.7rem/1 var(--font-geist-mono), ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
 }
+.rp-related {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+.rp-related .rc-h2 { margin-bottom: 4px; }
+.rp-related-row { padding: 12px 0; }
+.rp-related-row + .rp-related-row { border-top: 1px solid var(--line); }
+.rp-related-name {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  max-width: 100%;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.rp-related-name:focus-visible { outline-offset: -3px; }
+.rp-related-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+.rp-related-tag {
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+.rp-related-row .connector-row { margin-top: 8px; }
+
 .rp-secbody { padding: 4px 2px 22px; }
 .rp-secbody .cz-list { margin: 0; padding: 0; list-style: none; }
 .rp-secbody .hairline-row { padding: 14px 0; }
@@ -3114,12 +5029,19 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   flex-direction: column;
   width: min(40rem, 100%);
   height: 100%;
-  border-left: 0;
-  background: var(--surface-elevated);
-  box-shadow: var(--shadow-float);
+  /* Adjacent to the 26% ink scrim, not bare paper. --pill-line sinks. */
+  border-left: 1px solid var(--ink);
+  background: var(--page);
   animation: rp-sheet-in var(--dur) var(--ease);
 }
-@keyframes rp-sheet-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes rp-sheet-in {
+  from { transform: translateX(12px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes rp-sheet-up {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
 @media (prefers-reduced-motion: reduce) { .rp-sheet { animation: none; } }
 .rp-sheet-head {
   flex: none;
@@ -3128,21 +5050,42 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   align-items: center;
   justify-content: space-between;
   gap: 10px 14px;
-  padding: 16px 20px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 16px;
   border-bottom: 1px solid var(--line);
+  background: var(--page);
 }
 .rp-sheet-act { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+.rp-sheet-head .rc-h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
 .rp-sheet-body {
   flex: 1 1 auto;
+  min-width: 0;
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 4px 20px 28px;
+  padding: 4px 20px calc(28px + env(safe-area-inset-bottom, 0px));
 }
 
-@media (max-width: 720px) {
-  /* Hero already has the H1 + full tagline on the stacked mobile column. */
+@media (max-width: 1023px) {
+  /* Hero already has the H1 + full tagline on the stacked column. */
   .rp-head-id { display: none; }
+  /* One sticky bar: the copy row. Section titles stay in flow so
+     opening Routines cannot slide a heading under Copy link / Post on X. */
+  .rp-sum { min-height: 56px; }
+  .rp-sec,
+  .rp-sum,
+  .rp-related,
+  .rp-related-name,
+  .rp-secbody a,
+  .rp-secbody button,
+  .run-bar a { scroll-margin-top: calc(var(--masthead-h) + 72px); }
+  .rp-head { padding: 8px 0; }
   .rp-chips,
   .rp-room-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .rp-chip-name { white-space: normal; }
@@ -3151,23 +5094,79 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .rp-chips,
   .rp-room-grid { grid-template-columns: minmax(0, 1fr); }
 }
-@media (max-width: 640px) {
-  .rp-head { padding-top: 10px; }
+/* Viewport media above never sees CSS zoom. Repeat the 1-col stack here
+   so it wins over the 3-col / auto-fit defaults. */
+@container (max-width: 24rem) {
+  .rp-chips,
+  .rp-room-grid,
+  .rp-connectors .connector-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rp-chip-name { white-space: normal; overflow-wrap: anywhere; }
+  /* 3vw follows the 1280 layout viewport, so the title stayed 2.25rem
+     in a 177px column and "Reproduction" blew the pane by 30px. */
   .rp-name { font-size: 1.4rem; }
-  .rp-head-act { width: 100%; flex-wrap: nowrap; }
+  /* Cadence is nowrap + flex:none, so the owner was crushed to 18px. */
+  .rp-run-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+  .rp-run-cadence { text-align: left; }
+  .spon-facts,
+  .spon-surfaces,
+  .spon-stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .spon-fact + .spon-fact {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .spon-stage-name { font-size: 1.25rem; }
+  .spon-fact-value { font-size: 1.5rem; }
+}
+@media (max-width: 1023px) {
+  .rp-name { font-size: 1.4rem; }
+  .rp-head-act {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .rp-head-act::-webkit-scrollbar { display: none; }
   .rp-head-act .theme-control,
   .rp-head-act .rp-secondary,
-  .rp-head-act .share-btn { flex: 1 1 0; min-height: 44px; min-width: 0; justify-content: center; }
-  /* The header is taller once the action wraps, so the section titles
-     stop being sticky rather than stacking two bars deep. */
-  .rp-sum { position: static; min-height: 56px; }
+  .rp-head-act .share-btn {
+    flex: 0 0 auto;
+    min-height: 44px;
+    min-width: 0;
+    justify-content: center;
+  }
+  .rp-head-act .share-bar {
+    flex: 0 0 auto;
+    width: auto;
+  }
+  /* overflow-x:auto makes overflow-y compute to auto. Copy sits flush
+     to the left, so the 3px outer ring lost its left 5px. Same inset
+     as .cz-modes / List. */
+  .rp-head-act .theme-control-label:focus-visible,
+  .rp-head-act .rp-secondary:focus-visible,
+  .rp-head-act .share-btn:focus-visible {
+    outline-offset: -3px;
+  }
   .rp-sheet { width: 100%; border-left: 0; }
-  .rp-sheet-head { padding: 14px 16px; }
-  .rp-sheet-body { padding: 4px 16px 28px; }
+@media (prefers-reduced-motion: no-preference) {
+  .rp-sheet { animation-name: rp-sheet-up; }
+}
+  .rp-sheet-head {
+    padding: calc(14px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 14px max(16px, env(safe-area-inset-left, 0px));
+  }
+  .rp-sheet-body {
+    padding: 4px max(16px, env(safe-area-inset-right, 0px)) calc(28px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  }
   .rp-sheet-act .theme-control,
   .rp-sheet-act .rp-secondary { min-height: 44px; }
-  /* The chips take inline actions later, so they get a thumb-sized box
-     now rather than after someone tries to tap one. */
   .rp-chip { min-height: 44px; }
 }
 
@@ -3181,6 +5180,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   border: 0;
 }
 .share-bar {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3191,26 +5191,55 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .share-btn {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
+  min-height: 40px;
   padding: 0 13px;
   border: 1px solid var(--pill-line);
   border-radius: var(--r-pill);
   background: transparent;
   color: var(--ink-soft);
-  font: 500 0.58rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   cursor: pointer;
 }
 .share-btn { transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
-.share-btn:hover { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
-.share-btn:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
-.rp-disclaimer {
-  color: var(--muted);
-  font: 500 0.58rem/1.5 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.1em;
+/* Idle color is :not(fail) so it cannot beat the fail token. A later
+   .share-btn { color: ink-soft } was winning the early .is-copy-fail
+   pair, and a restated pair was merged back to that early rule. */
+.share-btn:not(.is-copy-fail) {
+  color: var(--ink-soft);
+  border-color: var(--pill-line);
 }
-.rp-disclaimer { color: var(--ink-soft); }
+.share-bar .share-btn.is-copy-fail,
+.cz-actions .cz-btn.is-copy-fail,
+.cz-btn.cz-btn-quiet.is-copy-fail {
+  color: var(--beta);
+  border-color: var(--beta);
+}
+.share-btn:hover,
+.share-btn:focus-visible { color: var(--ink); border-color: var(--ink); background: var(--surface-elevated); }
+.share-btn.is-copy-fail:hover,
+.share-btn.is-copy-fail:focus-visible {
+  /* The click that fails leaves the pointer on the control. Hover
+     would otherwise paint the fail label as idle ink. */
+  color: var(--beta);
+  border-color: var(--beta);
+  background: transparent;
+}
+.share-btn:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+/* Desktop Copy / Customize / share sit flush in the column scroller.
+   Phone already insets these inside .rp-head-act overflow-x:auto. */
+.rp-head-act .theme-control-label:focus-visible,
+.rp-head-act .rp-secondary:focus-visible,
+.rp-head-act .share-btn:focus-visible {
+  outline-offset: -3px;
+}
+.rp-disclaimer {
+  color: var(--ink-soft);
+  font: 500 11px/1.5 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
 
 @media (max-width: 640px) {
   .share-btn { min-height: 44px; }
@@ -3218,9 +5247,51 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 
 .home-disclaimer {
   color: var(--ink-soft);
-  font: 500 0.6rem/1.5 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font: 500 11px/1.5 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+/* Standalone CTAs, not prose in a sentence. 2.5.8 is 24px; thumb
+   restatement at the bottom of this file raises them to 44. */
+.home-hero-manifesto a,
+.home-hero-links a,
+.api-link,
+.hairline-row > a,
+.home-contribute-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  min-width: 24px;
+}
+/* How / contribute recoveries used 0.72rem on desktop while the
+   phone accordion already set the same labels at 0.9rem. */
+.home-contribute-links a {
+  font-size: 0.88rem;
+}
+/* Endpoint and download actions sat in 0.8rem parents (12.8px).
+   Sponsor / empty recoveries already use 0.88rem for the same job. */
+.api-link {
+  font-size: 0.88rem;
+}
+/* Same flush-left column scroller as the Grok Bot jump list. */
+.api-link:focus-visible { outline-offset: -3px; }
+.home-scroll-cue {
+  min-height: 24px;
+  min-width: 24px;
+}
+.home-contribute-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 18px;
+}
+.home-more .home-contribute-links {
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
 }
 
 
@@ -3238,7 +5309,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   text-decoration: none;
   color: inherit;
 }
-.os-badge:hover { border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.os-badge:hover,
+.os-badge:focus-visible { border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
 .os-badge-tag {
   display: inline-flex;
   align-items: center;
@@ -3283,13 +5355,18 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .hero-stat {
   display: inline-flex;
-  align-items: baseline;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 0.35em;
+  min-height: 24px;
   padding: 0;
   text-decoration: none;
   color: inherit;
   border: 0;
-  white-space: nowrap;
+  /* Counts are rem; the word used to stay 13px, so at 200% text
+     "140" outgrew "Teams". nowrap also shoved Limits checked past
+     a 320 column once the word scaled. */
+  white-space: normal;
 }
 .hero-stat:first-child { border: 0; }
 .hero-stat strong {
@@ -3297,19 +5374,28 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   font: 500 0.72rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .hero-stat span {
-  font-size: 13px;
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
   color: var(--ink-soft);
+  overflow-wrap: anywhere;
 }
-.hero-stat:hover strong { color: var(--accent); }
+.hero-stat:hover strong,
+.hero-stat:focus-visible strong { color: var(--ink); }
+.hero-stat:hover span,
+.hero-stat:focus-visible span { color: var(--ink); }
 .hero-stats,
 .hero-stat {
-  animation: hero-stat-in 700ms var(--ease) both;
+  /* Same 200ms as every other ledger entrance. 700ms left the counts
+     arriving after the catalog had already settled. `both` held the
+     `to` transform and blocked the 4% press squash. backwards still
+     hides the first paint; after 200ms :active can scale. */
+  animation: hero-stat-in var(--dur) var(--ease) backwards;
 }
 .hero-stat:nth-child(2) { animation-delay: 80ms; }
 .hero-stat:nth-child(3) { animation-delay: 160ms; }
@@ -3344,7 +5430,14 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   font: 500 1.05rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: -0.02em;
 }
-.run-bar-copy p { margin-top: 6px; color: var(--muted); font-size: 0.82rem; line-height: 1.45; }
+.run-bar-copy p {
+  margin-top: 6px;
+  color: var(--ink-soft);
+  /* Same size as empty bodies. This is the “what to do next” line
+     next to View source, not chrome. */
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
 .run-bar-act { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .rp-job-list .hairline-row { padding-top: 10px; padding-bottom: 10px; }
 /* ── Reduced motion ───────────────────────────────────────────────────
@@ -3364,6 +5457,180 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   }
 }
 
+/* Windows High Contrast / forced-colors: selected pills and icon-only
+   controls must keep a visible edge when background color is ignored. */
+@media (forced-colors: active) {
+  .theme-control,
+  .wings-mark,
+  .browse-pick-btn,
+  .cat-pill,
+  .sel-button,
+  .sel-list,
+  .theme-accent-popover,
+  .roster-shape-tip,
+  .filter-views,
+  .cz-modes,
+  .share-btn,
+  .rp-secondary,
+  .spon-chip,
+  .spon-cta,
+  .cf-chip,
+  .idx-chip,
+  .search-input,
+  .cf-input,
+  .cz-input,
+  .spon-input,
+  .spon-file,
+  .cz-btn,
+  .cz-mode,
+  .talk-watch-btn,
+  .talk-overlay-close,
+  .talk-stage,
+  .talk-overlay-canvas .talk-stage,
+  .talk-replay,
+  .talk-empty-go,
+  .talk-rail-row,
+  .talk-dock-item,
+  .site-menu-button,
+  .site-menu-link,
+  .sel-option,
+  .cz-skill-opt,
+  .cf-browse,
+  .cf-clear,
+  .idx-chip-clear,
+  .search-clear,
+  .cf-search-clear,
+  .cz-search-clear,
+  .add-yours,
+  .cz-chip,
+  .filter-chip,
+  .spon-cta-ghost,
+  .idx-card,
+  .index-ad,
+  .skip-link,
+  /* Filled labels set border-color: transparent at higher specificity
+     than .theme-control, so the generic ButtonText edge never reached
+     Copy, Mail us, or empty recoveries until restated here. */
+  .theme-control.theme-control-label,
+  .theme-control.theme-control-label:hover,
+  .theme-control.theme-control-label:focus-visible,
+  .theme-control-label,
+  .theme-control-label:hover,
+  .theme-control-label:focus-visible {
+    border: 1px solid ButtonText;
+    filter: none;
+  }
+  .filter-chip.is-on,
+  .cz-chip.is-on,
+  .theme-accent-swatch.is-selected,
+  .talk-rail-row.is-on,
+  .talk-dock-item.is-on,
+  .site-menu-link.is-current,
+  .site-masthead-nav a.is-current,
+  .foot-link[aria-current="page"],
+  .sel-option[data-active="true"],
+  .cz-skill-hits .cz-skill-opt.is-active {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+  /* Same overflow:hidden clip as color mode. An outer Highlight ring
+     on Read / List vanished on the flush edges. */
+  .cz-mode.is-on,
+  .cz-mode:focus-visible,
+  .filter-views .filter-chip--icon.is-on,
+  .filter-views .filter-chip--icon:focus-visible,
+  .rp-head-act .theme-control-label:focus-visible,
+  .rp-head-act .rp-secondary:focus-visible,
+  .rp-head-act .share-btn:focus-visible,
+  .browse-pick-btn.is-on,
+  .browse-pick-btn:focus-visible,
+  .cat-pill.is-on,
+  .cat-pill:focus-visible,
+  .cf-chip.is-on,
+  .cf-chip:focus-visible,
+  .spon-chip:focus-visible,
+  .idx-card:focus-visible,
+  .index-name:focus-visible,
+  .rp-related-name:focus-visible,
+  .cf-row-teams:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: -3px;
+  }
+  /* Guide compare stacks and quotes use --line, which vanishes when
+     backgrounds are ignored. Masthead current is colour-only. */
+  .spec-table th,
+  .spec-table td,
+  .spec-table tr,
+  .guide-quote {
+    border-color: ButtonText;
+  }
+  /* Copy fail is a box-shadow in color mode. Forced colors drop shadows. */
+  .theme-control-label.is-copy-fail,
+  .share-btn.is-copy-fail,
+  .cz-btn.is-copy-fail {
+    border-color: Highlight;
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+  /* Error sentences use --beta in color mode. That token is ignored
+     here, so the room-size hint and setup field errors would read as
+     ordinary body copy. */
+  .cz-hint[role="alert"],
+  .cz-hint.is-fail,
+  .cz-skill-status[role="alert"] .cz-hint,
+  .spon-field-error,
+  .spon-error,
+  .spon-reasons {
+    color: Highlight;
+  }
+  .cz-alert-stop,
+  .spon-error,
+  .cz-skill-status[role="alert"] {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+    border-color: Highlight;
+  }
+  .spon-input[aria-invalid="true"],
+  .spon-file[aria-invalid="true"],
+  .cz-input[aria-invalid="true"] {
+    border: 2px solid Highlight;
+  }
+  .theme-accent-mark i,
+  .theme-accent-swatch {
+    border: 1px solid ButtonText;
+  }
+  .chevron {
+    border: 1px solid ButtonText;
+  }
+  .cz-check input {
+    appearance: auto;
+    background: none;
+    border: 1px solid ButtonText;
+  }
+  /* Sticky/fixed page-on-page chrome. Color mode uses --pill-line
+     (often a box-shadow). Forced colors drop shadows. */
+  .site-masthead,
+  .index-chrome,
+  #teams .search-wrap,
+  .cf-bar,
+  .cf-search,
+  .rp-head,
+  .site-menu-sheet {
+    border-bottom: 1px solid ButtonText;
+  }
+  .spon-mq--bottom,
+  .spon-dock {
+    border-top: 1px solid ButtonText;
+  }
+  .rp-sheet {
+    border-left: 1px solid ButtonText;
+  }
+  .filter-views .filter-chip--icon + .filter-chip--icon,
+  .cz-mode + .cz-mode {
+    border-left: 1px solid ButtonText;
+  }
+}
+
 
 /* Side sponsor rails. Live on the outer edges, not under the page. */
 .page-rails {
@@ -3376,11 +5643,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .spon-mq {
   position: relative;
   height: 40px;
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
-  overflow: hidden;
+  overflow: clip;
   z-index: 30;
   background: var(--page);
-  border-color: var(--line);
+  border-color: var(--pill-line);
   border-style: solid;
   border-width: 0;
 }
@@ -3393,8 +5662,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: none;
   position: fixed;
   left: 0;
-  right: 0;
+  right: auto;
   bottom: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: clip;
+  contain: inline-size;
   border-top-width: 1px;
 }
 .spon-mq-row {
@@ -3402,9 +5675,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   align-items: center;
   justify-content: center;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   height: 100%;
-  padding: 0 10px;
+  padding: 0 max(10px, env(safe-area-inset-right, 0px)) 0 max(10px, env(safe-area-inset-left, 0px));
   gap: 8px;
+  overflow: hidden;
 }
 .spon-mq-label {
   position: static;
@@ -3413,10 +5689,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: flex;
   align-items: center;
   padding: 0;
-  font-size: 0.5rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-soft);
   background: transparent;
   box-shadow: none;
 }
@@ -3444,8 +5720,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding-right: 8px;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 6px;
+  padding-right: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 .spon-mq-copy[aria-hidden] {
   display: none;
@@ -3463,6 +5743,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   align-items: center;
   gap: 6px;
   flex: none;
+  min-height: 28px;
   height: 28px;
   padding: 0 10px 0 7px;
   border: 1px solid var(--pill-line, color-mix(in srgb, var(--ink) 16%, transparent));
@@ -3484,6 +5765,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   color: var(--accent-text);
   border-style: dashed;
 }
+.spon-chip:hover,
+.spon-chip:focus-visible { border-color: var(--ink); }
+/* Bottom ticker copy is an overflow-x auto row. Skillselion / Add
+   yours fill that box, so the 3px outer ring clipped on every side. */
+.spon-chip:focus-visible { outline-offset: -3px; }
 .page-rails-main { padding-bottom: 0; }
 .index-ad,
 .idx-card.idx-ad {
@@ -3503,19 +5789,33 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   background: transparent;
 }
 .idx-card.idx-ad {
-  gap: 6px;
-  padding: 14px;
-  border: 1px dashed var(--line);
-  border-radius: 10px;
+  gap: 8px;
+  padding: 28px 26px 24px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-card);
+  background: var(--card);
 }
+.idx-card.idx-ad .idx-ad-body,
+.idx-card.idx-ad .idx-ad-name {
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+}
+.index-ad:hover .idx-ad-name,
+.index-ad:focus-visible .idx-ad-name,
+.idx-card.idx-ad:hover .idx-ad-name,
+.idx-card.idx-ad:focus-visible .idx-ad-name { color: var(--accent-text); }
+/* Ledger ads are full-bleed in the column scroller. A 3px outer ring
+   lost 5px on both sides; cards already inset via .idx-card. */
+.index-ad:focus-visible { outline-offset: -3px; }
 .index-ad-open { border-bottom-style: dashed; }
 .idx-ad-kicker {
   display: block;
   align-self: flex-start;
-  font-size: 0.5rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-soft);
 }
 @media (min-width: 1024px) {
   .index-ad > .idx-ad-kicker {
@@ -3525,28 +5825,52 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .idx-ad-body {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 2px;
   width: 100%;
   min-width: 0;
-  text-align: center;
+  text-align: left;
 }
 .idx-ad-name {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
   font-size: 0.95rem;
+  transition: color var(--dur) var(--ease);
 }
 .idx-ad-line {
   font-size: 0.78rem;
-  color: var(--muted);
+  /* Same token as the side-rail pitch. --muted made the commercial
+     line quieter than the Sponsored kicker. */
+  color: var(--ink-soft);
   line-height: 1.35;
 }
 @media (max-width: 1023px) {
-  .spon-mq--top { display: block; }
-  .spon-mq--bottom { display: block; }
-  .page-rails-main { padding-bottom: 68px; }
+  /* One ticker on the phone: the fixed bar. A second in-flow copy
+     stacked the same chips twice in the first screen. */
+  .spon-mq--top { display: none; }
+  .spon-mq--bottom {
+    display: block;
+    box-sizing: border-box;
+    /* 56px chip row + home indicator. A fixed 56px bar sat the
+       44px chips in the last 34px on a notched phone (838 vs 810).
+       Dock and Watch already pad this; overlayFloor reads the box. */
+    height: calc(56px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .spon-mq--bottom .spon-chip {
+    height: 44px;
+    min-height: 44px;
+    font-size: 0.72rem;
+    padding: 0 12px 0 9px;
+  }
+  .page-rails-main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+  html { scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+  .foot-link,
+  .foot-grok {
+    scroll-margin-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 
@@ -3560,10 +5884,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .side-rail--left,
 .side-rail--right { display: none; }
 .side-rail-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  line-height: 1.4;
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
   margin: 0 0 12px;
   padding-block: 0.25em;
   overflow: visible;
@@ -3571,11 +5894,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .side-rail-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
-  perspective: 720px;
 }
 .side-rail-item,
 .add-yours {
@@ -3585,19 +5907,20 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .side-rail-item {
   margin: 0;
-  padding: 11px 12px 12px;
+  padding: 16px 16px 16px;
   border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--paper) 92%, white);
+  border-radius: var(--r-card);
+  background: var(--card);
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 .side-rail-item .spon-paid-link {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   min-width: 0;
+  min-height: 24px;
 }
 .side-rail-item .spon-paid-link .spon-name {
   flex: 1 1 0;
@@ -3631,20 +5954,23 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   flex-direction: column;
   justify-content: center;
   margin-top: 8px;
-  padding: 14px 14px 16px;
+  padding: 18px 16px 18px;
   border: 1px dashed color-mix(in srgb, var(--ink) 22%, transparent);
-  border-radius: 10px;
+  border-radius: var(--r-card);
   text-decoration: none;
   color: inherit;
 }
-.add-yours:hover { border-color: var(--accent-text); }
+.side-rail-item:hover,
+.side-rail-item:focus-within { border-color: var(--ink); }
+.add-yours:hover,
+.add-yours:focus-visible { border-color: var(--accent-text); }
 .add-yours-kicker {
   display: flex;
   align-items: center;
   gap: 0.4em;
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font: 500 0.88rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  text-transform: none;
 }
 .add-yours-arrow {
   font-size: 0.95rem;
@@ -3659,7 +5985,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (min-width: 1280px) {
   .page-rails {
     grid-template-columns: minmax(0, 1fr) 12.5rem;
-    gap: 1.5rem;
+    gap: 2rem;
     align-items: stretch;
     padding-inline: 1rem 1.25rem;
   }
@@ -3672,7 +5998,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     flex-direction: column;
     align-self: stretch;
     min-height: 100%;
-    padding-left: 1.1rem;
+    padding-left: 2.25rem;
     overflow: visible;
     border-left: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
   }
@@ -3686,68 +6012,38 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .site-foot { margin-top: 0; }
 }
 
-@keyframes rail-sway {
-  0%, 100% { transform: rotate(-0.55deg); }
-  50% { transform: rotate(0.7deg); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .side-rail-item,
-  .add-yours { animation: none; }
-}
-
-.side-rail {
-  perspective: none;
-}
 .side-rail-item,
 .add-yours {
   position: relative;
-  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 420ms ease, border-color 280ms ease;
-  will-change: transform;
+  transition: border-color var(--dur) var(--ease);
 }
-.side-rail-item::after,
-.add-yours::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(115deg, transparent 20%, color-mix(in srgb, white 55%, transparent) 48%, transparent 72%);
-  transform: translateX(-130%);
-  opacity: 0;
-  transition: transform 620ms ease, opacity 280ms ease;
-}
-@media (hover: hover) and (pointer: fine) {
-  .side-rail-item:hover,
-  .add-yours:hover {
-    transform: translateY(-5px) rotateY(-7deg) rotateX(2deg);
-    box-shadow: 0 10px 22px color-mix(in srgb, var(--ink) 10%, transparent);
-    border-color: color-mix(in srgb, var(--ink) 28%, transparent);
-    z-index: 1;
-  }
-  .side-rail-item:hover::after,
-  .add-yours:hover::after {
-    transform: translateX(130%);
-    opacity: 0.7;
-  }
-}
-@keyframes rail-sway {
-  0%, 100% { transform: none; }
-}
-
 
 .wings-persist { view-transition-name: wings; }
+.wings-main-col:focus {
+  outline: none;
+}
+.wings-main-col:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 4px;
+}
 .wings-crumb {
   margin-bottom: 1rem;
   font-size: 0.72rem;
   line-height: 1.4;
 }
+/* Same box as .crumb-list a. The hero kicker is the parent page, not
+   a word in a sentence, so min-height has to apply (inline ignores it). */
+.wings-crumb a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
 .wings-crumb nav { justify-content: center; }
 @media (max-width: 1023px) {
   .wings-main-col { background: transparent; }
   .rp-head {
-    background: color-mix(in srgb, var(--page) 42%, transparent);
-    box-shadow: none;
+    background: var(--page);
+    box-shadow: 0 1px 0 var(--pill-line);
   }
   .rp-main { background: transparent; }
 }
@@ -3755,6 +6051,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .wings-hero-col,
 .wings-main-col {
   animation: copy-in var(--dur) var(--ease);
+}
+/* 1.4.12 letter-spacing 0.12em turns “alternatives” wider than the
+   22rem hero. overflow-x hidden on the desktop column then clips it. */
+.wings-hero-col h1 {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 @keyframes copy-in {
   from { opacity: 0.35; }
@@ -3769,17 +6071,274 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .wings-hero-col {
     position: sticky;
     top: var(--masthead-h);
-    height: calc(100dvh - var(--masthead-h));
-    max-height: calc(100dvh - var(--masthead-h));
-    overflow: hidden;
+    height: var(--menu-max-h, calc(100dvh - var(--masthead-h)));
+    max-height: var(--menu-max-h, calc(100dvh - var(--masthead-h)));
+    /* How, contribute, and the FAQ sit below the first screen in this
+       column. Hidden overflow left those links in tab order and off
+       the glass. The catalog column already scrolls; this one must too. */
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scroll-padding-top: 1.25rem;
     align-self: start;
+    scrollbar-width: none;
+  }
+  .wings-hero-col::-webkit-scrollbar { display: none; }
+  /* Classic scrollbars reserved a gutter between the listing and the
+     sponsor rail. The column still scrolls; the thumb is not a third column. */
+  .wings-main-col {
+    scrollbar-width: none;
+    padding-inline: 12px;
+  }
+  .wings-main-col::-webkit-scrollbar { display: none; }
+}
+
+/* CSS zoom leaves the viewport at 1280, so the 1024 split and the
+   1280 rail still fire while the frame is ~640px. Hero was 98px and
+   clipped the title. This block sits after those viewport rules. */
+@container page (max-width: 50rem) {
+  .page-rails {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding-inline: 0;
+  }
+  .side-rail--left,
+  .side-rail--right { display: none; }
+  .home-split { grid-template-columns: minmax(0, 1fr); }
+  .wings-hero-col {
+    position: static;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    border-right-width: 0;
+  }
+  .wings-main-col {
+    grid-column: 1;
+    grid-row: auto;
+    position: static;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+  .story-beat {
+    min-height: 0;
+    overflow-x: visible;
+    padding-block: 0.35rem;
+  }
+  /* Default inbound home kept a 457px hero. Kind cleared the ticker;
+     categories did not. Keep the manifesto; tighten the stack. */
+  .story-beat h1 {
+    margin-top: 0.25rem;
+    font-size: 1.45rem;
+  }
+  .story-beat .home-hero-manifesto,
+  .story-beat .home-hero-links {
+    margin-top: 0.45rem;
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+  .story-beat .hero-stats { margin-top: 0.4rem; }
+@media (max-width: 1023px) and (max-height: 480px) {
+  /* Landscape phones: 390–430px tall. Manifesto + stats hid search
+     under the 56px ticker. Keep the title; the menu has the rest. */
+  .story-beat .home-hero-manifesto,
+  .story-beat .home-hero-links,
+  .story-beat .hero-stats {
+    display: none;
+  }
+  .story-beat { padding-block: 0.2rem; }
+  .story-beat h1 {
+    margin-top: 0.15rem;
+    font-size: 1.2rem;
+  }
+}
+  /* The cue sat at the bottom of a sticky hero column. After the
+     split stacks, How is 32px below, so "Browse teams" is a dead
+     hop before the extra copy. */
+  .home-scroll-cue { display: none; }
+  .font-display { overflow-wrap: anywhere; }
+  /* Document is the scroller. Sticky top: 0 pinned the filter stack
+     to the viewport and covered focused catalog names (2.4.11). */
+  .index-chrome {
+    display: contents;
+    position: static;
+    top: auto;
+    box-shadow: none;
+  }
+  .index-tools {
+    position: static;
+    top: auto;
+    box-shadow: none;
+    padding-bottom: 0;
+  }
+  /* Restate after the base 12px / 16px. Empty catalog at 667 put
+     List / Cards 6px under the ticker. */
+  .index-header { margin-bottom: 4px; }
+  .cat-rail { margin-bottom: 2px; }
+  #teams .search-wrap {
+    position: sticky;
+    top: var(--masthead-h);
+    z-index: 8;
+    background: var(--page);
+    margin-top: 0;
+    padding-top: 12px;
+    padding-bottom: 8px;
+    box-shadow: 0 1px 0 var(--pill-line);
+  }
+  .index-row,
+  .idx-card,
+  .idx-empty,
+  .index-name,
+  .index-ad {
+    scroll-margin-top: calc(var(--masthead-h) + 7.5rem);
+  }
+  .wings-main-col:has(.index-tools),
+  .wings-main-col:has(.cf-bar) {
+    scroll-padding-top: 0;
+  }
+  .cf-bar { display: contents; }
+  .wings-main-col .cf-bar { top: auto; }
+  .cf-search {
+    position: sticky;
+    top: var(--masthead-h);
+    z-index: 20;
+    background: var(--page);
+    padding-top: 12px;
+    padding-bottom: 10px;
+    box-shadow: 0 1px 0 var(--pill-line);
+  }
+  .rp-head { top: var(--masthead-h); }
+  .spon-surfaces,
+  .spon-stage { grid-template-columns: minmax(0, 1fr); }
+  .rp-sum,
+  .rp-sec,
+  .rp-related,
+  .rp-related-name {
+    scroll-margin-top: calc(var(--masthead-h) + 5rem);
+  }
+  .cf-shelf .cf-row-teams,
+  .cf-results > .cf-list .cf-row-teams,
+  .cf-browse,
+  .cf-empty,
+  .cf-row {
+    scroll-margin-top: calc(var(--masthead-h) + 7.5rem);
+  }
+}
+@media (max-width: 1023px) and (max-height: 480px) {
+  /* Viewport, not the 50rem page container. 932×430 (Pro Max
+     landscape) is wider than 50rem, so the nested hide left
+     manifesto + stats on and parked connector / sort off-screen. */
+  .story-beat .home-hero-manifesto,
+  .story-beat .home-hero-links,
+  .story-beat .hero-stats,
+  /* WingsHero ledes are plain <p>s, not the home manifesto class.
+     Connectors search sat 33px under the ticker at 667×375; API
+     “On this page” sat 27px under. Keep h1; the menu has Directory. */
+  .story-beat p {
+    display: none;
+  }
+  /* Crumb + 44px rows put the third /guides destination on screen
+     under the bar (316–360 vs 319). */
+  .wings-crumb { display: none; }
+  .story-beat { padding-block: 0.2rem; }
+  .story-beat h1,
+  .story-beat.is-catalog-active h1 {
+    margin-top: 0.15rem;
+    font-size: 1.2rem;
+  }
+  .cf-search {
+    padding-top: 6px;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+  }
+  /* Restate after the 1023 search pad and the 639 title hide. Connector
+     / sort sat on screen under the 56px ticker (13px at 844×390, 28px
+     at 667×375) because the section title still showed above 639 and
+     the search chrome kept 12+8 pad. Keep h1; kind and cats stay.
+     Caption + gap added 18px above the 44px triggers; the button
+     already has aria-label. */
+  .index-header .section-title { display: none; }
+  .index-header .sel-caption { display: none; }
+  .index-header .sel.has-caption { gap: 0; }
+  .filter-selects { width: auto; }
+  .browse-pick { margin-bottom: 4px; }
+  #teams .search-wrap {
+    padding-top: 6px;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+  }
+  /* Roster / Watch / verified are not <p>s, so the lede hide left
+     them on. Copy installer then sat on screen under the ticker
+     (667×375: 77px). Menu and scroll still reach Watch. */
+  .story-beat .wings-hero-extra { display: none; }
+  /* Five 404 recoveries wrap; the last sat 29px under the bar. */
+  .idx-empty { padding: 12px 16px; margin-top: 8px; }
+}
+@media (max-width: 1023px) and (max-height: 760px) {
+  /* Portrait short: keep the manifesto. Stats and the three guide
+     links wrap (94 + 88 on 320) and park List / Cards on screen
+     under the ticker (320×720 −65, 360×640 −101). Landscape already
+     hides these plus the manifesto. Captions add 18px above the
+     44px triggers; the buttons keep aria-label. 390×844 and
+     768×1024 stay above this height, so their stats stay. */
+  .story-beat .hero-stats,
+  .story-beat .home-hero-links {
+    display: none;
+  }
+  .index-header .sel-caption { display: none; }
+  .index-header .sel.has-caption { gap: 0; }
+  /* After the results line and wrap gap went, the 44px name still
+     sat 2.5px in the 90px bar. Search pad 6+4 was the last 6px.
+     390×844 stays above 760. */
+  #teams .search-wrap {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-bottom: 0;
+  }
+  .browse-pick { margin-bottom: 0; }
+  /* First team sat in the 90px notched ticker (row 580, bar 550).
+     Drop leftover gaps. Keep the manifesto. Name still sat 40px
+     in the bar: header wrap gap 12, results 19, row pad 13. */
+  .story-beat { padding-block: 0; }
+  .home-split { gap: 0; }
+  .index-header {
+    margin-bottom: 0;
+    gap: 0;
+  }
+  .cat-rail { margin-bottom: 0; }
+  .idx-status { display: none; }
+  .team-table,
+  .idx-cards { padding-top: 0; }
+  .team-table .index-row:first-child { padding-top: 0; }
+}
+@media (max-width: 1023px) and (max-height: 480px) {
+  /* After the 760 restatement. Landscape only had +14 above a 56px
+     bar; 21px of home indicator put List / Cards under it. */
+  .story-beat { padding-block: 0; }
+  /* Tailwind gap-3 is 12px between hero and listing. That 12px sat
+     List / Cards 1.5px under the 77px notched ticker at 640×360. */
+  .home-split { gap: 0; }
+  .cf-search,
+  #teams .search-wrap {
+    padding-top: 4px;
+    padding-bottom: 2px;
+    margin-bottom: 0;
+  }
+  .browse-pick { margin-bottom: 0; }
+  .cat-rail { margin-bottom: 0; }
+}
+/* 12rem after the last row is for a zoomed desktop frame. On a phone
+   it left 192px of empty catalog before the footer. */
+@media (min-width: 1024px) {
+  @container page (max-width: 50rem) {
+    #teams,
+    .cf { padding-bottom: 12rem; }
   }
 }
 
-
 /* Full-width conversation preview: own grid row above hero+listing. */
 .talk-preview-band {
-  background: #fff;
+  background: var(--page);
   grid-column: 1 / -1;
   grid-row: 1;
   width: 100%;
@@ -3795,25 +6354,28 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 
 html:not([data-theme="dark"]) .talk-stage {
   --talk-text: #0a0a0a;
-  --talk-soft: rgba(10, 10, 10, 0.62);
-  --talk-mute: rgba(20, 20, 20, 0.4);
+  --talk-soft: rgba(10, 10, 10, 0.72);
+  --talk-mute: rgba(20, 20, 20, 0.64);
   --talk-editor: rgba(252, 252, 252, 0.65);
   --talk-chrome: #fbfbfb;
   --talk-agent: rgba(16, 16, 0, 0.04);
   --talk-user: #111110;
   --talk-user-ink: #ffffff;
   --talk-border: rgba(20, 20, 20, 0.15);
+  /* #e8a33d is 2.1:1 on the paper thread. 1.4.11 is 3:1. */
+  --talk-typing-dot: #b87512;
 }
 html[data-theme="dark"] .talk-stage {
   --talk-text: #edecec;
-  --talk-soft: rgba(237, 236, 236, 0.68);
-  --talk-mute: rgba(237, 236, 236, 0.42);
+  --talk-soft: rgba(237, 236, 236, 0.72);
+  --talk-mute: rgba(237, 236, 236, 0.64);
   --talk-editor: #141414;
   --talk-chrome: #1a1a1a;
   --talk-agent: rgba(255, 255, 255, 0.06);
   --talk-user: #f2f1ef;
   --talk-user-ink: #111110;
   --talk-border: rgba(237, 236, 236, 0.1);
+  --talk-typing-dot: #e8a33d;
 }
 html[data-theme="dark"] .talk-overlay-canvas .talk-stage,
 html[data-theme="dark"] .talk-overlay-canvas .talk-main { background: #141414; }
@@ -3825,10 +6387,6 @@ html[data-theme="dark"] .talk-compose-bar,
 html[data-theme="dark"] .talk-you { background: #1a1a1a; }
 html:not([data-theme="dark"]) .talk-compose-bar,
 html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
-html[data-theme="dark"] .talk-composer { background: #1f1f1f; }
-html:not([data-theme="dark"]) .talk-composer { background: #fcfcfc; }
-html[data-theme="dark"] .talk-rail-search { background: rgba(255, 255, 255, 0.06); }
-html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05); }
 
 .home-split:has(.talk-preview-band) .wings-persist {
   grid-row-start: 2;
@@ -3850,14 +6408,18 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
 /* Live conversation stage: dark window, after public x.ai/bot screenshot. */
 .talk-stage {
   --talk-text: #edecec;
-  --talk-soft: rgba(237, 236, 236, 0.68);
-  --talk-mute: rgba(237, 236, 236, 0.42);
+  --talk-soft: rgba(237, 236, 236, 0.72);
+  --talk-mute: rgba(237, 236, 236, 0.64);
   --talk-editor: #141414;
   --talk-chrome: #1a1a1a;
   --talk-agent: rgba(255, 255, 255, 0.06);
   --talk-user: #f2f1ef;
   --talk-user-ink: #111110;
   --talk-border: rgba(237, 236, 236, 0.1);
+  --talk-typing-dot: #e8a33d;
+  --talk-badge: #8fd4dc;
+  --talk-badge-work: #e8b84a;
+  --talk-badge-done: #5ee0a8;
   --talk-r: 24px;
   --talk-sidebar: 280px;
   display: flex;
@@ -3871,11 +6433,46 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   border-radius: var(--talk-r);
   background: var(--talk-editor);
   color: var(--talk-text);
-  box-shadow: 0 0 0 1px color(srgb 0.145 0.145 0.145 / 0.1);
+  /* In-flow preview on paper. The old 10% ring was ~1.1:1; --pill-line
+     holds 3:1 on the page. Overlay restates ink against the dimmer. */
+  border: 1px solid var(--pill-line);
+  box-shadow: none;
   backdrop-filter: none;
   overflow: hidden;
   scroll-margin-top: calc(var(--masthead-h) + 12px);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+/* Theme tokens restated after the dark defaults so light Watch is
+   actually light, and mute/soft stay at 4.5:1 on the rail paper. */
+html:not([data-theme="dark"]) .talk-stage {
+  --talk-text: #0a0a0a;
+  --talk-soft: rgba(10, 10, 10, 0.72);
+  --talk-mute: rgba(20, 20, 20, 0.64);
+  --talk-editor: rgba(252, 252, 252, 0.65);
+  --talk-chrome: #fbfbfb;
+  --talk-agent: rgba(16, 16, 0, 0.04);
+  --talk-user: #111110;
+  --talk-user-ink: #ffffff;
+  --talk-border: rgba(20, 20, 20, 0.15);
+  --talk-typing-dot: #b87512;
+  --talk-badge: #0e5963;
+  --talk-badge-work: #7a4f08;
+  --talk-badge-done: #166534;
+}
+html[data-theme="dark"] .talk-stage {
+  --talk-text: #edecec;
+  --talk-soft: rgba(237, 236, 236, 0.72);
+  --talk-mute: rgba(237, 236, 236, 0.64);
+  --talk-editor: #141414;
+  --talk-chrome: #1a1a1a;
+  --talk-agent: rgba(255, 255, 255, 0.06);
+  --talk-user: #f2f1ef;
+  --talk-user-ink: #111110;
+  --talk-border: rgba(237, 236, 236, 0.1);
+  --talk-typing-dot: #e8a33d;
+  --talk-badge: #8fd4dc;
+  --talk-badge-work: #e8b84a;
+  --talk-badge-done: #5ee0a8;
 }
 .talk-titlebar {
   flex: none;
@@ -3928,39 +6525,13 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   height: 44px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0 14px 0 16px;
 }
 .talk-chrome { display: flex; gap: 8px; align-items: center; width: 52px; flex: none; }
-.talk-new-agent {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--talk-mute);
-  pointer-events: none;
-  user-select: none;
-}
-.talk-new-plus { font-size: 14px; line-height: 1; }
 .talk-dot { width: 12px; height: 12px; border-radius: 99px; background: #d0d0d0; box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.2); }
 .talk-dot:nth-child(1) { background: #ff5f57; }
 .talk-dot:nth-child(2) { background: #febc2e; }
 .talk-dot:nth-child(3) { background: #28c840; }
-.talk-rail-search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 254px;
-  height: 32px;
-  margin: 0 13px 8px;
-  padding: 0 10px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--talk-mute);
-  font-size: 13px;
-}
-.talk-search-ico { opacity: 0.55; }
 .talk-rail-list { padding: 0 6px 10px; }
 .talk-rail-row {
   position: relative;
@@ -3988,12 +6559,20 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   transition: opacity 0.18s ease;
   z-index: -1;
 }
-.talk-rail-row:hover::before { opacity: 0.7; }
+.talk-rail-row:hover::before,
+.talk-rail-row:focus::before,
+.talk-rail-row:focus-visible::before { opacity: 0.7; }
 .talk-rail-row.is-on::before { opacity: 1; background: color-mix(in srgb, var(--talk-text) 12%, transparent); }
-.talk-rail-row .talk-rail-name { color: var(--talk-mute); }
+.talk-rail-row:focus,
+.talk-rail-row:focus-visible {
+  /* Tab paints a 3px currentColor ring that wins the cascade. */
+  outline: 2px solid var(--accent-text) !important;
+  outline-offset: -3px !important;
+  box-shadow: inset 0 0 0 2px var(--accent-text) !important;
+}
+.talk-rail-row .talk-rail-name { color: var(--talk-text); }
 .talk-rail-row.is-on .talk-rail-name { color: var(--talk-text); }
 .talk-rail-meta { min-width: 0; display: grid; gap: 2px; }
-.talk-rail-topline { display: flex; justify-content: space-between; gap: 8px; }
 .talk-rail-name {
   font-size: 14px;
   line-height: 20px;
@@ -4006,19 +6585,19 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
 }
 .talk-rail-snip {
   font-size: 12px;
-  color: var(--talk-mute);
+  color: var(--talk-soft);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.talk-rail-time { font-size: 12px; color: var(--talk-mute); flex: none; }
 .talk-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100%; background: transparent; }
 .talk-head {
   display: flex;
   align-items: center;
-  height: 44px;
+  justify-content: space-between;
+  gap: 8px;
   min-height: 44px;
-  padding: 0 16px;
+  padding: 6px 16px;
   border-bottom: 0.5px solid var(--talk-border);
 }
 .talk-head-who { display: flex; align-items: center; gap: 8px; min-width: 0; }
@@ -4031,23 +6610,49 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
 }
 .talk-head-title {
   margin: 1px 0 0;
+  min-width: 0;
+  /* nowrap + ellipsis clipped “Company group chat” by 49px at 320
+     under 1.4.12. Replay and Close share that row; the name is the
+     dialog heading, not fake window chrome. */
+  overflow-wrap: anywhere;
+  white-space: normal;
+  line-height: 1.25;
   color: var(--talk-text);
   font-size: 14px;
   font-weight: 560;
   letter-spacing: -0.15px;
-  color: #ffffff;
 }
 .talk-replay {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
   border: 0.5px solid var(--talk-border);
   border-radius: 999px;
   background: transparent;
   color: var(--talk-soft);
-  font-size: 12px;
+  font: 500 12px/1 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
   padding: 5px 12px;
+  cursor: pointer;
+}
+.talk-replay:hover,
+.talk-replay:focus,
+.talk-replay:focus-visible {
+  color: var(--talk-text);
+  border-color: color-mix(in srgb, var(--talk-text) 55%, var(--talk-border));
+}
+.talk-replay:focus,
+.talk-replay:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
 }
 .talk-dock {
   display: flex;
+  /* Center clips the start of an overflowing row. 390 Company
+     parked "group chat" at −6px and scrollLeft could not recover it. */
   justify-content: center;
+  justify-content: safe center;
   gap: 10px;
   overflow-x: auto;
   padding: 10px 12px 4px;
@@ -4062,19 +6667,38 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   border: 0;
   background: transparent;
   color: inherit;
-  font-size: 10px;
+  font-size: 11px;
+  letter-spacing: 0;
+  text-transform: none;
   min-width: 52px;
   padding: 0;
 }
 .talk-dock-item span {
-  max-width: 64px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   color: var(--talk-mute);
+}
+.talk-dock-item > span:not(.talk-stack) {
+  /* 64px nowrap ellipsis clipped “group chat” (75px) and
+     “Findability” (68px) at 320/390 under 1.4.12. The dock
+     already scrolls sideways; wrap the name instead of
+     hiding letters. Cap at 4.75rem so a one-word Bot still
+     fits after letter-spacing, then wrap longer names. */
+  max-width: 4.75rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.25;
 }
 .talk-dock-item.is-on span { color: var(--talk-text); font-weight: 560; }
 .talk-dock-item.is-on .grok-bot-mark { transform: translateY(-2px); }
+.talk-dock-item:hover span,
+.talk-dock-item:focus span,
+.talk-dock-item:focus-visible span { color: var(--talk-text); }
+.talk-dock-item:focus,
+.talk-dock-item:focus-visible {
+  outline: 2px solid var(--accent-text) !important;
+  outline-offset: -3px !important;
+  box-shadow: inset 0 0 0 2px var(--accent-text) !important;
+}
 .talk-thread {
   flex: 1;
   min-height: 16rem;
@@ -4084,8 +6708,13 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   flex-direction: column;
   gap: 10px;
 }
+.talk-thread:focus,
+.talk-thread:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: -3px;
+}
 .talk-thread-swap {
-  animation: talk-thread-in 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  animation: talk-thread-in var(--dur) var(--ease) both;
 }
 @keyframes talk-thread-in {
   from { opacity: 0; transform: translateY(8px); }
@@ -4096,7 +6725,7 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
 }
 .talk-entry {
   max-width: min(640px, 100%);
-  animation: talk-in 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
+  animation: talk-in var(--dur) var(--ease) both;
 }
 .talk-entry.is-you {
   align-self: flex-end;
@@ -4107,7 +6736,9 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   color: var(--talk-user-ink);
 }
 .talk-entry.is-you .talk-bubble-text { color: var(--talk-user-ink); }
-.talk-entry.is-you .talk-bubble-who { color: rgba(255, 255, 255, 0.55); }
+.talk-entry.is-you .talk-bubble-who {
+  color: color-mix(in srgb, var(--talk-user-ink) 72%, var(--talk-user));
+}
 .talk-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -4134,19 +6765,65 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   letter-spacing: -0.15px;
 }
 .talk-entry.is-focus .talk-bubble { box-shadow: none; }
-.talk-bubble-who { margin: 0 0 4px; padding: 0 4px; font-size: 12px; font-weight: 500; color: var(--talk-mute); }
+.talk-bubble-who { margin: 0 0 4px; padding: 0 4px; font-size: 12px; font-weight: 500; color: var(--talk-soft); }
 .talk-bubble-text { margin: 0; color: var(--talk-text); }
 .talk-avatar { display: none; }
-.talk-typing { display: flex; gap: 5px; padding: 8px 4px; }
-.talk-typing span {
-  width: 6px;
-  height: 6px;
+.talk-typing {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 4px;
+}
+.talk-typing-dots { display: flex; gap: 6px; }
+.talk-typing-dots span {
+  width: 8px;
+  height: 8px;
   border-radius: 99px;
-  background: #e8a33d;
+  background: var(--talk-typing-dot);
   animation: talk-dot 1.3s ease-in-out infinite;
 }
-.talk-typing span:nth-child(2) { animation-delay: 0.15s; }
-.talk-typing span:nth-child(3) { animation-delay: 0.3s; }
+.talk-typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.talk-typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+.talk-typing-label {
+  color: var(--talk-text);
+  font-size: 13px;
+  line-height: 1.3;
+}
+.talk-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 4px;
+}
+.talk-empty-title {
+  margin: 0;
+  color: var(--talk-text);
+  font-size: 14px;
+  line-height: 1.4;
+}
+.talk-empty-go {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--talk-border);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--talk-text);
+  font: 500 13px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  cursor: pointer;
+}
+.talk-empty-go:hover,
+.talk-empty-go:focus,
+.talk-empty-go:focus-visible {
+  border-color: color-mix(in srgb, var(--talk-text) 55%, var(--talk-border));
+}
+.talk-empty-go:focus,
+.talk-empty-go:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
 .talk-card {
   max-width: min(560px, 92%);
   padding: 10px 12px 14px;
@@ -4167,11 +6844,12 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   align-items: center;
   gap: 6px;
   border-radius: 999px;
-  padding: 0 7px;
-  height: 19px;
-  font-size: 12px;
+  padding: 2px 8px;
+  min-height: 22px;
+  height: auto;
+  font-size: 11px;
   background: color-mix(in srgb, #64b5ff 14%, transparent);
-  color: #156e7a;
+  color: var(--talk-badge);
 }
 .talk-card-badge i {
   width: 5px;
@@ -4179,8 +6857,8 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   border-radius: 99px;
   background: currentColor;
 }
-.talk-card.is-work .talk-card-badge { background: color-mix(in srgb, #e8a33d 16%, transparent); color: #9a6b12; }
-.talk-card.is-done .talk-card-badge { background: color-mix(in srgb, #4cc79b 16%, transparent); color: #1f7a58; }
+.talk-card.is-work .talk-card-badge { background: color-mix(in srgb, #e8a33d 16%, transparent); color: var(--talk-badge-work); }
+.talk-card.is-done .talk-card-badge { background: color-mix(in srgb, #4cc79b 16%, transparent); color: var(--talk-badge-done); }
 .talk-card-copy { margin: 8px 0 0; font-size: 13px; line-height: 18px; color: var(--talk-soft); }
 .talk-computer { max-width: min(560px, 100%); }
 .talk-screen {
@@ -4217,7 +6895,15 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
 .talk-check-compact li {
   font-size: 12px;
   line-height: 16px;
-  color: var(--talk-mute);
+  color: var(--talk-soft);
+}
+.talk-check-compact li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 99px;
+  background: currentColor;
+  flex: none;
 }
 .talk-frombots {
   align-self: stretch;
@@ -4243,7 +6929,7 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   line-height: 16px;
   letter-spacing: 0;
   text-transform: none;
-  color: var(--talk-mute);
+  color: var(--talk-soft);
   text-align: center;
 }
 .talk-mention {
@@ -4301,7 +6987,7 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   gap: 8px;
   font-size: 13px;
   line-height: 18px;
-  color: var(--talk-mute);
+  color: var(--talk-soft);
 }
 .talk-tl-dot {
   position: absolute;
@@ -4314,7 +7000,7 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
 .talk-check li.is-on .talk-tl-dot { background: var(--accent); }
 .talk-check li.is-on {
   color: var(--talk-text);
-  animation: talk-check 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: talk-check var(--dur) var(--ease) both;
 }
 .talk-check-mark {
   width: 16px;
@@ -4332,73 +7018,76 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   background: #1a1a1a;
   border-top: 0.5px solid var(--talk-border);
 }
+html[data-theme="dark"] .talk-compose-bar,
+html[data-theme="dark"] .talk-you { background: #1a1a1a; }
+html:not([data-theme="dark"]) .talk-compose-bar,
+html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
 .talk-compose-bar {
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  justify-content: center;
+  padding: 0 16px;
   flex: none;
-}
-.talk-composer-fade { display: none; }
-.talk-composer {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 46px;
-  height: 46px;
-  width: 100%;
-  box-sizing: border-box;
   margin: 0;
-  padding: 12px 14px;
-  border-radius: 9999px;
-  border: 0.5px solid rgba(0, 0, 0, 0.1);
-  background: #1f1f1f;
-  color: var(--talk-mute);
-  font-size: 14px;
+}
+.talk-composer-ph {
+  color: var(--talk-text);
+  font-size: 13px;
   line-height: 20px;
-  pointer-events: none;
-  user-select: none;
-}
-.talk-plus {
-  width: 28px;
-  height: 28px;
-  border-radius: 99px;
-  display: grid;
-  place-items: center;
-  background: rgba(16, 16, 0, 0.04);
-  color: var(--talk-mute);
-  font-size: 18px;
-  line-height: 1;
-  flex: none;
-}
-.talk-composer-ph { flex: 1; }
-.talk-mic {
-  width: 28px;
-  height: 28px;
-  border-radius: 99px;
-  background: #111110;
-  border: 0;
-  flex: none;
-  position: relative;
-}
-.talk-mic::after {
-  content: "";
-  position: absolute;
-  inset: 8px 11px 7px;
-  border-radius: 99px;
-  background: #fff;
+  text-align: center;
 }
 .talk-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
   z-index: 400;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: var(--view-w, 100vw);
+  height: var(--view-h, 100dvh);
+  max-width: var(--view-w, 100vw);
+  max-height: var(--view-h, 100dvh);
   padding: 24px;
   background: rgba(10, 10, 10, 0.45);
   isolation: isolate;
   box-sizing: border-box;
-  animation: talk-overlay-dim 220ms ease both;
+  animation: talk-overlay-dim var(--dur) var(--ease) both;
+}
+.talk-overlay-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.talk-overlay-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--pill-line);
+  border-radius: var(--r-pill);
+  background: var(--surface-elevated);
+  color: var(--ink);
+  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+}
+.talk-overlay-close:hover,
+.talk-overlay-close:focus,
+.talk-overlay-close:focus-visible {
+  border-color: var(--ink);
+}
+.talk-overlay-close:focus,
+.talk-overlay-close:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
 }
 .talk-overlay-canvas {
   position: relative;
@@ -4406,22 +7095,26 @@ html:not([data-theme="dark"]) .talk-rail-search { background: rgba(0, 0, 0, 0.05
   isolation: isolate;
   width: 976px;
   height: 660px;
-  max-width: calc(100vw - 48px);
-  max-height: calc(100dvh - 48px);
+  max-width: calc(var(--view-w, 100vw) - 48px);
+  max-height: calc(var(--view-h, 100dvh) - 48px);
   margin: auto;
   padding: 0;
   border-radius: 24px;
   background: transparent;
-  animation: talk-overlay-fade 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: talk-overlay-fade var(--dur) var(--ease) both;
 }
 .talk-overlay-canvas .talk-stage {
-  width: 976px;
+  width: 100%;
   max-width: 100%;
-  height: 660px;
-  min-height: 660px;
+  height: 100%;
+  min-height: 0;
   margin: 0;
   isolation: isolate;
   background-color: #141414;
+  /* 45% ink dimmer. --pill-line holds 3:1 on the page, not on that
+     wash (light scrim measured ~1.1). Same ink edge as overwrite,
+     Customize, and the phone menu. */
+  border-color: var(--ink);
 }
 html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   background-color: #fcfcfc;
@@ -4429,6 +7122,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 .talk-overlay-canvas .talk-main { background: inherit; }
 .talk-overlay-canvas .talk-thread { background: inherit; }
 .talk-overlay-canvas .talk-dock { display: none; }
+.talk-overlay-canvas .talk-head { padding-right: 92px; }
 @keyframes talk-overlay-dim {
   from { background: rgba(10, 10, 10, 0); }
   to { background: rgba(10, 10, 10, 0.45); }
@@ -4440,17 +7134,113 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 @media (prefers-reduced-motion: reduce) {
   .talk-overlay, .talk-overlay-canvas { animation: none; }
 }
+@media (max-width: 1023px) {
+  .talk-overlay {
+    padding: 0;
+    align-items: stretch;
+    background: #141414;
+    animation: none;
+  }
+  html:not([data-theme="dark"]) .talk-overlay { background: #fcfcfc; }
+  .talk-overlay-canvas {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+    background: inherit;
+    animation: none;
+  }
+  .talk-overlay-canvas .talk-stage {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-width: none;
+    border-radius: 0;
+    margin: 0;
+    /* Full-bleed phone Watch. No adjacent dimmer, so no frame. */
+    border: 0;
+  }
+  .talk-overlay-canvas .talk-head {
+    order: 1;
+    /* Close is position:absolute on the canvas. 68px cleared the
+       default Close but 1.4.12 grows it to 66px at right: 8, so Replay
+       overlapped by 6px. 88px (not 5.5rem) keeps that gap: Close is
+       12px type, and a rem pad became 176px at 200% text and left
+       the title a 56px column. Side insets keep the name out of a
+       landscape notch (16px sat under 47px). Top inset was missing:
+       Replay sat at y=6 under a 47px notch (only 3px below it). */
+    padding-top: calc(6px + env(safe-area-inset-top, 0px));
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: calc(88px + env(safe-area-inset-right, 0px));
+  }
+  .talk-overlay-canvas .talk-thread {
+    order: 2;
+    flex: 1;
+    min-height: 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .talk-overlay-canvas .talk-dock {
+    display: flex;
+    order: 3;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: max(12px, env(safe-area-inset-left, 0px));
+    padding-right: max(12px, env(safe-area-inset-right, 0px));
+    border-top: 0.5px solid var(--talk-border);
+  }
+  .talk-overlay-canvas .talk-compose-bar {
+    order: 4;
+    height: auto;
+    min-height: 70px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .talk-overlay-close {
+    top: calc(8px + env(safe-area-inset-top, 0px));
+    right: calc(8px + env(safe-area-inset-right, 0px));
+    min-height: 44px;
+  }
+  .talk-dock-item { min-height: 44px; }
+}
+@media (forced-colors: active) {
+  /* Restated after the phone Watch `border: 0`. Backgrounds are ignored
+     here, so the window still needs a ButtonText edge. */
+  .talk-stage,
+  .talk-overlay-canvas .talk-stage {
+    border: 1px solid ButtonText;
+    box-shadow: none;
+  }
+}
 
 .talk-watch-btn {
   display: inline-flex;
   align-items: center;
-  margin-top: 0.65rem;
+  min-height: 44px;
+  margin-top: 0.35rem;
+  padding: 0 2px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  font: inherit;
   font-size: 0.8rem;
   color: var(--accent-text);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
+  cursor: pointer;
 }
-.talk-watch-btn:hover { border-bottom-color: var(--accent-text); }
+.talk-watch-btn:hover,
+.talk-watch-btn:focus,
+.talk-watch-btn:focus-visible {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+.talk-watch-btn:focus,
+.talk-watch-btn:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+}
 .talk-watch-inline {
   display: inline;
   margin-left: 0.6rem;
@@ -4458,9 +7248,10 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   color: var(--accent-text);
   text-decoration: none;
 }
-.talk-watch-inline:hover { text-decoration: underline; }
+.talk-watch-inline:hover,
+.talk-watch-inline:focus-visible { text-decoration: underline; }
 
-@media (min-width: 721px) {
+@media (min-width: 1024px) {
   .talk-stage { height: 660px; }
   .talk-body {
     grid-template-columns: var(--talk-sidebar) minmax(0, 1fr);
@@ -4487,25 +7278,24 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   50% { opacity: 0.7; }
 }
 @keyframes talk-check {
-  from { opacity: 0; transform: scale(0.4); }
-  to { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .talk-you {
-  color: #ffffff;
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 0 14px;
   font-size: 13px;
-  color: var(--talk-soft);
+  color: var(--talk-text);
 }
 .talk-you-av {
   width: 28px;
   height: 28px;
   border-radius: 99px;
-  background: rgba(10, 10, 10, 0.06);
-  color: #141414;
+  background: var(--talk-agent);
+  color: var(--talk-text);
   display: grid;
   place-items: center;
   font-size: 11px;
@@ -4523,15 +7313,39 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 }
 .talk-computer { width: 420px; max-width: 100%; }
 .talk-card-title { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--talk-text); }
-.talk-card-badge { height: 19px; border-radius: 999px; padding: 0 7px; font-size: 12px; }
-.talk-card.is-done .talk-card-badge { background: rgba(31, 138, 101, 0.14); color: rgb(31, 138, 101); }
+.talk-card-badge {
+  height: auto;
+  min-height: 22px;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--talk-badge);
+}
+.talk-card.is-work .talk-card-badge { color: var(--talk-badge-work); }
+.talk-card.is-done .talk-card-badge {
+  background: color-mix(in srgb, var(--talk-badge-done) 18%, transparent);
+  color: var(--talk-badge-done);
+}
 .talk-computer .talk-card-copy { margin: 8px 0 6px; }
 .talk-computer .talk-check-compact { margin-top: 4px; }
+.talk-bubble .talk-check-compact {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 0.5px solid var(--talk-border);
+}
+.talk-check-compact li {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--talk-soft);
+}
+.talk-entry.is-you .talk-check-compact li {
+  color: var(--talk-user-ink);
+}
 
 
 @media (prefers-reduced-motion: reduce) {
   .talk-entry, .talk-check li.is-on { animation: none; }
-  .talk-typing span { animation: none; }
+  .talk-typing-dots span { animation: none; }
 }
 
 
@@ -4555,3 +7369,189 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 .talk-stack-sm .grok-bot-mark:nth-child(1) { left: 5px; top: 0; }
 .talk-stack-sm .grok-bot-mark:nth-child(2) { left: 0; top: 9px; }
 .talk-stack-sm .grok-bot-mark:nth-child(3) { left: 10px; top: 9px; }
+
+/* Thumb-sized controls, restated last. An earlier (pointer: coarse) or
+   (max-width: 1023px) list loses to a later min-height: 36px on the
+   same class. iPad + trackpad is pointer: fine, so width has to be
+   in this query too. */
+@media (pointer: coarse), (max-width: 1023px) {
+  .skip-link,
+  .search-clear,
+  .browse-pick-btn,
+  .idx-chip,
+  .idx-chip-clear,
+  .cat-pill,
+  .sel-button,
+  .filter-views .filter-chip--icon,
+  .row-arrow-link,
+  .rp-secondary,
+  .cz-btn,
+  .cz-mode,
+  .cz-check,
+  .cz-chip,
+  .share-btn,
+  .talk-watch-btn,
+  .talk-overlay-close,
+  .talk-dock-item,
+  .talk-replay,
+  .talk-empty-go,
+  .sel-option,
+  .spon-cta,
+  .foot-link,
+  .doc-jump a,
+  .guide-toc a,
+  .guide-index a,
+  .guide-prose .spec-table a,
+  .doc-toc-sum,
+  a.chip,
+  .cf-chip,
+  .cf-browse,
+  .cf-clear,
+  .cf-search-clear,
+  .cz-search-clear,
+  .theme-control-label,
+  .hero-stat,
+  .site-wordmark,
+  .foot-id,
+  .foot-grok,
+  .cz-skill-scope .sel-button,
+  .cz-advanced summary,
+  .roster-shape-routines-sum,
+  button.cz-link,
+  p.cz-hint a.cz-link,
+  .spon-paid a,
+  .crumb-list a,
+  .wings-crumb a,
+  .home-hero-manifesto a,
+  .home-hero-links a,
+  .api-link,
+  .hairline-row > a,
+  .index-name,
+  .home-contribute-links a,
+  .home-scroll-cue,
+  .spon-paid-link,
+  .side-rail-item .spon-paid-link,
+  .site-masthead-nav a,
+  .cf-row-teams {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .wings-crumb a,
+  .cf-row-teams {
+    justify-content: center;
+  }
+  .theme-control,
+  .site-menu-button {
+    width: 44px;
+    height: 44px;
+  }
+  /* Square icon controls. A later width/height: 32px on the same
+     class would otherwise keep the GitHub mark and catalog chevron
+     at 32 on an iPad that still shows desktop chrome. */
+  .site-nav-icon,
+  .chevron {
+    width: 44px;
+    height: 44px;
+  }
+  .theme-accent-swatch {
+    width: 44px;
+    height: 44px;
+  }
+  .theme-accent-popover {
+    grid-template-columns: repeat(4, 44px);
+    gap: 8px;
+  }
+  .filter-views .filter-chip--icon { width: auto; min-width: 44px; }
+  .hero-stat {
+    align-items: center;
+    padding-inline: 6px;
+  }
+  /* Fields. The 16px / 44px rule near the top of this file loses to
+     later .cz-input { 0.88rem / 38px } and .cz-prompt-edit { 0.72rem }.
+     iOS Safari zooms the page when a focused field is under 16px. */
+  .search-input,
+  .cf-input,
+  .spon-input,
+  .spon-file,
+  .cz-input,
+  .cz-prompt-edit {
+    font-size: 1rem;
+  }
+  .cz-input {
+    min-height: 44px;
+    padding: 8px 14px;
+  }
+}
+
+/* Press: a 4% squash, same as the theme label. No lift and no shadow.
+   Instant on most chrome (their transitions list colour only). Reduced
+   motion keeps the control still. */
+@media (prefers-reduced-motion: no-preference) {
+  .cz-btn:active:not(:disabled),
+  .spon-cta:active:not(:disabled),
+  .share-btn:active,
+  .cat-pill:active,
+  .rp-secondary:active,
+  .filter-chip:active,
+  .idx-chip:active,
+  .idx-chip-clear:active,
+  .site-menu-button:active,
+  .theme-control:active:not(:disabled),
+  .sel-button:active,
+  .cf-chip:active,
+  .cf-browse:active,
+  .cf-clear:active,
+  .cf-search-clear:active,
+  .cz-search-clear:active,
+  .talk-watch-btn:active,
+  .talk-overlay-close:active,
+  .talk-dock-item:active,
+  .talk-replay:active,
+  .talk-empty-go:active,
+  .theme-accent-swatch:active,
+  .search-clear:active,
+  .browse-pick-btn:active,
+  .cz-chip:active,
+  a.chip:active,
+  .copy-btn:active,
+  .pill-btn:active,
+  .cz-check input:active,
+  .row-arrow-link:active,
+  .cz-mode:active,
+  .home-scroll-cue:active,
+  .spon-paid-link:active,
+  .api-link:active,
+  .home-more summary:active,
+  .guide-index a:active,
+  .guide-toc a:active,
+  .guide-prose .spec-table a:active,
+  .doc-jump a:active,
+  .home-hero-links a:active,
+  .home-contribute-links a:active,
+  .spon-faq summary:active,
+  .cz-advanced summary:active,
+  .rp-sum:active,
+  .doc-toc-sum:active,
+  .roster-shape-routines-sum:active,
+  .index-name:active,
+  .idx-card:active,
+  .index-ad:active,
+  .hero-stat:active,
+  .foot-link:active,
+  .crumb-list a:active,
+  .wings-crumb a:active,
+  .cf-row-teams:active,
+  .site-masthead-nav a:active,
+  .site-menu-link:active,
+  .rp-related-name:active,
+  .foot-grok:active {
+    transform: scale(0.96);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-control-label:active,
+  .rp-secondary:active,
+  .theme-accent-swatch:active {
+    transform: none;
+  }
+}

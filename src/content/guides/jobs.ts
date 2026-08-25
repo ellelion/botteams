@@ -103,7 +103,7 @@ export const jobGuides: Guide[] = [
         blocks: [
           {
             type: "p",
-            text: "Our [Chief of Staff](/bots/xai-chief-of-staff) bot is a write-up of that job. From xAI means we sourced the title and the category. The connectors, the modes, and the stop lines are ours. xAI does not certify the file.",
+            text: "Our [Chief of Staff](/bots/xai-chief-of-staff) Bot is a write-up of that job. From xAI means we sourced the title and the category. The connectors, the modes, and the stop lines are ours. xAI does not certify the file.",
           },
           {
             type: "p",

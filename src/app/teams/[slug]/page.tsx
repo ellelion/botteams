@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { grokRecipeTitle } from "@/lib/grok-names";
 import { notFound } from "next/navigation";
-import { ConnectorRow } from "@/components/ConnectorRow";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { WingsHero, WingsSplit } from "@/components/WingsSplit";
 import { Customize } from "@/components/team/Customize";
+import { RelatedRecipes } from "@/components/team/RelatedRecipes";
 import { WatchControl } from "@/components/ConversationStage";
 import { VerifiedChip } from "@/components/VerifiedChip";
 import { RosterShape } from "@/components/RosterShape";
@@ -12,7 +13,6 @@ import { renderMarkdown } from "@/lib/markdown";
 import { en } from "@/lib/messages/en";
 import { getTeam, listTeams } from "@/lib/teams";
 import { isVerified } from "@/lib/types";
-import Link from "next/link";
 import { resolveConnector } from "@/lib/connectors";
 import { teamJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
@@ -59,50 +59,29 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
       .map((x) => x.team),
   ].slice(0, 3);
 
-  const relatedNode = related.length > 0 ? (
-    <section className="mt-10 border-t pt-8" style={{ borderColor: ledger.hairline }}>
-      <h2 className="text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>
-        {en.team.relatedTitle()}
-      </h2>
-      <ul className="mt-4">
-        {related.map((other) => (
-          <li key={other.slug} className="hairline-row py-3">
-            <Link href={`/teams/${other.slug}`} className="accent-hover" style={{ fontFamily: ledger.serif }}>
-              {other.name}
-            </Link>
-            <p className="mt-1 text-[0.8rem] leading-relaxed" style={{ color: ledger.inkMuted }}>{other.tagline}</p>
-            <div className="mt-2">
-              <ConnectorRow names={other.connectors} labeled size={15} />
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ) : null;
+  const relatedNode = (
+    <RelatedRecipes
+      title={en.team.relatedTitle()}
+      items={related}
+      hrefFor={(other) => `/teams/${other.slug}`}
+    />
+  );
 
   return (
     <WingsSplit
       hero={
         <WingsHero
           title={grokRecipeTitle(team.kind, team.name)}
-          kicker={(
-            <nav className="meta flex flex-wrap items-center justify-center gap-2" aria-label="Breadcrumb">
-              <span>{team.name}</span>
-              <span aria-hidden>/</span>
-              <Link href="/" className="accent-hover">{en.team.allTeams}</Link>
-            </nav>
-          )}
+          kicker={<Breadcrumb parentHref="/" parentLabel={en.team.allTeams} current={team.name} />}
         >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{team.tagline}</p>
           {team.kind === "team" ? (
-            <div className="mt-4 flex flex-col items-center gap-3">
+            <div className="wings-hero-extra mt-4 flex flex-col items-center gap-3">
               <VerifiedChip on={isVerified(team)} />
-              <RosterShape bots={team.bots} rooms={0} routines={team.routines} />
-              <WatchControl team={team} />
+              <RosterShape bots={team.bots} rooms={team.rooms.length} routines={team.routines} />
             </div>
-          ) : (
-            <WatchControl team={team} />
-          )}
+          ) : null}
+          <WatchControl team={team} />
         </WingsHero>
       }
     >
@@ -132,14 +111,14 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
                 {team.addedVia ? (
                   <>
                     {en.team.basedOn}{" "}
-                    <a className="rp-secondary" href={team.addedVia} target="_blank" rel="noopener noreferrer">
+                    <a className="accent-hover underline" href={team.addedVia} target="_blank" rel="noopener noreferrer" aria-label={`${team.contributor}. ${en.nav.opensNew}`}>
                       {team.contributor}
                     </a>
                   </>
                 ) : team.contributor ? (
                   <>
                     {en.team.contributedBy}{" "}
-                    <a className="rp-secondary" href={team.contributorUrl} target="_blank" rel="noopener noreferrer">
+                    <a className="accent-hover underline" href={team.contributorUrl} target="_blank" rel="noopener noreferrer" aria-label={`${team.contributor}. ${en.nav.opensNew}`}>
                       {team.contributor}
                     </a>
                   </>
@@ -159,6 +138,7 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
                 href={`${site.github}/blob/main/teams/${team.slug}.md`}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={`${en.team.viewSource}. ${en.nav.opensNew}`}
               >
                 {en.team.viewSource}
               </a>

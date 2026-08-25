@@ -93,7 +93,9 @@ function Block({ block }: { block: GuideBlock }) {
       <thead>
         <tr>
           {block.headers.map((header) => (
-            <th key={header}>{header}</th>
+            <th key={header} scope="col">
+              {header}
+            </th>
           ))}
         </tr>
       </thead>
@@ -102,9 +104,11 @@ function Block({ block }: { block: GuideBlock }) {
           <tr key={row.join("|")}>
             {row.map((cell, i) =>
               i === 0 ? (
-                <th key={cell}>{cell}</th>
+                <th key={cell} scope="row">
+                  {cell}
+                </th>
               ) : (
-                <td key={`${cell}-${i}`}>
+                <td key={`${cell}-${i}`} data-label={block.headers[i]}>
                   <Rich text={cell} />
                 </td>
               ),

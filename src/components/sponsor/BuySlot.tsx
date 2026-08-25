@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { RAIL_PLANS } from "@/lib/rail";
 import { en } from "@/lib/messages/en";
+import { site } from "@/lib/site";
 import { StartCheckout } from "@/components/sponsor/StartCheckout";
 
 const FEATURED = "3m" as const;
@@ -14,7 +15,14 @@ const FEATURED = "3m" as const;
  */
 export function BuySlot({ soldOut }: { soldOut: boolean }) {
   if (soldOut) {
-    return <p className="cz-truth">{en.sponsor.soldOut}</p>;
+    return (
+      <p className="cz-truth">
+        {en.sponsor.soldOut}{" "}
+        <a className="accent-hover underline" href={`mailto:${site.email}`}>{en.sponsor.mailCta}</a>
+        {" "}
+        {en.sponsor.soldOutAfter}
+      </p>
+    );
   }
 
   return (
@@ -44,9 +52,9 @@ export function BuySlot({ soldOut }: { soldOut: boolean }) {
       </div>
       <p className="spon-fine">
         By paying you confirm you are 18 or older and agree to the{" "}
-        <Link className="underline" href="/terms">Terms</Link>
+        <Link className="accent-hover underline" href="/terms">Terms</Link>
         {" "}and the{" "}
-        <Link className="underline" href="/privacy">Privacy policy</Link>
+        <Link className="accent-hover underline" href="/privacy">Privacy policy</Link>
         . Stripe takes the card on their page. A paid row is a paid placement. It is not Verified, it is not a team, and it is not an endorsement.
       </p>
     </div>
