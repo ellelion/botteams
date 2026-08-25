@@ -1905,6 +1905,9 @@ a.chip-unverified:focus-visible {
 .index-name:hover,
 .index-row:hover .index-name,
 .index-row:focus-within .index-name { color: var(--accent-text); }
+/* Desktop .wings-main-col is overflow-y:auto, so overflow-x computes
+   to auto. Names sit flush left; a 3px outer ring lost 3px. */
+.index-name:focus-visible { outline-offset: -3px; }
 .index-tagline {
   margin-top: 2px;
   color: var(--ink-soft);
@@ -2783,7 +2786,9 @@ a.chip-unverified:focus-visible {
 }
 .cf-row-teams:hover,
 .cf-row-teams:focus-visible { text-decoration: underline; }
-.cf-row-teams:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+/* Same column scroller as catalog cards. “View the full team” sits
+   2px from the pane; an outer 2px ring lost the right edge. */
+.cf-row-teams:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -3px; }
 /* Shelf and short lists live in the page scroller, under the sticky
    search bar. Windowed rows stay inside .cf-scroll, so they must not
    inherit this offset or the inner list grows a 200px hole. */
@@ -3088,7 +3093,10 @@ a.chip-unverified:focus-visible {
 .idx-card:focus-visible .idx-card-name {
   color: var(--accent-text);
 }
-.idx-card:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+/* Cards fill the column. home-split is overflow:clip at lg, and the
+   column is overflow-y:auto, so a 3px outer ring on the right card
+   lost all 5px of the focus mark. */
+.idx-card:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -3px; }
 .idx-card-cat {
   color: var(--accent-text);
   font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
@@ -4839,6 +4847,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   font-weight: 500;
   letter-spacing: -0.01em;
 }
+.rp-related-name:focus-visible { outline-offset: -3px; }
 .rp-related-chips {
   display: flex;
   flex-wrap: wrap;
@@ -5371,7 +5380,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cat-pill:focus-visible,
   .cf-chip.is-on,
   .cf-chip:focus-visible,
-  .spon-chip:focus-visible {
+  .spon-chip:focus-visible,
+  .idx-card:focus-visible,
+  .index-name:focus-visible,
+  .rp-related-name:focus-visible,
+  .cf-row-teams:focus-visible {
     outline: 2px solid Highlight;
     outline-offset: -3px;
   }
