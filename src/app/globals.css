@@ -6083,10 +6083,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .story-beat .hero-stats,
   /* WingsHero ledes are plain <p>s, not the home manifesto class.
      Connectors search sat 33px under the ticker at 667×375; API
-     “On this page” sat 27px under. Keep h1 and the crumb. */
+     “On this page” sat 27px under. Keep h1; the menu has Directory. */
   .story-beat p {
     display: none;
   }
+  /* Crumb + 44px rows put the third /guides destination on screen
+     under the bar (316–360 vs 319). */
+  .wings-crumb { display: none; }
   .story-beat { padding-block: 0.2rem; }
   .story-beat h1,
   .story-beat.is-catalog-active h1 {
