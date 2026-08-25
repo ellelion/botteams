@@ -6135,6 +6135,20 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   /* Five 404 recoveries wrap; the last sat 29px under the bar. */
   .idx-empty { padding: 12px 16px; margin-top: 8px; }
 }
+@media (max-width: 1023px) and (max-height: 760px) {
+  /* Portrait short: keep the manifesto. Stats and the three guide
+     links wrap (94 + 88 on 320) and park List / Cards on screen
+     under the ticker (320×720 −65, 360×640 −101). Landscape already
+     hides these plus the manifesto. Captions add 18px above the
+     44px triggers; the buttons keep aria-label. 390×844 and
+     768×1024 stay above this height, so their stats stay. */
+  .story-beat .hero-stats,
+  .story-beat .home-hero-links {
+    display: none;
+  }
+  .index-header .sel-caption { display: none; }
+  .index-header .sel.has-caption { gap: 0; }
+}
 /* 12rem after the last row is for a zoomed desktop frame. On a phone
    it left 192px of empty catalog before the footer. */
 @media (min-width: 1024px) {
