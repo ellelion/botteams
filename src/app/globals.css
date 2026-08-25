@@ -6619,7 +6619,10 @@ html[data-theme="dark"] .talk-stage {
 }
 .talk-dock {
   display: flex;
+  /* Center clips the start of an overflowing row. 390 Company
+     parked "group chat" at −6px and scrollLeft could not recover it. */
   justify-content: center;
+  justify-content: safe center;
   gap: 10px;
   overflow-x: auto;
   padding: 10px 12px 4px;
