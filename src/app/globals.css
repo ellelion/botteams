@@ -5153,6 +5153,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .hero-stat {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.35em;
   min-height: 24px;
@@ -5160,7 +5161,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   text-decoration: none;
   color: inherit;
   border: 0;
-  white-space: nowrap;
+  /* Counts are rem; the word used to stay 13px, so at 200% text
+     "140" outgrew "Teams". nowrap also shoved Limits checked past
+     a 320 column once the word scaled. */
+  white-space: normal;
 }
 .hero-stat:first-child { border: 0; }
 .hero-stat strong {
@@ -5168,14 +5172,16 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   font: 500 0.72rem/1 var(--font-geist-mono), ui-monospace, monospace;
   letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .hero-stat span {
-  font-size: 13px;
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.4;
   color: var(--ink-soft);
+  overflow-wrap: anywhere;
 }
 .hero-stat:hover strong,
 .hero-stat:focus-visible strong { color: var(--ink); }
