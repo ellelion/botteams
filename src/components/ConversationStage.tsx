@@ -173,8 +173,14 @@ function ConversationStageLive({ team }: { team: Team }) {
     if (view === null) return turns;
     const agent = agents[view];
     if (!agent) return turns;
-    return byBot[agent.name] ?? [];
-  }, [turns, view, agents, byBot]);
+    const own = byBot[agent.name];
+    if (own && own.length > 0) return own;
+    /* One-Bot recipes generate `conversation`, not conversation_bots.
+       `?? []` left Watch on /bots/applicant-sheet-screen with an empty
+       thread and no typing line. */
+    if (team.kind === "bot") return turns;
+    return [];
+  }, [turns, view, agents, byBot, team.kind]);
 
   const start = useCallback(() => {
     if (reduceRef.current) {
