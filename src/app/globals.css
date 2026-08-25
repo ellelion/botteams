@@ -418,7 +418,7 @@ html:not([data-theme="dark"]) .wings-mark {
   overflow-y: auto;
   overscroll-behavior: contain;
   scroll-padding-bottom: env(safe-area-inset-bottom, 0px);
-  padding: 6px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+  padding: 6px max(16px, env(safe-area-inset-right, 0px)) calc(14px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
   background: var(--page);
   /* Adjacent to the 26% ink scrim, not bare paper. --pill-line sinks. */
   border-bottom: 1px solid var(--ink);
@@ -5573,7 +5573,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   max-width: 100%;
   min-width: 0;
   height: 100%;
-  padding: 0 10px;
+  padding: 0 max(10px, env(safe-area-inset-right, 0px)) 0 max(10px, env(safe-area-inset-left, 0px));
   gap: 8px;
   overflow: hidden;
 }
