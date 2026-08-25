@@ -4633,7 +4633,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   color: var(--accent-text);
 }
 .roster-shape-tip {
-  display: flex;
+  /* Parked tips used opacity/visibility, so a 16rem card still
+     widened a 390 page (~114px past the installer-prompt fix). */
+  display: none;
   flex-direction: column;
   gap: 10px;
   position: absolute;
@@ -4657,14 +4659,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   letter-spacing: 0;
   white-space: normal;
   overflow-wrap: anywhere;
-  opacity: 0;
-  visibility: hidden;
   pointer-events: none;
-  transform: translateY(4px);
-  transition:
-    opacity var(--dur) var(--ease),
-    visibility var(--dur) var(--ease),
-    transform var(--dur) var(--ease);
 }
 /* Bridge the 8px gap so the tip stays while the pointer moves into it. */
 .roster-shape-tip::before {
@@ -4677,10 +4672,34 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .roster-shape-routines:hover .roster-shape-tip,
 .roster-shape-routines:focus-within .roster-shape-tip {
-  opacity: 1;
-  visibility: visible;
+  display: flex;
   pointer-events: auto;
-  transform: none;
+}
+/* Centered team hero: the count sits mid-column, so left:0 of the
+   word still ran ~114px past 390. Park the open card in the extra
+   band (full 22rem story column), not off the last word. */
+.wings-hero-extra {
+  position: relative;
+}
+.wings-hero-extra .roster-shape-routines {
+  position: static;
+}
+.wings-hero-extra .roster-shape-tip {
+  left: 0;
+  right: 0;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+}
+@media (max-width: 40rem) {
+  .roster-shape-tip {
+    min-width: 0;
+    width: min(16rem, calc(100vw - 2rem));
+    max-width: min(24rem, calc(100vw - 2rem));
+  }
+  .wings-hero-extra .roster-shape-tip {
+    width: auto;
+  }
 }
 .roster-shape-tip-row { display: flex; flex-direction: column; gap: 2px; }
 .roster-shape-tip-row strong {
