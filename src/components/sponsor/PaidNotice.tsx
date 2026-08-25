@@ -13,10 +13,12 @@ export function PaidNotice() {
   const params = useSearchParams();
   if (params.get("checkout") === "error") {
     return (
-      <p className="spon-error" role="alert">
-        {en.sponsor.buyError}{" "}
-        <a className="accent-hover underline" href={`mailto:${site.email}`}>{en.sponsor.buyErrorMail}</a>.
-      </p>
+      <div className="spon-error-block">
+        <p className="spon-error" role="alert">
+          {en.sponsor.buyError}
+        </p>
+        <a className="theme-control theme-control-label" href={`mailto:${site.email}`}>{en.sponsor.mailCta}</a>
+      </div>
     );
   }
   const paid = params.get("paid") === "1";
