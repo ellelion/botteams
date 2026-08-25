@@ -16,10 +16,10 @@ const nextConfig: NextConfig = {
      sponsored rail label. Hide it; errors still overlay. */
   devIndicators: false,
   async rewrites() {
-    /* JSON-LD and old bookmarks ask for /icon.png. The mark is the
-       ellelion SVG; keep the .png names so scrapers do not 404. */
+    /* JSON-LD and old bookmarks ask for /icon.png. Serve the generated
+       PNG mark, not the SVG, so scrapers get the type they asked for. */
     return [
-      { source: "/icon.png", destination: "/icon.svg" },
+      { source: "/icon.png", destination: "/icon" },
       { source: "/apple-icon.png", destination: "/apple-icon" },
     ];
   },
