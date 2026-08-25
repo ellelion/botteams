@@ -1214,11 +1214,15 @@ a.chip-unverified:focus-visible {
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
+.spec-table td { min-width: 0; overflow-wrap: anywhere; }
 .spec-table code {
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.85em;
   letter-spacing: 0;
   text-transform: none;
+  /* `$schema` cites the full team.schema.json URL. Nowrap mono
+     pushed /docs 32px past a 320 frame. */
+  overflow-wrap: anywhere;
 }
 @media (max-width: 639px) {
   .spec-table,
