@@ -22,7 +22,7 @@ import { site } from "@/lib/site";
 import type { Team } from "@/lib/types";
 import { useCopyFeedback } from "@/lib/use-copy-feedback";
 import { useDialogChrome } from "@/lib/use-dialog-chrome";
-import { cssZoom, useScrollEdges } from "@/lib/use-scroll-edges";
+import { useScrollEdges } from "@/lib/use-scroll-edges";
 import {
   MODES,
   MODE_HINT,
@@ -40,6 +40,58 @@ import {
   type CustomState,
 } from "@/lib/customize";
 
+type RecipeSectionName = "job" | "routines" | "skills" | "notes" | "installer";
+
+function RecipeSection({
+  name,
+  label,
+  count,
+  open,
+  onToggle,
+  children,
+}: {
+  name: RecipeSectionName;
+  label: string;
+  count?: number;
+  open: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  const buttonId = useId();
+  const panelId = useId();
+
+  return (
+    <section className={`rp-sec${open ? " is-open" : ""}`}>
+      <h3 className="rp-sum-heading">
+        <button
+          id={buttonId}
+          type="button"
+          className="rp-sum"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={onToggle}
+        >
+          <RecipeSecIcon name={name} />
+          <span className="rp-sum-lab">{label}</span>
+          {count !== undefined ? <span className="rp-count">{count}</span> : null}
+        </button>
+      </h3>
+      <div
+        id={panelId}
+        className="rp-secbody-shell"
+        role="region"
+        aria-labelledby={buttonId}
+        aria-hidden={!open}
+        inert={!open}
+      >
+        <div className="rp-secbody-clip">
+          <div className="rp-secbody">{children}</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /*
  * Customize edits the installer recipe on the page, with no account and no
  * round trip. Everything it changes is text that ends up in one paste.
@@ -50,41 +102,6 @@ import {
  *   Connector modes are wording, never enforcement, so every claim about
  *   them points at Settings, then Plugins, which is the switch that exists.
  */
-
-function pinOpenRecipe(section: HTMLDetailsElement) {
-  if (!section.open) return;
-  const pin = () => {
-    const head = document.querySelector(".rp-head");
-    const col = section.closest(".wings-main-col");
-    const scale = cssZoom();
-    const bar = (head?.getBoundingClientRect().height ?? 0) / scale;
-    const sum = section.querySelector(".rp-sum") ?? section;
-    const scroller =
-      col instanceof HTMLElement && getComputedStyle(col).overflowY !== "visible"
-        ? col
-        : null;
-    if (scroller) {
-      const next =
-        (sum.getBoundingClientRect().top - scroller.getBoundingClientRect().top) / scale +
-        scroller.scrollTop -
-        bar -
-        32;
-      scroller.scrollTo({ top: Math.max(0, next), behavior: "auto" });
-      return;
-    }
-    const offset = (head?.getBoundingClientRect().bottom ?? 0) / scale + 8;
-    const top = sum.getBoundingClientRect().top / scale + window.scrollY - offset;
-    window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
-  };
-  /* Exclusive close settles in 2 frames at 100% and several more
-     at CSS zoom 200%. Pin each frame until the page height stops
-     moving the summary. */
-  const chase = (left: number) => {
-    pin();
-    if (left > 1) window.requestAnimationFrame(() => chase(left - 1));
-  };
-  window.requestAnimationFrame(() => chase(16));
-}
 
 export function Customize({
   team,
@@ -98,6 +115,7 @@ export function Customize({
   children?: ReactNode;
 }) {
   const [sheet, setSheet] = useState<"customize" | null>(null);
+  const [openRecipe, setOpenRecipe] = useState<RecipeSectionName | null>("job");
   const sheetId = useId();
   const overwriteTitleId = useId();
   const overwriteBodyId = useId();
@@ -484,7 +502,7 @@ export function Customize({
                         <span className="sr-only">{`${en.customize.botOn}: ${agent.name}`}</span>
                       </label>
                     )}
-                    <GrokBotMark size={18} animate={on} style={botMarkStyle(i)} />
+                    <GrokBotMark size={18} animate={on} frontFacing style={botMarkStyle(i, agent.name, agent.persona)} />
                     <label className="cz-field cz-field-grow">
                       <span className="sr-only">{`${en.customize.botName}: ${agent.name}`}</span>
                       <input
@@ -651,7 +669,7 @@ export function Customize({
         {resolved.agents.map(({ source, name, note }, i) => (
           <li key={source.name} className="hairline-row">
             <div className="flex gap-3">
-              <GrokBotMark size={19} animate className="mt-0.5" style={botMarkStyle(i)} />
+              <GrokBotMark size={19} animate frontFacing className="mt-0.5" style={botMarkStyle(i, source.name, source.persona)} />
               <div className="min-w-0">
                 <p className="flex flex-wrap items-baseline gap-2" style={{ fontFamily: ledger.serif }}>
                   <span>{grokDisplayBotName(name || source.name)}{source.reuse ? ` · ${en.team.reuse}` : ""}</span>
@@ -794,7 +812,7 @@ export function Customize({
         <ul className="rp-chips">
           {resolved.agents.map(({ source, name }, i) => (
             <li key={source.name} className="rp-chip">
-              <GrokBotMark size={17} animate style={botMarkStyle(i)} />
+              <GrokBotMark size={17} animate frontFacing style={botMarkStyle(i, source.name, source.persona)} />
               <span className="rp-chip-name">{grokDisplayBotName(name || source.name)}</span>
               {source.reuse ? <span className="rp-chip-note">{en.team.reuse}</span> : null}
             </li>
@@ -827,104 +845,107 @@ export function Customize({
         </div>
       </section>
 
-      {/* Native exclusive accordion. Opening one section closes the
-          others so sticky titles cannot stack into a wall on a phone. */}
+      {/* One controlled accordion keeps the clicked section continuous:
+          the previous body closes while the next body opens. */}
       <div className="rp-acc">
-        <details className="rp-sec" name="recipe" open onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
-          <summary className="rp-sum"><RecipeSecIcon name="job" /><span className="rp-sum-lab">{en.recipe.secJob}</span></summary>
-          <div className="rp-secbody">
-            {rosterPart}
-          </div>
-        </details>
+        <RecipeSection
+          name="job"
+          label={en.recipe.secJob}
+          open={openRecipe === "job"}
+          onToggle={() => setOpenRecipe((current) => current === "job" ? null : "job")}
+        >
+          {rosterPart}
+        </RecipeSection>
 
-        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
-          <summary className="rp-sum">
-            <RecipeSecIcon name="routines" />
-            <span className="rp-sum-lab">{en.recipe.secRoutines}</span>
-            <span className="rp-count">{resolved.routines.length}</span>
-          </summary>
-          <div className="rp-secbody">
-            {resolved.routines.length > 0 ? routinesPart : (
-              <div className="rc-empty-block">
-                <p className="rc-empty">{en.recipe.noRoutines}</p>
-                <p className="cz-hint">{en.recipe.noRoutinesHint}</p>
-                <Link
-                  href={solo ? "/guides/create-a-grok-bot" : "/guides/install-a-grok-bot-team"}
-                  className="rp-secondary mt-3"
-                >
-                  {solo ? en.recipe.noRoutinesBotGuide : en.recipe.noRoutinesGuide}
-                </Link>
-              </div>
-            )}
-          </div>
-        </details>
+        <RecipeSection
+          name="routines"
+          label={en.recipe.secRoutines}
+          count={resolved.routines.length}
+          open={openRecipe === "routines"}
+          onToggle={() => setOpenRecipe((current) => current === "routines" ? null : "routines")}
+        >
+          {resolved.routines.length > 0 ? routinesPart : (
+            <div className="rc-empty-block">
+              <p className="rc-empty">{en.recipe.noRoutines}</p>
+              <p className="cz-hint">{en.recipe.noRoutinesHint}</p>
+              <Link
+                href={solo ? "/guides/create-a-grok-bot" : "/guides/install-a-grok-bot-team"}
+                className="rp-secondary mt-3"
+              >
+                {solo ? en.recipe.noRoutinesBotGuide : en.recipe.noRoutinesGuide}
+              </Link>
+            </div>
+          )}
+        </RecipeSection>
 
-        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
-          <summary className="rp-sum">
-            <RecipeSecIcon name="skills" />
-            <span className="rp-sum-lab">{en.customize.skills}</span>
-            <span className="rp-count">{state.skillPicks.length || team.skills.length}</span>
-          </summary>
-          <div className="rp-secbody">
-            {state.skillPicks.length > 0 ? (
-              <>
-              <ul className="cz-list" aria-busy={state.skillPicks.some((pick) => skillCounts(pick.id).pending) || undefined}>
-                {state.skillPicks.map((pick) => {
-                  const counts = skillCounts(pick.id);
-                  return (
-                    <li key={`${pick.id}::${pick.scope}`} className="hairline-row">
-                      <SkillHitFace
-                        hit={pick}
-                        live={liveHits[pick.id]}
-                        pending={counts.pending}
-                        failed={counts.failed}
-                        extra={pick.use === "install" ? en.customize.skillsInstall : en.customize.skillsFetch}
-                      />
-                    </li>
-                  );
-                })}
-              </ul>
-              {listingsFailed ? (
-                <div className="cz-skill-status" role="alert">
-                  <p className="cz-hint">{en.customize.skillsCountsFail}</p>
-                  <button type="button" className="cz-btn cz-btn-quiet" onClick={retryListings}>
-                    {en.customize.skillsRetry}
-                  </button>
-                </div>
-              ) : null}
-              </>
-            ) : team.skills.length > 0 ? (
-              <ul className="cz-list">{team.skills.map((name) => <li key={name} className="hairline-row">{name}</li>)}</ul>
-            ) : (
-              <div className="rc-empty-block">
-                <p className="rc-empty">{en.recipe.noSkills}</p>
-                <p className="cz-hint">{en.recipe.noSkillsHint}</p>
-                <button type="button" className="rp-secondary mt-3" onClick={openCustomize}>
-                  {en.customize.open}
+        <RecipeSection
+          name="skills"
+          label={en.customize.skills}
+          count={state.skillPicks.length || team.skills.length}
+          open={openRecipe === "skills"}
+          onToggle={() => setOpenRecipe((current) => current === "skills" ? null : "skills")}
+        >
+          {state.skillPicks.length > 0 ? (
+            <>
+            <ul className="cz-list" aria-busy={state.skillPicks.some((pick) => skillCounts(pick.id).pending) || undefined}>
+              {state.skillPicks.map((pick) => {
+                const counts = skillCounts(pick.id);
+                return (
+                  <li key={`${pick.id}::${pick.scope}`} className="hairline-row">
+                    <SkillHitFace
+                      hit={pick}
+                      live={liveHits[pick.id]}
+                      pending={counts.pending}
+                      failed={counts.failed}
+                      extra={pick.use === "install" ? en.customize.skillsInstall : en.customize.skillsFetch}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+            {listingsFailed ? (
+              <div className="cz-skill-status" role="alert">
+                <p className="cz-hint">{en.customize.skillsCountsFail}</p>
+                <button type="button" className="cz-btn cz-btn-quiet" onClick={retryListings}>
+                  {en.customize.skillsRetry}
                 </button>
               </div>
-            )}
-          </div>
-        </details>
+            ) : null}
+            </>
+          ) : team.skills.length > 0 ? (
+            <ul className="cz-list">{team.skills.map((name) => <li key={name} className="hairline-row">{name}</li>)}</ul>
+          ) : (
+            <div className="rc-empty-block">
+              <p className="rc-empty">{en.recipe.noSkills}</p>
+              <p className="cz-hint">{en.recipe.noSkillsHint}</p>
+              <button type="button" className="rp-secondary mt-3" onClick={openCustomize}>
+                {en.customize.open}
+              </button>
+            </div>
+          )}
+        </RecipeSection>
 
-        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
-          <summary className="rp-sum">
-            <RecipeSecIcon name="notes" />
-            <span className="rp-sum-lab">{en.recipe.secNotes}</span>
-            <span className="rp-count">{notes.length}</span>
-          </summary>
-          <div className="rp-secbody">{notes.length > 0 ? notes : <p className="rc-empty">{en.recipe.noNotes}</p>}</div>
-        </details>
+        <RecipeSection
+          name="notes"
+          label={en.recipe.secNotes}
+          count={notes.length}
+          open={openRecipe === "notes"}
+          onToggle={() => setOpenRecipe((current) => current === "notes" ? null : "notes")}
+        >
+          {notes.length > 0 ? notes : <p className="rc-empty">{en.recipe.noNotes}</p>}
+        </RecipeSection>
 
-        <details className="rp-sec" name="recipe" onToggle={(event) => pinOpenRecipe(event.currentTarget)}>
-          <summary className="rp-sum"><RecipeSecIcon name="installer" /><span className="rp-sum-lab">{en.recipe.secInstaller}</span></summary>
-          <div className="rp-secbody">
-            <p className="rp-note">{en.team.installNote}</p>
-            <pre className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
-              <code>{prompt}</code>
-            </pre>
-          </div>
-        </details>
+        <RecipeSection
+          name="installer"
+          label={en.recipe.secInstaller}
+          open={openRecipe === "installer"}
+          onToggle={() => setOpenRecipe((current) => current === "installer" ? null : "installer")}
+        >
+          <p className="rp-note">{en.team.installNote}</p>
+          <pre className="installer-prompt mt-4 overflow-x-auto p-4 text-[0.72rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
+            <code>{prompt}</code>
+          </pre>
+        </RecipeSection>
       </div>
 
       {related}

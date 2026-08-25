@@ -67,7 +67,7 @@ function TalkMention({
   const style = botMarkStyle(index, name, persona);
   return (
     <span className="talk-mention" style={style}>
-      <GrokBotMark size={size} style={style} />
+      <GrokBotMark size={size} frontFacing style={style} />
       <span className="talk-mention-name">{shortBot(name)}</span>
     </span>
   );
@@ -303,7 +303,7 @@ function ConversationStageLive({ team }: { team: Team }) {
                 aria-pressed={selected}
                 onClick={() => setView(i)}
               >
-                <GrokBotMark size={32} animate={typingHere} style={botMarkStyle(i, agent.name, agent.persona)} />
+                <GrokBotMark size={32} animate={typingHere} frontFacing style={botMarkStyle(i, agent.name, agent.persona)} />
                 <span className="talk-rail-meta">
                   <span className="talk-rail-name">{name}</span>
                   <span className="talk-rail-snip">{typingHere ? en.team.watchTyping : snippet || agent.persona}</span>
@@ -320,7 +320,7 @@ function ConversationStageLive({ team }: { team: Team }) {
             >
               <span className="talk-stack" aria-hidden>
                 {agents.slice(0, 3).map((agent, i) => (
-                  <GrokBotMark key={agent.name} size={16} style={botMarkStyle(i, agent.name, agent.persona)} />
+                  <GrokBotMark key={agent.name} size={16} frontFacing style={botMarkStyle(i, agent.name, agent.persona)} />
                 ))}
               </span>
               <span className="talk-rail-meta">
@@ -355,7 +355,7 @@ function ConversationStageLive({ team }: { team: Team }) {
             >
               <span className="talk-stack talk-stack-sm">
                 {agents.slice(0, 3).map((agent, i) => (
-                  <GrokBotMark key={agent.name} size={12} style={botMarkStyle(i, agent.name, agent.persona)} />
+                  <GrokBotMark key={agent.name} size={12} frontFacing style={botMarkStyle(i, agent.name, agent.persona)} />
                 ))}
               </span>
               <span>{en.team.watchGroup}</span>
@@ -371,7 +371,7 @@ function ConversationStageLive({ team }: { team: Team }) {
               onClick={() => setView(i)}
               aria-label={grokDisplayBotName(agent.name)}
             >
-              <GrokBotMark size={22} animate={view === i} style={botMarkStyle(i, agent.name, agent.persona)} />
+              <GrokBotMark size={22} animate={view === i} frontFacing style={botMarkStyle(i, agent.name, agent.persona)} />
               <span>{grokDisplayBotName(agent.name).replace(" Grok Bot", "")}</span>
             </button>
           ))}
@@ -465,7 +465,7 @@ function ConversationStageLive({ team }: { team: Team }) {
                   style={botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)}
                 >
                   <div className="talk-avatar" aria-hidden>
-                    {stack ? null : <GrokBotMark size={26} style={botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)} />}
+                    {stack ? null : <GrokBotMark size={26} frontFacing style={botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)} />}
                   </div>
                   <div className={`talk-card talk-computer ${done ? "is-done" : "is-work"}`}>
                     <div className="talk-card-top">
@@ -493,7 +493,7 @@ function ConversationStageLive({ team }: { team: Team }) {
                 aria-label={you ? en.team.watchYou : undefined}
               >
                 <div className="talk-avatar" aria-hidden>
-                  {stack || you ? null : <GrokBotMark size={26} style={botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)} />}
+                  {stack || you ? null : <GrokBotMark size={26} frontFacing style={botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)} />}
                 </div>
                 <div className="talk-bubble">
                   {stack || hideWho ? null : <p className="talk-bubble-who">{turn.speaker}</p>}

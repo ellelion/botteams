@@ -4,6 +4,24 @@ import { botMarkStyle } from "@/lib/bot-icon";
 import { en } from "@/lib/messages/en";
 import type { TeamRoutine } from "@/lib/types";
 
+function rosterMarkStyle(index: number): Record<string, string> {
+  const x = [-2, 1, 2, -1, 0, 2][index % 6];
+  const tilt = [-7, 5, 8, -5, 3, -8][index % 6];
+  const height = [7, 5, 8, 6, 7, 5][index % 6];
+  return {
+    ...botMarkStyle(index),
+    "--roster-hop-x": `${x}px`,
+    "--roster-hop-x-back": `${x * -0.5}px`,
+    "--roster-hop-y": `-${height}px`,
+    "--roster-hop-y-small": `-${Math.max(2, height - 4)}px`,
+    "--roster-hop-tilt": `${tilt}deg`,
+    "--roster-hop-tilt-back": `${tilt * -0.45}deg`,
+    "--roster-hop-delay": `-${90 + ((index * 113) % 620)}ms`,
+    "--roster-hop-duration": `${570 + ((index * 83) % 230)}ms`,
+    "--roster-z": String(12 - index),
+  };
+}
+
 export function RosterShape({
   bots,
   rooms,
@@ -17,20 +35,20 @@ export function RosterShape({
   allowTip?: boolean;
 }) {
   const tipId = useId();
-  const shown = Math.min(Math.max(bots, 0), 4);
+  const botCount = Number.isFinite(bots) ? Math.max(0, Math.trunc(bots)) : 0;
   const n = routines.length;
   const label = n === 1 ? "1 routine" : `${n} routines`;
   return (
     <span
       className="roster-shape"
-      aria-label={`${en.home.shape(bots, rooms)}${n ? ` · ${label}` : ""}`}
+      aria-label={`${en.home.shape(botCount, rooms)}${n ? ` · ${label}` : ""}`}
     >
       <span className="roster-shape-stack">
-        {Array.from({ length: shown }, (_, i) => (
-          <GrokBotMark key={i} size={13} style={botMarkStyle(i)} />
+        {Array.from({ length: botCount }, (_, i) => (
+          <GrokBotMark key={i} size={13} frontFacing style={rosterMarkStyle(i)} />
         ))}
       </span>
-      <span className="roster-shape-n">{bots === 1 ? "1 Bot" : `${bots} Bots`}</span>
+      <span className="roster-shape-n">{botCount === 1 ? "1 Bot" : `${botCount} Bots`}</span>
       {rooms > 0 ? <span className="roster-shape-rooms">· {rooms === 1 ? "1 group chat" : `${rooms} group chats`}</span> : null}
       {n > 0 ? (
         allowTip ? (

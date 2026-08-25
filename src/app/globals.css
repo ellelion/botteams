@@ -2417,9 +2417,9 @@ a.chip-unverified:focus-visible {
 .idx-empty .notfound-nav,
 .cf-empty .notfound-nav { padding-top: 8px; }
 
-/* Grok Bot face mark. Silhouette is xAI's, used to identify the product
-   this shelf serves. --fg follows the site accent so faces stay in
-   theme; --bg is the page punch-through for eyes and smile.
+/* Grok Bot face mark. The head, eye paths, and viewBox match x.ai/bot's
+   static mark. --fg follows the site accent so faces stay in theme;
+   --bg is the page punch-through for the eyes.
 
    The motion below reproduces the three states we sampled off the live
    mark (idle, curious, happy): a slow vertical breathe, a head tilt, eyes
@@ -2437,23 +2437,37 @@ a.chip-unverified:focus-visible {
   user-select: none;
 }
 .grok-bot-mark__head { fill: var(--fg, var(--accent)); }
-.grok-bot-mark__eye,
-.grok-bot-mark__smile { fill: var(--bg, var(--page)); }
+.grok-bot-mark__eye { fill: var(--bg, var(--page)); }
+.grok-bot-mark--front .grok-bot-mark__face {
+  transform-box: fill-box;
+  transform-origin: 50% 58%;
+  transform: var(--gb-face-rest, translateY(0) rotate(0deg) scaleY(1));
+}
+.grok-bot-mark--front .grok-bot-mark__gaze {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform:
+    translate(var(--gb-gaze-x, 0), var(--gb-gaze-y, 0))
+    rotate(var(--gb-gaze-rotate, 0deg))
+    scale(var(--gb-gaze-scale-x, 1), var(--gb-gaze-scale-y, 1));
+}
 
 /* The head pivots on the face, not on the SVG box, so it gets its own
    group and its own origin. scaleX never moves; only scaleY breathes. */
 .grok-bot-mark--live .grok-bot-mark__face {
   transform-box: fill-box;
   transform-origin: 50% 58%;
-  animation: gb-face 7.5s ease-in-out infinite;
-  animation-delay: var(--gb-delay, 0s);
+  animation: gb-face var(--gb-face-duration, 7.5s) ease-in-out infinite;
+  animation-delay: var(--gb-face-delay, var(--gb-delay, 0s));
 }
 .grok-bot-mark--live .grok-bot-mark__eye {
   transform-box: fill-box;
   transform-origin: center;
-  animation: gb-eye 7.5s ease-in-out infinite;
-  animation-delay: var(--gb-delay, 0s);
+  animation: gb-eye var(--gb-eye-duration, 7.5s) ease-in-out infinite;
+  animation-delay: var(--gb-eye-delay, var(--gb-delay, 0s));
 }
+.grok-bot-mark--front.grok-bot-mark--live .grok-bot-mark__face { animation-name: gb-face-front; }
+.grok-bot-mark--front.grok-bot-mark--live .grok-bot-mark__eye { animation-name: gb-eye-front; }
 
 @keyframes gb-face {
   0% { transform: rotate(-2deg) scaleY(0.98); }
@@ -2484,9 +2498,30 @@ a.chip-unverified:focus-visible {
   100% { transform: translate(0, 0) scale(1, 1); }
 }
 
+@keyframes gb-face-front {
+  0%, 100% { transform: var(--gb-face-rest, translateY(0) rotate(-1deg) scaleY(1)); }
+  18% { transform: var(--gb-face-rise, translateY(-0.35px) rotate(1.5deg) scaleY(1.01)); }
+  37% { transform: var(--gb-face-dip, translateY(0) rotate(-1.8deg) scaleY(0.99)); }
+  58% { transform: var(--gb-face-look, translateY(-0.2px) rotate(2.2deg) scaleY(1.01)); }
+  78% { transform: var(--gb-face-rest, translateY(0.15px) rotate(-0.5deg) scaleY(0.995)); }
+}
+
+@keyframes gb-eye-front {
+  0%, 14%, 100% { transform: translate(0, 0) scale(1, 1); }
+  17% { transform: translate(0, 0) scale(1.03, 0.1); }
+  20% { transform: translate(0, 0) scale(1, 1); }
+  38% { transform: translate(-0.55px, 0.2px) scale(1.03); }
+  56% { transform: translate(0.45px, -0.15px) scale(0.98, 1.02); }
+  73% { transform: translate(0, 0.1px) scale(1, 1); }
+  76% { transform: translate(0, 0.1px) scale(1.02, 0.12); }
+  79% { transform: translate(0, 0) scale(1, 1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .grok-bot-mark--live .grok-bot-mark__face,
-  .grok-bot-mark--live .grok-bot-mark__eye { animation: none; }
+  .grok-bot-mark--live .grok-bot-mark__eye,
+  .grok-bot-mark--front.grok-bot-mark--live .grok-bot-mark__face,
+  .grok-bot-mark--front.grok-bot-mark--live .grok-bot-mark__eye { animation: none; }
 }
 
 .bot-tag {
@@ -4609,14 +4644,57 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   direction: ltr;
 }
 .roster-shape-stack .grok-bot-mark {
-  margin-left: -6px;
-  box-shadow: 0 0 0 1.5px var(--page);
+  margin-left: -2px;
+  box-shadow: 0 0 0 1px var(--page);
   border-radius: 999px;
   position: relative;
-  z-index: 1;
+  z-index: var(--roster-z, 1);
   transform-origin: 50% 80%;
 }
 .roster-shape-stack .grok-bot-mark:first-child { margin-left: 0; }
+
+/* A roster is a tiny room, not a static tally. Each exact Bot mark keeps
+   its compact 13px footprint, then hops with a different height, drift,
+   tilt, delay, and cadence while the room is hovered. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .roster-shape:hover .roster-shape-stack .grok-bot-mark {
+    z-index: 2;
+    will-change: transform;
+    animation: roster-bot-hop var(--roster-hop-duration, 680ms) cubic-bezier(0.22, 0.8, 0.3, 1) var(--roster-hop-delay, 0ms) infinite;
+  }
+  .roster-shape:hover .grok-bot-mark--front .grok-bot-mark__face {
+    animation: gb-face-front var(--gb-face-duration, 7.5s) ease-in-out var(--gb-face-delay, 0s) infinite;
+  }
+  .roster-shape:hover .grok-bot-mark--front .grok-bot-mark__eye {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: gb-eye-front var(--gb-eye-duration, 7.5s) ease-in-out var(--gb-eye-delay, 0s) infinite;
+  }
+}
+
+@keyframes roster-bot-hop {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  26% { transform: translate3d(var(--roster-hop-x, 0), var(--roster-hop-y, -6px), 0) rotate(var(--roster-hop-tilt, 0deg)) scale(0.98, 1.03); }
+  48% { transform: translate3d(var(--roster-hop-x-back, 0), 0, 0) rotate(var(--roster-hop-tilt-back, 0deg)) scale(1.04, 0.94); }
+  66% { transform: translate3d(0, var(--roster-hop-y-small, -2px), 0) rotate(0deg) scale(0.99, 1.01); }
+  82% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1.02, 0.97); }
+}
+
+.bot-row .grok-bot-mark {
+  transform-origin: 50% 80%;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.bot-row:hover .grok-bot-mark,
+.bot-row:focus-within .grok-bot-mark {
+  transform: translateY(calc(var(--gb-hover-lift, 1px) * -1)) rotate(var(--gb-hover-tilt, 0deg));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bot-row .grok-bot-mark { transition: none; }
+  .bot-row:hover .grok-bot-mark,
+  .bot-row:focus-within .grok-bot-mark { transform: none; }
+}
+
 .roster-shape-n { font-variant-numeric: tabular-nums; }
 .roster-shape-routines {
   position: relative;
@@ -4907,26 +4985,29 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 
 .rp-acc { margin-top: 28px; border-top: 1px solid var(--line-strong); }
 .rp-sec { border-bottom: 1px solid var(--line); }
+.rp-sum-heading { margin: 0; }
 .rp-sum {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
-  /* In flow. Exclusive <details name> already prevents a stack, and
-     a sticky title under the copy bar was a second wall on desktop. */
+  /* In flow. The controlled accordion already prevents a stack, and a
+     sticky title under the copy bar was a second wall on desktop. */
   position: static;
+  width: 100%;
   min-height: 48px;
-  padding: 0 2px;
+  padding: 0 10px;
+  border: 0;
   background: var(--page);
   color: var(--ink-soft);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1rem;
+  line-height: 1.3;
+  text-align: left;
   cursor: pointer;
-  list-style: none;
 }
-.rp-sec[open] > .rp-sum { color: var(--ink); }
-.rp-sec[open] > .rp-sum .line-icon { color: inherit; }
-.rp-sum::-webkit-details-marker { display: none; }
+.rp-sec.is-open > .rp-sum-heading .rp-sum { color: var(--ink); }
+.rp-sec.is-open > .rp-sum-heading .rp-sum .line-icon { color: inherit; }
 .rp-sum::after {
   content: "";
   width: 9px;
@@ -4935,9 +5016,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   border-right: 1.5px solid var(--muted);
   border-bottom: 1.5px solid var(--muted);
   transform: rotate(45deg) translate(-2px, -2px);
-  transition: transform var(--dur) var(--ease);
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.rp-sec[open] > .rp-sum::after { transform: rotate(-135deg) translate(-3px, -3px); }
+.rp-sec.is-open > .rp-sum-heading .rp-sum::after { transform: rotate(-135deg) translate(-3px, -3px); }
 @media (prefers-reduced-motion: reduce) { .rp-sum::after { transition: none; } }
 .rp-sum:hover,
 .rp-sum:focus-visible { color: var(--accent-text); }
@@ -5003,7 +5084,27 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .rp-related-row .connector-row { margin-top: 8px; }
 
-.rp-secbody { padding: 4px 2px 22px; }
+.rp-secbody-shell {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 150ms ease-out,
+    visibility 0s linear 300ms;
+}
+.rp-sec.is-open > .rp-secbody-shell {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms ease-out 35ms,
+    visibility 0s linear;
+}
+.rp-secbody-clip { min-height: 0; overflow: hidden; }
+.rp-secbody { padding: 4px 10px 22px; }
 .rp-secbody .cz-list { margin: 0; padding: 0; list-style: none; }
 .rp-secbody .hairline-row { padding: 14px 0; }
 .rp-secbody .hairline-row:first-child { padding-top: 6px; }
@@ -7530,7 +7631,6 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .home-contribute-links a:active,
   .spon-faq summary:active,
   .cz-advanced summary:active,
-  .rp-sum:active,
   .doc-toc-sum:active,
   .roster-shape-routines-sum:active,
   .index-name:active,
