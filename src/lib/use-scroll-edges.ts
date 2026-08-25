@@ -41,6 +41,23 @@ export function cssZoom(): number {
   return Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
 }
 
+/* Phone ticker / sponsor dock cover the bottom of the viewport.
+   A popover that treats innerHeight as the floor opens into that
+   strip: the bar stays painted on top while isolate() makes it
+   inert, so a tap on a chip changes the accent. */
+export function overlayFloor(): number {
+  let floor = window.innerHeight;
+  for (const sel of [".spon-mq--bottom", ".spon-dock"]) {
+    const el = document.querySelector(sel);
+    if (!(el instanceof HTMLElement)) continue;
+    const cs = getComputedStyle(el);
+    const box = el.getBoundingClientRect();
+    if (cs.display === "none" || cs.visibility === "hidden" || box.height < 2) continue;
+    floor = Math.min(floor, box.top);
+  }
+  return floor;
+}
+
 /* Horizontal overflow only. scrollIntoView also moves the page, and at
    CSS zoom that yanked the catalog hundreds of pixels. */
 export function scrollIntoRail(pane: HTMLElement, el: HTMLElement) {

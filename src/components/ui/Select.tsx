@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { overlayFloor } from "@/lib/use-scroll-edges";
 
 /*
  * A listbox we own.
@@ -113,7 +114,7 @@ export function Select({
       const box = root.getBoundingClientRect();
       const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom);
       const scale = Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
-      const spaceBelow = window.innerHeight - box.bottom - 8;
+      const spaceBelow = overlayFloor() - box.bottom - 8;
       const spaceAbove = box.top - 8;
       /* getBoundingClientRect is painted px; max-height is pre-zoom CSS. */
       const available = Math.max(spaceBelow, spaceAbove) / scale;

@@ -420,12 +420,15 @@ html:not([data-theme="dark"]) .wings-mark {
   /* Adjacent to the 26% ink scrim, not bare paper. --pill-line sinks. */
   border-bottom: 1px solid var(--ink);
 }
-/* The sheet is position:fixed but still inside the masthead stacking
-   context (z-index 30). The ticker and sponsor dock are later siblings
-   at 30 / 45, so Spec / API / Sponsor sat under the bar on landscape
-   (API fully in the 56px strip). Lift the bar while the dialog is
-   open; stay below Customize (80) and Watch (400). */
-body:has(.site-menu [role="dialog"]) .site-masthead {
+/* Menu sheet and accent popover are position:fixed but still inside
+   the masthead stacking context (z-index 30). The ticker and sponsor
+   dock are later siblings at 30 / 45, so Spec / API / Sponsor sat
+   under the bar on landscape, and accent swatches sat in the 56px
+   strip while isolate() made the chips inert (tap changed the
+   accent). Lift the bar while either dialog is open; stay below
+   Customize (80) and Watch (400). */
+body:has(.site-menu [role="dialog"]) .site-masthead,
+body:has(.theme-accent-popover) .site-masthead {
   z-index: 50;
 }
 
