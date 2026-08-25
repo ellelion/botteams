@@ -11,8 +11,9 @@ governance.
   authors to approve their own pull requests. This maintainer account has the
   direct-push and ruleset bypass described below.
 - `@skillselion` is the brand automation and repository administration account.
-  It can prepare branches, workflows, and settings. It cannot approve its own
-  pull requests and it is not a code owner.
+  It can prepare branches, workflows, settings, and releases. It cannot approve
+  its own pull requests and it is not a code owner, but it has the publishing
+  bypass described below.
 - Contributors propose changes through forks and pull requests.
 
 These are the only accounts with repository administrator access. `@icidab` is
@@ -33,9 +34,10 @@ Three active rulesets protect `main`:
 - **Main integrity** has no bypass. It requires linear history and blocks branch
   deletion and force pushes.
 - **Main required checks** requires strict schema, documentation, lint, build,
-  dependency, and CodeQL status checks. `@icidab` has always-bypass access.
-- **Main reviews** requires a pull request and approval. `@icidab` has
-  always-bypass access and may push directly to `main`.
+  dependency, and CodeQL status checks. `@icidab` and `@skillselion` have
+  always-bypass access.
+- **Main reviews** requires a pull request and approval. `@icidab` and
+  `@skillselion` have always-bypass access and may push directly to `main`.
 
 A contributor change must:
 
@@ -46,11 +48,12 @@ A contributor change must:
 5. Receive approval from `@icidab` after the latest reviewable push.
 6. Use a squash merge.
 
-The `@icidab` maintainer account may push directly to `main` or bypass the
-pull-request and required-check rules. CI still runs after a direct push.
-Direct pushes remain blocked for every other account. Branch deletion, force
-pushes, and nonlinear history are blocked for every account. Changes to this
-file, `CODEOWNERS`, workflows, or a ruleset must keep this policy accurate.
+The `@icidab` owner account and `@skillselion` brand administration account may
+push directly to `main` or bypass the pull-request and required-check rules. CI
+still runs after a direct push. Direct pushes remain blocked for every other
+account. Branch deletion, force pushes, and nonlinear history are blocked for
+every account. Changes to this file, `CODEOWNERS`, workflows, or a ruleset must
+keep this policy accurate.
 
 ## Releases
 
@@ -63,5 +66,5 @@ request.
 
 Security reports follow [SECURITY.md](./SECURITY.md). A private security fix may
 stay non-public while it is being prepared, but the final change still needs
-maintainer review. Normal contributor checks apply unless `@icidab` uses the
-recorded maintainer bypass.
+maintainer review. Normal contributor checks apply unless `@icidab` or
+`@skillselion` uses the recorded maintainer bypass.

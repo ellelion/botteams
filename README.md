@@ -129,10 +129,10 @@ and [GOVERNANCE.md](./GOVERNANCE.md) before you start. Report security issues
 privately as described in [SECURITY.md](./SECURITY.md).
 
 `main` is protected. Contributors must use a pull request, pass every required
-check, and receive approval from `@icidab`. The `@icidab` maintainer account
-may bypass the pull-request and status-check rules or push directly to `main`.
-CI still runs after a direct push. Branch deletion, force pushes, and nonlinear
-history cannot be bypassed.
+check, and receive approval from `@icidab`. The `@icidab` owner account and
+`@skillselion` brand administration account may bypass the pull-request and
+status-check rules or push directly to `main`. CI still runs after a direct
+push. Branch deletion, force pushes, and nonlinear history cannot be bypassed.
 
 ## Stack
 

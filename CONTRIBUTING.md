@@ -21,9 +21,10 @@ in the same recipe.
 
 GitHub blocks contributors from changing `main` directly. The schema, lint,
 build, dependency, and security checks must pass, and code owner `@icidab`
-must approve the pull request. The `@icidab` maintainer account has a recorded
-exception that permits direct pushes and bypasses the pull-request and status-
-check rules. CI still runs after a maintainer direct push. See
+must approve the pull request. The `@icidab` owner account and `@skillselion`
+brand administration account have recorded exceptions that permit direct
+pushes and bypass the pull-request and status-check rules. CI still runs after
+a maintainer direct push. See
 [GOVERNANCE.md](./GOVERNANCE.md).
 
 ## The bar
