@@ -80,9 +80,7 @@ export default async function BotPage({ params }: { params: Promise<{ slug: stri
           kicker={<Breadcrumb parentHref="/?kind=bot" parentLabel={en.bot.allBots} current={team.name} />}
         >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{team.tagline}</p>
-          <div className="wings-hero-extra">
-            <WatchControl team={team} />
-          </div>
+          <WatchControl team={team} />
         </WingsHero>
       }
     >
