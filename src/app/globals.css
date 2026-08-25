@@ -6232,6 +6232,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   /* After the 760 restatement. Landscape only had +14 above a 56px
      bar; 21px of home indicator put List / Cards under it. */
   .story-beat { padding-block: 0; }
+  /* Tailwind gap-3 is 12px between hero and listing. That 12px sat
+     List / Cards 1.5px under the 77px notched ticker at 640×360. */
+  .home-split { gap: 0; }
   .cf-search,
   #teams .search-wrap {
     padding-top: 4px;
@@ -6239,6 +6242,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     margin-bottom: 0;
   }
   .browse-pick { margin-bottom: 0; }
+  .cat-rail { margin-bottom: 0; }
 }
 /* 12rem after the last row is for a zoomed desktop frame. On a phone
    it left 192px of empty catalog before the footer. */
