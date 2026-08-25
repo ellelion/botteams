@@ -4545,6 +4545,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   min-height: 24px;
   cursor: pointer;
   list-style: none;
+  transition: color var(--dur) var(--ease);
+}
+.roster-shape-routines summary:hover,
+.roster-shape-routines summary:focus-visible {
+  color: var(--accent-text);
 }
 .roster-shape-routines summary::-webkit-details-marker { display: none; }
 .roster-shape-routines summary::marker { content: ""; }
@@ -4718,7 +4723,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .rc-empty { margin-top: 14px; color: var(--ink-soft); font-size: 0.88rem; line-height: 1.6; }
 .rc-empty-block { margin-top: 14px; }
 .rc-empty-block .rc-empty { margin-top: 0; }
-.rc-empty-block .cz-hint { margin-top: 6px; }
+.rc-empty-block .cz-hint {
+  margin-top: 6px;
+  /* Same sentence as catalog / connector empty bodies. The helper
+     0.74 stayed on “what to do next” while .rc-empty sat at 0.88. */
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+}
 
 /* The accordion. Titles always visible, Job open, the rest closed. */
 .rp-run-meta {
