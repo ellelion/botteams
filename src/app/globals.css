@@ -951,13 +951,17 @@ a.accent-hover:focus-visible {
 }
 
 .installer-prompt {
+  box-sizing: border-box;
   min-width: 0;
+  width: 100%;
+  max-width: 100%;
   max-height: 24rem;
   overflow: auto;
   border: 0;
   border-radius: var(--r-inner);
   background: var(--card);
 }
+/* Long installer lines stay on one line. The pre is the scrollport. */
 /* The contribute sample is a whole team file, and the point of showing it
    is that it is short. A scrollbar on twenty lines makes it look long. */
 .installer-prompt.is-whole {
@@ -4474,7 +4478,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
    accordion with its title always on screen, which horizontal tabs
    cannot promise: a quarter of people never open one and decide the
    content is missing. */
-.rp-main { max-width: var(--w-data); }
+.rp-main {
+  min-width: 0;
+  max-width: var(--w-data);
+}
 /* Everything on a recipe page that is a sentence rather than a row. */
 .rp-job,
 .rp-note,
