@@ -6665,8 +6665,10 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
     order: 1;
     /* Close is position:absolute on the canvas. 68px cleared the
        default Close but 1.4.12 grows it to 66px at right: 8, so Replay
-       overlapped by 6px. 88px keeps an 8px gap after that growth. */
-    padding-right: 5.5rem;
+       overlapped by 6px. 88px (not 5.5rem) keeps that gap: Close is
+       12px type, and a rem pad became 176px at 200% text and left
+       the title a 56px column. */
+    padding-right: 88px;
   }
   .talk-overlay-canvas .talk-thread {
     order: 2;
