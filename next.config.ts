@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
   /* The default Next.js N sits bottom-left and covers the mobile
      sponsored rail label. Hide it; errors still overlay. */
   devIndicators: false,
+  async rewrites() {
+    return [
+      { source: "/icon.png", destination: "/icon" },
+      { source: "/apple-icon.png", destination: "/apple-icon" },
+    ];
+  },
 };
 
 export default nextConfig;
