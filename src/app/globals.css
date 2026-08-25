@@ -1119,6 +1119,7 @@ a.chip-unverified:focus-visible {
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--line);
+  padding-top: 4px;
 }
 
 /* Connector marks: a logo bound to its own name, repeated across a row.
@@ -1408,7 +1409,8 @@ a.chip-unverified:focus-visible {
   top: 0;
   z-index: 8;
   background: var(--page);
-  padding-bottom: 18px;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
   box-shadow: 0 1px 0 var(--pill-line);
 }
 .index-tools {
@@ -2097,7 +2099,7 @@ a.chip-unverified:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 8px 16px;
-  margin: 2px 0 4px;
+  margin: 2px 0 10px;
 }
 .idx-count {
   color: var(--muted);
@@ -3118,7 +3120,7 @@ a.chip-unverified:focus-visible {
      1280 while .wings-main-col shrinks. */
   grid-template-columns: repeat(auto-fill, minmax(min(258px, 100%), 1fr));
   gap: 22px;
-  padding-top: 6px;
+  padding-top: 4px;
 }
 .idx-card {
   display: flex;
@@ -4655,19 +4657,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   bottom: 100%;
   height: 10px;
 }
+.roster-shape-routines:hover .roster-shape-tip,
 .roster-shape-routines:focus-within .roster-shape-tip {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
   transform: none;
-}
-@media (hover: hover) and (pointer: fine) {
-  .roster-shape-routines:hover .roster-shape-tip {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: none;
-  }
 }
 .roster-shape-tip-row { display: flex; flex-direction: column; gap: 2px; }
 .roster-shape-tip-row strong {
@@ -5929,7 +5924,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     flex-direction: column;
     align-self: stretch;
     min-height: 100%;
-    padding-left: 1.75rem;
+    padding-left: 2.25rem;
     overflow: visible;
     border-left: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
   }
@@ -6019,6 +6014,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
      sponsor rail. The column still scrolls; the thumb is not a third column. */
   .wings-main-col {
     scrollbar-width: none;
+    padding-inline: 12px;
   }
   .wings-main-col::-webkit-scrollbar { display: none; }
 }
