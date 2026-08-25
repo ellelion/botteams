@@ -4677,7 +4677,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 /* Centered team hero: the count sits mid-column, so left:0 of the
    word still ran ~114px past 390. Park the open card in the extra
-   band (full 22rem story column), not off the last word. */
+   band (full 22rem story column), above the roster so it does not
+   sit on Watch. */
 .wings-hero-extra {
   position: relative;
 }
@@ -4687,9 +4688,15 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .wings-hero-extra .roster-shape-tip {
   left: 0;
   right: 0;
+  top: auto;
+  bottom: calc(100% + 8px);
   width: auto;
   min-width: 0;
   max-width: 100%;
+}
+.wings-hero-extra .roster-shape-tip::before {
+  top: 100%;
+  bottom: auto;
 }
 @media (max-width: 40rem) {
   .roster-shape-tip {
@@ -4697,8 +4704,20 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     width: min(16rem, calc(100vw - 2rem));
     max-width: min(24rem, calc(100vw - 2rem));
   }
-  .wings-hero-extra .roster-shape-tip {
+  .wings-hero-extra .roster-shape-tip,
+  .index-row .roster-shape-tip {
     width: auto;
+  }
+  /* List rows put the count on the right of a short name. left:0 of
+     that word ran 53px past 390. The head is already the column. */
+  .index-row .roster-shape-routines {
+    position: static;
+  }
+  .index-row .roster-shape-tip {
+    left: 0;
+    right: 0;
+    min-width: 0;
+    max-width: 100%;
   }
 }
 .roster-shape-tip-row { display: flex; flex-direction: column; gap: 2px; }
