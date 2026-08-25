@@ -128,8 +128,10 @@ Contributions are welcome through pull requests. Read
 and [GOVERNANCE.md](./GOVERNANCE.md) before you start. Report security issues
 privately as described in [SECURITY.md](./SECURITY.md).
 
-`main` is protected. Every change needs passing checks and approval from
-`@icidab`. Repository administrators cannot bypass these rules.
+`main` is protected. Every change needs a pull request and passing checks.
+Pull requests from other accounts need approval from `@icidab`. For a
+self-authored pull request, `@icidab` can bypass review only; automated checks
+and the other integrity rules cannot be bypassed.
 
 ## Stack
 

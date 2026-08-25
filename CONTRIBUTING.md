@@ -20,8 +20,10 @@ in the same recipe.
 5. Resolve review comments and keep the branch up to date with `main`.
 
 GitHub blocks direct changes to `main`. The schema, lint, build, dependency,
-and security checks must pass. Approval from code owner `@icidab` is required,
-including for maintainers. See [GOVERNANCE.md](./GOVERNANCE.md).
+and security checks must pass. Pull requests from other accounts require
+approval from code owner `@icidab`. A self-authored `@icidab` pull request can
+use the recorded review bypass only after the same checks pass. See
+[GOVERNANCE.md](./GOVERNANCE.md).
 
 ## The bar
 

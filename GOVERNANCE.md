@@ -6,8 +6,10 @@ governance.
 
 ## Roles
 
-- `@icidab` is the code owner and final reviewer. Every pull request needs this
-  account's approval before merge.
+- `@icidab` is the code owner and final reviewer. Pull requests from other
+  accounts need this account's approval before merge. GitHub does not permit
+  authors to approve their own pull requests, so a self-authored pull request
+  uses the review-only bypass described below.
 - `@skillselion` is the brand automation and repository administration account.
   It can prepare branches, workflows, and settings. It cannot approve its own
   pull requests and it is not a code owner.
@@ -26,17 +28,27 @@ decision.
 
 ## Merge policy
 
-The active `main` ruleset has no bypass account. A change must:
+Two active rulesets protect `main`:
+
+- **Main checks and integrity** has no bypass. It requires strict status checks,
+  linear history, and blocks deletion and force pushes.
+- **Main reviews** requires a pull request and approval. `@icidab` has
+  pull-request-only bypass for this ruleset, so it cannot push directly to
+  `main`.
+
+A change must:
 
 1. Use a pull request.
 2. Pass schema, documentation, lint, build, dependency, and CodeQL checks.
 3. Be up to date with `main`.
 4. Resolve all review conversations.
-5. Receive approval from `@icidab` after the latest reviewable push.
+5. Receive approval from `@icidab` after the latest reviewable push, unless
+   `@icidab` authored the pull request and uses the recorded review bypass.
 6. Use a squash merge.
 
-Direct pushes, branch deletion, and force pushes on `main` are blocked. Changes
-to this file, `CODEOWNERS`, workflows, or the ruleset follow the same process.
+Direct pushes, branch deletion, force pushes, and merges with failed or missing
+checks are blocked for every account. Changes to this file, `CODEOWNERS`,
+workflows, or either ruleset follow the same process.
 
 ## Releases
 
