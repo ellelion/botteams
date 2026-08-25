@@ -46,8 +46,8 @@ function ChipRow({
   const rail = useScrollEdges<HTMLDivElement>(base.length);
   return (
     <div
-      ref={rail.ref}
-      className={`spon-mq-copy scroll-fade${rail.edges.start ? " has-start" : ""}${rail.edges.end ? " has-end" : ""}`}
+      ref={rail}
+      className="spon-mq-copy scroll-fade"
     >
       {base.map((slot, i) => (
         <Chip key={`${slot.id}-${i}`} slot={slot} campaign={campaign} />

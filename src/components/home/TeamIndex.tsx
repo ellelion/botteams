@@ -350,8 +350,8 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
     ],
     [categories, inSource.length],
   );
-  const categoriesRef = useScrollEdges<HTMLElement>(categoryOptions.length);
-  const kindRef = useScrollEdges<HTMLDivElement>();
+  const categoriesRail = useScrollEdges<HTMLElement>(categoryOptions.length);
+  const kindRail = useScrollEdges<HTMLDivElement>();
 
   const connectorSelectOptions: SelectOption[] = useMemo(
     () => [
@@ -549,8 +549,8 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
 
         <div className="index-tools">
         <div
-          ref={kindRef.ref}
-          className={`browse-pick scroll-fade${kindRef.edges.start ? " has-start" : ""}${kindRef.edges.end ? " has-end" : ""}`}
+          ref={kindRail}
+          className="browse-pick scroll-fade"
           role="radiogroup"
           aria-label={en.home.kindLabel}
           onKeyDown={(event) => {
@@ -592,8 +592,8 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
         </div>
 
         <nav
-          ref={categoriesRef.ref}
-          className={`cat-rail scroll-fade${categoriesRef.edges.start ? " has-start" : ""}${categoriesRef.edges.end ? " has-end" : ""}`}
+          ref={categoriesRail}
+          className="cat-rail scroll-fade"
           role="radiogroup"
           aria-label={en.home.categoriesAria(kindParam)}
           onKeyDown={(event) => {

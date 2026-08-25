@@ -1,18 +1,19 @@
 "use client";
 
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef } from "react";
 
+/* Fade marks live on the node via classList. Reading a wrapper
+   `{ ref, edges }` during render trips react-hooks/refs, and
+   setState from the observer trips set-state-in-effect. */
 export function useScrollEdges<T extends HTMLElement>(watch?: unknown) {
   const ref = useRef<T>(null);
-  const [edges, setEdges] = useState({ start: false, end: false });
 
   const measure = useCallback(() => {
     const el = ref.current;
     if (!el) return;
     const { scrollLeft, scrollWidth, clientWidth } = el;
-    const start = scrollLeft > 2;
-    const end = scrollLeft + clientWidth < scrollWidth - 2;
-    setEdges((prev) => (prev.start === start && prev.end === end ? prev : { start, end }));
+    el.classList.toggle("has-start", scrollLeft > 2);
+    el.classList.toggle("has-end", scrollLeft + clientWidth < scrollWidth - 2);
   }, []);
 
   useLayoutEffect(() => {
@@ -30,7 +31,7 @@ export function useScrollEdges<T extends HTMLElement>(watch?: unknown) {
     };
   }, [measure, watch]);
 
-  return { ref, edges, measure };
+  return ref;
 }
 
 /* `zoom` on <html> paints getBoundingClientRect in a different space
