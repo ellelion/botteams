@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { botMarkStyle } from "@/lib/bot-icon";
 import { en } from "@/lib/messages/en";
@@ -12,9 +13,10 @@ export function RosterShape({
   bots: number;
   rooms: number;
   routines?: TeamRoutine[];
-  /** False when this shape sits inside a card link. A disclosure there would nest a control in a link. */
+  /** False when this shape sits inside a card link. A control there would nest in a link. */
   allowTip?: boolean;
 }) {
+  const tipId = useId();
   const shown = Math.min(Math.max(bots, 0), 4);
   const n = routines.length;
   const label = n === 1 ? "1 routine" : `${n} routines`;
@@ -32,9 +34,11 @@ export function RosterShape({
       {rooms > 0 ? <span className="roster-shape-rooms">· {rooms === 1 ? "1 group chat" : `${rooms} group chats`}</span> : null}
       {n > 0 ? (
         allowTip ? (
-          <details className="roster-shape-routines">
-            <summary>· {label}</summary>
-            <span className="roster-shape-tip">
+          <span className="roster-shape-routines">
+            <button type="button" className="roster-shape-routines-sum" aria-describedby={tipId}>
+              · {label}
+            </button>
+            <span className="roster-shape-tip" id={tipId} role="tooltip">
               {routines.map((r) => (
                 <span key={r.name} className="roster-shape-tip-row">
                   <strong>{r.name}</strong>
@@ -43,7 +47,7 @@ export function RosterShape({
                 </span>
               ))}
             </span>
-          </details>
+          </span>
         ) : (
           <span className="roster-shape-rooms">· {label}</span>
         )

@@ -311,9 +311,8 @@ body {
   color: var(--muted);
   font-size: 0.9375rem;
   letter-spacing: -0.005em;
-  /* Page-on-page sticky chrome. --line is ~1.1:1; the hairline is
-     the only edge once content scrolls underneath. */
-  box-shadow: 0 1px 0 var(--pill-line);
+  /* No hairline. A 1px rule under the wordmark read as a second bar.
+     Forced-colors still paints an edge so the sticky chrome stays findable. */
   container-type: inline-size;
 }
 
@@ -1409,7 +1408,7 @@ a.chip-unverified:focus-visible {
   top: 0;
   z-index: 8;
   background: var(--page);
-  padding-bottom: 8px;
+  padding-bottom: 18px;
   box-shadow: 0 1px 0 var(--pill-line);
 }
 .index-tools {
@@ -1559,7 +1558,7 @@ a.chip-unverified:focus-visible {
   .cf-clear,
   .theme-control-label,
   .cz-advanced summary,
-  .roster-shape-routines summary,
+  .roster-shape-routines-sum,
   button.cz-link,
   p.cz-hint a.cz-link,
   .crumb-list a,
@@ -1636,7 +1635,7 @@ a.chip-unverified:focus-visible {
   .theme-control-label,
   .cz-skill-scope .sel-button,
   .cz-advanced summary,
-  .roster-shape-routines summary,
+  .roster-shape-routines-sum,
   button.cz-link,
   p.cz-hint a.cz-link,
   .crumb-list a,
@@ -1916,6 +1915,11 @@ a.chip-unverified:focus-visible {
      a tablet fling hit the old estimated end and the list then grew. */
   contain-intrinsic-size: auto 140px;
 }
+/* Paint containment on a skipped row clips the hover tip. */
+.index-row:hover,
+.index-row:focus-within {
+  content-visibility: visible;
+}
 .index-head {
   grid-column: 1;
   position: relative;
@@ -2093,7 +2097,7 @@ a.chip-unverified:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 8px 16px;
-  margin: 2px 0 10px;
+  margin: 2px 0 4px;
 }
 .idx-count {
   color: var(--muted);
@@ -2177,7 +2181,7 @@ a.chip-unverified:focus-visible {
   .index-name,
   .index-ad,
   .index-row .chevron,
-  .roster-shape-routines summary,
+  .roster-shape-routines-sum,
   .index-row a.chip {
     scroll-margin-top: calc(var(--masthead-h) + 5.5rem);
     scroll-margin-bottom: 80px;
@@ -3113,13 +3117,14 @@ a.chip-unverified:focus-visible {
      Viewport media at 720px never sees CSS zoom: the layout viewport stays
      1280 while .wings-main-col shrinks. */
   grid-template-columns: repeat(auto-fill, minmax(min(258px, 100%), 1fr));
-  gap: 16px;
+  gap: 22px;
+  padding-top: 6px;
 }
 .idx-card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 28px 26px 24px;
+  gap: 10px;
+  padding: 36px 32px 32px;
   border: 0;
   border-radius: var(--r-card);
   background: var(--card);
@@ -4588,56 +4593,81 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .roster-shape-stack .grok-bot-mark:first-child { margin-left: 0; }
 .roster-shape-n { font-variant-numeric: tabular-nums; }
-.roster-shape:has(.roster-shape-routines[open]) {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-}
 .roster-shape-routines {
+  position: relative;
   display: inline;
 }
-.roster-shape-routines[open] {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex: 1 1 100%;
-  min-width: 0;
-}
-.roster-shape-routines summary {
+.roster-shape-routines-sum {
   display: inline-flex;
   align-items: center;
   min-height: 24px;
-  cursor: pointer;
-  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  line-height: inherit;
+  cursor: help;
   transition: color var(--dur) var(--ease);
 }
-.roster-shape-routines summary:hover,
-.roster-shape-routines summary:focus-visible {
+.roster-shape-routines-sum:hover,
+.roster-shape-routines-sum:focus-visible {
   color: var(--accent-text);
 }
-.roster-shape-routines summary::-webkit-details-marker { display: none; }
-.roster-shape-routines summary::marker { content: ""; }
 .roster-shape-tip {
-  display: none;
-  position: static;
-  min-width: 0;
-  width: 100%;
-  max-width: min(20rem, 100%);
-  margin-top: 8px;
-  padding: 10px 12px;
-  /* Page-coloured card. --line is ~1.1:1 on paper; --pill-line is 3:1. */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  z-index: 20;
+  box-sizing: border-box;
+  min-width: min(16rem, 70vw);
+  max-width: min(24rem, calc(100vw - 2rem));
+  padding: 16px 18px;
+  /* Overlay, not an in-flow card. --pill-line is the 3:1 edge. */
   border: 1px solid var(--pill-line);
   border-radius: var(--r-inner);
-  background: var(--page);
+  background: var(--card);
   text-transform: none;
   letter-spacing: 0;
   white-space: normal;
   overflow-wrap: anywhere;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition:
+    opacity var(--dur) var(--ease),
+    visibility var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
 }
-.roster-shape-routines[open] > .roster-shape-tip {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+/* Bridge the 8px gap so the tip stays while the pointer moves into it. */
+.roster-shape-tip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 10px;
+}
+.roster-shape-routines:focus-within .roster-shape-tip {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .roster-shape-routines:hover .roster-shape-tip {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+  }
 }
 .roster-shape-tip-row { display: flex; flex-direction: column; gap: 2px; }
 .roster-shape-tip-row strong {
@@ -5795,7 +5825,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .side-rail-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -5808,7 +5838,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .side-rail-item {
   margin: 0;
-  padding: 11px 12px 12px;
+  padding: 16px 16px 16px;
   border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
   border-radius: var(--r-card);
   background: var(--card);
@@ -5855,7 +5885,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   flex-direction: column;
   justify-content: center;
   margin-top: 8px;
-  padding: 14px 14px 16px;
+  padding: 18px 16px 18px;
   border: 1px dashed color-mix(in srgb, var(--ink) 22%, transparent);
   border-radius: var(--r-card);
   text-decoration: none;
@@ -5886,7 +5916,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (min-width: 1280px) {
   .page-rails {
     grid-template-columns: minmax(0, 1fr) 12.5rem;
-    gap: 1.5rem;
+    gap: 2rem;
     align-items: stretch;
     padding-inline: 1rem 1.25rem;
   }
@@ -5899,7 +5929,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     flex-direction: column;
     align-self: stretch;
     min-height: 100%;
-    padding-left: 1.1rem;
+    padding-left: 1.75rem;
     overflow: visible;
     border-left: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
   }
@@ -5982,7 +6012,15 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     overscroll-behavior: contain;
     scroll-padding-top: 1.25rem;
     align-self: start;
+    scrollbar-width: none;
   }
+  .wings-hero-col::-webkit-scrollbar { display: none; }
+  /* Classic scrollbars reserved a gutter between the listing and the
+     sponsor rail. The column still scrolls; the thumb is not a third column. */
+  .wings-main-col {
+    scrollbar-width: none;
+  }
+  .wings-main-col::-webkit-scrollbar { display: none; }
 }
 
 /* CSS zoom leaves the viewport at 1280, so the 1024 split and the
@@ -7232,7 +7270,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .foot-grok,
   .cz-skill-scope .sel-button,
   .cz-advanced summary,
-  .roster-shape-routines summary,
+  .roster-shape-routines-sum,
   button.cz-link,
   p.cz-hint a.cz-link,
   .crumb-list a,
@@ -7346,7 +7384,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .cz-advanced summary:active,
   .rp-sum:active,
   .doc-toc-sum:active,
-  .roster-shape-routines summary:active,
+  .roster-shape-routines-sum:active,
   .index-name:active,
   .idx-card:active,
   .index-ad:active,
