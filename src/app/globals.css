@@ -1444,6 +1444,11 @@ a.chip-unverified:focus-visible {
 /* The only visible name of the field (the <label> is sr-only).
    --muted on --card is 4.66:1 in dark; --ink-soft matches connector
    search and keeps the hint a step below filled type. */
+.search-input:not(:placeholder-shown) {
+  /* “Clear search” is 92px at rest and 111px under 1.4.12. The
+     88px pad left the query under the control by 12px, then 23px. */
+  padding-right: 8rem;
+}
 .search-input::placeholder { color: var(--ink-soft); opacity: 1; }
 .search-input:focus,
 .search-input:focus-visible {
@@ -1486,7 +1491,7 @@ a.chip-unverified:focus-visible {
   /* 12px, not 16: under WCAG 1.4.12 the hint is already the width of
      the 320 field, and the slash key is hidden on coarse pointers. */
   .search-input { padding-right: 12px; }
-  .search-input:not(:placeholder-shown) { padding-right: 88px; }
+  .search-input:not(:placeholder-shown) { padding-right: 8rem; }
   .search-clear,
   .browse-pick-btn,
   .idx-chip,
@@ -2575,7 +2580,7 @@ a.chip-unverified:focus-visible {
   font-size: 0.95rem;
   transition: background var(--dur) var(--ease);
 }
-.cf-input:not(:placeholder-shown) { padding-right: 88px; }
+.cf-input:not(:placeholder-shown) { padding-right: 8rem; }
 .cf-input::placeholder { color: var(--ink-soft); }
 .cf-input:focus,
 .cf-input:focus-visible {
@@ -2604,7 +2609,7 @@ a.chip-unverified:focus-visible {
   /* Same as catalog search: the slash key is gone, so do not keep
      52px of empty right padding. A 200% hint needs that room. */
   .cf-input { padding-right: 12px; }
-  .cf-input:not(:placeholder-shown) { padding-right: 88px; }
+  .cf-input:not(:placeholder-shown) { padding-right: 8rem; }
   .cf-search-clear { min-height: 44px; }
 }
 .cf-kbd {
@@ -3498,7 +3503,7 @@ html[data-theme="light"] .cz-check input:checked {
 .cz-input::placeholder { color: var(--ink-soft); opacity: 1; }
 .cz-input::-webkit-search-cancel-button { appearance: none; }
 .cz-search-wrap { position: relative; display: block; }
-.cz-search-wrap .cz-input:not(:placeholder-shown) { padding-right: 88px; }
+.cz-search-wrap .cz-input:not(:placeholder-shown) { padding-right: 8rem; }
 .cz-search-clear {
   position: absolute;
   right: 8px;
