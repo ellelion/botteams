@@ -2091,13 +2091,20 @@ a.chip-unverified:focus-visible {
   border-radius: var(--r-card);
   text-align: center;
 }
-.idx-empty-title { font-size: 1rem; }
+.idx-empty-title {
+  font-size: 1rem;
+  /* A one-token query ("zzzznosuchteamzzzz") at 200% text is 342px
+     in a 238px card and widened the page 63px. Sponsor-off already
+     wraps its title. */
+  overflow-wrap: anywhere;
+}
 .idx-empty-body {
   margin: 8px auto 16px;
   max-width: 34rem;
   color: var(--ink-soft);
   font-size: 0.84rem;
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 .index-row,
 .idx-card,
@@ -2823,13 +2830,17 @@ a.chip-unverified:focus-visible {
   border-radius: var(--r-card);
   text-align: center;
 }
-.cf-empty-title { font-size: 1rem; }
+.cf-empty-title {
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
 .cf-empty-body {
   margin: 8px auto 16px;
   max-width: 34rem;
   color: var(--ink-soft);
   font-size: 0.84rem;
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 430px) {
