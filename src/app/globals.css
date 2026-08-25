@@ -6235,6 +6235,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .browse-pick { margin-bottom: 0; }
   /* First team sat in the 90px notched ticker (row 580, bar 550).
      Drop leftover gaps. Keep the manifesto. */
+  .story-beat { padding-block: 0; }
   .home-split { gap: 0; }
   .index-header { margin-bottom: 0; }
   .cat-rail { margin-bottom: 0; }
