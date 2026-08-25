@@ -280,7 +280,9 @@ body {
   background: var(--ink);
   color: var(--page);
   font-size: 0.85rem;
-  transform: translateY(-160%);
+  /* -160% left 21px of the 44px control on screen when top is the
+     47px notch inset (47 − 0.6×44). Park it fully above the inset. */
+  transform: translateY(calc(-100% - max(8px, env(safe-area-inset-top, 0px)) - 8px));
   transition: transform var(--dur) var(--ease);
 }
 .skip-link:focus,
@@ -4112,7 +4114,9 @@ html[data-theme="light"] .cz-check input:checked {
 }
 @media (max-width: 859px) {
   .wings-main-col:has(.spon-dock) {
-    padding-bottom: 80px;
+    /* Dock is 10+44+10 plus the home indicator (98 on a 34px inset).
+       80px left the last block under that bar. */
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   }
   body:has(.spon-dock) .spon-mq--bottom {
     display: none;
@@ -4129,8 +4133,8 @@ html[data-theme="light"] .cz-check input:checked {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    min-height: 56px;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    min-height: calc(56px + env(safe-area-inset-bottom, 0px));
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
     background: var(--page);
     box-shadow: 0 -1px 0 var(--pill-line);
     color: var(--ink-soft);
