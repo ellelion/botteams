@@ -227,8 +227,19 @@ export function Customize({
   useEffect(() => {
     if (!hydrated.current) return;
     const payload = encodeState(team, state);
-    const next = payload ? `#${HASH_KEY}${payload}` : window.location.pathname + window.location.search;
-    window.history.replaceState(null, "", next);
+    if (payload) {
+      const next = `#${HASH_KEY}${payload}`;
+      if (window.location.hash !== next) {
+        window.history.replaceState(null, "", next);
+      }
+      return;
+    }
+    const hash = window.location.hash.replace(/^#/, "");
+    /* A stock recipe used to write pathname+search on every mount, which
+       stripped #watch before Watch hydrated. Deep links never opened. */
+    if (hash.startsWith(HASH_KEY)) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
   }, [team, state]);
 
   const resolved = useMemo(() => resolve(team, state), [team, state]);
