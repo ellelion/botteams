@@ -17,6 +17,10 @@ import { normalizeSkillPick, type SkillPick } from "@/lib/skillselion";
  * Copy and paste is still how a team installs.
  */
 
+/* Shared-link payload. Watch uses the same prefix so it does not
+   replace `#c=…` with `#watch` and throw away the recipe. */
+export const CUSTOMIZE_HASH_KEY = "c=";
+
 export const MODES: ConnectorMode[] = ["read", "draft", "ask"];
 
 export const MODE_LABEL: Record<ConnectorMode, string> = {

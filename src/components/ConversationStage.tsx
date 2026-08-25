@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { botMarkStyle, botUiKind } from "@/lib/bot-icon";
 import { grokDisplayBotName, grokRecipeTitle, grokRoomName } from "@/lib/grok-names";
+import { CUSTOMIZE_HASH_KEY } from "@/lib/customize";
 import { en } from "@/lib/messages/en";
 import type { ConversationTurn, Team } from "@/lib/types";
 import { useDialogChrome } from "@/lib/use-dialog-chrome";
@@ -25,6 +26,11 @@ function subscribeToWatchState(callback: () => void) {
 
 function watchState(): boolean {
   return window.location.hash === "#watch";
+}
+
+function hasCustomizeHash(): boolean {
+  const raw = window.location.hash.replace(/^#/, "");
+  return raw.startsWith(CUSTOMIZE_HASH_KEY) && raw.length > CUSTOMIZE_HASH_KEY.length;
 }
 
 function notifyWatchState() {
@@ -86,7 +92,9 @@ export function WatchControl({ team }: { team: Team }) {
 }
 
 function WatchOverlay({ team }: { team: Team }) {
-  const open = useSyncExternalStore(subscribeToWatchState, watchState, () => false);
+  const hashOpen = useSyncExternalStore(subscribeToWatchState, watchState, () => false);
+  const [held, setHeld] = useState(false);
+  const open = hashOpen || held;
   const overlayRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const overlayId = useId();
@@ -94,11 +102,18 @@ function WatchOverlay({ team }: { team: Team }) {
   const dialogTitle = team.kind === "bot" ? en.team.watchLabelBot : en.team.watchLabel;
 
   const openWatch = useCallback(() => {
+    /* A stock page can use #watch. A Customize share is already #c=…
+       and replacing it threw the recipe away on Close. */
+    if (hasCustomizeHash()) {
+      setHeld(true);
+      return;
+    }
     history.replaceState(null, "", "#watch");
     notifyWatchState();
   }, []);
 
   const closeWatch = useCallback(() => {
+    setHeld(false);
     if (window.location.hash === "#watch") {
       history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
       notifyWatchState();

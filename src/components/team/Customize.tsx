@@ -27,6 +27,7 @@ import {
   MODES,
   MODE_HINT,
   MODE_LABEL,
+  CUSTOMIZE_HASH_KEY,
   buildPrompt,
   check,
   decodeState,
@@ -49,9 +50,6 @@ import {
  *   Connector modes are wording, never enforcement, so every claim about
  *   them points at Settings, then Plugins, which is the switch that exists.
  */
-
-const HASH_KEY = "c=";
-
 
 function pinOpenRecipe(section: HTMLDetailsElement) {
   if (!section.open) return;
@@ -143,8 +141,8 @@ export function Customize({
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     const raw = window.location.hash.replace(/^#/, "");
-    if (raw.startsWith(HASH_KEY)) {
-      const payload = raw.slice(HASH_KEY.length);
+    if (raw.startsWith(CUSTOMIZE_HASH_KEY)) {
+      const payload = raw.slice(CUSTOMIZE_HASH_KEY.length);
       if (payload) {
         /* Once, on mount. The server cannot see the hash, so reading it
            any earlier would render one recipe and hydrate another. */
@@ -228,7 +226,7 @@ export function Customize({
     if (!hydrated.current) return;
     const payload = encodeState(team, state);
     if (payload) {
-      const next = `#${HASH_KEY}${payload}`;
+      const next = `#${CUSTOMIZE_HASH_KEY}${payload}`;
       if (window.location.hash !== next) {
         window.history.replaceState(null, "", next);
       }
@@ -237,7 +235,7 @@ export function Customize({
     const hash = window.location.hash.replace(/^#/, "");
     /* A stock recipe used to write pathname+search on every mount, which
        stripped #watch before Watch hydrated. Deep links never opened. */
-    if (hash.startsWith(HASH_KEY)) {
+    if (hash.startsWith(CUSTOMIZE_HASH_KEY)) {
       window.history.replaceState(null, "", window.location.pathname + window.location.search);
     }
   }, [team, state]);
