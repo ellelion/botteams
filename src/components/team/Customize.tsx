@@ -162,7 +162,7 @@ export function Customize({
     onClose: closeOverwrite,
     restoreFromRef: overwriteRestoreRef,
   });
-  const { ref: actionsRef, edges: actionEdges } = useScrollEdges<HTMLDivElement>();
+  const actionsRail = useScrollEdges<HTMLDivElement>();
 
   const askedHits = useRef<Set<string>>(new Set());
   useEffect(() => {
@@ -748,8 +748,8 @@ export function Customize({
       </div>
       <header className="rp-head">
         <div
-          ref={actionsRef}
-          className={`rp-head-act scroll-fade${actionEdges.start ? " has-start" : ""}${actionEdges.end ? " has-end" : ""}`}
+          ref={actionsRail}
+          className="rp-head-act scroll-fade"
         >
           <CopyInstallerButton
             text={verdict.canCopy ? prompt : ""}

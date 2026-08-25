@@ -193,7 +193,7 @@ export function ConnectorFinder({
     }
   }
   const searchRef = useRef<HTMLInputElement>(null);
-  const chipsRef = useScrollEdges<HTMLDivElement>(categories.length);
+  const chipsRail = useScrollEdges<HTMLDivElement>(categories.length);
   const [isPending, startFilter] = useTransition();
   const [resume, setResume] = useState<FinderFilters>(serverFilters);
 
@@ -363,8 +363,8 @@ export function ConnectorFinder({
         </form>
 
         <div
-          ref={chipsRef.ref}
-          className={`cf-chips scroll-fade${chipsRef.edges.start ? " has-start" : ""}${chipsRef.edges.end ? " has-end" : ""}`}
+          ref={chipsRail}
+          className="cf-chips scroll-fade"
           onKeyDown={(event) => {
             if (event.key !== "Tab") return;
             const chips = [...event.currentTarget.querySelectorAll<HTMLElement>(".cf-chip:not([disabled])")];
