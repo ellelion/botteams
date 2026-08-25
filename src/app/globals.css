@@ -5962,6 +5962,20 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cf-row {
     scroll-margin-top: calc(var(--masthead-h) + 7.5rem);
   }
+  /* Absolute 20rem tip uses 100vw, which stays 1280 at CSS zoom 2
+     while the stacked hero is 288. Same in-flow as the phone rule. */
+  .roster-shape-routines[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1 1 100%;
+  }
+  .roster-shape-tip {
+    position: static;
+    width: auto;
+    max-width: none;
+    margin-top: 8px;
+  }
 }
 /* 12rem after the last row is for a zoomed desktop frame. On a phone
    it left 192px of empty catalog before the footer. */
