@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # /// script
 # requires-python = ">=3.9"
-# dependencies = ["google-auth>=2.30,<3"]
+# dependencies = ["google-auth>=2.30,<3", "requests>=2.31,<3"]
 # ///
 """Read-only Google Ads keyword ideas for Ellelion SEO/AEO/GEO research."""
 
@@ -100,7 +100,10 @@ def clean_customer_id(value: Optional[str]) -> Optional[str]:
 
 def google_auth_available() -> bool:
     try:
-        return importlib.util.find_spec("google.oauth2.service_account") is not None
+        return all(
+            importlib.util.find_spec(module) is not None
+            for module in ("google.oauth2.service_account", "requests")
+        )
     except ModuleNotFoundError:
         return False
 
@@ -127,7 +130,8 @@ def get_access_token() -> str:
         from google.oauth2 import service_account
     except ImportError as exc:
         raise RuntimeError(
-            "google-auth is missing; rerun scripts/install-agent-tooling.sh or use uv run --script"
+            "Google authentication dependencies are missing; rerun "
+            "scripts/install-agent-tooling.sh or use uv run --script"
         ) from exc
 
     try:
@@ -162,7 +166,7 @@ def config_state() -> Dict[str, Any]:
     if not direct_token and not key_configured:
         missing.append("GOOGLE_ADS_CREDENTIALS_FILE")
     if key_configured and not auth_dependency_ready:
-        missing.append("google-auth")
+        missing.append("google-auth/requests")
 
     production_access = access_level in PRODUCTION_LEVELS
     return {
