@@ -1634,7 +1634,9 @@ a.chip-unverified:focus-visible {
   }
 }
 @media (max-width: 639px) {
-  .search-wrap { margin-top: 32px; margin-bottom: 8px; }
+  /* 32px plus the phone hero used to land the category rail under
+     the 56px ticker (All sat at 659, bar at 664). */
+  .search-wrap { margin-top: 10px; margin-bottom: 8px; }
   .index-header .section-title { display: none; }
   .cat-rail { margin-bottom: 10px; }
   .hero-stats { margin-top: 0.5rem; }
@@ -5970,7 +5972,21 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .story-beat {
     min-height: 0;
     overflow-x: visible;
+    padding-block: 0.35rem;
   }
+  /* Default inbound home kept a 457px hero. Kind cleared the ticker;
+     categories did not. Keep the manifesto; tighten the stack. */
+  .story-beat h1 {
+    margin-top: 0.25rem;
+    font-size: 1.45rem;
+  }
+  .story-beat .home-hero-manifesto,
+  .story-beat .home-hero-links {
+    margin-top: 0.45rem;
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+  .story-beat .hero-stats { margin-top: 0.4rem; }
   /* The cue sat at the bottom of a sticky hero column. After the
      split stacks, How is 32px below, so "Browse teams" is a dead
      hop before the extra copy. */
