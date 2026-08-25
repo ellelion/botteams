@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 function useCountUp(to: number, ms = 900) {
   const [n, setN] = useState(0);
   useEffect(() => {
+    let raf = 0;
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setN(to);
-      return;
+      raf = requestAnimationFrame(() => setN(to));
+      return () => cancelAnimationFrame(raf);
     }
     const start = performance.now();
-    let raf = 0;
     const tick = (now: number) => {
       const p = Math.min(1, (now - start) / ms);
       const e = 1 - (1 - p) ** 3;
@@ -36,14 +37,14 @@ export function HeroStats({
   const botN = useCountUp(bots, 980);
   return (
     <div className="hero-stats" aria-label={`${teams} teams, ${bots} bots, verified ${verifiedOn}`}>
-      <a className="hero-stat" href="/?kind=team">
+      <Link className="hero-stat" href="/?kind=team">
         <strong>{teamN}</strong>
         <span>Teams</span>
-      </a>
-      <a className="hero-stat" href="/?kind=bot">
+      </Link>
+      <Link className="hero-stat" href="/?kind=bot">
         <strong>{botN}</strong>
         <span>Bots</span>
-      </a>
+      </Link>
       <p className="hero-stat">
         <strong>
           <time dateTime={verifiedOn}>{verifiedOn}</time>

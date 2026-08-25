@@ -25,30 +25,27 @@ export function SkillselionPicker({
   onChange: (next: SkillPick[]) => void;
 }) {
   const [q, setQ] = useState("");
-  const [hits, setHits] = useState<SkillselionHit[]>([]);
+  const [result, setResult] = useState<{ query: string; hits: SkillselionHit[] }>({ query: "", hits: [] });
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const query = q.trim();
+  const hits = result.query === query ? result.hits : [];
 
   useEffect(() => {
-    const query = q.trim();
-    if (query.length < 2) {
-      setHits([]);
-      return;
-    }
+    if (query.length < 2) return;
     const t = window.setTimeout(() => {
       setBusy(true);
       searchSkills(query)
-        .then((rows) => setHits(rows))
+        .then((rows) => setResult({ query, hits: rows }))
         .finally(() => setBusy(false));
     }, 250);
     return () => window.clearTimeout(t);
-  }, [q]);
+  }, [query]);
 
   function add(hit: SkillselionHit) {
     if (picks.some((p) => p.id === hit.id && p.scope === "team")) return;
     onChange([...picks, { ...hit, use: "fetch", scope: "team" }]);
     setQ("");
-    setHits([]);
     setOpen(false);
   }
 

@@ -5,6 +5,26 @@ Bots, the group chat, the routines, and the connectors the account needs
 first. The installer prompt is generated from that file, so the file is the
 product. There is no database and no admin.
 
+The machine-readable source of truth is the public
+[team schema](https://botteams.ai/schema/team.schema.json). The validator also
+applies semantic checks that JSON Schema cannot express, such as matching the
+filename to `slug` and checking that room members and routine owners name Bots
+in the same recipe.
+
+## How pull requests work
+
+1. Fork the repository and create a branch from `main`.
+2. Add or change one focused item.
+3. Run `npm ci` and `npm test` with the Node version in `.nvmrc`.
+4. Open a pull request and complete the checklist.
+5. Resolve review comments and keep the branch up to date with `main`.
+
+GitHub blocks direct changes to `main`. The schema, lint, build, dependency,
+and security checks must pass. Pull requests from other accounts require
+approval from code owner `@icidab`. A self-authored `@icidab` pull request can
+use the recorded review bypass only after the same checks pass. See
+[GOVERNANCE.md](./GOVERNANCE.md).
+
 ## The bar
 
 Before you open a pull request:
@@ -14,8 +34,8 @@ Before you open a pull request:
   useful.
 - **It is self-contained.** A reader with the listed connectors can run it
   without any other setup, private repo, or internal doc.
-- **It is a team, not a bot.** Two to six Bots with distinct jobs and one
-  group chat. A single Bot is not a team.
+- **It has the right shape.** A team has two to six Bots with distinct jobs and
+  at least one group chat. A bot has exactly one Bot and no group chat.
 - **It is not an ad.** A team that exists to sell one product will be closed.
   Sponsorship is a separate thing: see [/sponsor](https://botteams.ai/sponsor).
 - **Guardrails are explicit.** If a Bot touches money, mail, or production,
@@ -29,6 +49,7 @@ alphanumerics and dashes only.
 
 ```yaml
 ---
+$schema: https://botteams.ai/schema/team.schema.json
 slug: founder-os                    # required, equals the filename
 name: Founder OS                    # required
 tagline: One line for the job.      # required
@@ -146,21 +167,23 @@ asserted in the validate script, so breaking it fails CI.
 ### Categories
 
 The category list is closed so a typo cannot quietly become a new category.
-Current values live in `CATEGORIES` in
-[`scripts/validate-teams.mjs`](./scripts/validate-teams.mjs). To add one,
-change that list in the same pull request and say why.
+Current values live in the `section` enum in the
+[public schema](https://botteams.ai/schema/team.schema.json). To add one,
+change that enum in the same pull request and say why.
 
 ## Checks
 
 ```bash
 npm run validate   # schema, slug, category, roster sizes, attribution
+npm run lint       # TypeScript and React lint rules
 npm run build      # types and a full production build
+npm test           # every local merge check
 ```
 
-CI runs both. `validate` fails on an unknown category, a slug that does not
-match the filename, a duplicate slug or `url`, a room outside 2 to 6 members,
-a `bots` count that disagrees with the roster, and a per-Bot connector that is
-not on the team.
+CI runs these checks, a dependency review, and CodeQL. `validate` fails on an
+unknown category, a slug that does not match the filename, a duplicate slug or
+`url`, a room outside 2 to 6 members, a `bots` count that disagrees with the
+roster, and a per-Bot connector that is not on the team.
 
 ## Language
 
