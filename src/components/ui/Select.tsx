@@ -111,7 +111,7 @@ export function Select({
     const list = listEl;
     const root = rootEl;
     function place() {
-      const box = (buttonRef.current ?? root).getBoundingClientRect();
+      const box = root.getBoundingClientRect();
       const scale = cssZoom();
       const gap = 8 * scale;
       const spaceBelow = overlayFloor() - box.bottom - gap;
