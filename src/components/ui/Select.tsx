@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { overlayFloor } from "@/lib/use-scroll-edges";
+import { cssZoom, overlayFloor } from "@/lib/use-scroll-edges";
 
 /*
  * A listbox we own.
@@ -111,20 +111,21 @@ export function Select({
     const list = listEl;
     const root = rootEl;
     function place() {
-      const box = root.getBoundingClientRect();
-      const zoom = Number.parseFloat(getComputedStyle(document.documentElement).zoom);
-      const scale = Number.isFinite(zoom) && zoom > 0 ? zoom : 1;
-      const spaceBelow = overlayFloor() - box.bottom - 8;
-      const spaceAbove = box.top - 8;
+      const box = (buttonRef.current ?? root).getBoundingClientRect();
+      const scale = cssZoom();
+      const gap = 8 * scale;
+      const spaceBelow = overlayFloor() - box.bottom - gap;
+      const spaceAbove = box.top - gap;
       /* getBoundingClientRect is painted px; max-height is pre-zoom CSS. */
-      const available = Math.max(spaceBelow, spaceAbove) / scale;
+      const available = Math.max(0, Math.max(spaceBelow, spaceAbove) / scale);
       /* Match the stylesheet cap (19rem, or the remaining viewport on a
          phone) so leftover space above the button cannot become a
-         full-screen menu. */
+         full-screen menu. 120 won when 1.4.12 left ~112px above the
+         ticker, so the list sat in the bar. */
       list.style.maxHeight = "";
       const cssCap = Number.parseFloat(getComputedStyle(list).maxHeight);
       const cap = Number.isFinite(cssCap) && cssCap > 0 ? cssCap : Math.min(304, Math.floor(window.innerHeight * 0.5 / scale));
-      list.style.maxHeight = `${Math.max(120, Math.floor(Math.min(available, cap)))}px`;
+      list.style.maxHeight = `${Math.max(0, Math.floor(Math.min(available, cap)))}px`;
       const height = list.offsetHeight;
       list.classList.toggle("is-up", spaceBelow < height * scale && spaceAbove > spaceBelow);
     }
