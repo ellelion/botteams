@@ -6219,11 +6219,19 @@ html[data-theme="dark"] .talk-stage {
   padding: 0;
 }
 .talk-dock-item span {
-  max-width: 64px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   color: var(--talk-mute);
+}
+.talk-dock-item > span:not(.talk-stack) {
+  /* 64px nowrap ellipsis clipped “group chat” (75px) and
+     “Findability” (68px) at 320/390 under 1.4.12. The dock
+     already scrolls sideways; wrap the name instead of
+     hiding letters. Cap at 4.75rem so a one-word Bot still
+     fits after letter-spacing, then wrap longer names. */
+  max-width: 4.75rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.25;
 }
 .talk-dock-item.is-on span { color: var(--talk-text); font-weight: 560; }
 .talk-dock-item.is-on .grok-bot-mark { transform: translateY(-2px); }
