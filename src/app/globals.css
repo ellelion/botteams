@@ -6230,9 +6230,17 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   #teams .search-wrap {
     padding-top: 6px;
     padding-bottom: 4px;
-    margin-bottom: 6px;
+    margin-bottom: 0;
   }
-  .browse-pick { margin-bottom: 4px; }
+  .browse-pick { margin-bottom: 0; }
+  /* First team sat in the 90px notched ticker (row 580, bar 550).
+     Drop leftover gaps. Keep the manifesto. */
+  .home-split { gap: 0; }
+  .index-header { margin-bottom: 0; }
+  .cat-rail { margin-bottom: 0; }
+  .idx-status { margin: 2px 0 4px; }
+  .team-table,
+  .idx-cards { padding-top: 0; }
 }
 @media (max-width: 1023px) and (max-height: 480px) {
   /* After the 760 restatement. Landscape only had +14 above a 56px
