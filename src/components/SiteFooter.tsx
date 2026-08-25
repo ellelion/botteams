@@ -45,6 +45,21 @@ export function SiteFooter() {
         </div>
         <div className="foot-meta">
           <p className="foot-meta-note">{en.footer.notAffiliated}</p>
+          {/* Findly verifies this listing-specific embed in the public footer. */}
+          <a
+            href="https://findly.tools/botteams-ai?utm_source=botteams-ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Featured on Findly.tools. ${en.nav.opensNew}`}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
+            <img
+              src="https://findly.tools/badges/findly-tools-badge-light.svg"
+              alt="Featured on Findly.tools"
+              width="175"
+              height="55"
+            />
+          </a>
           {/* Credit at the bottom of the footer, well clear of the mark. */}
           <a
             className="foot-grok"
