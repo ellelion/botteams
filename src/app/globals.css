@@ -1563,6 +1563,7 @@ a.chip-unverified:focus-visible {
   .roster-shape-routines-sum,
   button.cz-link,
   p.cz-hint a.cz-link,
+  .spon-paid a,
   .crumb-list a,
   .wings-crumb a,
   .home-hero-manifesto a,
@@ -1640,6 +1641,7 @@ a.chip-unverified:focus-visible {
   .roster-shape-routines-sum,
   button.cz-link,
   p.cz-hint a.cz-link,
+  .spon-paid a,
   .crumb-list a,
   .wings-crumb a,
   .home-hero-manifesto a,
@@ -3170,12 +3172,11 @@ a.chip-unverified:focus-visible {
 }
 .idx-card-foot {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
   margin-top: auto;
-  padding-top: 4px;
+  padding-top: 12px;
 }
 .idx-card-bots {
   color: var(--ink-soft);
@@ -4177,7 +4178,12 @@ html[data-theme="light"] .cz-check input:checked {
   font-size: 0.84rem;
   line-height: 1.6;
 }
-.spon-paid a { color: inherit; }
+.spon-paid a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  color: inherit;
+}
 .spon-paid-link {
   display: inline-flex;
   align-items: center;
@@ -7278,6 +7284,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .roster-shape-routines-sum,
   button.cz-link,
   p.cz-hint a.cz-link,
+  .spon-paid a,
   .crumb-list a,
   .wings-crumb a,
   .home-hero-manifesto a,
