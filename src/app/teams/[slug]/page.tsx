@@ -80,10 +80,8 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
               <VerifiedChip on={isVerified(team)} />
               <RosterShape bots={team.bots} rooms={team.rooms.length} routines={team.routines} />
             </div>
-            <WatchControl team={team} />
-          ) : (
-            <WatchControl team={team} />
-          )}
+          ) : null}
+          <WatchControl team={team} />
         </WingsHero>
       }
     >
