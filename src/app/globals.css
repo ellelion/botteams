@@ -3310,12 +3310,22 @@ a.chip-unverified:focus-visible {
 }
 .cz-btn:hover,
 .cz-btn:focus-visible { opacity: 0.88; }
-/* Ghost: a hairline until it is wanted, then it fills. */
+/* Ghost: a hairline until it is wanted, then it fills. Idle
+   color is :not(fail) so it cannot beat the fail token. A later
+   restated .cz-btn.is-copy-fail pair was merged back to the early
+   rule, then this quiet color won at rest. Focus-visible still
+   painted beta, so a click looked fixed. */
 .cz-btn-quiet {
   background: transparent;
+  opacity: 1;
+}
+.cz-btn-quiet:not(.is-copy-fail) {
   border-color: var(--pill-line);
   color: var(--ink-soft);
-  opacity: 1;
+}
+.cz-btn.cz-btn-quiet.is-copy-fail {
+  color: var(--beta);
+  border-color: var(--beta);
 }
 .cz-btn-quiet:hover,
 .cz-btn-quiet:focus-visible {
@@ -5201,7 +5211,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   border-color: var(--pill-line);
 }
 .share-bar .share-btn.is-copy-fail,
-.cz-btn.is-copy-fail {
+.cz-actions .cz-btn.is-copy-fail,
+.cz-btn.cz-btn-quiet.is-copy-fail {
   color: var(--beta);
   border-color: var(--beta);
 }
