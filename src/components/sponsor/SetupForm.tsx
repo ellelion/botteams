@@ -223,16 +223,16 @@ export function SetupForm({ sessionId, remaining: initialRemaining }: { sessionI
         </ul>
       ) : null}
       {error ? (
-        <p className="spon-error" role="alert">
-          {error === en.sponsor.setupError ? (
-            <>
-              {en.sponsor.setupError}{" "}
-              <a className="accent-hover underline" href={`mailto:${site.email}`}>{en.sponsor.buyErrorMail}</a>.
-            </>
-          ) : (
-            error
-          )}
-        </p>
+        error === en.sponsor.setupError ? (
+          <div className="spon-error-block">
+            <p className="spon-error" role="alert">
+              {en.sponsor.setupError}
+            </p>
+            <a className="theme-control theme-control-label" href={`mailto:${site.email}`}>{en.sponsor.mailCta}</a>
+          </div>
+        ) : (
+          <p className="spon-error" role="alert">{error}</p>
+        )
       ) : null}
     </form>
   );

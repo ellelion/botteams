@@ -3876,7 +3876,8 @@ html[data-theme="light"] .cz-check input:checked {
   margin-top: 22px;
 }
 .spon-hero-cta.theme-control-label,
-.spon-off .theme-control-label {
+.spon-off .theme-control-label,
+.spon-error-block .theme-control-label {
   font-size: 0.88rem;
   letter-spacing: -0.01em;
   min-height: 44px;
@@ -3887,6 +3888,7 @@ html[data-theme="light"] .cz-check input:checked {
 }
 .spon-ask-cta.theme-control-label,
 .spon-off .theme-control-label,
+.spon-error-block .theme-control-label,
 .idx-empty .theme-control-label,
 .cf-empty .theme-control-label,
 .notfound-nav .theme-control-label,
@@ -4041,6 +4043,9 @@ html[data-theme="light"] .cz-check input:checked {
   line-height: 1.5;
 }
 .spon-error a { color: inherit; }
+.spon-error-block { margin-top: 10px; }
+.spon-error-block .spon-error { margin-top: 0; }
+.spon-error-block .theme-control { margin-top: 12px; }
 
 .spon-steps {
   display: grid;
