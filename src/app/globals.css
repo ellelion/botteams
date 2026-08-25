@@ -415,7 +415,7 @@ html:not([data-theme="dark"]) .wings-mark {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 6px 16px 14px;
+  padding: 6px 16px calc(14px + env(safe-area-inset-bottom, 0px));
   background: var(--page);
   /* Adjacent to the 26% ink scrim, not bare paper. --pill-line sinks. */
   border-bottom: 1px solid var(--ink);
@@ -5742,7 +5742,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .spon-mq--top { display: none; }
   .spon-mq--bottom {
     display: block;
-    height: 56px;
+    box-sizing: border-box;
+    /* 56px chip row + home indicator. A fixed 56px bar sat the
+       44px chips in the last 34px on a notched phone (838 vs 810).
+       Dock and Watch already pad this; overlayFloor reads the box. */
+    height: calc(56px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .spon-mq--bottom .spon-chip {
     height: 44px;
@@ -5750,11 +5755,11 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     font-size: 0.72rem;
     padding: 0 12px 0 9px;
   }
-  .page-rails-main { padding-bottom: 80px; }
-  html { scroll-padding-bottom: 80px; }
+  .page-rails-main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+  html { scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
   .foot-link,
   .foot-grok {
-    scroll-margin-bottom: 80px;
+    scroll-margin-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   }
 }
 
