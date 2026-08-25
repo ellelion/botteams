@@ -221,8 +221,14 @@ function ConversationStageLive({ team }: { team: Team }) {
     el.addEventListener("talk-play", onPlay);
 
     if (reduceRef.current) {
-      setShown(script.length);
-      return () => el.removeEventListener("talk-play", onPlay);
+      const id = window.setTimeout(() => {
+        setShown(script.length);
+        setPlaying(false);
+      }, 0);
+      return () => {
+        window.clearTimeout(id);
+        el.removeEventListener("talk-play", onPlay);
+      };
     }
 
     const io = new IntersectionObserver(
@@ -233,11 +239,13 @@ function ConversationStageLive({ team }: { team: Team }) {
     );
     io.observe(el);
 
-    if (typeof window !== "undefined" && window.location.hash === "#watch") {
-      start();
-    }
+    /* Hash and IO callbacks, not the effect body: setState-in-effect
+       failed quality on the empty-state start() change. */
+    const hashTimer =
+      window.location.hash === "#watch" ? window.setTimeout(() => start(), 0) : 0;
 
     return () => {
+      if (hashTimer) window.clearTimeout(hashTimer);
       io.disconnect();
       el.removeEventListener("talk-play", onPlay);
     };
@@ -261,7 +269,8 @@ function ConversationStageLive({ team }: { team: Team }) {
   }, [shown, view]);
 
   useEffect(() => {
-    start();
+    const id = window.setTimeout(() => start(), 0);
+    return () => window.clearTimeout(id);
   }, [view, start]);
 
   const visible = script.slice(0, shown);
