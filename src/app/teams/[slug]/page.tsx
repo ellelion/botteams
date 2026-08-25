@@ -76,7 +76,7 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
         >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{team.tagline}</p>
           {team.kind === "team" ? (
-            <div className="mt-4 flex flex-col items-center gap-3">
+            <div className="wings-hero-extra mt-4 flex flex-col items-center gap-3">
               <VerifiedChip on={isVerified(team)} />
               <RosterShape bots={team.bots} rooms={team.rooms.length} routines={team.routines} />
               <WatchControl team={team} />

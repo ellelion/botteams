@@ -6114,6 +6114,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     padding-bottom: 4px;
     margin-bottom: 6px;
   }
+  /* Roster / Watch / verified are not <p>s, so the lede hide left
+     them on. Copy installer then sat on screen under the ticker
+     (667×375: 77px). Menu and scroll still reach Watch. */
+  .story-beat .wings-hero-extra { display: none; }
+  /* Five 404 recoveries wrap; the last sat 29px under the bar. */
+  .idx-empty { padding: 12px 16px; margin-top: 8px; }
 }
 /* 12rem after the last row is for a zoomed desktop frame. On a phone
    it left 192px of empty catalog before the footer. */
