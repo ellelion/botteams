@@ -4820,7 +4820,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (prefers-reduced-motion: reduce) { .rp-sum::after { transition: none; } }
 .rp-sum:hover,
 .rp-sum:focus-visible { color: var(--accent-text); }
-.rp-sum:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.rp-sum:focus-visible {
+  outline: 2px solid var(--accent-text);
+  /* Full-bleed in the column scroller. A 2px outer ring lost 4px
+     a side on Job / Routines / Skills / Notes. */
+  outline-offset: -3px;
+}
 .rp-sum .line-icon { width: 16px; height: 16px; flex: none; color: var(--muted); }
 .rp-sum:hover .line-icon,
 .rp-sum:focus-visible .line-icon { color: inherit; }
