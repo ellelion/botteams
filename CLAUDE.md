@@ -5,3 +5,13 @@ user-facing copy, OG cards, README, or llms.txt.
 
 `kind` is the shape (`team` or `bot`). `status` is whether it is real
 (`installable`) or a format demo (`example`). Do not write `status: team`.
+
+## Deploy policy
+
+- Pushes to `main` continue to auto-deploy to Vercel production.
+- Vercel Git previews are disabled for `cursor/**`, `claude/**`, and
+  `codex/**` branches. Commit checkpoints locally, but do not spend a build on
+  every agent push.
+- When one final preview is needed, push the ready commit to a `preview/**`
+  branch, such as `preview/final-ui-check`. Normal and `preview/**` branches
+  still create previews.
