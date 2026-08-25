@@ -6267,8 +6267,8 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
      hid stats; the 34px home-indicator ticker then parked List /
      Cards 13px under the bar. 390×844 stays above 760. */
   #teams .search-wrap {
-    padding-top: 6px;
-    padding-bottom: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     margin-bottom: 0;
   }
   .browse-pick { margin-bottom: 0; }
