@@ -1,13 +1,33 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { botMarkStyle, botUiKind } from "@/lib/bot-icon";
 import { grokDisplayBotName, grokRecipeTitle, grokRoomName } from "@/lib/grok-names";
 import type { ConversationTurn, Team } from "@/lib/types";
 
-const YOU_KEYS = new Set(["you", "itzik", "itzik dabush", "founder"]);
+const YOU_KEYS = new Set(["you", "founder"]);
+const EMPTY_TURNS: ConversationTurn[] = [];
+const EMPTY_TURNS_BY_BOT: Record<string, ConversationTurn[]> = {};
+const WATCH_STATE_EVENT = "botteams:watch-state";
+
+function subscribeToWatchState(callback: () => void) {
+  window.addEventListener("hashchange", callback);
+  window.addEventListener(WATCH_STATE_EVENT, callback);
+  return () => {
+    window.removeEventListener("hashchange", callback);
+    window.removeEventListener(WATCH_STATE_EVENT, callback);
+  };
+}
+
+function watchState(): boolean {
+  return window.location.hash === "#watch";
+}
+
+function notifyWatchState() {
+  window.dispatchEvent(new Event(WATCH_STATE_EVENT));
+}
 
 function isYouTurn(turn: ConversationTurn): boolean {
   if (turn.role === "user") return true;
@@ -72,30 +92,19 @@ export function WatchControl({ team }: { team: Team }) {
 }
 
 function WatchOverlay({ team }: { team: Team }) {
-  const [open, setOpen] = useState(false);
+  const open = useSyncExternalStore(subscribeToWatchState, watchState, () => false);
   const label = team.kind === "bot" ? "Watch this Bot" : "Watch this team";
 
   const openWatch = useCallback(() => {
-    setOpen(true);
-    if (typeof window !== "undefined") history.replaceState(null, "", "#watch");
+    history.replaceState(null, "", "#watch");
+    notifyWatchState();
   }, []);
 
   const closeWatch = useCallback(() => {
-    setOpen(false);
-    if (typeof window === "undefined") return;
     if (window.location.hash === "#watch") {
       history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+      notifyWatchState();
     }
-  }, []);
-
-  useEffect(() => {
-    if (window.location.hash === "#watch") setOpen(true);
-    const onHash = () => {
-      if (window.location.hash === "#watch") setOpen(true);
-      else setOpen(false);
-    };
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
   useEffect(() => {
@@ -150,8 +159,8 @@ export function ConversationStage({ team }: { team: Team }) {
 }
 
 function ConversationStageLive({ team }: { team: Team }) {
-  const turns = team.conversation ?? [];
-  const byBot = team.conversationByBot ?? {};
+  const turns = team.conversation ?? EMPTY_TURNS;
+  const byBot = team.conversationByBot ?? EMPTY_TURNS_BY_BOT;
 
   const rootRef = useRef<HTMLElement | null>(null);
   const threadRef = useRef<HTMLDivElement | null>(null);
@@ -217,7 +226,7 @@ function ConversationStageLive({ team }: { team: Team }) {
       io.disconnect();
       el.removeEventListener("talk-play", onPlay);
     };
-  }, [start, turns.length]);
+  }, [start, turns.length, script.length]);
 
   useEffect(() => {
     if (!playing) return;
@@ -311,8 +320,8 @@ function ConversationStageLive({ team }: { team: Team }) {
           ) : null}
         </div>
         <div className="talk-you" aria-hidden>
-          <span className="talk-you-av">ID</span>
-          <span>Itzik Dabush</span>
+          <span className="talk-you-av">Y</span>
+          <span>You</span>
         </div>
       </aside>
 

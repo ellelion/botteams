@@ -1,0 +1,48 @@
+name: Propose a team or bot
+description: Propose a tested recipe for the public directory.
+title: "[Listing]: "
+labels: ["listing"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A listing must use the public schema and must be tested in Grok Bot end to end. You can also open a pull request with the finished Markdown file.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Recipe kind
+      options:
+        - Team, two to six Bots and a group chat
+        - Bot, one Bot and no group chat
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      placeholder: Founder OS
+    validations:
+      required: true
+  - type: textarea
+    id: job
+    attributes:
+      label: Job and expected result
+      description: Explain what the recipe does and what useful output you observed.
+    validations:
+      required: true
+  - type: textarea
+    id: connectors
+    attributes:
+      label: Connectors
+      description: List every connector the recipe expects.
+    validations:
+      required: true
+  - type: checkboxes
+    id: tested
+    attributes:
+      label: Test confirmation
+      options:
+        - label: I pasted the installer into Grok Bot and ran the recipe end to end.
+          required: true
+        - label: The recipe does not contain credentials, private data, or an advertisement.
+          required: true

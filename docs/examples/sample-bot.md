@@ -1,4 +1,5 @@
 ---
+$schema: https://botteams.ai/schema/team.schema.json
 slug: sample-bot
 name: Sample bot
 tagline: One Bot, one job. This file is the contribution template, not a live listing.
