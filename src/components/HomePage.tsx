@@ -52,7 +52,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
           <StoryBeat catalogActive={catalogActive}>
             <div className="relative z-10 w-full max-w-full overflow-x-hidden px-1">
               <p className="home-hero-eyebrow hidden items-center justify-center gap-2 text-[0.62rem] uppercase tracking-[0.3em] lg:flex" style={{ color: ledger.accentText }}>
-                <GrokBotMark size={22} animate />
+                <GrokBotMark size={66} animate />
                 <RevealText text={en.eyebrow} delay={0.05} step={0.016} className="block" />
               </p>
               <h1 className="font-display mx-auto mt-4 w-full max-w-full text-[clamp(1.7rem,3.5vw,2.9rem)] lg:mt-8 font-normal leading-[1.05] tracking-[-0.03em]" style={{ fontFamily: ledger.serif }}>

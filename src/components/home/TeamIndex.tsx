@@ -643,19 +643,19 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
               <Select
                 id="index-integration"
                 label={en.home.filterConnector}
-                caption={en.home.filterConnectorShort}
                 value={integrationParam}
                 options={connectorSelectOptions}
                 onChange={(next) => setParam("integration", next)}
+                bare
               />
               <Select
                 id="index-sort"
                 label={en.home.sortLabel(kindParam)}
-                caption={en.home.sortShort}
                 value={sortParam}
                 options={sortOptions}
                 onChange={(next) => setParam("sort", next)}
                 align="end"
+                bare
               />
             </div>
             <span
@@ -793,7 +793,7 @@ function TeamExpandable({
             {team.agents.map((agent, i) => (
               <li key={agent.name} className="bot-row">
                 <div className="flex items-start gap-2">
-                  <GrokBotMark size={17} animate className="mt-0.5" style={botMarkStyle(i)} />
+                  <GrokBotMark size={17} animate frontFacing className="mt-0.5" style={botMarkStyle(i, agent.name, agent.persona)} />
                   <div className="min-w-0">
                     <p className="flex flex-wrap items-baseline gap-2 text-[0.92rem]" style={{ fontFamily: ledger.serif }}>
                       {grokDisplayBotName(agent.name)}
