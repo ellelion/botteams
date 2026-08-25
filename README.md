@@ -128,10 +128,11 @@ Contributions are welcome through pull requests. Read
 and [GOVERNANCE.md](./GOVERNANCE.md) before you start. Report security issues
 privately as described in [SECURITY.md](./SECURITY.md).
 
-`main` is protected. Every change needs a pull request and passing checks.
-Pull requests from other accounts need approval from `@icidab`. For a
-self-authored pull request, `@icidab` can bypass review only; automated checks
-and the other integrity rules cannot be bypassed.
+`main` is protected. Contributors must use a pull request, pass every required
+check, and receive approval from `@icidab`. The `@icidab` maintainer account
+may bypass the pull-request and status-check rules or push directly to `main`.
+CI still runs after a direct push. Branch deletion, force pushes, and nonlinear
+history cannot be bypassed.
 
 ## Stack
 
