@@ -4524,9 +4524,20 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 }
 .roster-shape-stack .grok-bot-mark:first-child { margin-left: 0; }
 .roster-shape-n { font-variant-numeric: tabular-nums; }
+.roster-shape:has(.roster-shape-routines[open]) {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
 .roster-shape-routines {
-  position: relative;
   display: inline;
+}
+.roster-shape-routines[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1 1 100%;
+  min-width: 0;
 }
 .roster-shape-routines summary {
   display: inline-flex;
@@ -4539,15 +4550,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .roster-shape-routines summary::marker { content: ""; }
 .roster-shape-tip {
   display: none;
-  position: absolute;
-  left: 0;
-  top: calc(100% + 8px);
-  z-index: 20;
+  position: static;
   min-width: 0;
-  width: max-content;
-  max-width: min(20rem, calc(100vw - 2rem));
+  width: 100%;
+  max-width: min(20rem, 100%);
+  margin-top: 8px;
   padding: 10px 12px;
-  /* Desktop: a page-coloured popover. --line is ~1.1:1 on paper. */
+  /* Page-coloured card. --line is ~1.1:1 on paper; --pill-line is 3:1. */
   border: 1px solid var(--pill-line);
   border-radius: var(--r-inner);
   background: var(--page);
@@ -4560,34 +4569,6 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-@media (max-width: 1023px) {
-  .roster-shape-routines[open] {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex: 1 1 100%;
-  }
-  .roster-shape-tip {
-    position: static;
-    width: auto;
-    max-width: none;
-    margin-top: 8px;
-  }
-}
-/* Desktop hero is ~22rem. The 20rem popover hangs from "4 routines"
-   and measured 187px past the column at 1280. Same in-flow as phone. */
-.wings-hero-col .roster-shape-routines[open] {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex: 1 1 100%;
-}
-.wings-hero-col .roster-shape-tip {
-  position: static;
-  width: auto;
-  max-width: none;
-  margin-top: 8px;
 }
 .roster-shape-tip-row { display: flex; flex-direction: column; gap: 2px; }
 .roster-shape-tip-row strong {
@@ -5975,20 +5956,6 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .cf-empty,
   .cf-row {
     scroll-margin-top: calc(var(--masthead-h) + 7.5rem);
-  }
-  /* Absolute 20rem tip uses 100vw, which stays 1280 at CSS zoom 2
-     while the stacked hero is 288. Same in-flow as the phone rule. */
-  .roster-shape-routines[open] {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    flex: 1 1 100%;
-  }
-  .roster-shape-tip {
-    position: static;
-    width: auto;
-    max-width: none;
-    margin-top: 8px;
   }
 }
 /* 12rem after the last row is for a zoomed desktop frame. On a phone
