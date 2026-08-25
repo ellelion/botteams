@@ -5,7 +5,7 @@ import { en } from "@/lib/messages/en";
 import { ACCENT_PALETTE, DEFAULT_ACCENT } from "@/lib/theme";
 import { applyAccentPreference, readCurrentAccent } from "@/lib/theme-client";
 import { useDialogChrome } from "@/lib/use-dialog-chrome";
-import { cssZoom } from "@/lib/use-scroll-edges";
+import { cssZoom, overlayFloor } from "@/lib/use-scroll-edges";
 
 function accentName(hex: string): string {
   return (en.theme.accents as Record<string, string>)[hex] ?? hex;
@@ -66,7 +66,7 @@ export function AccentPicker() {
       if (left + paintedW > window.innerWidth - pad) {
         left = Math.max(pad, window.innerWidth - pad - paintedW);
       }
-      const spaceBelow = window.innerHeight - box.bottom - pad;
+      const spaceBelow = overlayFloor() - box.bottom - pad;
       const spaceAbove = box.top - pad;
       pop.style.maxHeight = "";
       const cssCap = Number.parseFloat(getComputedStyle(pop).maxHeight);
