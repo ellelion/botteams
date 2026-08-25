@@ -198,6 +198,11 @@ function ConversationStageLive({ team }: { team: Team }) {
   }, [turns, view, agents, byBot, team.kind]);
 
   const start = useCallback(() => {
+    if (script.length === 0) {
+      setShown(0);
+      setPlaying(false);
+      return;
+    }
     if (reduceRef.current) {
       setShown(script.length);
       setPlaying(false);
@@ -370,6 +375,17 @@ function ConversationStageLive({ team }: { team: Team }) {
           tabIndex={0}
           aria-label={en.team.watchThread}
         >
+          {view !== null && script.length === 0 ? (
+            <div className="talk-empty" role="status">
+              <p className="talk-empty-title">{en.team.watchNoOneToOne}</p>
+              {hasGroup ? (
+                <button type="button" className="talk-empty-go" onClick={() => setView(null)}>
+                  {en.team.watchOpenGroup}
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+
           {visible.map((turn, i) => {
             const agentIdx = Math.max(
               0,

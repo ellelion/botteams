@@ -243,6 +243,8 @@ export const en = {
     watchReplayHint: "Replay only. This is not a live chat.",
     watchThread: "Conversation replay",
     watchTyping: "A Bot is typing",
+    watchNoOneToOne: "No 1:1 replay for this Bot.",
+    watchOpenGroup: "Open group chat",
     watchTeammates: "Teammates",
     watchDock: "Open a Bot or the group chat",
     watchGroup: "group chat",
