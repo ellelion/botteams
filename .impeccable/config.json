@@ -1,0 +1,20 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(0.22, 1.2, 0.36, 1)",
+        "createdAt": "2026-08-23T11:51:06.528Z",
+        "reason": "pre-existing roster-face-jump hover motion already shipping; this session only hides the bottom ticker"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(0.2, 0.9, 0.3, 1.15)",
+        "createdAt": "2026-08-23T11:51:06.791Z",
+        "reason": "pre-existing talk-thread entry motion already shipping; this session only hides the bottom ticker"
+      }
+    ]
+  }
+}
