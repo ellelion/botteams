@@ -5465,6 +5465,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .talk-stage,
   .talk-overlay-canvas .talk-stage,
   .talk-replay,
+  .talk-empty-go,
   .talk-rail-row,
   .talk-dock-item,
   .site-menu-button,
@@ -6789,6 +6790,11 @@ html[data-theme="dark"] .talk-stage {
   color: var(--talk-text);
   font: 500 13px/1.2 var(--font-geist-sans), system-ui, sans-serif;
   cursor: pointer;
+}
+.talk-empty-go:hover,
+.talk-empty-go:focus,
+.talk-empty-go:focus-visible {
+  border-color: color-mix(in srgb, var(--talk-text) 55%, var(--talk-border));
 }
 .talk-empty-go:focus,
 .talk-empty-go:focus-visible {
