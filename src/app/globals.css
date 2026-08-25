@@ -4134,7 +4134,9 @@ html[data-theme="light"] .cz-check input:checked {
     justify-content: space-between;
     gap: 12px;
     min-height: calc(56px + env(safe-area-inset-bottom, 0px));
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    /* Full-bleed bar. 16px sides sat the slot line at 16 (in the
+       47px landscape notch) and Buy a slot at 651 (past 646). */
+    padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
     background: var(--page);
     box-shadow: 0 -1px 0 var(--pill-line);
     color: var(--ink-soft);
