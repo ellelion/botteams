@@ -49,6 +49,9 @@ export const GROK_BOT_GUIDE_UPDATED = "2026-08-24";
 /* Date the /guides cluster was verified against live vendor docs. */
 export const GUIDES_UPDATED = "2026-08-24";
 
+/* Date the Chief of Staff collection was reviewed against its recipe files. */
+export const CHIEF_OF_STAFF_COLLECTION_UPDATED = "2026-08-26";
+
 export const COMPARE_DOCS = {
   coworkOverview: "https://claude.com/docs/cowork/overview",
   coworkGetStarted: "https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork",

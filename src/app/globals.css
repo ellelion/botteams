@@ -260,6 +260,163 @@
   margin-top: 0.25rem;
 }
 
+/* Curated collection pages compare a small, intentional set of recipes.
+   They stay server-rendered and use the same ledger planes as the directory. */
+.collection-page {
+  width: 100%;
+  min-width: 0;
+  max-width: var(--w-data);
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.collection-section + .collection-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+.collection-section > h2 {
+  color: var(--ink);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 1.18rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.collection-section > h2 + p { margin-top: 0.65rem; max-width: var(--w-measure); }
+.collection-table-wrap {
+  width: 100%;
+  margin-top: 1.25rem;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+}
+.collection-table {
+  width: 100%;
+  min-width: 38rem;
+  border-collapse: collapse;
+  text-align: left;
+}
+.collection-table th,
+.collection-table td {
+  padding: 12px 14px 12px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.collection-table tr:last-child > * { border-bottom: 0; }
+.collection-table thead th {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.collection-table tbody th {
+  width: 29%;
+  color: var(--ink);
+  font-size: 0.86rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.collection-table tbody td { font-size: 0.8rem; line-height: 1.5; }
+.collection-table a,
+.collection-card a { text-underline-offset: 3px; }
+.collection-table a:hover,
+.collection-table a:focus-visible,
+.collection-card a:hover,
+.collection-card a:focus-visible { color: var(--accent-text); }
+.collection-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin-top: 1.25rem;
+}
+.collection-card {
+  display: flex;
+  min-width: 0;
+  min-height: 100%;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-inner);
+  background: var(--surface);
+}
+.collection-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.collection-card h3 {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.collection-kind {
+  flex: none;
+  padding: 4px 8px;
+  border: 1px solid var(--pill-line);
+  border-radius: var(--r-pill);
+  color: var(--muted);
+  font-size: 0.66rem;
+  font-weight: 500;
+  line-height: 1;
+}
+.collection-card > p {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.collection-card .connector-row { margin-top: 1px; }
+.collection-card-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin-top: auto;
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-decoration: underline;
+}
+@container (max-width: 41.99rem) {
+  .collection-table-wrap { overflow-x: visible; }
+  .collection-table,
+  .collection-table tbody,
+  .collection-table tr,
+  .collection-table th,
+  .collection-table td { display: block; }
+  .collection-table { min-width: 0; }
+  .collection-table thead { display: none; }
+  .collection-table tr {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .collection-table tr:last-child { border-bottom: 0; }
+  .collection-table th,
+  .collection-table td {
+    width: auto;
+    padding: 0;
+    border-bottom: 0;
+  }
+  .collection-table td { margin-top: 9px; }
+  .collection-table td::before {
+    display: block;
+    margin-bottom: 2px;
+    color: var(--muted);
+    content: attr(data-label);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+}
+@container (min-width: 42rem) {
+  .collection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 html { background: var(--page); scroll-padding-top: calc(var(--masthead-h) + 10px); }
 body {
   background: var(--page);

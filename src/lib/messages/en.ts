@@ -539,6 +539,7 @@ export const en = {
     teams: "Grok Bot Teams",
     bots: "Grok Bots",
     connectors: "Connectors",
+    chiefOfStaff: "Chief of Staff setups",
     sponsor: "Sponsor",
     spec: "Spec",
     guide: "What is Grok Bot?",
