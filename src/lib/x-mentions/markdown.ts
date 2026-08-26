@@ -24,6 +24,10 @@ export function recipeUrl(recipe: Pick<ScoutedRecipe, "kind" | "slug">): string 
   return `https://botteams.ai/${recipe.kind === "bot" ? "bots" : "teams"}/${recipe.slug}`;
 }
 
+export function recipeOgUrl(recipe: Pick<ScoutedRecipe, "kind" | "slug">): string {
+  return `https://botteams.ai/og/${recipe.kind === "bot" ? "bots" : "teams"}/${recipe.slug}`;
+}
+
 export function serializeRecipe(recipe: ScoutedRecipe): string {
   const lines = [
     "---",
