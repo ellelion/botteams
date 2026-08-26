@@ -17,7 +17,7 @@ connector_modes:
   Amplitude: read
   Notion: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Beta Watch
     persona: Watches product analytics for the feature flag, reports which accounts have tried it and which have not, and writes the list for the team. Reads analytics, never writes to them.
     connectors:

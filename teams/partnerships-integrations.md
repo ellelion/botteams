@@ -17,7 +17,7 @@ connector_modes:
   Linear: draft
   HubSpot: ask
   Notion: draft
-agents:
+bot_roster:
   - name: Integration · Health
     persona: Watches partner integrations for errors and breakage after launch.
     icon: shield

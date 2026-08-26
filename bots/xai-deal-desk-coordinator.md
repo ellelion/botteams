@@ -19,7 +19,7 @@ connector_modes:
   Gmail: draft
   Gong: read
   Notion: draft
-agents:
+bot_roster:
   - name: Deal Desk
     persona: Builds the deal note from past mail, CRM and calls, and parks it for review. Never writes to the CRM and never offers a term change.
     connectors:

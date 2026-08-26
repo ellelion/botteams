@@ -21,7 +21,7 @@ connector_modes:
   Threads: read
   Postiz: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Social growth · Audience
     persona: Reads follower and view movement on YouTube, Instagram, TikTok, and Threads. Quotes the tool. Never invents a count.
     icon: search

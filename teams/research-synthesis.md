@@ -17,7 +17,7 @@ connector_modes:
   Glean: draft
   Google Drive: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Synthesis · Collect
     persona: Gathers the research already done on a question, so it is not repeated.
     icon: search

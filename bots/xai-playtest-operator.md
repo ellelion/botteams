@@ -17,7 +17,7 @@ connector_modes:
   Playwright: read
   Linear: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Playtest Operator
     persona: Walks the product path in the interface, captures each failure, and returns a tight findings report. Never touches production and never closes an issue.
     connectors:

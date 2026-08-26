@@ -55,14 +55,14 @@ $schema: https://botteams.ai/schema/team.schema.json
 slug: founder-os                    # required, equals the filename
 name: Founder OS                    # required
 tagline: One line for the job.      # required
-bots: 2                             # required, must equal the agents length
+bots: 2                             # required, must equal the bot_roster length
 section: Founder OS                 # required, from the closed list below
 kind: team                          # required: team or bot
 status: installable                 # required: installable or example
 connectors:                         # required, account-wide union
   - Stripe
   - Gmail
-agents:                             # required, 2 to 6 Bots
+bot_roster:                         # required, 2 to 6 Bots
   - name: Founder · Money
     persona: Reads Stripe. Drafts the brief. Never moves funds.
     connectors: [Stripe]
@@ -139,8 +139,8 @@ adds them into one count.
 | | `bots/` | `teams/` |
 |---|---|---|
 | `kind` | `bot` | `team` |
-| `bots` | always 1 | 2 to 6, matching `agents` |
-| `agents` | exactly one | one per Bot |
+| `bots` | always 1 | 2 to 6, matching `bot_roster` |
+| `bot_roster` | exactly one Bot | two to six Bots |
 | `rooms` | forbidden, empty or absent | required, each 2 to 6 Bots |
 | `routines` | 0 to 50 per owning Bot | 0 to 50 per owning Bot |
 | Verified | never | when the roster fits |

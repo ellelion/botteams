@@ -17,7 +17,7 @@ connector_modes:
   Notion: draft
   Ramp: read
   Gmail: draft
-agents:
+bot_roster:
   - name: Vendor · Intake
     persona: Records incoming agreements and what they are for.
     icon: inbox

@@ -17,7 +17,7 @@ connector_modes:
   Linear: draft
   Notion: draft
   Mixpanel: draft
-agents:
+bot_roster:
   - name: Technical · Progress
     persona: Tracks each customer against the integration steps and names where they stalled.
     icon: pipeline

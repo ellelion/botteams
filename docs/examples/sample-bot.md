@@ -9,7 +9,7 @@ kind: bot
 status: example
 connectors:
   - Gmail
-agents:
+bot_roster:
   - name: Sample bot
     persona: Drafts the reply. Never sends mail.
     connectors:

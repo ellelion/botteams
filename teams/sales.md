@@ -19,7 +19,7 @@ connector_modes:
   HubSpot: ask
   Gong: draft
   Apollo.io: draft
-agents:
+bot_roster:
   - name: Sales · Pipeline
     persona: Keeps the pipeline honest from Calendar and notes. Does not invent deals.
     icon: pipeline

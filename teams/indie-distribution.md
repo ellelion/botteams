@@ -19,7 +19,7 @@ connector_modes:
   Hacker News: draft
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Indie distribution · Ship
     persona: Reads GitHub releases and merged changelog items that are actually out. Never writes a release and never invents a ship date.
     icon: search

@@ -20,7 +20,7 @@ section: Founder OS
 kind: team
 status: installable
 connectors: [Stripe, Gmail]
-agents:
+bot_roster:
   - name: Founder · Money
     persona: Reads Stripe. Drafts the brief. Never moves funds.
     connectors: [Stripe]

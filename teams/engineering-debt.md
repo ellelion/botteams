@@ -17,7 +17,7 @@ connector_modes:
   Linear: draft
   Sentry: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Debt · Hotspots
     persona: Finds files changed most often alongside bug fixes.
     icon: search

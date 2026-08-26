@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   Google Drive: draft
   Calendar: draft
-agents:
+bot_roster:
   - name: Privacy · Inventory
     persona: Keeps the record of what personal data is held and where.
     icon: clipboard

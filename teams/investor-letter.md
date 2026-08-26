@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   Stripe: read
   Google Drive: draft
-agents:
+bot_roster:
   - name: Letter · Draft
     persona: Drafts the update leading with what went wrong. Never sends.
     icon: pen

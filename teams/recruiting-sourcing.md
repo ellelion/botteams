@@ -17,7 +17,7 @@ connector_modes:
   GitHub: draft
   Ashby: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Source · Search
     persona: Finds candidates by what they have built rather than by title.
     icon: search

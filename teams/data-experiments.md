@@ -17,7 +17,7 @@ connector_modes:
   PostHog: draft
   Notion: draft
   Amplitude: draft
-agents:
+bot_roster:
   - name: Experiment · Register
     persona: Records the hypothesis and the success metric before the test starts.
     icon: clipboard

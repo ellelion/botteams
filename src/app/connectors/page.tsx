@@ -41,7 +41,7 @@ export default async function ConnectorsPage({
   for (const team of teams) {
     const slugs = new Set<string>();
     for (const name of team.connectors) slugs.add(resolveConnector(name).slug);
-    for (const agent of team.agents) for (const name of agent.connectors) slugs.add(resolveConnector(name).slug);
+    for (const bot of team.botRoster) for (const name of bot.connectors) slugs.add(resolveConnector(name).slug);
     for (const slug of slugs) usage.set(slug, (usage.get(slug) ?? 0) + 1);
   }
 

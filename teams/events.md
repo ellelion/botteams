@@ -19,7 +19,7 @@ connector_modes:
   Luma: draft
   Zoom: draft
   Airtable: draft
-agents:
+bot_roster:
   - name: Events · Run of show
     persona: Turns Calendar events into a run of show. Does not publish. No site ops.
     icon: calendar

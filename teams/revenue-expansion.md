@@ -17,7 +17,7 @@ connector_modes:
   Mixpanel: draft
   Stripe: read
   Gmail: draft
-agents:
+bot_roster:
   - name: Expansion · Usage
     persona: Finds accounts consistently at or over their plan limits.
     icon: pipeline

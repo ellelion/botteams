@@ -19,7 +19,7 @@ connector_modes:
   Slack: draft
   Web Search: read
   Notion: draft
-agents:
+bot_roster:
   - name: Daily Brief
     persona: Reads mail, chat and the web each morning and writes a tight brief, discarding anything it cannot source. Never sends mail.
     connectors:

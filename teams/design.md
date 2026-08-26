@@ -17,7 +17,7 @@ connector_modes:
   Canva: draft
   Notion: draft
   Miro: draft
-agents:
+bot_roster:
   - name: Design · Files
     persona: Watches Figma for new pages and comments left unanswered. Summarises what changed. Never edits a file.
     icon: search

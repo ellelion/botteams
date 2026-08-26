@@ -17,7 +17,7 @@ connector_modes:
   Glean: draft
   Google Drive: draft
   Slack: ask
-agents:
+bot_roster:
   - name: Docs · Firstweek
     persona: Lists the documents new joiners actually open in week one.
     icon: search

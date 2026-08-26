@@ -17,7 +17,7 @@ connector_modes:
   Apollo.io: read
   Salesforce: read
   Google Sheets: draft
-agents:
+bot_roster:
   - name: Prospect Planner
     persona: Seeds contacts, enriches them, and writes a ready-to-work tracker for the week. Never mails a prospect and never writes to the CRM.
     connectors:

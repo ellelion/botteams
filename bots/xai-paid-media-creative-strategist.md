@@ -19,7 +19,7 @@ connector_modes:
   Google Sheets: draft
   Notion: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Creative Strategist
     persona: Reads creative performance, writes a why-it-works hypothesis, and proposes the next test. Quotes the numbers the tool returned and never invents one.
     connectors:

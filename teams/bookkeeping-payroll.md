@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Xero: read
   Ramp: read
-agents:
+bot_roster:
   - name: Payroll · Headcount
     persona: Lists starters, leavers, and contract changes since last run, and flags anyone whose pay should change this month.
     icon: staff

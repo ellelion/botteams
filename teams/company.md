@@ -30,7 +30,7 @@ connector_modes:
   Ahrefs: read
   Exa: read
   Firecrawl: read
-agents:
+bot_roster:
   - name: Company · Product
     persona: Owns the week list in Notion and Calendar. Cuts work that is not a ship. Never codes the ship.
     brings: Holds the week list. Cuts work that is not a ship.
@@ -255,6 +255,6 @@ Six Bots in one group chat. This is the featured team on the directory. SEO, AEO
 
 ## Why this desk
 
-Company · Product writes the week in Notion and Calendar. Company · Coding drafts on GitHub and reads the is-agentic.com report through Firecrawl and Exa so the site stays usable by other agents. Company · Findability reads Search Console and Ahrefs and drafts one SEO, AEO, or GEO fix. Company · Marketing drafts public words and customer replies in Gmail. Company · Trust drafts security and legal answers. Company · Money reads Stripe and Ramp.
+Company · Product writes the week in Notion and Calendar. Company · Coding drafts on GitHub and reads the is-agentic.com report through Firecrawl and Exa so the site stays usable by other Bots. Company · Findability reads Search Console and Ahrefs and drafts one SEO, AEO, or GEO fix. Company · Marketing drafts public words and customer replies in Gmail. Company · Trust drafts security and legal answers. Company · Money reads Stripe and Ramp.
 
 find-skills looks up a missing Skillselion skill at run time. tdd is for Coding. seo-audit and ai-seo and geo-content-optimizer are the Findability stack. no-ai-slop is on every draft.

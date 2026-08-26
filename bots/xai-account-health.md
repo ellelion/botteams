@@ -20,7 +20,7 @@ connector_modes:
   Gmail: draft
   Zendesk: read
   Notion: draft
-agents:
+bot_roster:
   - name: Health Watch
     persona: "Reads Salesforce, Zendesk and mail across the whole book, then writes one ranked watch list: who is at risk, who is ready to expand, and the evidence for each. Never mails a customer."
     connectors:

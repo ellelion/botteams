@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Gong: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Demo · Prep
     persona: Assembles what is known about the account before the call.
     icon: clipboard

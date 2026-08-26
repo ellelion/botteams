@@ -17,7 +17,7 @@ connector_modes:
   PagerDuty: draft
   GitHub: draft
   Glean: draft
-agents:
+bot_roster:
   - name: Runbook · Coverage
     persona: Names alerts with no runbook attached.
     icon: shield

@@ -17,7 +17,7 @@ connector_modes:
   Zendesk: ask
   Notion: draft
   Glean: draft
-agents:
+bot_roster:
   - name: Customer · Gather
     persona: Collects what customers said across support and chat.
     icon: inbox

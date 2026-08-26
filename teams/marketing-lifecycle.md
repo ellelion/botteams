@@ -19,7 +19,7 @@ connector_modes:
   PostHog: read
   Gmail: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Life · Funnel
     persona: Reads Analytics and PostHog for drop-offs worth a human look.
     icon: pipeline

@@ -17,7 +17,7 @@ connector_modes:
   Ashby: read
   Gmail: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Sheet screen
     persona: Reads one applicant row or Ashby packet, scores it against the bar you wrote, and drafts a review note plus a mail. Never contacts a candidate and never rejects anyone.
     connectors:

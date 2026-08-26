@@ -17,7 +17,7 @@ connector_modes:
   Notion: draft
   Zendesk: ask
   Gmail: draft
-agents:
+bot_roster:
   - name: Launch · Ready
     persona: Checks the feature is actually done, not merely merged.
     icon: shield

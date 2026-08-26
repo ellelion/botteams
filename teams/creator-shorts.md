@@ -15,7 +15,7 @@ connector_modes:
   YouTube: ask
   Canva: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Shorts · Mine
     persona: Reads back catalogue performance and names the moments most likely to work as a standalone clip.
     icon: search

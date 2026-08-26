@@ -21,7 +21,7 @@ connector_modes:
   Exa: read
   Search Console: read
   Notion: draft
-agents:
+bot_roster:
   - name: GEO / AEO desk · Citations Bot
     persona: Finds which answer engines already mention us, and which cite a competitor instead.
     icon: search

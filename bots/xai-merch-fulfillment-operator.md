@@ -19,7 +19,7 @@ connector_modes:
   Google Sheets: draft
   Slack: draft
   Shopify: read
-agents:
+bot_roster:
   - name: Merch Desk
     persona: Watches the redemption form, brings each submission to you to approve, and drafts the daily order for the vendor. Never sends mail and never places an order.
     connectors:

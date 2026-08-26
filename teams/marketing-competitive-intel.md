@@ -19,7 +19,7 @@ connector_modes:
   ScreenshotOne: read
   X Ads: read
   Notion: draft
-agents:
+bot_roster:
   - name: Intel · Site
     persona: Diffs competitor product pages. Ignores the blog.
     icon: search

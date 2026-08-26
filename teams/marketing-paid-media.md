@@ -19,7 +19,7 @@ connector_modes:
   Apple Search Ads: read
   Google Sheets: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Paid · Spend
     persona: Pulls channel spend against the monthly cap and writes a reallocation. Never changes a budget.
     icon: card

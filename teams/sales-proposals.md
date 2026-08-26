@@ -17,7 +17,7 @@ connector_modes:
   Docusign: draft
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Proposal · Build
     persona: Drafts the proposal from the opportunity record.
     icon: pen

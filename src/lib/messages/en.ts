@@ -267,7 +267,7 @@ export const en = {
     promptTitle: "Installer prompt",
     connectorsNote:
       "The prompt asks for these as it goes. They are account-wide. The per-Bot row is which Bot uses which ones, not a second OAuth.",
-    agents: "Bots",
+    botRoster: "Bots",
     botTag: "Grok Bot",
     rooms: "Group chat",
     routines: "Routines",

@@ -17,7 +17,7 @@ connector_modes:
   Stripe: read
   Gmail: draft
   Calendar: draft
-agents:
+bot_roster:
   - name: Renewal · Dates
     persona: Lists renewals in the next ninety days and how much each is worth.
     icon: calendar

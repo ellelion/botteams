@@ -17,7 +17,7 @@ connector_modes:
   Zendesk: ask
   Linear: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Feedback · Collect
     persona: Gathers feedback from support and chat into one place with the source kept.
     icon: inbox

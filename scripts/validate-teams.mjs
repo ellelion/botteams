@@ -18,7 +18,7 @@ const validateRecipe = new Ajv2020({ allErrors: true, strict: true }).compile(sc
    runs of each. Zero routines is fine. There is no documented team-level
    cap, so this script does not invent one. */
 const MAX_ROUTINES_PER_BOT = 50;
-const REQUIRED = ["slug", "name", "tagline", "section", "status", "kind", "connectors", "agents", "routines"];
+const REQUIRED = ["slug", "name", "tagline", "section", "status", "kind", "connectors", "bot_roster", "routines"];
 
 /* Closed category list. A team file may only use a section that already
    exists, so the index chips and the API `category` filter stay a known
@@ -96,19 +96,19 @@ for (const { file, dir, kind: folderKind } of entries) {
 
   if (!Array.isArray(data.connectors)) fail(file + ": connectors must be an array");
   const teamConnectors = new Set((data.connectors || []).map((name) => String(name)));
-  const agentNames = new Set();
-  if (!Array.isArray(data.agents) || data.agents.length === 0) fail(file + ": agents must be a non-empty array");
+  const botNames = new Set();
+  if (!Array.isArray(data.bot_roster) || data.bot_roster.length === 0) fail(file + ": bot_roster must be a non-empty array");
   else {
-    if (data.agents.length !== bots) fail(file + ": bots count must equal agents length");
-    data.agents.forEach((agent, i) => {
-      if (!isNonEmptyString(agent?.name) || !isNonEmptyString(agent?.persona)) fail(file + ": agents[" + i + "] needs name and persona");
-      if (agentNames.has(agent?.name)) fail(file + ': duplicate agent name "' + agent.name + '"');
-      if (isNonEmptyString(agent?.name)) agentNames.add(agent.name);
-      if (agent.brings !== undefined && !isNonEmptyString(agent.brings)) fail(file + ": agents[" + i + "].brings must be a short sentence when set");
-      if (agent.connectors !== undefined) {
-        if (!Array.isArray(agent.connectors)) fail(file + ": agents[" + i + "].connectors must be an array");
-        else agent.connectors.forEach((name) => {
-          if (!teamConnectors.has(name)) fail(file + ": agents[" + i + "] connector \"" + name + "\" is not in team connectors");
+    if (data.bot_roster.length !== bots) fail(file + ": bots count must equal bot_roster length");
+    data.bot_roster.forEach((bot, i) => {
+      if (!isNonEmptyString(bot?.name) || !isNonEmptyString(bot?.persona)) fail(file + ": bot_roster[" + i + "] needs name and persona");
+      if (botNames.has(bot?.name)) fail(file + ': duplicate Bot name "' + bot.name + '"');
+      if (isNonEmptyString(bot?.name)) botNames.add(bot.name);
+      if (bot.brings !== undefined && !isNonEmptyString(bot.brings)) fail(file + ": bot_roster[" + i + "].brings must be a short sentence when set");
+      if (bot.connectors !== undefined) {
+        if (!Array.isArray(bot.connectors)) fail(file + ": bot_roster[" + i + "].connectors must be an array");
+        else bot.connectors.forEach((name) => {
+          if (!teamConnectors.has(name)) fail(file + ": bot_roster[" + i + "] connector \"" + name + "\" is not in team connectors");
         });
       }
     });
@@ -124,7 +124,7 @@ for (const { file, dir, kind: folderKind } of entries) {
         roomNames.add(room.name);
         if (room.members.length < 2 || room.members.length > 6) fail(file + ": rooms[" + i + "] must have two to six Bots");
         for (const member of room.members) {
-          if (!agentNames.has(member)) fail(file + ': rooms[' + i + '] names unknown Bot "' + member + '"');
+          if (!botNames.has(member)) fail(file + ': rooms[' + i + '] names unknown Bot "' + member + '"');
         }
       }
     });
@@ -133,7 +133,7 @@ for (const { file, dir, kind: folderKind } of entries) {
     if (folderKind === "bot") {
       if (rooms.length > 0) fail(file + ": a bot has no group chat, so rooms must be empty or absent");
       if (bots !== 1) fail(file + ": a bot is one Bot, so bots must be 1");
-      if (Array.isArray(data.agents) && data.agents.length !== 1) fail(file + ": a bot has exactly one agent");
+      if (Array.isArray(data.bot_roster) && data.bot_roster.length !== 1) fail(file + ": a bot has exactly one Bot");
     } else if (rooms.length === 0) {
       fail(file + ": a team needs a group chat of two to six Bots");
     } else if (bots + rooms.length > 50) {
@@ -150,7 +150,7 @@ for (const { file, dir, kind: folderKind } of entries) {
       const owner = String(routine?.owner ?? "");
       if (routineNames.has(routine?.name)) fail(file + ': duplicate routine name "' + routine.name + '"');
       if (isNonEmptyString(routine?.name)) routineNames.add(routine.name);
-      if (isNonEmptyString(owner) && !agentNames.has(owner)) fail(file + ': routines[' + i + '] names unknown owner "' + owner + '"');
+      if (isNonEmptyString(owner) && !botNames.has(owner)) fail(file + ': routines[' + i + '] names unknown owner "' + owner + '"');
       perOwner.set(owner, (perOwner.get(owner) ?? 0) + 1);
     }
     for (const [owner, n] of perOwner) {
@@ -230,22 +230,22 @@ for (const { file, dir, kind: folderKind } of entries) {
 const MIN_ROOM = 2, MAX_ROOM = 6, ACCOUNT_CAP = 50;
 function verifiedByRule(t) {
   if (t.kind !== "team") return false;
-  if (!Array.isArray(t.agents) || t.agents.length === 0) return false;
-  if (t.bots !== t.agents.length) return false;
+  if (!Array.isArray(t.botRoster) || t.botRoster.length === 0) return false;
+  if (t.bots !== t.botRoster.length) return false;
   const rooms = Array.isArray(t.rooms) ? t.rooms : [];
-  if (t.agents.length + rooms.length > ACCOUNT_CAP) return false;
+  if (t.botRoster.length + rooms.length > ACCOUNT_CAP) return false;
   if (rooms.length === 0) return false;
   return rooms.every((r) => Array.isArray(r.members) && r.members.length >= MIN_ROOM && r.members.length <= MAX_ROOM);
 }
 for (const [name, team, expected] of [
-  ["a bot, whatever else is true", { kind: "bot", agents: [{}], bots: 1, rooms: [] }, false],
-  ["a team with no group chat", { kind: "team", agents: [{}], bots: 1, rooms: [] }, false],
-  ["a group chat of one", { kind: "team", agents: [{}, {}], bots: 2, rooms: [{ members: ["a"] }] }, false],
-  ["a group chat of seven", { kind: "team", agents: [{}], bots: 1, rooms: [{ members: "abcdefg".split("") }] }, false],
-  ["a mismatched bots count", { kind: "team", agents: [{}, {}], bots: 3, rooms: [{ members: ["a", "b"] }] }, false],
-  ["no Bots at all", { kind: "team", agents: [], bots: 0, rooms: [{ members: ["a", "b"] }] }, false],
-  ["a two-Bot room", { kind: "team", agents: [{}, {}], bots: 2, rooms: [{ members: ["a", "b"] }] }, true],
-  ["a six-Bot room", { kind: "team", agents: Array(6).fill({}), bots: 6, rooms: [{ members: "abcdef".split("") }] }, true],
+  ["a bot, whatever else is true", { kind: "bot", botRoster: [{}], bots: 1, rooms: [] }, false],
+  ["a team with no group chat", { kind: "team", botRoster: [{}], bots: 1, rooms: [] }, false],
+  ["a group chat of one", { kind: "team", botRoster: [{}, {}], bots: 2, rooms: [{ members: ["a"] }] }, false],
+  ["a group chat of seven", { kind: "team", botRoster: [{}], bots: 1, rooms: [{ members: "abcdefg".split("") }] }, false],
+  ["a mismatched bots count", { kind: "team", botRoster: [{}, {}], bots: 3, rooms: [{ members: ["a", "b"] }] }, false],
+  ["no Bots at all", { kind: "team", botRoster: [], bots: 0, rooms: [{ members: ["a", "b"] }] }, false],
+  ["a two-Bot room", { kind: "team", botRoster: [{}, {}], bots: 2, rooms: [{ members: ["a", "b"] }] }, true],
+  ["a six-Bot room", { kind: "team", botRoster: Array(6).fill({}), bots: 6, rooms: [{ members: "abcdef".split("") }] }, true],
 ]) {
   if (verifiedByRule(team) !== expected) {
     fail(`isVerified rule: ${name} should be ${expected ? "Verified" : "not Verified"}`);

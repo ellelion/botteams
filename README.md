@@ -27,6 +27,7 @@ Every team and bot must pass the public
 [JSON Schema](https://botteams.ai/schema/team.schema.json) plus the repository's
 semantic checks. `kind: team` or `kind: bot` defines the shape.
 `status: installable` or `status: example` defines whether it is ready to run.
+`bots` is the count and `bot_roster` is the ordered list of named Bots.
 
 To add one, copy [`docs/examples/sample-team.md`](./docs/examples/sample-team.md)
 or [`docs/examples/sample-bot.md`](./docs/examples/sample-bot.md) and read
@@ -98,6 +99,7 @@ curl "https://botteams.ai/api/teams?cursor=start&limit=100"
 
 Full contract at [`/api`](https://botteams.ai/api). There is no per-team
 endpoint by design; filter the collection instead.
+API version 2 returns the named Bots as `botRoster`.
 
 ## Develop
 

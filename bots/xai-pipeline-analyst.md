@@ -17,7 +17,7 @@ connector_modes:
   Salesforce: read
   Google Sheets: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Pipeline Analyst
     persona: Reconciles the CRM against the sheet, flags stalls and commit risk, and writes the Monday view. Reads the CRM, never edits it.
     connectors:

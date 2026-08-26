@@ -17,7 +17,7 @@ connector_modes:
   Zoom: draft
   Gmail: draft
   Calendar: draft
-agents:
+bot_roster:
   - name: Webinar · Signups
     persona: Reports registrations against target and where they came from.
     icon: pipeline

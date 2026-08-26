@@ -17,7 +17,7 @@ connector_modes:
   Zendesk: ask
   HubSpot: ask
   Gmail: draft
-agents:
+bot_roster:
   - name: Proactive · Errors
     persona: Finds accounts hitting errors repeatedly without filing a ticket.
     icon: shield

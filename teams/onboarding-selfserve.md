@@ -17,7 +17,7 @@ connector_modes:
   PostHog: draft
   Intercom: ask
   Notion: draft
-agents:
+bot_roster:
   - name: Activation · Funnel
     persona: Reports where new accounts stop, step by step.
     icon: pipeline

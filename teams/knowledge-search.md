@@ -15,7 +15,7 @@ connector_modes:
   Glean: draft
   Notion: draft
   Google Drive: draft
-agents:
+bot_roster:
   - name: Find · Failed
     persona: Reports searches that returned nothing useful.
     icon: search

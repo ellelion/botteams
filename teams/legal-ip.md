@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Gmail: draft
   Exa: draft
-agents:
+bot_roster:
   - name: IP · Register
     persona: Keeps the register of marks, filings, and their status.
     icon: clipboard

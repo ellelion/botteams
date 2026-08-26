@@ -36,7 +36,7 @@ export default function ApiDocsPage() {
         >
           <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
             Every team on this directory is readable as JSON. No key, no account, no rate limit worth mentioning. CORS is open,
-            so a browser or an agent can call it directly. {teamCount} teams and {botCount} Bots today.
+            so any HTTP client can call it directly. {teamCount} teams and {botCount} Bots today.
           </p>
         </WingsHero>
       }
@@ -163,7 +163,7 @@ export default function ApiDocsPage() {
               `  "bots": 3,`,
               `  "addedAt": "2026-08-21T03:57:51.000Z",`,
               `  "connectors": ["Stripe", "Gmail", "Calendar", "Ramp", "Notion"],`,
-              `  "agents":   [{ "name": "...", "persona": "...", "connectors": [...] }],`,
+              `  "botRoster": [{ "name": "...", "persona": "...", "connectors": [...] }],`,
               `  "rooms":    [{ "name": "Founder HQ", "members": [...] }],   // always [] on a bot`,
               `  "routines": [{ "name": "...", "owner": "...", "schedule": "...", "prompt": "..." }],`,
               `  "installer": "# Grok Bot Teams installer ...",`,

@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   Webflow: draft
   Calendar: draft
-agents:
+bot_roster:
   - name: Newsletter · Assemble
     persona: Builds the issue from the queue and says what is still missing.
     icon: clipboard

@@ -17,7 +17,7 @@ connector_modes:
   Salesforce: ask
   Gong: draft
   Calendly: draft
-agents:
+bot_roster:
   - name: Revenue · Deals
     persona: Watches the HubSpot pipeline for stalled deals and missing next steps. Drafts nudges, never sends them.
     icon: pipeline

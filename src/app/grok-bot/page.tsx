@@ -150,12 +150,12 @@ export default function GrokBotGuidePage() {
             that product in beta on 11 August 2026. The unit of work is one Bot.
           </p>
           <Quote
-            text="Grok Bot is your team of always-on agents. They have their own computer, work inside tools and apps like you do, and keep working 24/7."
-            source='x.ai/news/introducing-grok-bot, "Introducing Grok Bot"'
+            text="xAI presents Grok Bot as a team of always-on Bots. They share a computer, work inside tools and apps, and keep working after you leave."
+            source='Paraphrased from x.ai/news/introducing-grok-bot, "Introducing Grok Bot"'
           />
           <Quote
-            text="In the Docs and in the Grok Bot app, a Bot = a single persistent, named agent or one AI teammate."
-            source='docs.x.ai/grok-bot/overview, "Grok Bot"'
+            text="In the Docs and the Grok Bot app, one Bot is one persistent, named AI teammate."
+            source='Paraphrased from docs.x.ai/grok-bot/overview, "Grok Bot"'
           />
           <p>
             That computer is the whole product. A Bot can use a browser, a filesystem, a terminal, and connectors (the

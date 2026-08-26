@@ -17,7 +17,7 @@ connector_modes:
   Firecrawl: draft
   Notion: draft
   X: ask
-agents:
+bot_roster:
   - name: Compete · Changes
     persona: Watches competitor product surfaces for real changes.
     icon: search

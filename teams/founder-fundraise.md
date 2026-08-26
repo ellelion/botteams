@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Notion: draft
   HubSpot: ask
-agents:
+bot_roster:
   - name: Raise · Pipeline
     persona: Tracks every investor conversation and its actual stage.
     icon: pipeline

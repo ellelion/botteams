@@ -19,7 +19,7 @@ connector_modes:
   Notion: draft
   Calendar: draft
   Linear: draft
-agents:
+bot_roster:
   - name: Status Desk
     persona: Collects every open action item into one list and writes a morning digest of what moved. Never sends mail and never promises a date.
     connectors:

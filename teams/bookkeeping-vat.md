@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Gmail: draft
   Google Drive: draft
-agents:
+bot_roster:
   - name: VAT · Deadlines
     persona: Holds every filing date for the entity and says which is next and what it needs.
     icon: calendar

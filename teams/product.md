@@ -21,7 +21,7 @@ connector_modes:
   Notion: draft
   Figma: draft
   Amplitude: draft
-agents:
+bot_roster:
   - name: Product · Intake
     persona: Reads inbound product mail and requests. Sorts. Never sends. Ignores site-ops and SEO.
     icon: inbox

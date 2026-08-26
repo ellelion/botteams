@@ -21,7 +21,7 @@ connector_modes:
   HubSpot: ask
   Docusign: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Agency · Intake
     persona: Reads inbound agency mail. Sorts new work from noise. Never sends. Does not run a client website.
     icon: inbox

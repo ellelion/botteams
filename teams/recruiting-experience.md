@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   Calendar: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Experience · Time
     persona: Measures time from application to first reply, and to decision.
     icon: pipeline

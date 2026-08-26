@@ -6459,7 +6459,7 @@ html:not([data-theme="dark"]) .talk-stage {
   --talk-mute: rgba(20, 20, 20, 0.64);
   --talk-editor: rgba(252, 252, 252, 0.65);
   --talk-chrome: #fbfbfb;
-  --talk-agent: rgba(16, 16, 0, 0.04);
+  --talk-bot: rgba(16, 16, 0, 0.04);
   --talk-user: #111110;
   --talk-user-ink: #ffffff;
   --talk-border: rgba(20, 20, 20, 0.15);
@@ -6472,7 +6472,7 @@ html[data-theme="dark"] .talk-stage {
   --talk-mute: rgba(237, 236, 236, 0.64);
   --talk-editor: #141414;
   --talk-chrome: #1a1a1a;
-  --talk-agent: rgba(255, 255, 255, 0.06);
+  --talk-bot: rgba(255, 255, 255, 0.06);
   --talk-user: #f2f1ef;
   --talk-user-ink: #111110;
   --talk-border: rgba(237, 236, 236, 0.1);
@@ -6513,7 +6513,7 @@ html:not([data-theme="dark"]) .talk-you { background: #f4f4f3; }
   --talk-mute: rgba(237, 236, 236, 0.64);
   --talk-editor: #141414;
   --talk-chrome: #1a1a1a;
-  --talk-agent: rgba(255, 255, 255, 0.06);
+  --talk-bot: rgba(255, 255, 255, 0.06);
   --talk-user: #f2f1ef;
   --talk-user-ink: #111110;
   --talk-border: rgba(237, 236, 236, 0.1);
@@ -6551,7 +6551,7 @@ html:not([data-theme="dark"]) .talk-stage {
   --talk-mute: rgba(20, 20, 20, 0.64);
   --talk-editor: rgba(252, 252, 252, 0.65);
   --talk-chrome: #fbfbfb;
-  --talk-agent: rgba(16, 16, 0, 0.04);
+  --talk-bot: rgba(16, 16, 0, 0.04);
   --talk-user: #111110;
   --talk-user-ink: #ffffff;
   --talk-border: rgba(20, 20, 20, 0.15);
@@ -6566,7 +6566,7 @@ html[data-theme="dark"] .talk-stage {
   --talk-mute: rgba(237, 236, 236, 0.64);
   --talk-editor: #141414;
   --talk-chrome: #1a1a1a;
-  --talk-agent: rgba(255, 255, 255, 0.06);
+  --talk-bot: rgba(255, 255, 255, 0.06);
   --talk-user: #f2f1ef;
   --talk-user-ink: #111110;
   --talk-border: rgba(237, 236, 236, 0.1);
@@ -6860,7 +6860,7 @@ html[data-theme="dark"] .talk-stage {
 .talk-bubble {
   padding: 8px 12px;
   border-radius: 16px;
-  background: var(--talk-agent);
+  background: var(--talk-bot);
   font-size: 14px;
   line-height: 20px;
   letter-spacing: -0.15px;
@@ -6929,7 +6929,7 @@ html[data-theme="dark"] .talk-stage {
   max-width: min(560px, 92%);
   padding: 10px 12px 14px;
   border-radius: 16px;
-  background: var(--talk-agent);
+  background: var(--talk-bot);
 }
 .talk-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .talk-card-title {
@@ -7395,7 +7395,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   width: 28px;
   height: 28px;
   border-radius: 99px;
-  background: var(--talk-agent);
+  background: var(--talk-bot);
   color: var(--talk-text);
   display: grid;
   place-items: center;
@@ -7409,7 +7409,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 .talk-card {
   border: 0;
   border-radius: 16px;
-  background: var(--talk-agent);
+  background: var(--talk-bot);
   padding: 10px 12px;
 }
 .talk-computer { width: 420px; max-width: 100%; }

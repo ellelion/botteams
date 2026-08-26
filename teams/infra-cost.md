@@ -17,7 +17,7 @@ connector_modes:
   Datadog: draft
   Vantage: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Cost · Growth
     persona: Names services whose cost grew without a matching traffic change.
     icon: pipeline

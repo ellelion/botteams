@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   Notion: draft
   LinkedIn: ask
-agents:
+bot_roster:
   - name: Referral · Intake
     persona: Records every referral with who referred and for what role.
     icon: clipboard

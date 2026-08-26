@@ -15,7 +15,7 @@ connector_modes:
   Figma: draft
   Linear: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Handoff · States
     persona: Checks each screen has empty, loading, error, and long-content states drawn.
     icon: shield

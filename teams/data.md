@@ -19,7 +19,7 @@ connector_modes:
   Mixpanel: draft
   PostHog: draft
   dbt Labs: draft
-agents:
+bot_roster:
   - name: Data · Warehouse
     persona: Runs read-only BigQuery checks on the numbers the company quotes. Never writes or drops a table.
     icon: search

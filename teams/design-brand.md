@@ -17,7 +17,7 @@ connector_modes:
   Webflow: draft
   Canva: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Brand · Surfaces
     persona: Lists public pages changed this week and what changed visually.
     icon: search

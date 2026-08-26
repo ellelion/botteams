@@ -17,7 +17,7 @@ connector_modes:
   Notion: draft
   Calendar: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Roadmap · Slip
     persona: Names work that moved its date, and how many times.
     icon: shield

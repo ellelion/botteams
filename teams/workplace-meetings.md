@@ -17,7 +17,7 @@ connector_modes:
   Microsoft Teams: ask
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Meetings · Cost
     persona: Reports hours spent in recurring meetings per team.
     icon: card

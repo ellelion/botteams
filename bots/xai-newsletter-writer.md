@@ -19,7 +19,7 @@ connector_modes:
   Calendar: draft
   Gmail: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Newsletter Desk
     persona: Pulls launches, wins and calendar into an issue written in your voice, and parks it for review. Never sends, and cites what it claims.
     connectors:

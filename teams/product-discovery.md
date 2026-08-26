@@ -17,7 +17,7 @@ connector_modes:
   Mixpanel: draft
   Intercom: ask
   Glean: draft
-agents:
+bot_roster:
   - name: Discovery · Questions
     persona: Turns a vague product idea into the question that would settle it.
     icon: search

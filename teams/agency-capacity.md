@@ -15,7 +15,7 @@ connector_modes:
   Calendar: draft
   Notion: draft
   Linear: draft
-agents:
+bot_roster:
   - name: Capacity · Booked
     persona: Adds up committed delivery time per person from Calendar for the next four weeks.
     icon: calendar
