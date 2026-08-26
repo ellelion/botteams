@@ -177,6 +177,22 @@ export function SiteFooter() {
             >
               Listed on DevTool.io
             </a>
+            {/* Dofollow.Tools verifies this exact static footer badge for free submissions. */}
+            <a
+              href="https://dofollow.tools"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Featured on Dofollow.Tools. ${en.nav.opensNew}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
+              <img
+                src="https://dofollow.tools/badge/badge_dark.svg"
+                alt="Featured on Dofollow.Tools"
+                width="200"
+                height="54"
+                loading="lazy"
+              />
+            </a>
           </div>
           {/* Credit at the bottom of the footer, well clear of the mark. */}
           <a
