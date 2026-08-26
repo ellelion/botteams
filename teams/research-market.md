@@ -17,7 +17,7 @@ connector_modes:
   Firecrawl: draft
   Notion: draft
   Google Cloud BigQuery: draft
-agents:
+bot_roster:
   - name: Market · Sources
     persona: Finds primary sources rather than articles citing other articles.
     icon: search

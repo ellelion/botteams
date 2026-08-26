@@ -1,7 +1,7 @@
 /* Public name is botteams.ai. Never grokbotteams.ai in user-facing copy. */
 export const site = {
   name: "botteams.ai",
-  updatedAt: "2026-08-24",
+  updatedAt: "2026-08-25",
   verifiedOn: "2026-08-23",
   title: "Grok Bot teams directory · botteams.ai",
   description:
@@ -11,6 +11,8 @@ export const site = {
   email: "info@ellelion.com",
   address: "30 N Gould St Ste R, Sheridan, WY 82801, United States",
   github: "https://github.com/ellelion/botteams",
+  xHandle: "@Botteams_ai",
+  xUrl: "https://x.com/Botteams_ai",
   entity:
     "botteams.ai is a public directory of company teams for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
   /* The other Ellelion products. They are not "sisters", they are the
@@ -46,6 +48,9 @@ export const GROK_BOT_GUIDE_UPDATED = "2026-08-24";
 
 /* Date the /guides cluster was verified against live vendor docs. */
 export const GUIDES_UPDATED = "2026-08-24";
+
+/* Date the Chief of Staff collection was reviewed against its recipe files. */
+export const CHIEF_OF_STAFF_COLLECTION_UPDATED = "2026-08-26";
 
 export const COMPARE_DOCS = {
   coworkOverview: "https://claude.com/docs/cowork/overview",

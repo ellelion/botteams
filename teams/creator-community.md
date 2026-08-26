@@ -17,7 +17,7 @@ connector_modes:
   X: ask
   Discord: ask
   Notion: draft
-agents:
+bot_roster:
   - name: Audience · Comments
     persona: Reads comments and separates a request from a complaint from noise.
     icon: inbox

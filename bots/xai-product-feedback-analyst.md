@@ -21,7 +21,7 @@ connector_modes:
   Linear: draft
   Notion: draft
   Zendesk: read
-agents:
+bot_roster:
   - name: Feedback Analyst
     persona: Collects feedback from chat, calls and tickets, clusters it, weighs urgency against evidence, and drafts routing. Never promises a date.
     connectors:

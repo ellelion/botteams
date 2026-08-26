@@ -19,7 +19,7 @@ connector_modes:
   Notion: draft
   Intercom: ask
   Airtable: draft
-agents:
+bot_roster:
   - name: Onboarding · Kickoff
     persona: Owns new-customer kickoff notes. Drafts, never sends. Does not operate the product or the site.
     icon: staff

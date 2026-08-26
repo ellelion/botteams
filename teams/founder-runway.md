@@ -17,7 +17,7 @@ connector_modes:
   Ramp: read
   Xero: read
   Notion: draft
-agents:
+bot_roster:
   - name: Runway · In
     persona: Reports revenue actually collected, not invoiced.
     icon: card

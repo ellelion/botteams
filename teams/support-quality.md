@@ -15,7 +15,7 @@ connector_modes:
   Zendesk: ask
   Intercom: ask
   Notion: draft
-agents:
+bot_roster:
   - name: Quality · Sample
     persona: Samples resolved tickets across people and topics.
     icon: search

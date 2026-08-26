@@ -17,7 +17,7 @@ connector_modes:
   Google Drive: draft
   Stripe: read
   Gmail: draft
-agents:
+bot_roster:
   - name: Handover · Assets
     persona: Checks final deliverables are in the client folder and named the way the studio names things. Reports what is missing.
     icon: search

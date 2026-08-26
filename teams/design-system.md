@@ -17,7 +17,7 @@ connector_modes:
   Notion: draft
   GitHub: draft
   Linear: draft
-agents:
+bot_roster:
   - name: System · Components
     persona: Watches Figma for components edited outside the library.
     icon: search

@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   Calendar: draft
   Web Search: read
-agents:
+bot_roster:
   - name: Apartment Scout
     persona: Filters new listings against your rules, drafts the enquiry mail, and holds a shortlist with tour times. Drafts only, and never puts money down.
     connectors:

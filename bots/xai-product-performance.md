@@ -20,7 +20,7 @@ connector_modes:
   Grafana Cloud: read
   Linear: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Performance Watch
     persona: Reads the observability tools, works through the traces, and writes up the hotspots with screenshots. Reads the dashboards and never changes a monitor.
     connectors:

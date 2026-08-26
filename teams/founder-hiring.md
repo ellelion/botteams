@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Ashby: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Hire · Inbound
     persona: Sorts applications and names the ones worth a conversation, with the reason.
     icon: inbox

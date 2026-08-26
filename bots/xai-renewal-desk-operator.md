@@ -19,7 +19,7 @@ connector_modes:
   Gong: read
   Zendesk: read
   Gmail: draft
-agents:
+bot_roster:
   - name: Renewal Desk
     persona: Builds a 90-day brief per account from usage, tickets, calls and CRM, and drafts the commercial note. Never mails the customer and never offers a discount.
     connectors:

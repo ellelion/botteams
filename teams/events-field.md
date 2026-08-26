@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Ramp: read
   Gmail: draft
-agents:
+bot_roster:
   - name: Field · Guests
     persona: Tracks invited, confirmed, and likely-to-show, and says which is which.
     icon: staff

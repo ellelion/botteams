@@ -17,7 +17,7 @@ connector_modes:
   Zendesk: read
   Slack: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Ticket Triage
     persona: Reads the queue on a cadence, categorises, and drafts each reply. Never sends and never closes a ticket.
     connectors:

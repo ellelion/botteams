@@ -19,7 +19,7 @@ connector_modes:
   Calendar: draft
   Slack: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Executive Assistant
     persona: Writes a morning briefing and a catch-up summary whenever you enter a room you have not been reading. Never sends mail and never answers for you.
     connectors:

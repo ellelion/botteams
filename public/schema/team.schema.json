@@ -14,7 +14,7 @@
     "kind",
     "status",
     "connectors",
-    "agents",
+    "bot_roster",
     "routines"
   ],
   "properties": {
@@ -91,11 +91,11 @@
         "enum": ["read", "draft", "ask"]
       }
     },
-    "agents": {
+    "bot_roster": {
       "type": "array",
       "minItems": 1,
       "maxItems": 6,
-      "items": { "$ref": "#/$defs/agent" }
+      "items": { "$ref": "#/$defs/bot" }
     },
     "rooms": {
       "type": "array",
@@ -161,14 +161,14 @@
         "required": ["rooms"],
         "properties": {
           "bots": { "type": "integer", "minimum": 2, "maximum": 6 },
-          "agents": { "type": "array", "minItems": 2, "maxItems": 6 },
+          "bot_roster": { "type": "array", "minItems": 2, "maxItems": 6 },
           "rooms": { "type": "array", "minItems": 1 }
         }
       },
       "else": {
         "properties": {
           "bots": { "type": "integer", "const": 1 },
-          "agents": { "type": "array", "minItems": 1, "maxItems": 1 },
+          "bot_roster": { "type": "array", "minItems": 1, "maxItems": 1 },
           "rooms": { "type": "array", "maxItems": 0 }
         }
       }
@@ -183,7 +183,7 @@
       "type": "string",
       "pattern": "^https?://"
     },
-    "agent": {
+    "bot": {
       "type": "object",
       "additionalProperties": false,
       "required": ["name", "persona"],
@@ -233,7 +233,7 @@
       "properties": {
         "speaker": { "$ref": "#/$defs/nonEmptyString" },
         "speakerKey": { "$ref": "#/$defs/nonEmptyString" },
-        "role": { "enum": ["user", "assistant"] },
+        "role": { "enum": ["user", "bot"] },
         "text": { "$ref": "#/$defs/nonEmptyString" },
         "checks": {
           "type": "array",

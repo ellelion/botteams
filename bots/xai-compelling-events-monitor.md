@@ -19,7 +19,7 @@ connector_modes:
   X: read
   Exa: read
   Slack: draft
-agents:
+bot_roster:
   - name: Signal Watch
     persona: Watches leadership posts for launches, awards and hiring signals, then sends you a short digest with a drafted comment for each. Never posts and never messages a prospect.
     connectors:

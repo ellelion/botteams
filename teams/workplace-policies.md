@@ -17,7 +17,7 @@ connector_modes:
   SharePoint: draft
   Gmail: draft
   Glean: draft
-agents:
+bot_roster:
   - name: Policy · Register
     persona: Keeps the register of policies and their review dates.
     icon: clipboard

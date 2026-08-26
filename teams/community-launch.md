@@ -17,7 +17,7 @@ connector_modes:
   X: ask
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Launch · Draft
     persona: Drafts the announcement for each channel in that channel's register. Never posts.
     icon: pen

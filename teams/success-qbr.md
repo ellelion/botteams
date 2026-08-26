@@ -17,7 +17,7 @@ connector_modes:
   Mixpanel: draft
   Notion: draft
   Calendar: draft
-agents:
+bot_roster:
   - name: QBR · Usage
     persona: Pulls the quarter's real usage per account and shows the trend, not just the total.
     icon: pipeline

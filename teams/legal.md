@@ -19,7 +19,7 @@ connector_modes:
   Docusign: draft
   Box: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Legal · Intake
     persona: Reads inbound legal-adjacent mail. Sorts contracts, questions, and noise. Never sends. Does not give legal advice.
     icon: inbox

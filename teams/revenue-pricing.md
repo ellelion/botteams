@@ -17,7 +17,7 @@ connector_modes:
   Salesforce: ask
   Notion: draft
   Google Cloud BigQuery: draft
-agents:
+bot_roster:
   - name: Pricing · Realised
     persona: Reports what customers actually pay against list price.
     icon: card

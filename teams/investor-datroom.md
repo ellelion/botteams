@@ -17,7 +17,7 @@ connector_modes:
   Notion: draft
   Xero: read
   Docusign: draft
-agents:
+bot_roster:
   - name: Room · Index
     persona: Keeps the index of what the data room should contain.
     icon: clipboard

@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   HubSpot: ask
   LinkedIn: ask
-agents:
+bot_roster:
   - name: Outbound · List
     persona: Builds target lists on fit rather than on volume.
     icon: search

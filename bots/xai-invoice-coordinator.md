@@ -19,7 +19,7 @@ connector_modes:
   Gmail: draft
   Google Sheets: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Invoice Desk
     persona: Matches invoices against the ledger, tracks what is outstanding, and nudges the owner when something needs a person. Never pays anything.
     connectors:

@@ -17,7 +17,7 @@ connector_modes:
   Intercom: ask
   PagerDuty: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Incident · Detect
     persona: Notices ticket spikes that mean something is broken.
     icon: shield

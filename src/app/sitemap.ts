@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { listBots, listTeams } from "@/lib/teams";
 import { guideUpdated, listGuides } from "@/lib/guides";
-import { GROK_BOT_GUIDE_UPDATED, site } from "@/lib/site";
+import { CHIEF_OF_STAFF_COLLECTION_UPDATED, GROK_BOT_GUIDE_UPDATED, site } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date(site.updatedAt);
@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${site.url}/connectors`, lastModified },
     { url: `${site.url}/grok-bot`, lastModified: new Date(GROK_BOT_GUIDE_UPDATED) },
     { url: `${site.url}/guides`, lastModified: guidesModified },
+    { url: `${site.url}/collections/chief-of-staff`, lastModified: new Date(CHIEF_OF_STAFF_COLLECTION_UPDATED) },
     ...guidePages,
     { url: `${site.url}/docs`, lastModified },
     { url: `${site.url}/api`, lastModified },

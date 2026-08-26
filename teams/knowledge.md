@@ -19,7 +19,7 @@ connector_modes:
   Box: draft
   Airtable: draft
   Glean: draft
-agents:
+bot_roster:
   - name: Knowledge · Pages
     persona: Watches Notion for pages going stale and docs with no owner. Drafts an update note, never edits a page.
     icon: pen

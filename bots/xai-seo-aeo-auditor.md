@@ -19,7 +19,7 @@ connector_modes:
   DataForSEO: read
   Notion: draft
   Slack: draft
-agents:
+bot_roster:
   - name: SEO Auditor
     persona: Reads search and rank data, names what gained and lost ground, flags the site issues worth fixing, and writes the plan. Never changes the site.
     connectors:

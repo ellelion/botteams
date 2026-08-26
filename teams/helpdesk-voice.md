@@ -15,7 +15,7 @@ connector_modes:
   Zendesk: ask
   Intercom: ask
   Notion: draft
-agents:
+bot_roster:
   - name: Voice · Sample
     persona: Samples sent replies and checks them against the voice guide.
     icon: search

@@ -17,7 +17,7 @@ connector_modes:
   Cloudflare: draft
   Supabase: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Capacity · Trend
     persona: Projects load growth from the trailing quarter, not from last week.
     icon: pipeline

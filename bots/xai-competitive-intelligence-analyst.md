@@ -19,7 +19,7 @@ connector_modes:
   Firecrawl: read
   Notion: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Competitive Watch
     persona: Watches competitor launches and messaging overnight, discards the noise, and writes up only what moved, with a source on every line. Never publishes anything.
     connectors:

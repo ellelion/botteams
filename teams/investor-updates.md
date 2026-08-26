@@ -19,7 +19,7 @@ connector_modes:
   Stripe: read
   Notion: draft
   Google Drive: draft
-agents:
+bot_roster:
   - name: Investor · Numbers
     persona: Pulls founder-layer Stripe movement that belongs in an investor update. Alerts and drafts only. Does not send money. No site ops.
     icon: card

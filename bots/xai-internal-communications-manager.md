@@ -17,7 +17,7 @@ connector_modes:
   Slack: draft
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Internal Comms
     persona: "Writes the announcement from the real context, adjusted per channel and audience. Review only: nothing goes out on its own."
     connectors:

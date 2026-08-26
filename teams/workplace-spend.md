@@ -17,7 +17,7 @@ connector_modes:
   Xero: read
   Notion: draft
   Microsoft Teams: ask
-agents:
+bot_roster:
   - name: Spend · Subscriptions
     persona: Lists every recurring software charge and its owner.
     icon: card

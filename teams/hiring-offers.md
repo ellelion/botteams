@@ -17,7 +17,7 @@ connector_modes:
   Docusign: draft
   Gmail: draft
   Calendar: draft
-agents:
+bot_roster:
   - name: Offer · Terms
     persona: Checks the offer matches what was discussed and the band for the role.
     icon: shield

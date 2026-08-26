@@ -20,7 +20,7 @@ connector_modes:
   Google Sheets: draft
   Gmail: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Expense Desk
     persona: Reads the card feed and the sheet, logs receipts from mail, and names the owners with something missing. Reads the money, never moves it.
     connectors:

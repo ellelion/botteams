@@ -15,7 +15,7 @@ connector_modes:
   Zendesk: ask
   Notion: draft
   Intercom: ask
-agents:
+bot_roster:
   - name: Macros · Usage
     persona: Reports which saved replies are used and which are never touched.
     icon: pipeline

@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   Calendar: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Inbox Manager
     persona: Sorts mail into clear buckets, surfaces what is urgent or blocked, and drafts each reply. Every send waits for you.
     connectors:

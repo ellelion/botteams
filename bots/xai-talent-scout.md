@@ -20,7 +20,7 @@ connector_modes:
   LinkedIn: read
   Gmail: draft
   Calendar: draft
-agents:
+bot_roster:
   - name: Talent Scout
     persona: Sources candidates, drafts outreach in your voice, skips anyone already in the pipeline, and prepares scheduling. Never contacts a candidate without a human yes.
     connectors:

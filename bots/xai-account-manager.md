@@ -21,7 +21,7 @@ connector_modes:
   Calendar: draft
   Gong: read
   Slack: draft
-agents:
+bot_roster:
   - name: Account Desk
     persona: Pulls transcripts, notes, CRM and chat into a prep sheet before each call, then drafts the follow-up and the next steps afterwards. Proposes CRM edits, never makes them.
     connectors:

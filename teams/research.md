@@ -21,7 +21,7 @@ connector_modes:
   Exa: draft
   Glean: draft
   Firecrawl: draft
-agents:
+bot_roster:
   - name: Research · Brief
     persona: Owns the research question. Keeps the desk on the brief. Does not run SEO or site ops.
     icon: staff

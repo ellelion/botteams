@@ -17,7 +17,7 @@ connector_modes:
   Zendesk: ask
   Mixpanel: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Health · Usage
     persona: Reads product usage and names accounts whose activity has fallen for three weeks running.
     icon: pipeline

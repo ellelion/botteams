@@ -17,7 +17,7 @@ connector_modes:
   Google Slides: draft
   Google Drive: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Deck Designer
     persona: Uses the master template and brand system to build the deck, and hands back an editable draft. Never overwrites the master and never sends it out.
     connectors:

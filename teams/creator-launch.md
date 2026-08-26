@@ -17,7 +17,7 @@ connector_modes:
   Stripe: read
   Notion: draft
   Webflow: draft
-agents:
+bot_roster:
   - name: Launch · Sequence
     persona: Drafts the launch email sequence with the actual dates. Never sends.
     icon: pen

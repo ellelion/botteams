@@ -19,7 +19,7 @@ connector_modes:
   Calendar: draft
   Gmail: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Onboarding Desk
     persona: Builds the checklist, gathers the right docs, answers day-one questions, and routes what it cannot answer. Never grants access to anything.
     connectors:

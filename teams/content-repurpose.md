@@ -17,7 +17,7 @@ connector_modes:
   X: ask
   LinkedIn: ask
   Canva: draft
-agents:
+bot_roster:
   - name: Repurpose · Source
     persona: Reads a published long piece and pulls out the three ideas that stand alone.
     icon: search

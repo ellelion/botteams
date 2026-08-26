@@ -62,12 +62,12 @@ export default function DocsPage() {
             <tr><th scope="row"><code>slug</code></th><td>Lowercase URL key. Must equal the markdown filename.</td></tr>
             <tr><th scope="row"><code>name</code></th><td>Team title on the directory.</td></tr>
             <tr><th scope="row"><code>tagline</code></th><td>One line for the job of the team.</td></tr>
-            <tr><th scope="row"><code>bots</code></th><td>Count of Bots in the recipe. Must match the <code>agents</code> list length.</td></tr>
+            <tr><th scope="row"><code>bots</code></th><td>Count of Bots in the recipe. Must match the <code>bot_roster</code> list length.</td></tr>
             <tr><th scope="row"><code>section</code></th><td>Closed directory category. On a team, it is also the suggested sidebar section.</td></tr>
             <tr><th scope="row"><code>kind</code></th><td><code>team</code> (two to six Bots and a group chat) or <code>bot</code> (one Bot and no group chat).</td></tr>
             <tr><th scope="row"><code>status</code></th><td><code>installable</code> (ready to run) or <code>example</code> (format demo).</td></tr>
             <tr><th scope="row"><code>connectors</code></th><td>Account-wide connectors this team expects already connected. Union of per-Bot lists.</td></tr>
-            <tr><th scope="row">Bots list <code>agents</code></th><td>Each Bot: <code>name</code> + <code>persona</code> (the job). Optional <code>icon</code>, <code>connectors</code> (subset of the team list), <code>reuse</code>.</td></tr>
+            <tr><th scope="row">Bot roster <code>bot_roster</code></th><td>Each Bot: <code>name</code> + <code>persona</code> (the job). Optional <code>icon</code>, <code>connectors</code> (subset of the team list), <code>reuse</code>.</td></tr>
             <tr><th scope="row">Group chats <code>rooms</code></th><td>Each group chat: <code>name</code> + <code>members</code> (Bot names). Visible label is Group chat.</td></tr>
             <tr><th scope="row"><code>routines</code></th><td><code>name</code>, owner Bot, <code>schedule</code>, <code>prompt</code>. A routine is owned by one Bot.</td></tr>
             <tr><th scope="row"><code>skills</code></th><td>Optional. Named later. Skills cannot be attached at Bot create time.</td></tr>
@@ -77,10 +77,10 @@ export default function DocsPage() {
         <h2 id="published-limits" className="mt-20 text-[0.6rem] uppercase tracking-[0.26em]" style={{ color: ledger.accentText }}>Published limits we map to</h2>
         <ul className="measure mt-4 space-y-3 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
           <li>
-            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.overview} rel="nofollow noopener noreferrer">Bot definition</a>: In the Docs and in the Grok Bot app, a Bot = a single persistent, named agent or one AI teammate.
+            <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.overview} rel="nofollow noopener noreferrer">Bot definition</a>: In the Docs and in the Grok Bot app, a Bot is one persistent, named AI teammate.
           </li>
           <li>
-            A Bot has a name, a job, its own conversation, and working context. Create via New chat, then Create new agent, then Edit Profile (name, title, description, avatar). Cited from the{" "}
+            A Bot has a name, a job, its own conversation, and working context. Create it from Grok Bot, then edit its profile: name, title, description, and avatar. Cited from the{" "}
             <a className="accent-hover underline underline-offset-2" href={XAI_DOCS.bots} rel="nofollow noopener noreferrer" aria-label="xAI Bots documentation">Bots</a> doc.
           </li>
           <li>
@@ -110,8 +110,8 @@ export default function DocsPage() {
           <tbody>
             <tr><th scope="col"><span className="sr-only">Field</span></th><th scope="col">bots/</th><th scope="col">teams/</th></tr>
             <tr><th scope="row"><code>kind</code></th><td data-label="bots/"><code>bot</code></td><td data-label="teams/"><code>team</code></td></tr>
-            <tr><th scope="row"><code>bots</code></th><td data-label="bots/">Always 1</td><td data-label="teams/">2 to 6, matching <code>agents</code></td></tr>
-            <tr><th scope="row"><code>agents</code></th><td data-label="bots/">Exactly one</td><td data-label="teams/">One per Bot</td></tr>
+            <tr><th scope="row"><code>bots</code></th><td data-label="bots/">Always 1</td><td data-label="teams/">2 to 6, matching <code>bot_roster</code></td></tr>
+            <tr><th scope="row"><code>bot_roster</code></th><td data-label="bots/">Exactly one Bot</td><td data-label="teams/">Two to six Bots</td></tr>
             <tr><th scope="row"><code>rooms</code></th><td data-label="bots/">Forbidden. Empty or absent</td><td data-label="teams/">Required. Each holds 2 to 6 Bots</td></tr>
             <tr><th scope="row"><code>routines</code></th><td data-label="bots/">0 to 50 per owning Bot</td><td data-label="teams/">0 to 50 per owning Bot</td></tr>
             <tr><th scope="row">Verified</th><td data-label="bots/">Never</td><td data-label="teams/">When the roster fits the limits</td></tr>

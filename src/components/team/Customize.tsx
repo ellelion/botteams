@@ -482,35 +482,35 @@ export function Customize({
           <legend className="cz-legend">{en.customize.bots}</legend>
           {solo ? <p className="cz-truth">{en.xai.soloRoster}</p> : null}
           <ul className="cz-list">
-            {team.agents.map((agent, i) => {
-              const on = isOn(state, agent.name);
-              const resolvedAgent = resolved.agents.find((row) => row.source.name === agent.name);
-              const blankName = on && !resolvedAgent?.name;
+            {team.botRoster.map((bot, i) => {
+              const on = isOn(state, bot.name);
+              const resolvedBot = resolved.botRoster.find((row) => row.source.name === bot.name);
+              const blankName = on && !resolvedBot?.name;
               const clashName = Boolean(
                 on &&
-                  resolvedAgent?.name &&
-                  resolved.agents.filter((row) => row.name.toLowerCase() === resolvedAgent.name.toLowerCase()).length > 1,
+                  resolvedBot?.name &&
+                  resolved.botRoster.filter((row) => row.name.toLowerCase() === resolvedBot.name.toLowerCase()).length > 1,
               );
               const nameErrorId = `${botNameErrorBase}-${i}`;
               const noteHintId = `${botNoteHintBase}-${i}`;
               return (
-                <li key={agent.name} className={`cz-bot${on ? "" : " is-off"}`}>
+                <li key={bot.name} className={`cz-bot${on ? "" : " is-off"}`}>
                   <div className="cz-bot-top">
                     {solo ? null : (
                       <label className="cz-check">
-                        <input type="checkbox" checked={on} onChange={() => toggleBot(agent.name)} />
-                        <span className="sr-only">{`${en.customize.botOn}: ${agent.name}`}</span>
+                        <input type="checkbox" checked={on} onChange={() => toggleBot(bot.name)} />
+                        <span className="sr-only">{`${en.customize.botOn}: ${bot.name}`}</span>
                       </label>
                     )}
-                    <GrokBotMark size={18} animate={on} frontFacing style={botMarkStyle(i, agent.name, agent.persona)} />
+                    <GrokBotMark size={18} animate={on} frontFacing style={botMarkStyle(i, bot.name, bot.persona)} />
                     <label className="cz-field cz-field-grow">
-                      <span className="sr-only">{`${en.customize.botName}: ${agent.name}`}</span>
+                      <span className="sr-only">{`${en.customize.botName}: ${bot.name}`}</span>
                       <input
                         type="text"
                         className="cz-input"
-                        value={state.names[agent.name] ?? grokMemberName(team.name, agent.name)}
+                        value={state.names[bot.name] ?? grokMemberName(team.name, bot.name)}
                         disabled={!on}
-                        onChange={(e) => patch({ names: { ...state.names, [agent.name]: e.target.value } })}
+                        onChange={(e) => patch({ names: { ...state.names, [bot.name]: e.target.value } })}
                         aria-invalid={blankName || clashName || undefined}
                         aria-describedby={blankName || clashName ? nameErrorId : undefined}
                       />
@@ -521,10 +521,10 @@ export function Customize({
                       {blankName ? en.customize.botNameNeeded : en.customize.botNameClash}
                     </p>
                   ) : null}
-                  <p className="cz-bot-persona">{agent.persona}</p>
-                  {agent.reuse ? <p className="cz-hint">{en.customize.reuseNote}</p> : null}
-                  {agent.connectors.length > 0 ? (
-                    <div className="mt-2"><ConnectorRow names={agent.connectors} labeled size={14} /></div>
+                  <p className="cz-bot-persona">{bot.persona}</p>
+                  {bot.reuse ? <p className="cz-hint">{en.customize.reuseNote}</p> : null}
+                  {bot.connectors.length > 0 ? (
+                    <div className="mt-2"><ConnectorRow names={bot.connectors} labeled size={14} /></div>
                   ) : null}
                   {on ? (
                     <label className="cz-field mt-2">
@@ -533,8 +533,8 @@ export function Customize({
                         type="text"
                         className="cz-input"
                         placeholder={en.customize.botNotePlaceholder}
-                        value={state.notes[agent.name] ?? ""}
-                        onChange={(e) => patch({ notes: { ...state.notes, [agent.name]: e.target.value } })}
+                        value={state.notes[bot.name] ?? ""}
+                        onChange={(e) => patch({ notes: { ...state.notes, [bot.name]: e.target.value } })}
                         aria-describedby={noteHintId}
                       />
                       <span id={noteHintId} className="cz-hint">{en.customize.botNoteHint}</span>
@@ -573,15 +573,15 @@ export function Customize({
             <p id={roomSizeErrorId} className="cz-hint" role="alert">{en.customize.roomSizeNeeded}</p>
           ) : null}
           <ul className="cz-members">
-            {team.agents.filter((a) => isOn(state, a.name)).map((agent) => (
-              <li key={agent.name}>
+            {team.botRoster.filter((a) => isOn(state, a.name)).map((bot) => (
+              <li key={bot.name}>
                 <label className="cz-check cz-check-row">
                   <input
                     type="checkbox"
-                    checked={state.members.includes(agent.name)}
-                    onChange={() => toggleMember(agent.name)}
+                    checked={state.members.includes(bot.name)}
+                    onChange={() => toggleMember(bot.name)}
                   />
-                  <span>{grokDisplayBotName(state.names[agent.name] ?? agent.name)}</span>
+                  <span>{grokDisplayBotName(state.names[bot.name] ?? bot.name)}</span>
                 </label>
               </li>
             ))}
@@ -592,7 +592,7 @@ export function Customize({
 
         <SkillselionPicker
           picks={state.skillPicks}
-          agents={team.agents}
+          botRoster={team.botRoster}
           liveHits={liveHits}
           listingsFailed={listingsFailed}
           skillCounts={skillCounts}
@@ -666,7 +666,7 @@ export function Customize({
   const rosterPart = (
     <section className="rp-job-list">
       <ul>
-        {resolved.agents.map(({ source, name, note }, i) => (
+        {resolved.botRoster.map(({ source, name, note }, i) => (
           <li key={source.name} className="hairline-row">
             <div className="flex gap-3">
               <GrokBotMark size={19} animate frontFacing className="mt-0.5" style={botMarkStyle(i, source.name, source.persona)} />
@@ -810,7 +810,7 @@ export function Customize({
       <section className="rp-roster" aria-label={rosterLabel}>
         <h2 className="rc-h2">{rosterLabel}</h2>
         <ul className="rp-chips">
-          {resolved.agents.map(({ source, name }, i) => (
+          {resolved.botRoster.map(({ source, name }, i) => (
             <li key={source.name} className="rp-chip">
               <GrokBotMark size={17} animate frontFacing style={botMarkStyle(i, source.name, source.persona)} />
               <span className="rp-chip-name">{grokDisplayBotName(name || source.name)}</span>
@@ -824,8 +824,8 @@ export function Customize({
             <p className="rp-room-name">{resolved.roomName}</p>
             <ul className="rp-room-grid">
               {state.members
-                .map((sourceName) => resolved.agents.find((a) => a.source.name === sourceName))
-                .filter((row): row is (typeof resolved.agents)[number] => row != null)
+                .map((sourceName) => resolved.botRoster.find((a) => a.source.name === sourceName))
+                .filter((row): row is (typeof resolved.botRoster)[number] => row != null)
                 .map((row) => (
                   <li key={row.source.name}>
                     <span className="rp-room-bot-name">{grokDisplayBotName(row.name)}</span>

@@ -19,7 +19,7 @@ connector_modes:
   Discord: ask
   X: ask
   Intercom: ask
-agents:
+bot_roster:
   - name: Community · Inbound
     persona: Reads inbound community mail. Sorts questions, welcomes, and noise. Never sends. Never posts.
     icon: inbox

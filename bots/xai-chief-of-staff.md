@@ -20,7 +20,7 @@ connector_modes:
   Calendar: draft
   Slack: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Chief of Staff
     persona: "Scans mail, calendar, chat and notes each morning and writes one short read-out: what is new, what maps to your priorities, and the source for each line. Never sends mail and never accepts a meeting for you."
     connectors:

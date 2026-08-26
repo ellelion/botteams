@@ -19,7 +19,7 @@ connector_modes:
   Gong: read
   Calendar: draft
   Slack: draft
-agents:
+bot_roster:
   - name: CRM Hygiene
     persona: Compares calls and calendar against the CRM, writes the list of records that drifted, and proposes each edit. Never writes to the CRM itself.
     connectors:

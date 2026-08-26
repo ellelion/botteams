@@ -28,10 +28,10 @@ const TEAM_PROPERTIES: Record<keyof ApiTeam, Schema> = {
   status: { type: "string", enum: ["installable", "example"], description: "installable is a recipe to use. example is a format demonstration." },
   fromXai: { type: "boolean", description: "True when the recipe is our write-up of a job published in xAI's own Grok Bot use-case gallery. Sourcing, not endorsement: xAI does not review or certify anything on this directory." },
   featured: { type: "boolean", description: "True when this team is pinned first on the public index." },
-  bots: { type: "integer", minimum: 1, description: "Number of Bots. Always equal to agents.length, and always 1 on a bot." },
+  bots: { type: "integer", minimum: 1, description: "Number of Bots. Always equal to botRoster.length, and always 1 on a bot." },
   addedAt: { type: ["string", "null"], format: "date-time", description: "Date stated in the team file. Never inferred. Null when the file does not state one, and those sort last." },
   connectors: { type: "array", items: { type: "string" }, description: "Connectors the account must already have. Connectors are account-wide in Grok Bot." },
-  agents: {
+  botRoster: {
     type: "array",
     description: "The Bots this team creates. One entry per Bot.",
     items: {
@@ -211,12 +211,12 @@ export function buildOpenApiDocument(): Record<string, unknown> {
     openapi: "3.1.0",
     info: {
       title: `${site.name} API`,
-      version: "1.0.0",
+      version: "2.0.0",
       summary: "Read the public directory of Grok Bot teams as JSON.",
       description: [
         "A team is a recipe, not a bot: named Bots, one group chat where the recipe has one, standing routines, and the connectors the account needs first.",
         "",
-        "No key, no account, no auth. CORS is open, so a browser or an agent can call this directly.",
+        "No key, no account, no auth. CORS is open, so any HTTP client can call this directly.",
         "",
         "There is no per-team endpoint by design. /api/teams/<slug> returns 404. Filter the collection instead.",
         "",

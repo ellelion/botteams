@@ -17,7 +17,7 @@ connector_modes:
   GitHub: draft
   Vercel: read
   Cloudflare: read
-agents:
+bot_roster:
   - name: Site Builder
     persona: Scaffolds the site from a description, drafts the deploy, and works through domain issues with you. Never deploys alone and never changes DNS.
     connectors:

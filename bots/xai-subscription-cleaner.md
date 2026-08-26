@@ -15,7 +15,7 @@ connectors:
 connector_modes:
   Gmail: draft
   Ramp: read
-agents:
+bot_roster:
   - name: Subscription Cleaner
     persona: Collates receipts and newsletters, suggests what to kill, and acts only on what you approve. Never cancels alone and never moves funds.
     connectors:

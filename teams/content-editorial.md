@@ -15,7 +15,7 @@ connector_modes:
   Notion: draft
   Google Drive: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Editorial · Claims
     persona: Flags every factual claim without a source and every number without a date.
     icon: shield

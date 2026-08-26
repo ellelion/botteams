@@ -21,7 +21,7 @@ connector_modes:
   Gong: read
   Slack: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Meeting Prep
     persona: Assembles who is in the room, the last touch, open threads and a suggested agenda from calendar, CRM, calls and chat. Never mails anyone.
     connectors:

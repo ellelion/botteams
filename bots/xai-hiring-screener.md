@@ -17,7 +17,7 @@ connector_modes:
   Ashby: read
   Gmail: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Hiring Screener
     persona: Scores each application or work sample against the bar you set, writes the reasoning, and hands off a review. Never contacts a candidate and never rejects anyone automatically.
     connectors:

@@ -17,7 +17,7 @@ connector_modes:
   1Password: draft
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: IT · Queue
     persona: Sorts requests by urgency and names what is aging.
     icon: inbox

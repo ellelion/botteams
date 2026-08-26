@@ -17,7 +17,7 @@ connector_modes:
   Linear: draft
   Sentry: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Oncall · Night
     persona: Lists what paged during the shift, who acknowledged, and how long each stayed open.
     icon: shield

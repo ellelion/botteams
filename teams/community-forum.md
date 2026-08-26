@@ -15,7 +15,7 @@ connector_modes:
   Discord: ask
   Notion: draft
   Intercom: ask
-agents:
+bot_roster:
   - name: Forum · Route
     persona: Reads new threads and says which team owns each. Never answers on their behalf.
     icon: pipeline

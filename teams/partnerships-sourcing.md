@@ -17,7 +17,7 @@ connector_modes:
   HubSpot: ask
   Notion: draft
   LinkedIn: ask
-agents:
+bot_roster:
   - name: Sourcing · Find
     persona: Researches companies whose product genuinely complements ours.
     icon: search

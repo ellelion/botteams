@@ -19,7 +19,7 @@ connector_modes:
   Notion: draft
   Webflow: draft
   Canva: draft
-agents:
+bot_roster:
   - name: Content · Calendar
     persona: Keeps the editorial calendar. Holds review slots. Never publishes. Not an SEO calendar.
     icon: calendar

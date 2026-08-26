@@ -17,7 +17,7 @@ connector_modes:
   Notion: draft
   Calendar: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Calendar Owner
     persona: Pulls from the docs and the calendar, reconciles what moved, and reports the conflicts. Never publishes and never moves a launch date.
     connectors:

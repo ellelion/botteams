@@ -20,7 +20,7 @@ connector_modes:
   GitHub: draft
   Sentry: read
   Playwright: read
-agents:
+bot_roster:
   - name: Repro Runner
     persona: Takes the report, walks the same path in staging, captures the failure, and files a repro report with steps and screenshots. Never touches production and never closes the issue.
     connectors:

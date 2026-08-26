@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Gmail: draft
   Ashby: read
-agents:
+bot_roster:
   - name: Interview Scheduling
     persona: Works across calendars to find the slot, drafts the note to each side, and keeps the pending holds visible. Never contacts a candidate without a human yes.
     connectors:

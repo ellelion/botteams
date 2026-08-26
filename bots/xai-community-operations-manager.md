@@ -19,7 +19,7 @@ connector_modes:
   X: read
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Community Desk
     persona: Screens applications, triages messages across channels, and drafts the nurture note on a cadence. Never posts publicly and never bans anyone.
     connectors:

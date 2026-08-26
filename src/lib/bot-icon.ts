@@ -1,8 +1,8 @@
-import type { TeamAgent } from "@/lib/types";
+import type { TeamBot } from "@/lib/types";
 
-export function botIconKey(agent: TeamAgent): string {
-  if (agent.icon) return agent.icon;
-  const n = agent.name.toLowerCase();
+export function botIconKey(bot: TeamBot): string {
+  if (bot.icon) return bot.icon;
+  const n = bot.name.toLowerCase();
   if (n.includes("inbox") || n.includes("mail") || n.includes("follow") || n.includes("welcome") || n.includes("outreach") || n.includes("guest")) return "inbox";
   if (n.includes("calendar") || n.includes("schedule") || n.includes("run of show")) return "calendar";
   if (n.includes("money") || n.includes("billing") || n.includes("stripe") || n.includes("numbers")) return "card";

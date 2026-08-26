@@ -17,7 +17,7 @@ connector_modes:
   HubSpot: ask
   Notion: draft
   Google Cloud BigQuery: draft
-agents:
+bot_roster:
   - name: Territory · Coverage
     persona: Finds accounts with no owner or no contact this quarter.
     icon: shield

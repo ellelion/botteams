@@ -17,7 +17,7 @@ connector_modes:
   Google Drive: draft
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Questionnaire Desk
     persona: Pulls answers from the trust centre and past responses, drafts each field, and parks the submit. Never submits, and never invents an answer.
     connectors:

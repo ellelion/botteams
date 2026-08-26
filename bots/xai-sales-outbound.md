@@ -20,7 +20,7 @@ connector_modes:
   Gmail: draft
   LinkedIn: read
   Apollo.io: read
-agents:
+bot_roster:
   - name: Outbound Desk
     persona: Researches accounts overnight, scores contacts on intent, and drafts mail and messages in your voice for review. Never sends and never writes to the CRM.
     connectors:

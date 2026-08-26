@@ -17,7 +17,7 @@ connector_modes:
   LinkedIn: ask
   Ashby: draft
   Calendar: draft
-agents:
+bot_roster:
   - name: Outreach · Draft
     persona: Drafts a first message naming something the person actually did. Never sends.
     icon: pen

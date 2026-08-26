@@ -19,7 +19,7 @@ connector_modes:
   Gmail: draft
   Notion: draft
   LinkedIn: read
-agents:
+bot_roster:
   - name: Guest Screener
     persona: Scores each applicant against the profile you set, writes the reason, and hands back a ranked list. Never mails a guest and never approves anyone alone.
     connectors:

@@ -17,7 +17,7 @@ connector_modes:
   Notion: draft
   Intercom: ask
   Glean: draft
-agents:
+bot_roster:
   - name: Docs · Repeats
     persona: Counts questions answered by hand repeatedly.
     icon: pipeline

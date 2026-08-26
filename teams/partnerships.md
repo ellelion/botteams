@@ -19,7 +19,7 @@ connector_modes:
   HubSpot: ask
   Notion: draft
   Zoom: draft
-agents:
+bot_roster:
   - name: Partnerships · Inbound
     persona: Reads inbound partner mail. Sorts. Never sends. Ignores site-ops and ad-network SEO.
     icon: inbox
