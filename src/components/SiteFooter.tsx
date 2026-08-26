@@ -124,6 +124,38 @@ export function SiteFooter() {
                 loading="lazy"
               />
             </a>
+            {/* DeepLaunch verifies this exact static footer backlink for free listings. */}
+            <a
+              href="https://deeplaunch.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Featured on DeepLaunch.io. ${en.nav.opensNew}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
+              <img
+                src="https://deeplaunch.io/badge/badge_transparent.svg"
+                alt="Featured on DeepLaunch.io"
+                width="200"
+                height="54"
+                loading="lazy"
+              />
+            </a>
+            {/* DodoDirectory requires this exact static badge for its free listing. */}
+            <a
+              href="https://dododirectory.com"
+              target="_blank"
+              rel="dofollow"
+              aria-label={`Featured on DodoDirectory. ${en.nav.opensNew}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
+              <img
+                src="https://dododirectory.com/badge-light.png"
+                alt="Featured on DodoDirectory"
+                width="200"
+                height="54"
+                loading="lazy"
+              />
+            </a>
           </div>
           {/* Credit at the bottom of the footer, well clear of the mark. */}
           <a
