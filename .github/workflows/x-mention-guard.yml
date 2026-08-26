@@ -31,7 +31,7 @@ jobs:
               bad=1
               continue
             fi
-            body=$(curl --fail --silent --show-error "$raw_url") || { bad=1; continue; }
+          body=$(curl --fail --location --silent --show-error "$raw_url") || { bad=1; continue; }
             printf '%s\n' "$body" | grep -Eq '^status: ("example"|example)$' || {
               echo "::error::$file must use status: example"
               bad=1
