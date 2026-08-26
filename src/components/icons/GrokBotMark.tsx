@@ -17,12 +17,16 @@ export function GrokBotMark({
   size = 18,
   animate = false,
   frontFacing = false,
+  headColor,
+  eyeColor,
   className = "",
   style,
 }: {
   size?: number;
   animate?: boolean;
   frontFacing?: boolean;
+  headColor?: string;
+  eyeColor?: string;
   className?: string;
   style?: React.CSSProperties;
 }) {
@@ -37,11 +41,11 @@ export function GrokBotMark({
       focusable="false"
     >
       <g className="grok-bot-mark__face">
-        <path className="grok-bot-mark__head" d={HEAD} />
+        <path className="grok-bot-mark__head" d={HEAD} fill={headColor} />
         <g className="grok-bot-mark__eyes" transform={frontFacing ? "translate(-43 6)" : undefined}>
           <g className="grok-bot-mark__gaze">
-            <path className="grok-bot-mark__eye" d={LEFT_EYE} />
-            <path className="grok-bot-mark__eye" d={RIGHT_EYE} />
+            <path className="grok-bot-mark__eye" d={LEFT_EYE} fill={eyeColor} />
+            <path className="grok-bot-mark__eye" d={RIGHT_EYE} fill={eyeColor} />
           </g>
         </g>
       </g>
