@@ -190,9 +190,9 @@ const viewListeners = new Set<() => void>();
 function readStoredView(): View {
   try {
     const stored = window.localStorage.getItem(VIEW_KEY);
-    return stored === "cards" || stored === "ledger" ? stored : "ledger";
+    return stored === "cards" || stored === "ledger" ? stored : "cards";
   } catch {
-    return "ledger";
+    return "cards";
   }
 }
 
@@ -237,7 +237,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
   const sectionParam = filters.category;
   const integrationParam = filters.integration;
   const sortParam = filters.sort;
-  const view = useSyncExternalStore(subscribeView, readStoredView, (): View => "ledger");
+  const view = useSyncExternalStore(subscribeView, readStoredView, (): View => "cards");
   const [query, setQuery] = useState(initial.q);
   const [seenQ, setSeenQ] = useState(initial.q);
   const [pushedQ, setPushedQ] = useState(initial.q);

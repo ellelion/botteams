@@ -1306,6 +1306,48 @@ a.chip-unverified:focus-visible {
   min-width: 0;
   max-width: 100%;
 }
+.connector-item.has-tooltip { position: relative; }
+.connector-tooltip {
+  position: absolute;
+  inset-inline-start: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 30;
+  width: max-content;
+  max-width: min(220px, 70vw);
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--page);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--ink) 18%, transparent);
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 3px);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease), visibility 0s linear var(--dur);
+}
+.connector-tooltip::after {
+  position: absolute;
+  inset-inline-start: 50%;
+  top: 100%;
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+  content: "";
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+@media (hover: hover) and (pointer: fine) {
+  .connector-item.has-tooltip:hover .connector-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+    transition-delay: 80ms, 80ms, 0s;
+  }
+}
 /* Logos ship at mixed aspect ratios, so every mark gets the same square
    box and is contained inside it. That keeps the left edges aligned when
    the names sit next to them. */
@@ -3342,8 +3384,16 @@ a.chip-unverified:focus-visible {
    lost all 5px of the focus mark. */
 .idx-card:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -3px; }
 .idx-card-cat {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 26px;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--accent) 11%, var(--card));
   color: var(--accent-text);
-  font: 500 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  font: 600 11px/1.2 var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -4804,9 +4854,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   isolation: isolate;
 }
 .roster-shape-stack .grok-bot-mark {
-  margin-left: -2px;
-  box-shadow: 0 0 0 1px var(--page);
-  border-radius: 999px;
+  margin-left: -1px;
   position: relative;
   z-index: var(--roster-z, 1);
   transform-origin: 50% 80%;
