@@ -177,25 +177,25 @@ function ConversationStageLive({ team }: { team: Team }) {
   const [view, setView] = useState<number | null>(team.kind === "bot" ? 0 : null);
   const reduceRef = useRef(false);
 
-  const agents = team.agents;
-  const hasGroup = team.kind === "team" && agents.length > 1;
+  const bots = team.botRoster;
+  const hasGroup = team.kind === "team" && bots.length > 1;
   const roomLabel = team.rooms[0] ? grokRoomName(team.rooms[0].name) : grokRecipeTitle(team.kind, team.name);
-  const solo = view !== null ? agents[view] : null;
+  const solo = view !== null ? bots[view] : null;
   const soloName = solo ? grokDisplayBotName(solo.name) : "";
   const headTitle = solo ? soloName : roomLabel;
 
   const script = useMemo(() => {
     if (view === null) return turns;
-    const agent = agents[view];
-    if (!agent) return turns;
-    const own = byBot[agent.name];
+    const bot = bots[view];
+    if (!bot) return turns;
+    const own = byBot[bot.name];
     if (own && own.length > 0) return own;
     /* One-Bot recipes generate `conversation`, not conversation_bots.
        `?? []` left Watch on /bots/applicant-sheet-screen with an empty
        thread and no typing line. */
     if (team.kind === "bot") return turns;
     return [];
-  }, [turns, view, agents, byBot, team.kind]);
+  }, [turns, view, bots, byBot, team.kind]);
 
   const start = useCallback(() => {
     if (script.length === 0) {
@@ -288,25 +288,25 @@ function ConversationStageLive({ team }: { team: Team }) {
           </div>
         </div>
         <div className="talk-rail-list">
-          {agents.map((agent, i) => {
-            const name = grokDisplayBotName(agent.name);
-            const own = byBot[agent.name] ?? [];
-            const snippet = lastSnippet(own, own.length, agent.name, name);
+          {bots.map((bot, i) => {
+            const name = grokDisplayBotName(bot.name);
+            const own = byBot[bot.name] ?? [];
+            const snippet = lastSnippet(own, own.length, bot.name, name);
             const selected = view === i;
             const typingHere = selected && typing;
             return (
               <button
-                key={agent.name}
+                key={bot.name}
                 type="button"
-                className={`talk-rail-row talk-var-${botUiKind(agent.name, agent.persona)}${selected ? " is-on" : ""}`}
-                style={botMarkStyle(i, agent.name, agent.persona)}
+                className={`talk-rail-row talk-var-${botUiKind(bot.name, bot.persona)}${selected ? " is-on" : ""}`}
+                style={botMarkStyle(i, bot.name, bot.persona)}
                 aria-pressed={selected}
                 onClick={() => setView(i)}
               >
-                <GrokBotMark size={32} animate={typingHere} frontFacing style={botMarkStyle(i, agent.name, agent.persona)} />
+                <GrokBotMark size={32} animate={typingHere} frontFacing style={botMarkStyle(i, bot.name, bot.persona)} />
                 <span className="talk-rail-meta">
                   <span className="talk-rail-name">{name}</span>
-                  <span className="talk-rail-snip">{typingHere ? en.team.watchTyping : snippet || agent.persona}</span>
+                  <span className="talk-rail-snip">{typingHere ? en.team.watchTyping : snippet || bot.persona}</span>
                 </span>
               </button>
             );
@@ -319,8 +319,8 @@ function ConversationStageLive({ team }: { team: Team }) {
               onClick={() => setView(null)}
             >
               <span className="talk-stack" aria-hidden>
-                {agents.slice(0, 3).map((agent, i) => (
-                  <GrokBotMark key={agent.name} size={16} frontFacing style={botMarkStyle(i, agent.name, agent.persona)} />
+                {bots.slice(0, 3).map((bot, i) => (
+                  <GrokBotMark key={bot.name} size={16} frontFacing style={botMarkStyle(i, bot.name, bot.persona)} />
                 ))}
               </span>
               <span className="talk-rail-meta">
@@ -354,25 +354,25 @@ function ConversationStageLive({ team }: { team: Team }) {
               aria-label={`${en.team.watchGroup}, ${roomLabel}`}
             >
               <span className="talk-stack talk-stack-sm">
-                {agents.slice(0, 3).map((agent, i) => (
-                  <GrokBotMark key={agent.name} size={12} frontFacing style={botMarkStyle(i, agent.name, agent.persona)} />
+                {bots.slice(0, 3).map((bot, i) => (
+                  <GrokBotMark key={bot.name} size={12} frontFacing style={botMarkStyle(i, bot.name, bot.persona)} />
                 ))}
               </span>
               <span>{en.team.watchGroup}</span>
             </button>
           ) : null}
-          {agents.map((agent, i) => (
+          {bots.map((bot, i) => (
             <button
-              key={agent.name}
+              key={bot.name}
               type="button"
-              className={`talk-dock-item talk-var-${botUiKind(agent.name, agent.persona)}${view === i ? " is-on" : ""}`}
-              style={botMarkStyle(i, agent.name, agent.persona)}
+              className={`talk-dock-item talk-var-${botUiKind(bot.name, bot.persona)}${view === i ? " is-on" : ""}`}
+              style={botMarkStyle(i, bot.name, bot.persona)}
               aria-pressed={view === i}
               onClick={() => setView(i)}
-              aria-label={grokDisplayBotName(agent.name)}
+              aria-label={grokDisplayBotName(bot.name)}
             >
-              <GrokBotMark size={22} animate={view === i} frontFacing style={botMarkStyle(i, agent.name, agent.persona)} />
-              <span>{grokDisplayBotName(agent.name).replace(" Grok Bot", "")}</span>
+              <GrokBotMark size={22} animate={view === i} frontFacing style={botMarkStyle(i, bot.name, bot.persona)} />
+              <span>{grokDisplayBotName(bot.name).replace(" Grok Bot", "")}</span>
             </button>
           ))}
         </div>
@@ -396,32 +396,32 @@ function ConversationStageLive({ team }: { team: Team }) {
           ) : null}
 
           {visible.map((turn, i) => {
-            const agentIdx = Math.max(
+            const botIdx = Math.max(
               0,
-              agents.findIndex((a) => a.name === turn.speakerKey || grokDisplayBotName(a.name) === turn.speaker),
+              bots.findIndex((a) => a.name === turn.speakerKey || grokDisplayBotName(a.name) === turn.speaker),
             );
             const prev = visible[i - 1];
             const stack = Boolean(prev && (prev.speakerKey ?? prev.speaker) === (turn.speakerKey ?? turn.speaker));
             const you = isYouTurn(turn);
-            const mine = !you && view === agentIdx;
+            const mine = !you && view === botIdx;
             const kind = you ? "you" : botUiKind(turn.speakerKey ?? turn.speaker);
             const hideWho = view !== null || you;
             if (turn.fromBots) {
               const faces = turn.fromBots.keys
-                .map((key) => agents.find((a) => a.name === key))
-                .filter((a): a is (typeof agents)[number] => Boolean(a));
+                .map((key) => bots.find((a) => a.name === key))
+                .filter((a): a is (typeof bots)[number] => Boolean(a));
               const parts: Array<{ key: string; node: ReactNode }> = [];
               let rest = turn.fromBots.text;
               const names = faces
-                .map((a) => ({ agent: a, labels: [grokDisplayBotName(a.name), shortBot(a.name), a.name] }))
-                .flatMap((x, fi) => x.labels.map((label) => ({ label, agent: x.agent, fi })))
+                .map((a) => ({ bot: a, labels: [grokDisplayBotName(a.name), shortBot(a.name), a.name] }))
+                .flatMap((x, fi) => x.labels.map((label) => ({ label, bot: x.bot, fi })))
                 .sort((a, b) => b.label.length - a.label.length);
               while (rest.length) {
-                let hit: { at: number; label: string; agent: (typeof agents)[number]; fi: number } | null = null;
+                let hit: { at: number; label: string; bot: (typeof bots)[number]; fi: number } | null = null;
                 for (const n of names) {
                   const at = rest.indexOf(n.label);
                   if (at === -1) continue;
-                  if (!hit || at < hit.at) hit = { at, label: n.label, agent: n.agent, fi: n.fi };
+                  if (!hit || at < hit.at) hit = { at, label: n.label, bot: n.bot, fi: n.fi };
                 }
                 if (!hit) {
                   parts.push({ key: `t-${parts.length}`, node: rest });
@@ -429,8 +429,8 @@ function ConversationStageLive({ team }: { team: Team }) {
                 }
                 if (hit.at > 0) parts.push({ key: `t-${parts.length}`, node: rest.slice(0, hit.at) });
                 parts.push({
-                  key: `m-${hit.agent.name}-${parts.length}`,
-                  node: <TalkMention name={hit.agent.name} persona={hit.agent.persona} index={hit.fi} />,
+                  key: `m-${hit.bot.name}-${parts.length}`,
+                  node: <TalkMention name={hit.bot.name} persona={hit.bot.persona} index={hit.fi} />,
                 });
                 rest = rest.slice(hit.at + hit.label.length);
               }
@@ -438,10 +438,10 @@ function ConversationStageLive({ team }: { team: Team }) {
                 <article key={`frombots-${i}`} className="talk-frombots">
                   <p className="talk-frombots-kicker">
                     {en.team.watchFrom}{" "}
-                    {faces.map((agent, fi) => (
-                      <span key={agent.name}>
+                    {faces.map((bot, fi) => (
+                      <span key={bot.name}>
                         {fi > 0 ? ` ${en.team.watchAnd} ` : ""}
-                        <TalkMention name={agent.name} persona={agent.persona} index={fi} />
+                        <TalkMention name={bot.name} persona={bot.persona} index={fi} />
                       </span>
                     ))}
                   </p>
@@ -462,10 +462,10 @@ function ConversationStageLive({ team }: { team: Team }) {
                 <article
                   key={`${turn.speaker}-comp-${i}`}
                   className={`talk-entry talk-row talk-var-${kind}${mine ? " is-focus" : ""}${stack ? " is-stack" : ""}`}
-                  style={botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)}
+                  style={botMarkStyle(botIdx, turn.speakerKey ?? turn.speaker)}
                 >
                   <div className="talk-avatar" aria-hidden>
-                    {stack ? null : <GrokBotMark size={26} frontFacing style={botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)} />}
+                    {stack ? null : <GrokBotMark size={26} frontFacing style={botMarkStyle(botIdx, turn.speakerKey ?? turn.speaker)} />}
                   </div>
                   <div className={`talk-card talk-computer ${done ? "is-done" : "is-work"}`}>
                     <div className="talk-card-top">
@@ -489,11 +489,11 @@ function ConversationStageLive({ team }: { team: Team }) {
               <article
                 key={`${turn.speaker}-${i}`}
                 className={`talk-entry talk-row talk-var-${kind}${you ? " is-you" : ""}${mine ? " is-focus" : ""}${stack ? " is-stack" : ""}`}
-                style={you ? undefined : botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)}
+                style={you ? undefined : botMarkStyle(botIdx, turn.speakerKey ?? turn.speaker)}
                 aria-label={you ? en.team.watchYou : undefined}
               >
                 <div className="talk-avatar" aria-hidden>
-                  {stack || you ? null : <GrokBotMark size={26} frontFacing style={botMarkStyle(agentIdx, turn.speakerKey ?? turn.speaker)} />}
+                  {stack || you ? null : <GrokBotMark size={26} frontFacing style={botMarkStyle(botIdx, turn.speakerKey ?? turn.speaker)} />}
                 </div>
                 <div className="talk-bubble">
                   {stack || hideWho ? null : <p className="talk-bubble-who">{turn.speaker}</p>}

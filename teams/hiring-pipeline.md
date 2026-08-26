@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   Calendar: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Pipeline · Stuck
     persona: Names candidates who have not moved stage in a week.
     icon: shield

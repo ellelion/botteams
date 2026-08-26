@@ -17,7 +17,7 @@ connector_modes:
   X Ads: read
   Exa: read
   Notion: draft
-agents:
+bot_roster:
   - name: X growth · Listen
     persona: Reads replies, quotes, and related talk on X and Exa. Never tweets and never replies as the brand.
     icon: search

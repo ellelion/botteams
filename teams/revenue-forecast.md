@@ -17,7 +17,7 @@ connector_modes:
   Salesforce: ask
   Stripe: read
   Notion: draft
-agents:
+bot_roster:
   - name: Forecast · Commit
     persona: Separates committed pipeline from optimistic pipeline.
     icon: pipeline

@@ -4,7 +4,7 @@ import { site } from "@/lib/site";
 import { resolveConnector } from "@/lib/connectors";
 import type { Team } from "@/lib/types";
 
-export const API_VERSION = 1;
+export const API_VERSION = 2;
 export const DEFAULT_LIMIT = 25;
 export const MAX_LIMIT = 100;
 
@@ -20,7 +20,7 @@ export type ApiTeam = {
   bots: number;
   addedAt: string | null;
   connectors: string[];
-  agents: { name: string; persona: string; connectors: string[] }[];
+  botRoster: { name: string; persona: string; connectors: string[] }[];
   rooms: { name: string; members: string[] }[];
   routines: { name: string; owner: string; schedule: string; prompt: string }[];
   installer: string;
@@ -54,7 +54,7 @@ export function toApiTeam(team: Team): ApiTeam {
     bots: team.bots,
     addedAt: team.addedAt ?? null,
     connectors: team.connectors,
-    agents: team.agents.map((a) => ({ name: a.name, persona: a.persona, connectors: a.connectors })),
+    botRoster: team.botRoster.map((bot) => ({ name: bot.name, persona: bot.persona, connectors: bot.connectors })),
     rooms: team.rooms.map((r) => ({ name: r.name, members: r.members })),
     routines: team.routines.map((r) => ({ name: r.name, owner: r.owner, schedule: r.schedule, prompt: r.prompt })),
     installer: installerPrompt(team),
@@ -95,7 +95,7 @@ export function applyFilters(teams: ApiTeam[], f: Filters): ApiTeam[] {
   if (f.q) {
     const q = f.q.toLowerCase();
     out = out.filter((t) =>
-      [t.name, t.tagline, t.category, t.slug, t.contributor ?? "", ...t.connectors, ...t.agents.map((a) => a.name), t.installer]
+      [t.name, t.tagline, t.category, t.slug, t.contributor ?? "", ...t.connectors, ...t.botRoster.map((a) => a.name), t.installer]
         .join(" ")
         .toLowerCase()
         .includes(q),

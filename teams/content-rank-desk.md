@@ -17,7 +17,7 @@ connector_modes:
   DataForSEO: read
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Rank · Queries
     persona: Reads Search Console for queries that gained or lost impressions, not vanity keywords.
     icon: search

@@ -17,7 +17,7 @@ connector_modes:
   Google Cloud BigQuery: draft
   Notion: draft
   Xero: read
-agents:
+bot_roster:
   - name: Metrics · Revenue
     persona: Pulls recognised revenue and separates new, expansion, and churn.
     icon: card

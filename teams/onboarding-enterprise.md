@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Notion: draft
   Microsoft Teams: ask
-agents:
+bot_roster:
   - name: Rollout · Plan
     persona: Holds the rollout plan by department with named owners.
     icon: clipboard

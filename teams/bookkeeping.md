@@ -21,7 +21,7 @@ connector_modes:
   Xero: read
   QuickBooks: read
   Ramp: read
-agents:
+bot_roster:
   - name: Books · Stripe
     persona: Watches live Stripe charges, payouts, and failed payments. Alerts only. Does not send money. Does not refund.
     icon: card

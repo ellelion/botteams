@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Score · Missing
     persona: Names interviews held with no scorecard filed.
     icon: shield

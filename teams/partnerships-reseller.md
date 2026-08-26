@@ -17,7 +17,7 @@ connector_modes:
   Salesforce: ask
   Gmail: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Channel · Deals
     persona: Tracks registered deals and flags conflicts with direct sales.
     icon: pipeline

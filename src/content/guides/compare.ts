@@ -21,8 +21,8 @@ export const compareGuides: Guide[] = [
           },
           {
             type: "quote",
-            text: "Grok Bot is your team of always-on agents. They have their own computer, work inside tools and apps like you do, and keep working 24/7.",
-            source: 'x.ai/news/introducing-grok-bot, "Introducing Grok Bot"',
+            text: "xAI presents Grok Bot as a team of always-on Bots. They share a computer, work inside tools and apps, and keep working after you leave.",
+            source: 'Paraphrased from x.ai/news/introducing-grok-bot, "Introducing Grok Bot"',
           },
           {
             type: "p",
@@ -137,12 +137,12 @@ export const compareGuides: Guide[] = [
         blocks: [
           {
             type: "p",
-            text: "Grok Bot is one persistent named agent, or a group chat of two to six. The computer under those Bots is shared across the account. xAI launched it in beta on 11 August 2026.",
+            text: "Grok Bot is one persistent named Bot, or a group chat of two to six Bots. Their computer is shared across the account. xAI launched it in beta on 11 August 2026.",
           },
           {
             type: "quote",
-            text: "In the Docs and in the Grok Bot app, a Bot = a single persistent, named agent or one AI teammate.",
-            source: 'docs.x.ai/grok-bot/overview, "Grok Bot"',
+            text: "In the Docs and the Grok Bot app, one Bot is one persistent, named AI teammate.",
+            source: 'Paraphrased from docs.x.ai/grok-bot/overview, "Grok Bot"',
           },
           {
             type: "p",

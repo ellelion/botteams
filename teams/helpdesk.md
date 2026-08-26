@@ -17,7 +17,7 @@ connector_modes:
   Intercom: ask
   Plain: draft
   Linear: draft
-agents:
+bot_roster:
   - name: Desk · Triage
     persona: Sorts new Zendesk tickets by urgency and topic. Drafts a first reply, never sends it.
     icon: inbox

@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   Calendar: draft
   LinkedIn: ask
-agents:
+bot_roster:
   - name: Comarketing · Plan
     persona: Holds who owes what by when on both sides.
     icon: clipboard

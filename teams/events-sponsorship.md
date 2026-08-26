@@ -17,7 +17,7 @@ connector_modes:
   Ramp: read
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Sponsor · Terms
     persona: Records what the sponsorship actually included, in a checkable list.
     icon: clipboard

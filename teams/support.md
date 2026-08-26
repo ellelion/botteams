@@ -17,7 +17,7 @@ connector_modes:
   Zendesk: ask
   Intercom: ask
   Linear: draft
-agents:
+bot_roster:
   - name: Support · Triage
     persona: Labels incoming support mail by urgency. Does not reply.
     icon: inbox

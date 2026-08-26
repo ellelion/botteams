@@ -17,7 +17,7 @@ connector_modes:
   Google Cloud BigQuery: draft
   Gmail: draft
   Linear: draft
-agents:
+bot_roster:
   - name: Requests · Intake
     persona: Reads incoming data questions and restates each one precisely enough to answer.
     icon: inbox

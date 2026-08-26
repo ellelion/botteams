@@ -2,8 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { generateConversation, isFirstParty } from "@/lib/conversation-script";
-import type { ConnectorMode, ConversationTurn, Team, TeamAgent, TeamKind, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
-export type { ConnectorMode, ConversationTurn, Team, TeamAgent, TeamKind, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
+import type { ConnectorMode, ConversationTurn, Team, TeamBot, TeamKind, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
+export type { ConnectorMode, ConversationTurn, Team, TeamBot, TeamKind, TeamRoom, TeamRoutine, TeamStatus, TeamSuggestion } from "@/lib/types";
 export { isExample, isVerified } from "@/lib/types";
 
 const TEAMS_DIR = path.join(process.cwd(), "teams");
@@ -16,31 +16,31 @@ function asStringArray(value: unknown, field: string): string[] {
   return value;
 }
 
-function asAgents(value: unknown, teamConnectors: string[]): TeamAgent[] {
+function asBots(value: unknown, teamConnectors: string[]): TeamBot[] {
   if (!Array.isArray(value) || value.length === 0) {
-    throw new Error("agents must be a non-empty array");
+    throw new Error("bot_roster must be a non-empty array");
   }
   const allowed = new Set(teamConnectors.map((name) => name.trim()));
   return value.map((item, i) => {
-    if (!item || typeof item !== "object") throw new Error(`agents[${i}] is invalid`);
+    if (!item || typeof item !== "object") throw new Error(`bot_roster[${i}] is invalid`);
     const row = item as Record<string, unknown>;
     if (typeof row.name !== "string" || typeof row.persona !== "string") {
-      throw new Error(`agents[${i}] needs name and persona`);
+      throw new Error(`bot_roster[${i}] needs name and persona`);
     }
-    const connectors = row.connectors === undefined ? [] : asStringArray(row.connectors, `agents[${i}].connectors`);
+    const connectors = row.connectors === undefined ? [] : asStringArray(row.connectors, `bot_roster[${i}].connectors`);
     for (const name of connectors) {
       if (!allowed.has(name)) {
-        throw new Error(`agents[${i}] connector "${name}" is not in team connectors`);
+        throw new Error(`bot_roster[${i}] connector "${name}" is not in team connectors`);
       }
     }
-    const agent: TeamAgent = { name: row.name, persona: row.persona, connectors };
+    const bot: TeamBot = { name: row.name, persona: row.persona, connectors };
     if (typeof row.brings === "string" && row.brings.trim()) {
-      agent.brings = row.brings.replace(/\s+/g, " ").trim();
+      bot.brings = row.brings.replace(/\s+/g, " ").trim();
     }
-    if (row.reuse === true) agent.reuse = true;
-    if (typeof row.icon === "string" && row.icon.trim()) agent.icon = row.icon.trim();
-    if (row.skills !== undefined) agent.skills = asStringArray(row.skills, `agents[${i}].skills`);
-    return agent;
+    if (row.reuse === true) bot.reuse = true;
+    if (typeof row.icon === "string" && row.icon.trim()) bot.icon = row.icon.trim();
+    if (row.skills !== undefined) bot.skills = asStringArray(row.skills, `bot_roster[${i}].skills`);
+    return bot;
   });
 }
 
@@ -146,7 +146,7 @@ function asConversation(value: unknown): ConversationTurn[] | undefined {
       throw new Error(`conversation[${i}] needs text`);
     }
     const turn: ConversationTurn = { speaker: row.speaker.trim(), text: row.text.trim() };
-    if (row.role === "user" || row.role === "agent") turn.role = row.role;
+    if (row.role === "user" || row.role === "bot") turn.role = row.role;
     if (typeof row.speakerKey === "string" && row.speakerKey.trim()) turn.speakerKey = row.speakerKey.trim();
     if (Array.isArray(row.checks) && row.checks.every((c) => typeof c === "string")) {
       turn.checks = row.checks.map((c) => c.trim()).filter(Boolean);
@@ -200,9 +200,9 @@ export function parseTeam(raw: string, filename: string): Team {
     throw new Error(`${filename}: a team needs a group chat of two to six Bots`);
   }
   const connectors = asStringArray(data.connectors, "connectors");
-  const agents = asAgents(data.agents, connectors);
+  const botRoster = asBots(data.bot_roster, connectors);
   const union = new Set<string>();
-  for (const agent of agents) for (const name of agent.connectors) union.add(name);
+  for (const bot of botRoster) for (const name of bot.connectors) union.add(name);
   const merged = connectors.slice();
   for (const name of union) if (!merged.includes(name)) merged.push(name);
   const team: Team = {
@@ -214,7 +214,7 @@ export function parseTeam(raw: string, filename: string): Team {
     section: data.section,
     status,
     connectors: merged,
-    agents,
+    botRoster,
     rooms,
     routines: asRoutines(data.routines),
     skills: data.skills === undefined ? [] : asStringArray(data.skills, "skills"),
@@ -242,7 +242,7 @@ export function parseTeam(raw: string, filename: string): Team {
     conversation: asConversation(data.conversation),
     conversationByBot: asConversationBots(data.conversation_bots),
   };
-  if (!team.conversation && isFirstParty(team) && team.agents.length > 0) {
+  if (!team.conversation && isFirstParty(team) && team.botRoster.length > 0) {
     team.conversation = generateConversation(team);
   }
   return team;
@@ -285,4 +285,3 @@ export function getTeam(slug: string): Team | null {
 export function getBot(slug: string): Team | null {
   return listBots().find((bot) => bot.slug === slug) ?? null;
 }
-

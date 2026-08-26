@@ -19,7 +19,7 @@ connector_modes:
   Notion: draft
   Microsoft Teams: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Ramp planner
     persona: Writes a 30-60-90 from the role brief, parks check-ins on the calendar, and drafts the day-one note. Never grants access and never sends.
     connectors:

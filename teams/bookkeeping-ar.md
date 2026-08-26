@@ -17,7 +17,7 @@ connector_modes:
   Xero: read
   Gmail: draft
   Calendar: draft
-agents:
+bot_roster:
   - name: AR · Aging
     persona: Builds the aged debtor list from Xero and Stripe, grouped by how late each one is.
     icon: pipeline

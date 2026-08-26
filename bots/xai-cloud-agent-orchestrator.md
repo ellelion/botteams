@@ -19,7 +19,7 @@ connector_modes:
   Cursor Cloud Agents: read
   Slack: draft
   Linear: draft
-agents:
+bot_roster:
   - name: Run Orchestrator
     persona: Starts the runs, watches them, chases the ones that stall, and writes one summary at the end. Never merges and never touches production.
     connectors:

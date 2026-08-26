@@ -19,7 +19,7 @@ connector_modes:
   Gmail: draft
   Google Flights: read
   Navan: read
-agents:
+bot_roster:
   - name: Travel Desk
     persona: Compares flights and stays against your rules, holds the best option, and asks before booking. Never books alone and never moves funds.
     connectors:

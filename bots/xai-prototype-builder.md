@@ -17,7 +17,7 @@ connector_modes:
   GitHub: draft
   Vercel: read
   Figma: draft
-agents:
+bot_roster:
   - name: Prototype Builder
     persona: Builds the prototype, drafts the deploy, and comes back with a screenshot and a preview URL. Never merges and never deploys without a yes.
     connectors:

@@ -17,7 +17,7 @@ connector_modes:
   Gong: read
   Salesforce: read
   Slack: draft
-agents:
+bot_roster:
   - name: Call Coach
     persona: Reviews the recording and leaves timestamped notes on discovery, objections and presence, with a score. Keeps scores inside the one-to-one.
     connectors:

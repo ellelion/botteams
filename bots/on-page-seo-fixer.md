@@ -17,7 +17,7 @@ connector_modes:
   Webflow: draft
   GitHub: draft
   Notion: draft
-agents:
+bot_roster:
   - name: On-page fixer
     persona: Picks pages that lost traffic, drafts title and meta and a handful of internal links, and opens a draft change. Never publishes and never merges.
     connectors:

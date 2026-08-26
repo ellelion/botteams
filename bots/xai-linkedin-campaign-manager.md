@@ -19,7 +19,7 @@ connector_modes:
   HubSpot: read
   Google Sheets: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Campaign Desk
     persona: Drafts the campaign, checks the offer and the handoff match, and keeps the tracking clean. Never launches a campaign and never changes a budget.
     connectors:

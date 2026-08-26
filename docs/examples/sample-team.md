@@ -10,7 +10,7 @@ status: example
 connectors:
   - Gmail
   - Notion
-agents:
+bot_roster:
   - name: Sample · Inbox
     persona: Drafts replies. Never sends mail.
     connectors:

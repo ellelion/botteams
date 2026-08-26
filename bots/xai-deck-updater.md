@@ -19,7 +19,7 @@ connector_modes:
   Google Drive: draft
   Gong: read
   Notion: draft
-agents:
+bot_roster:
   - name: Deck Updater
     persona: Takes discovery notes and updates the working deck with next steps baked in. Never overwrites the master template and never sends the deck out.
     connectors:

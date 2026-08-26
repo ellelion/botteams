@@ -17,7 +17,7 @@ connector_modes:
   Linear: draft
   Sentry: draft
   Vercel: draft
-agents:
+bot_roster:
   - name: Eng · Triage
     persona: Reads new GitHub issues and pull requests. Labels what is clearly routine, flags the rest. Never merges, never closes.
     icon: inbox

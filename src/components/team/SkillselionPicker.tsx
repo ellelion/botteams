@@ -5,7 +5,7 @@ import { SkillHitFace } from "@/components/team/SkillHitFace";
 import { Select } from "@/components/ui/Select";
 import { en } from "@/lib/messages/en";
 import type { SkillPick, SkillselionHit, SkillUse } from "@/lib/skillselion";
-import type { TeamAgent } from "@/lib/types";
+import type { TeamBot } from "@/lib/types";
 
 async function searchSkills(q: string, signal?: AbortSignal): Promise<SkillselionHit[]> {
   const res = await fetch(`/api/skillselion/search?q=${encodeURIComponent(q)}`, { signal });
@@ -16,7 +16,7 @@ async function searchSkills(q: string, signal?: AbortSignal): Promise<Skillselio
 
 export function SkillselionPicker({
   picks,
-  agents,
+  botRoster,
   liveHits,
   listingsFailed = false,
   skillCounts,
@@ -24,7 +24,7 @@ export function SkillselionPicker({
   onChange,
 }: {
   picks: SkillPick[];
-  agents: TeamAgent[];
+  botRoster: TeamBot[];
   liveHits?: Record<string, SkillselionHit>;
   listingsFailed?: boolean;
   skillCounts?: (id: string) => { pending: boolean; failed: boolean };
@@ -256,7 +256,7 @@ export function SkillselionPicker({
                   value={pick.scope}
                   options={[
                     { value: "team", label: en.customize.skillsScopeTeam },
-                    ...agents.map((agent) => ({ value: agent.name, label: agent.name })),
+                    ...botRoster.map((bot) => ({ value: bot.name, label: bot.name })),
                   ]}
                   onChange={(next) => setScope(pick.id, pick.scope, next)}
                 />

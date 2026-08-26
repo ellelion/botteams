@@ -19,7 +19,7 @@ connector_modes:
   LinkedIn: read
   Notion: draft
   Slack: draft
-agents:
+bot_roster:
   - name: Social Desk
     persona: Studies the real posting history, drafts when something noteworthy ships, and keeps the queue moving. Never posts and never replies as you.
     connectors:

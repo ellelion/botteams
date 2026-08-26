@@ -1,4 +1,4 @@
-export type TeamAgent = {
+export type TeamBot = {
   name: string;
   persona: string;
   /** One line for the group-chat roster. Falls back to the first sentence of persona. */
@@ -24,7 +24,7 @@ export type TeamRoutine = {
 /*
  * Two shapes, and they are not the same product.
  *
- *   bot   one named agent doing one job. No group chat, so nothing to
+ *   bot   one named Bot doing one job. No group chat, so nothing to
  *         verify: Verified is a claim about a group chat.
  *   team  two to six Bots in one group chat.
  *
@@ -36,9 +36,9 @@ export type TeamRoutine = {
 
 export type ConversationTurn = {
   speaker: string;
-  /* Agent name as in the recipe, used to highlight the rail. */
+  /* Bot name as in the recipe, used to highlight the rail. */
   speakerKey?: string;
-  role?: "user" | "agent";
+  role?: "user" | "bot";
   text: string;
   checks?: string[];
   working?: { label: string; detail: string; state?: "work" | "done"; screen?: string };
@@ -76,7 +76,7 @@ export type Team = {
   section: string;
   status: TeamStatus;
   connectors: string[];
-  agents: TeamAgent[];
+  botRoster: TeamBot[];
   rooms: TeamRoom[];
   routines: TeamRoutine[];
   skills: string[];
@@ -138,12 +138,12 @@ export const MAX_ROOM = 6;
 export const ACCOUNT_CAP = 50;
 
 export function isVerified(team: Team): boolean {
-  /* Only a team can be Verified. A Bot is one agent with no group chat,
+  /* Only a team can be Verified. A Bot is one Bot with no group chat,
      so the claim has nothing to be true about. */
   if (team.kind !== "team") return false;
-  if (team.agents.length === 0) return false;
-  if (team.bots !== team.agents.length) return false;
-  if (team.agents.length + team.rooms.length > ACCOUNT_CAP) return false;
+  if (team.botRoster.length === 0) return false;
+  if (team.bots !== team.botRoster.length) return false;
+  if (team.botRoster.length + team.rooms.length > ACCOUNT_CAP) return false;
   if (team.rooms.length === 0) return false;
   return team.rooms.every((room) => room.members.length >= MIN_ROOM && room.members.length <= MAX_ROOM);
 }

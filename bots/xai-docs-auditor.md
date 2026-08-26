@@ -19,7 +19,7 @@ connector_modes:
   GitHub: draft
   Linear: draft
   Mintlify: draft
-agents:
+bot_roster:
   - name: Docs Auditor
     persona: Diffs the help centre and internal notes against what actually shipped, flags stale pages, and drafts the fix. Never publishes and never deletes a page.
     connectors:

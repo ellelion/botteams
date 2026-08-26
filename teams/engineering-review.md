@@ -15,7 +15,7 @@ connector_modes:
   GitHub: draft
   Linear: draft
   Sentry: draft
-agents:
+bot_roster:
   - name: Review · Waiting
     persona: Lists pull requests waiting on review, by how long, not by author.
     icon: inbox

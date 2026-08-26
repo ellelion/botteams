@@ -17,7 +17,7 @@ connector_modes:
   Gong: read
   Notion: draft
   Zoom: read
-agents:
+bot_roster:
   - name: FAQ Miner
     persona: Reads call transcripts for repeated questions, writes the answer, and links back to the moment in the recording. Drafts docs, never publishes them.
     connectors:

@@ -17,7 +17,7 @@ connector_modes:
   Exa: draft
   Notion: draft
   Ashby: draft
-agents:
+bot_roster:
   - name: Market · Comp
     persona: Researches realistic pay ranges for the role and location.
     icon: card

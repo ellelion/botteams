@@ -17,7 +17,7 @@ connector_modes:
   AWS Core: draft
   Notion: draft
   PagerDuty: draft
-agents:
+bot_roster:
   - name: Backup · Ran
     persona: Confirms each backup ran and how large it was.
     icon: shield

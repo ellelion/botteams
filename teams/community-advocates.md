@@ -17,7 +17,7 @@ connector_modes:
   X: ask
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Advocate · Spot
     persona: Notices people repeatedly answering others in public and lists them with what they did.
     icon: search

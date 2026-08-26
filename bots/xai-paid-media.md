@@ -20,7 +20,7 @@ connector_modes:
   Google Sheets: draft
   Slack: draft
   Apple Search Ads: read
-agents:
+bot_roster:
   - name: Paid Media Desk
     persona: Pulls channel and campaign spend, writes a recommended reallocation against the monthly budget, and holds. Never changes a budget and never pauses a campaign.
     connectors:

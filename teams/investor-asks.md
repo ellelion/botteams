@@ -17,7 +17,7 @@ connector_modes:
   Gmail: draft
   HubSpot: ask
   Calendar: draft
-agents:
+bot_roster:
   - name: Asks · Draft
     persona: Turns a general offer of help into one specific, answerable request.
     icon: pen

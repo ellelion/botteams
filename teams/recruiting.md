@@ -19,7 +19,7 @@ connector_modes:
   Ashby: draft
   LinkedIn: ask
   Notion: draft
-agents:
+bot_roster:
   - name: Recruiting · Sourcer
     persona: Keeps a current list of outbound people to reach. Drafts notes. Never sends. Not a job-board operator.
     icon: search

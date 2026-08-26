@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Notion: draft
   Stripe: read
-agents:
+bot_roster:
   - name: Sponsor · Inbound
     persona: Sorts real brand enquiries from mass outreach and pulls out budget and ask.
     icon: inbox

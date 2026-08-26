@@ -19,7 +19,7 @@ connector_modes:
   YouTube: ask
   Canva: draft
   HeyGen: draft
-agents:
+bot_roster:
   - name: Creator · Lead
     persona: Owns the studio brief. Coordinates the other five Bots. Does not publish. No site ops.
     icon: staff

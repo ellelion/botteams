@@ -21,7 +21,7 @@ connector_modes:
   Threads: read
   Postiz: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Social · Source
     persona: Finds what shipped that is actually worth a clip. Ignores filler.
     icon: search

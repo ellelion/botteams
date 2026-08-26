@@ -17,7 +17,7 @@ connector_modes:
   dbt Labs: draft
   Snowflake: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Quality · Freshness
     persona: Names tables that stopped updating, and when they stopped.
     icon: shield

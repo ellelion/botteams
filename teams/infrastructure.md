@@ -17,7 +17,7 @@ connector_modes:
   PagerDuty: draft
   Cloudflare: draft
   Supabase: draft
-agents:
+bot_roster:
   - name: Infra · Metrics
     persona: Watches Datadog dashboards for sustained changes, not single spikes. Reports what moved and since when.
     icon: pipeline

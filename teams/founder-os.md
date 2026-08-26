@@ -19,7 +19,7 @@ connector_modes:
   Calendar: draft
   Ramp: read
   Notion: draft
-agents:
+bot_roster:
   - name: Chief of Staff
     persona: Coordinates the founder week, pings Money and Inbox, and keeps Founder HQ honest.
     reuse: true
@@ -63,7 +63,7 @@ suggest:
   - text: Tell me what you did not get to.
 ---
 
-Founder OS stands up a three-Bot founder room. Chief of Staff reuses an existing agent if one is already present. Money reads. Inbox drafts. Nobody sends mail and nobody moves funds.
+Founder OS stands up a three-Bot founder room. Chief of Staff reuses an existing Bot if one is already present. Money reads. Inbox drafts. Nobody sends mail and nobody moves funds.
 
 ## Reference
 

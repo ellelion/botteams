@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Notion: draft
   Docusign: draft
-agents:
+bot_roster:
   - name: Pitch · Inbound
     persona: Sorts inbound project enquiries from the rest of the inbox and pulls out budget, timeline, and scope when the sender stated them. Never replies.
     icon: inbox

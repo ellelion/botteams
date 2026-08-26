@@ -21,7 +21,7 @@ connector_modes:
   Zendesk: ask
   HubSpot: ask
   Gong: draft
-agents:
+bot_roster:
   - name: Success · Health
     persona: Watches account health signals and failed Stripe charges that affect a customer. Alerts only. Does not refund. No site ops.
     icon: health

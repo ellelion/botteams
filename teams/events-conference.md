@@ -17,7 +17,7 @@ connector_modes:
   HubSpot: ask
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Conf · Schedule
     persona: Holds the team schedule and flags clashes and unstaffed slots.
     icon: calendar

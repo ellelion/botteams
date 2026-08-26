@@ -17,7 +17,7 @@ connector_modes:
   Linear: draft
   Intercom: ask
   Gmail: draft
-agents:
+bot_roster:
   - name: Escalate · Spot
     persona: Names tickets that have bounced between people without progress.
     icon: shield

@@ -97,8 +97,8 @@ export const howtoGuides: Guide[] = [
     title: "How to create a Grok Bot",
     headline: "How do you create a Grok Bot?",
     description:
-      "Create one Grok Bot from New chat, then Create new agent, then Edit Profile. Give it one job, a stop line, and a first task. 24 August 2026.",
-    hero: "Create one Bot from New chat, then Create new agent, then Edit Profile. Set a short name, a one-line title, and a description that names the job, the sources, and the stop line. Give it one task. Take over the computer for passwords. Save a skill only after the job works twice.",
+      "Create one Grok Bot from New chat, then edit its profile. Give it one job, a stop line, and a first task. 24 August 2026.",
+    hero: "Create one Bot from New chat, then edit its profile. Set a short name, a one-line title, and a description that names the job, the sources, and the stop line. Give it one task. Take over the computer for passwords. Save a skill only after the job works twice.",
     sections: [
       {
         id: "the-click-path",
@@ -106,13 +106,13 @@ export const howtoGuides: Guide[] = [
         blocks: [
           {
             type: "p",
-            text: "xAI's Bots doc, read on 24 August 2026, says you create via New chat, then Create new agent, then Edit Profile. The profile fields are name, title, description, and avatar. Conversation is the task. Title is the one-line job. Description holds durable rules and approvals.",
+            text: "xAI's Bots doc, read on 24 August 2026, says to create a Bot from New chat and then edit its profile. The profile fields are name, title, description, and avatar. Conversation is the task. Title is the one-line job. Description holds durable rules and approvals.",
           },
           {
             type: "ol",
             items: [
               "Install the macOS or Windows app and sign in with an eligible plan.",
-              "Open New chat, then Create new agent.",
+              "Open New chat and create one Bot.",
               "Edit Profile. Use a short name. Write one primary job in the title.",
               "In the description, name the sources, the output format, and the stop line. Put send, publish, purchase, deletion, and production behind approval.",
               "Give the Bot a first task that repeats those four things: outcome, sources, constraints, deliverable.",

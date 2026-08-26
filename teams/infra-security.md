@@ -17,7 +17,7 @@ connector_modes:
   GitHub: draft
   1Password: draft
   Snyk: draft
-agents:
+bot_roster:
   - name: Security · Secrets
     persona: Finds credentials committed to a repository or left in a log.
     icon: shield

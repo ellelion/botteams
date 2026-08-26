@@ -17,7 +17,7 @@ connector_modes:
   Linear: draft
   Glean: draft
   Slack: ask
-agents:
+bot_roster:
   - name: Decision · Spot
     persona: Notices decisions made in passing that were never written down.
     icon: search

@@ -1,4 +1,4 @@
-import type { Team, TeamAgent } from "@/lib/types";
+import type { Team, TeamBot } from "@/lib/types";
 import { hitFromId, type SkillPick, type SkillselionHit } from "@/lib/skillselion";
 
 const C = {
@@ -23,7 +23,7 @@ function pick(hit: SkillselionHit, scope: string): SkillPick {
 }
 
 function blob(team: Team): string {
-  return [team.section, team.name, team.tagline, team.body, ...team.connectors, ...team.agents.flatMap((a) => [a.name, a.persona])].join(" ").toLowerCase();
+  return [team.section, team.name, team.tagline, team.body, ...team.connectors, ...team.botRoster.flatMap((a) => [a.name, a.persona])].join(" ").toLowerCase();
 }
 
 function has(text: string, words: string[]): boolean {
@@ -35,19 +35,19 @@ function has(text: string, words: string[]): boolean {
   });
 }
 
-function match(agents: TeamAgent[], words: string[]): TeamAgent | undefined {
-  return agents.find((a) => has((a.name + " " + a.persona).toLowerCase(), words));
+function match(bots: TeamBot[], words: string[]): TeamBot | undefined {
+  return bots.find((a) => has((a.name + " " + a.persona).toLowerCase(), words));
 }
 
 export function teamHasOwnSkills(team: Team): boolean {
-  return team.skills.length > 0 || team.agents.some((a) => (a.skills?.length ?? 0) > 0);
+  return team.skills.length > 0 || team.botRoster.some((a) => (a.skills?.length ?? 0) > 0);
 }
 
 export function seedSkillPicks(team: Team): SkillPick[] {
   /* Always at least one Skillselion skill. Own YAML skills still get find-skills. */
   const text = blob(team);
-  const agents = team.agents;
-  const solo = team.kind === "bot" || agents.length === 1;
+  const bots = team.botRoster;
+  const solo = team.kind === "bot" || bots.length === 1;
   const out: SkillPick[] = [];
   const seen = new Set<string>();
   const add = (hit: SkillselionHit, scope: string) => {
@@ -69,7 +69,7 @@ export function seedSkillPicks(team: Team): SkillPick[] {
   const pages = frontend || marketing || has(text, ["landing", "website"]);
 
   add(C.find, "team");
-  const one = agents[0]?.name ?? "team";
+  const one = bots[0]?.name ?? "team";
   if (solo) {
     if (supportish) add(C.triage, one);
     else if (has(head, ["marketing", "content", "seo", "copy", "growth", "creator", "brand"])) add(C.seo, one);
@@ -81,22 +81,22 @@ export function seedSkillPicks(team: Team): SkillPick[] {
     return out;
   }
 
-  if (agents.length >= 2) add(C.handoff, "team");
+  if (bots.length >= 2) add(C.handoff, "team");
 
-  const rev = match(agents, ["review", "reviewer", "critic", "architect", "qa", "release", "on-call", "sre"]) ?? match(agents, ["engineer", "senior", "lead"]);
-  const bld = match(agents, ["build", "builder", "implement", "frontend", "designer", "maker", "dev", "engineer", "product"]);
-  const plan = match(agents, ["founder", "strategy", "chief", "plan", "staff", "coach"]);
-  const watch = match(agents, ["watch", "browser", "social", "competitive", "scout", "research"]);
-  const desk = match(agents, ["hire", "hiring", "recruit", "support", "ticket", "desk", "triage", "success", "people"]);
-  const mkt = match(agents, ["market", "content", "seo", "copy", "writer", "growth", "brand"]);
-  const des = match(agents, ["design", "ui", "ux", "web", "frontend", "brand"]) ?? bld;
+  const rev = match(bots, ["review", "reviewer", "critic", "architect", "qa", "release", "on-call", "sre"]) ?? match(bots, ["engineer", "senior", "lead"]);
+  const bld = match(bots, ["build", "builder", "implement", "frontend", "designer", "maker", "dev", "engineer", "product"]);
+  const plan = match(bots, ["founder", "strategy", "chief", "plan", "staff", "coach"]);
+  const watch = match(bots, ["watch", "browser", "social", "competitive", "scout", "research"]);
+  const desk = match(bots, ["hire", "hiring", "recruit", "support", "ticket", "desk", "triage", "success", "people"]);
+  const mkt = match(bots, ["market", "content", "seo", "copy", "writer", "growth", "brand"]);
+  const des = match(bots, ["design", "ui", "ux", "web", "frontend", "brand"]) ?? bld;
 
   if (engineering) {
     add(C.tdd, rev?.name ?? "team");
     add(C.arch, rev?.name ?? "team");
     if (bld && bld !== rev) add(C.proto, bld.name);
     else if (product) add(C.proto, bld?.name ?? "team");
-    if (agents.length >= 3) add(C.setup, rev?.name ?? "team");
+    if (bots.length >= 3) add(C.setup, rev?.name ?? "team");
   } else if (product) {
     add(C.proto, bld?.name ?? "team");
   }

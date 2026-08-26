@@ -17,7 +17,7 @@ connector_modes:
   Stripe: read
   Calendar: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Board · Numbers
     persona: Pulls the operating numbers and shows the trend rather than a snapshot.
     icon: card

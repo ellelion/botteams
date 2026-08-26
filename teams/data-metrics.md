@@ -15,7 +15,7 @@ connector_modes:
   Notion: draft
   dbt Labs: draft
   Google Cloud BigQuery: draft
-agents:
+bot_roster:
   - name: Metrics · Registry
     persona: Holds the definition of every headline metric and where it is computed.
     icon: clipboard

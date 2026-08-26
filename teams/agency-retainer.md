@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Gmail: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Retainer · Ledger
     persona: Reads Stripe subscriptions and lists which retainers renewed, which failed, and which changed amount. Never issues a charge or a refund.
     icon: card

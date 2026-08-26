@@ -17,7 +17,7 @@ connector_modes:
   Webflow: draft
   Exa: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: SEO · Decay
     persona: Finds pages whose traffic has fallen steadily rather than sharply, which is the kind nobody notices.
     icon: pipeline

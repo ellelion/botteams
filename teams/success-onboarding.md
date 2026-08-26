@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   HubSpot: ask
   Notion: draft
-agents:
+bot_roster:
   - name: Onboard · Handover
     persona: Reads the closed deal and lists what was promised during the sale.
     icon: clipboard

@@ -116,8 +116,8 @@ function matchesQuery(team: Team, q: string): boolean {
     team.section,
     team.slug,
     ...team.connectors,
-    ...team.agents.map((a) => a.name),
-    ...team.agents.map((a) => a.persona),
+    ...team.botRoster.map((a) => a.name),
+    ...team.botRoster.map((a) => a.persona),
   ].join(" ").toLowerCase();
   return hay.includes(q);
 }
@@ -790,19 +790,19 @@ function TeamExpandable({
       {open ? (
         <div className="index-body" id={bodyId}>
           <ul>
-            {team.agents.map((agent, i) => (
-              <li key={agent.name} className="bot-row">
+            {team.botRoster.map((bot, i) => (
+              <li key={bot.name} className="bot-row">
                 <div className="flex items-start gap-2">
-                  <GrokBotMark size={17} animate frontFacing className="mt-0.5" style={botMarkStyle(i, agent.name, agent.persona)} />
+                  <GrokBotMark size={17} animate frontFacing className="mt-0.5" style={botMarkStyle(i, bot.name, bot.persona)} />
                   <div className="min-w-0">
                     <p className="flex flex-wrap items-baseline gap-2 text-[0.92rem]" style={{ fontFamily: ledger.serif }}>
-                      {grokDisplayBotName(agent.name)}
+                      {grokDisplayBotName(bot.name)}
                       <span className="bot-tag">{en.team.botTag}</span>
                     </p>
-                    <p className="mt-0.5 text-[0.75rem] leading-snug" style={{ color: ledger.inkMuted }}>{agent.persona}</p>
-                    {agent.connectors.length > 0 ? (
+                    <p className="mt-0.5 text-[0.75rem] leading-snug" style={{ color: ledger.inkMuted }}>{bot.persona}</p>
+                    {bot.connectors.length > 0 ? (
                       <div className="mt-1.5">
-                        <ConnectorRow names={agent.connectors} size={15} />
+                        <ConnectorRow names={bot.connectors} size={15} />
                       </div>
                     ) : null}
                   </div>

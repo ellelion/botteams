@@ -1,4 +1,4 @@
-import type { ConnectorMode, Team, TeamAgent, TeamRoutine } from "@/lib/types";
+import type { ConnectorMode, Team, TeamBot, TeamRoutine } from "@/lib/types";
 import { resolveConnector } from "@/lib/connectors";
 import { seedSkillPicks } from "@/lib/skill-defaults";
 import { grokBotName, grokMemberName, grokRoomName, grokTeamName } from "@/lib/grok-names";
@@ -134,14 +134,14 @@ export function finalName(state: CustomState, name: string): string {
   return (renamed === undefined ? name : renamed).trim();
 }
 
-export function activeAgents(team: Team, state: CustomState): TeamAgent[] {
-  return team.agents.filter((agent) => isOn(state, agent.name));
+export function activeBots(team: Team, state: CustomState): TeamBot[] {
+  return team.botRoster.filter((bot) => isOn(state, bot.name));
 }
 
 /* ── The recipe after edits ─────────────────────────────────────────── */
 
 export type Resolved = {
-  agents: { source: TeamAgent; name: string; note: string }[];
+  botRoster: { source: TeamBot; name: string; note: string }[];
   roomName: string;
   members: string[];
   routines: { source: TeamRoutine; owner: string }[];
@@ -149,14 +149,14 @@ export type Resolved = {
 };
 
 export function resolve(team: Team, state: CustomState): Resolved {
-  const agents = activeAgents(team, state).map((source) => ({
+  const botRoster = activeBots(team, state).map((source) => ({
     source,
     name: grokMemberName(team.name, finalName(state, source.name)),
     note: (state.notes[source.name] ?? "").trim(),
   }));
-  const live = new Set(agents.map((a) => a.source.name));
+  const live = new Set(botRoster.map((bot) => bot.source.name));
   return {
-    agents,
+    botRoster,
     roomName: grokRoomName(state.roomName),
     /* A Bot that is off cannot sit in the room, so membership is filtered
        here rather than trusted from state. */
@@ -193,10 +193,10 @@ export function check(team: Team, state: CustomState): Check {
   const warnings: string[] = [];
   const r = resolve(team, state);
 
-  if (r.agents.length === 0) {
+  if (r.botRoster.length === 0) {
     errors.push("A team needs at least one Bot. Turn one back on, or reset to the recipe.");
   }
-  const blank = r.agents.filter((a) => !a.name);
+  const blank = r.botRoster.filter((a) => !a.name);
   if (blank.length > 0) {
     errors.push("Every Bot needs a name. Give the blank one a name, or turn it off.");
   }
@@ -204,7 +204,7 @@ export function check(team: Team, state: CustomState): Check {
      Bots called "Money" and "money" are still two Bots to read and one to
      confuse. */
   const seen = new Map<string, string[]>();
-  for (const a of r.agents) {
+  for (const a of r.botRoster) {
     if (!a.name) continue;
     const key = a.name.toLowerCase();
     seen.set(key, [...(seen.get(key) ?? []), a.name]);
@@ -351,9 +351,9 @@ function skillsSection(team: Team, state: CustomState, botNames: string[]): stri
 
 export function buildPrompt(team: Team, state: CustomState, siteUrl: string, siteGithub: string): string {
   const r = resolve(team, state);
-  const stock = new Set(team.agents.map((a) => a.name));
+  const stock = new Set(team.botRoster.map((a) => a.name));
 
-  const agents = r.agents
+  const botRoster = r.botRoster
     .map(({ source, name, note }) => {
       const renamed = name !== source.name;
       const reuse = source.reuse
@@ -383,13 +383,13 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     .join("\n\n");
 
   const also = alsoSection(state);
-  const skillLines = skillsSection(team, state, r.agents.map((a) => a.name).filter(Boolean));
+  const skillLines = skillsSection(team, state, r.botRoster.map((a) => a.name).filter(Boolean));
 
   /* An already-installed team gets a diff, not a second copy of itself.
      Pasting the full recipe twice is how people end up with two Chiefs of
      Staff, which is exactly what the reuse flag exists to prevent. */
-  const dropped = team.agents.filter((a) => !isOn(state, a.name)).map((a) => a.name);
-  const renames = r.agents.filter((a) => a.name !== a.source.name && stock.has(a.source.name));
+  const dropped = team.botRoster.filter((a) => !isOn(state, a.name)).map((a) => a.name);
+  const renames = r.botRoster.filter((a) => a.name !== a.source.name && stock.has(a.source.name));
   const changeNote = state.installed
     ? [
         "## 0. You already installed this team",
@@ -429,9 +429,9 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     state.installed
       ? "Check each one against what is already in the sidebar. Create only the ones that are missing, and rename the ones listed above."
       : "Create each Bot below. Use the names exactly, including any prefix. After create, set Name, Title, and Description on the profile, then tell me to set the avatar.",
-    "A Bot is a single persistent, named agent. Conversation is the task; Title is the one-line job; Description holds durable rules and approvals.",
+    "A Bot is persistent and named. Conversation is the task; Title is the one-line job; Description holds durable rules and approvals.",
     "",
-    agents,
+    botRoster,
     "",
     ...(isSolo(team)
       ? [
@@ -576,7 +576,7 @@ export function decodeState(team: Team, payload: string): CustomState {
        than an error page. The team is still readable either way. */
     return state;
   }
-  const known = new Set(team.agents.map((a) => a.name));
+  const known = new Set(team.botRoster.map((a) => a.name));
   if (Array.isArray(wire.o)) state.off = wire.o.filter((n) => known.has(n));
   if (Array.isArray(wire.n)) {
     for (const pair of wire.n) {
@@ -625,7 +625,7 @@ export function toMarkdown(team: Team, state: CustomState): string {
     `slug: ${team.slug}`,
     `name: ${yamlScalar(isSolo(team) ? grokBotName(team.name) : grokTeamName(team.name))}`,
     `tagline: ${yamlScalar(team.tagline)}`,
-    `bots: ${r.agents.length}`,
+    `bots: ${r.botRoster.length}`,
     `section: ${yamlScalar(team.section)}`,
     `kind: ${team.kind}`,
     `status: ${team.status}`,
@@ -633,9 +633,9 @@ export function toMarkdown(team: Team, state: CustomState): string {
     ...team.connectors.map((c) => `  - ${yamlScalar(c)}`),
     "connector_modes:",
     ...team.connectors.map((c) => `  ${yamlScalar(c)}: ${state.modes[c] ?? teamMode(team, c)}`),
-    "agents:",
+    "bot_roster:",
   ];
-  for (const { source, name, note } of r.agents) {
+  for (const { source, name, note } of r.botRoster) {
     lines.push(`  - name: ${yamlScalar(name)}`);
     lines.push(`    persona: ${yamlScalar(note ? `${source.persona} ${note}` : source.persona)}`);
     if (source.reuse) lines.push("    reuse: true");

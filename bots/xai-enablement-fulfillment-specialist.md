@@ -19,7 +19,7 @@ connector_modes:
   Google Drive: draft
   Gmail: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Enablement Desk
     persona: Finds the assets, builds the one-pager, files it, and drafts the reply with links. Never sends the mail and never shares an internal asset publicly.
     connectors:

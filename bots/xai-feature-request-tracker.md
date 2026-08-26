@@ -19,7 +19,7 @@ connector_modes:
   Gong: read
   Linear: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Request Tracker
     persona: Mines chat and calls into a living list of requests tied to the customer who made them. Never promises a date and never replies to the customer.
     connectors:

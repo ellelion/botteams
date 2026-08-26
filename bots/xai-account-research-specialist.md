@@ -19,7 +19,7 @@ connector_modes:
   Exa: read
   LinkedIn: read
   Notion: draft
-agents:
+bot_roster:
   - name: Account Research
     persona: Pulls the CRM record and live signals for each account, scores fit and warmth, and writes a research brief a human can argue with. Never mails a prospect.
     connectors:

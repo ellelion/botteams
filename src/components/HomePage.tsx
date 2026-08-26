@@ -10,6 +10,7 @@ import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import type { Team } from "@/lib/types";
 import { site } from "@/lib/site";
+import { XTagDialog } from "@/components/XTagDialog";
 
 const CONTRIBUTE_SAMPLE = `---
 slug: founder-os
@@ -20,7 +21,7 @@ section: Founder OS
 kind: team
 status: installable
 connectors: [Stripe, Gmail]
-agents:
+bot_roster:
   - name: Founder · Money
     persona: Reads Stripe. Drafts the brief. Never moves funds.
     connectors: [Stripe]
@@ -90,6 +91,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
               {en.home.contributeTitle}
             </h2>
             <p className="mt-4 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.contributeBody}</p>
+            <p className="mt-3 text-[0.9rem] leading-relaxed" style={{ color: ledger.inkSoft }}>{en.home.contributeX}</p>
             <pre className="installer-prompt is-whole mt-5 p-4 text-left text-[0.68rem] leading-relaxed" style={{ fontFamily: ledger.mono }}>
               <code>{CONTRIBUTE_SAMPLE}</code>
             </pre>
@@ -97,6 +99,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
               <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-label={`${en.home.contributePr}. ${en.nav.opensNew}`}>
                 {en.home.contributePr}
               </a>
+              <XTagDialog />
               <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-label={`${en.home.contributeGuide}. ${en.nav.opensNew}`}>
                 {en.home.contributeGuide}
               </a>
@@ -170,10 +173,12 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
         <details name="home-more">
           <summary>{en.home.contributeSummary}</summary>
           <p>{en.home.contributeBody}</p>
+          <p>{en.home.contributeX}</p>
           <p className="home-contribute-links">
             <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-label={`${en.home.contributePr}. ${en.nav.opensNew}`}>
               {en.home.contributePr}
             </a>
+            <XTagDialog />
             <a className="accent-hover underline" href={`${site.github}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" aria-label={`${en.home.contributeGuide}. ${en.nav.opensNew}`}>
               {en.home.contributeGuide}
             </a>

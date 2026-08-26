@@ -17,7 +17,7 @@ connector_modes:
   Notion: draft
   Google Drive: draft
   Calendar: draft
-agents:
+bot_roster:
   - name: Contract · Register
     persona: Keeps the register of signed agreements and their key terms.
     icon: clipboard

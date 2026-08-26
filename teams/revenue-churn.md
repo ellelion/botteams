@@ -17,7 +17,7 @@ connector_modes:
   Zendesk: ask
   Mixpanel: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Churn · Events
     persona: Records every cancellation with the account's real history.
     icon: card

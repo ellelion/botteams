@@ -19,7 +19,7 @@ connector_modes:
   Ashby: draft
   Zoom: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Hiring · Inbound
     persona: Reads inbound applicant mail. Sorts and prioritizes. Never sends. Not a job-board operator.
     icon: inbox

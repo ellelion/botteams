@@ -17,7 +17,7 @@ connector_modes:
   Intercom: ask
   Plain: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: SLA · Clock
     persona: Names tickets approaching their promised response time.
     icon: shield

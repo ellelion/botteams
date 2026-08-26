@@ -17,7 +17,7 @@ connector_modes:
   Vercel: draft
   Sentry: draft
   Linear: draft
-agents:
+bot_roster:
   - name: Release · Notes
     persona: Drafts release notes from merged pull requests in language a non-engineer can read.
     icon: pen

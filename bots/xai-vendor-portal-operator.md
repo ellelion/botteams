@@ -17,7 +17,7 @@ connector_modes:
   Google Sheets: draft
   Gmail: draft
   Notion: draft
-agents:
+bot_roster:
   - name: Vendor Desk
     persona: Walks the same portal path each week, records what changed, and reports only the exceptions. Never submits and never commits money.
     connectors:

@@ -15,7 +15,7 @@ connector_modes:
   Discord: ask
   Notion: draft
   Gmail: draft
-agents:
+bot_roster:
   - name: Discord · Unanswered
     persona: Finds questions with no reply after a few hours and names who is best placed to answer.
     icon: inbox

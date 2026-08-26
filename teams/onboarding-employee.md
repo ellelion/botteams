@@ -17,7 +17,7 @@ connector_modes:
   Calendar: draft
   Gmail: draft
   1Password: draft
-agents:
+bot_roster:
   - name: Joiner · Checklist
     persona: Holds the setup checklist per role and reports what is outstanding.
     icon: clipboard

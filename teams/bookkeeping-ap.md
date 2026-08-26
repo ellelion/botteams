@@ -17,7 +17,7 @@ connector_modes:
   Xero: read
   Ramp: read
   QuickBooks: read
-agents:
+bot_roster:
   - name: AP · Intake
     persona: Finds supplier invoices in the inbox and pulls out amount, due date, and supplier. Never pays anything.
     icon: inbox

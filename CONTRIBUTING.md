@@ -11,6 +11,11 @@ applies semantic checks that JSON Schema cannot express, such as matching the
 filename to `slug` and checking that room members and routine owners name Bots
 in the same recipe.
 
+Prefer not to use GitHub? Reply under a public X post that describes a Bot or
+team setup and tag [@Botteams_ai](https://x.com/Botteams_ai). The mention worker
+reads that reply chain and opens a pull request. The person who tagged the post
+gets scout credit when they are not the source author.
+
 ## How pull requests work
 
 1. Fork the repository and create a branch from `main`.
@@ -18,6 +23,15 @@ in the same recipe.
 3. Run `npm ci` and `npm test` with the Node version in `.nvmrc`.
 4. Open a pull request and complete the checklist.
 5. Resolve review comments and keep the branch up to date with `main`.
+
+The X mention worker follows the same review path. It can only add new Markdown
+files under `bots/` or `teams/`, and every automated file starts as
+`status: example`. The `via-x` workflow rejects edits, deletions, non-recipe
+files, missing X attribution, and stronger status claims. The worker replies on
+X only after a maintainer merges the pull request and the live page is ready.
+The first 20 replies each UTC day include the direct link. Later replies use a
+profile-search fallback without a URL, up to 100 total replies per day. Further
+completed submissions receive no automated X reply.
 
 GitHub blocks contributors from changing `main` directly. The schema, lint,
 build, dependency, and security checks must pass, and code owner `@icidab`
@@ -55,14 +69,14 @@ $schema: https://botteams.ai/schema/team.schema.json
 slug: founder-os                    # required, equals the filename
 name: Founder OS                    # required
 tagline: One line for the job.      # required
-bots: 2                             # required, must equal the agents length
+bots: 2                             # required, must equal the bot_roster length
 section: Founder OS                 # required, from the closed list below
 kind: team                          # required: team or bot
 status: installable                 # required: installable or example
 connectors:                         # required, account-wide union
   - Stripe
   - Gmail
-agents:                             # required, 2 to 6 Bots
+bot_roster:                         # required, 2 to 6 Bots
   - name: Founder · Money
     persona: Reads Stripe. Drafts the brief. Never moves funds.
     connectors: [Stripe]
@@ -139,8 +153,8 @@ adds them into one count.
 | | `bots/` | `teams/` |
 |---|---|---|
 | `kind` | `bot` | `team` |
-| `bots` | always 1 | 2 to 6, matching `agents` |
-| `agents` | exactly one | one per Bot |
+| `bots` | always 1 | 2 to 6, matching `bot_roster` |
+| `bot_roster` | exactly one Bot | two to six Bots |
 | `rooms` | forbidden, empty or absent | required, each 2 to 6 Bots |
 | `routines` | 0 to 50 per owning Bot | 0 to 50 per owning Bot |
 | Verified | never | when the roster fits |

@@ -19,7 +19,7 @@ connector_modes:
   Notion: draft
   Gmail: draft
   Google Drive: draft
-agents:
+bot_roster:
   - name: Contract Desk
     persona: Summarises contracts by stage and owner, pulls the key terms, and names the reviews that are blocked. Never signs anything, and says plainly that it is not legal advice.
     connectors:

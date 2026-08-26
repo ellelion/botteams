@@ -1,5 +1,5 @@
 import { grokDisplayBotName } from "@/lib/grok-names";
-import type { Team, TeamAgent, TeamRoutine, ConversationTurn } from "@/lib/types";
+import type { Team, TeamBot, TeamRoutine, ConversationTurn } from "@/lib/types";
 
 export type { ConversationTurn };
 
@@ -88,7 +88,7 @@ function seedKey(team: Team): string {
     team.tagline,
     team.section,
     team.body,
-    team.agents.map((a) => [a.name, a.persona, a.connectors.join(",")].join("|")).join("~"),
+    team.botRoster.map((a) => [a.name, a.persona, a.connectors.join(",")].join("|")).join("~"),
     team.connectors.join(","),
     team.routines.map((r) => [r.name, r.owner, r.schedule, r.prompt].join("|")).join("~"),
   ].join("\n");
@@ -112,11 +112,11 @@ function gcd(a: number, b: number): number {
   return a;
 }
 
-function ownedRoutines(agent: TeamAgent, routines: TeamRoutine[]): TeamRoutine[] {
-  const role = roleOf(agent.name).toLowerCase();
+function ownedRoutines(bot: TeamBot, routines: TeamRoutine[]): TeamRoutine[] {
+  const role = roleOf(bot.name).toLowerCase();
   return routines.filter((r) => {
     const o = r.owner.toLowerCase();
-    return o === agent.name.toLowerCase() || o.includes(role) || role.includes(o.replace(/^.*?·\s*/, ""));
+    return o === bot.name.toLowerCase() || o.includes(role) || role.includes(o.replace(/^.*?·\s*/, ""));
   });
 }
 
@@ -134,13 +134,13 @@ function checkFrom(routine: TeamRoutine, connector: string | undefined, rng: Rng
 
 /**
  * A real pass of this recipe, not a shuffled greeting pack.
- * Roster order is the story: first agent starts the week job,
- * each later agent reports from their own connectors and owned routine,
+ * Roster order is the story: first bot starts the week job,
+ * each later bot reports from their own connectors and owned routine,
  * then hands the next named Bot a concrete next step.
  */
-function connectorUse(tool: string, agent: TeamAgent, team: Team): { doing: string; status: string; check: string; screen: string; detail: string } {
+function connectorUse(tool: string, bot: TeamBot, team: Team): { doing: string; status: string; check: string; screen: string; detail: string } {
   const t = tool.toLowerCase();
-  const hay = `${agent.name} ${agent.persona} ${team.section} ${team.tagline} ${team.slug} ${team.body}`.toLowerCase();
+  const hay = `${bot.name} ${bot.persona} ${team.section} ${team.tagline} ${team.slug} ${team.body}`.toLowerCase();
   if (/salesforce|hubspot/.test(t)) {
     return {
       doing: `reading the pipeline in ${tool}`,
@@ -224,7 +224,7 @@ function connectorUse(tool: string, agent: TeamAgent, team: Team): { doing: stri
   }
   if (/firecrawl|exa/.test(t)) {
     return {
-      doing: `reading the live site the way another agent would`,
+      doing: `reading the live site the way another bot would`,
       status: `scan noted. Next fix is a draft.`,
       check: `${tool} → scan done`,
       screen: `${tool} scan · live pages · 0 changed`,
@@ -241,15 +241,15 @@ function connectorUse(tool: string, agent: TeamAgent, team: Team): { doing: stri
 }
 
 export function generateConversation(team: Team): ConversationTurn[] {
-  const agents = team.agents;
+  const bots = team.botRoster;
   const rng = new Rng(hash32(seedKey(team)));
   const room = team.rooms[0]?.name ?? team.name;
   const teamTools = team.connectors;
   const routines = team.routines;
   const turns: ConversationTurn[] = [];
 
-  const toolsOf = (agent: TeamAgent): string[] => {
-    const own = agent.connectors.filter(Boolean);
+  const toolsOf = (bot: TeamBot): string[] => {
+    const own = bot.connectors.filter(Boolean);
     if (own.length) return own;
     return teamTools.slice(0, 1);
   };
@@ -260,9 +260,9 @@ export function generateConversation(team: Team): ConversationTurn[] {
     text,
   });
 
-  const speak = (agent: TeamAgent, text: string, extra?: Partial<ConversationTurn>): ConversationTurn => ({
-    speaker: grokDisplayBotName(agent.name),
-    speakerKey: agent.name,
+  const speak = (bot: TeamBot, text: string, extra?: Partial<ConversationTurn>): ConversationTurn => ({
+    speaker: grokDisplayBotName(bot.name),
+    speakerKey: bot.name,
     text,
     ...extra,
   });
@@ -284,16 +284,16 @@ export function generateConversation(team: Team): ConversationTurn[] {
   })();
   const closeAsk = `Good. Nothing sent, merged, published, or moved until I say.`;
 
-  if (agents.length === 1) {
-    const agent = agents[0];
-    const tool = toolsOf(agent)[0] ?? "the board";
-    const r0 = ownedRoutines(agent, routines)[0];
+  if (bots.length === 1) {
+    const bot = bots[0];
+    const tool = toolsOf(bot)[0] ?? "the board";
+    const r0 = ownedRoutines(bot, routines)[0];
     turns.push(you(openAsk));
-    turns.push(speak(agent, `Opened ${tool}. ${firstClause(agent.persona)} Draft only.`));
+    turns.push(speak(bot, `Opened ${tool}. ${firstClause(bot.persona)} Draft only.`));
     turns.push(you(followAsk));
     turns.push(
       speak(
-        agent,
+        bot,
         r0
           ? `Draft is ready. ${r0.name} stays ${r0.schedule}. I will not send, merge, or publish without you.`
           : `Draft is ready. I will not send, merge, or publish without you.`,
@@ -305,8 +305,8 @@ export function generateConversation(team: Team): ConversationTurn[] {
     return turns;
   }
 
-  const lead = agents[0];
-  const second = agents[1];
+  const lead = bots[0];
+  const second = bots[1];
   const leadTool = toolsOf(lead)[0] ?? "the board";
 
   turns.push(you(openAsk));
@@ -336,6 +336,6 @@ export function generateConversation(team: Team): ConversationTurn[] {
 export function conversationFor(team: Team): ConversationTurn[] | undefined {
   if (team.conversation && team.conversation.length > 0) return team.conversation;
   if (!isFirstParty(team)) return undefined;
-  if (team.agents.length === 0) return undefined;
+  if (team.botRoster.length === 0) return undefined;
   return generateConversation(team);
 }

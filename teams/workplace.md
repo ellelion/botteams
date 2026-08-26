@@ -19,7 +19,7 @@ connector_modes:
   Microsoft Teams: ask
   SharePoint: draft
   OneDrive: draft
-agents:
+bot_roster:
   - name: Workplace · Mail
     persona: Sorts Outlook mail into what needs a human and what does not. Drafts replies, never sends.
     icon: inbox

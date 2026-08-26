@@ -23,10 +23,17 @@ A team is one markdown file in [`teams/`](./teams). Front matter names the Bots,
 the group chat, the routines, and the connectors. The installer prompt is
 generated from it, so the file is the product and GitHub is the CMS.
 
+To suggest a public setup without using GitHub, reply under its X post and tag
+[@Botteams_ai](https://x.com/Botteams_ai). The mention worker drafts an Example
+pull request for maintainer review and replies after merge. A daily link budget
+controls whether that reply contains the live URL or a profile-search fallback,
+and a total response budget caps automated X replies.
+
 Every team and bot must pass the public
 [JSON Schema](https://botteams.ai/schema/team.schema.json) plus the repository's
 semantic checks. `kind: team` or `kind: bot` defines the shape.
 `status: installable` or `status: example` defines whether it is ready to run.
+`bots` is the count and `bot_roster` is the ordered list of named Bots.
 
 To add one, copy [`docs/examples/sample-team.md`](./docs/examples/sample-team.md)
 or [`docs/examples/sample-bot.md`](./docs/examples/sample-bot.md) and read
@@ -41,6 +48,7 @@ or [`docs/examples/sample-bot.md`](./docs/examples/sample-bot.md) and read
 | `/bots/<slug>` | A bot: one Bot, routines, installer prompt, and Customize. No group chat, no Verified. |
 | `/grok-bot` | What is Grok Bot? Setup, teams, skills, routines, and limits. |
 | `/guides` | How-to, comparison, access, and job pages. One query per URL. |
+| `/collections/chief-of-staff` | Compare six Chief of Staff Bot and team setups. |
 | `/docs` | The team spec. Our recipe format, mapped onto official Grok Bot nouns. |
 | `/connectors` | Every connector Grok Bot reaches, and which teams use each. |
 | `/api` | Public API contract, readable without JavaScript. |
@@ -98,6 +106,7 @@ curl "https://botteams.ai/api/teams?cursor=start&limit=100"
 
 Full contract at [`/api`](https://botteams.ai/api). There is no per-team
 endpoint by design; filter the collection instead.
+API version 2 returns the named Bots as `botRoster`.
 
 ## Develop
 

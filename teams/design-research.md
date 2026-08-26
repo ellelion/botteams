@@ -17,7 +17,7 @@ connector_modes:
   Zoom: draft
   Figma: draft
   Glean: draft
-agents:
+bot_roster:
   - name: Research · Sessions
     persona: Tracks scheduled sessions and flags the ones with no notes filed.
     icon: calendar
