@@ -77,6 +77,22 @@ export function SiteFooter() {
                 loading="lazy"
               />
             </a>
+            {/* AI Tech Viral verifies this exact listing link and remote badge image. */}
+            <a
+              href="https://aitechviral.com/ai/botteams"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Listed on AI Tech Viral. ${en.nav.opensNew}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
+              <img
+                src="https://aitechviral.com/assets/images/badge.png"
+                alt="AI Tech Viral"
+                width="192"
+                height="54"
+                loading="lazy"
+              />
+            </a>
           </div>
           {/* Credit at the bottom of the footer, well clear of the mark. */}
           <a
