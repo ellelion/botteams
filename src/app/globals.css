@@ -4642,6 +4642,9 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   display: inline-flex;
   align-items: center;
   direction: ltr;
+  /* Bot z-indices order the faces inside this stack only. Without a
+     stacking context, they paint above the sticky directory chrome. */
+  isolation: isolate;
 }
 .roster-shape-stack .grok-bot-mark {
   margin-left: -2px;
@@ -6231,6 +6234,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   height: 18px;
   object-fit: contain;
   border-radius: 4px;
+}
+/* The AP asset uses near-white strokes for dark cards. Keep its original
+   colors in dark mode; give only that mark enough contrast on light cards. */
+html:not([data-theme="dark"]) :is(.spon-mark, .spon-chip-mark)[src$="/agent-plugins-directory.svg"] {
+  filter: brightness(0) saturate(100%);
+  opacity: 0.6;
 }
 .side-rail-item .spon-paid-link + span {
   display: -webkit-box;
