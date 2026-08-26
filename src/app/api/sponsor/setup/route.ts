@@ -11,8 +11,8 @@ import {
   upsertPaidSession,
 } from "@/lib/rail-db";
 import { getRailInventory } from "@/lib/rail-inventory";
-import { buyerReasons, deterministicRejects, normalizeHref, publicUrlReject, reviewListing } from "@/lib/rail-review";
-import { storeRailMark } from "@/lib/rail-upload";
+import { buyerReasons, deterministicRejects, normalizeHref, reviewListing } from "@/lib/rail-review";
+import { deleteRailMark, storeRailMark, validateRailMark } from "@/lib/rail-upload";
 import { isRailSessionMeta } from "@/lib/rail";
 import { site } from "@/lib/site";
 import { stripe } from "@/lib/stripe";
@@ -21,18 +21,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const MAX_REVIEWS = 3;
-
-function safeOrigin(request: Request): string {
-  const canonical = new URL(site.url);
-  try {
-    const url = new URL(request.url);
-    const local = url.hostname === "localhost" || url.hostname === "127.0.0.1";
-    if (local || url.hostname === canonical.hostname) return url.origin;
-  } catch {
-    /* fall through */
-  }
-  return canonical.origin;
-}
+const MAX_FORM_BYTES = 600 * 1024;
 
 async function loadPaidPayment(sessionId: string) {
   const existing = await getPaymentBySessionId(sessionId);
@@ -85,6 +74,11 @@ export async function POST(request: Request) {
     return Response.json({ error: "Setup is not configured yet." }, { status: 503 });
   }
 
+  const declaredBytes = Number(request.headers.get("content-length") ?? "0");
+  if (Number.isFinite(declaredBytes) && declaredBytes > MAX_FORM_BYTES) {
+    return Response.json({ error: "The submitted form is too large." }, { status: 413 });
+  }
+
   let form: FormData;
   try {
     form = await request.formData();
@@ -98,7 +92,7 @@ export async function POST(request: Request) {
   const href = normalizeHref(String(form.get("href") ?? ""));
   const image = form.get("image");
 
-  if (!sessionId.startsWith("cs_")) {
+  if (!sessionId.startsWith("cs_") || sessionId.length > 255) {
     return Response.json({ error: "Missing checkout session." }, { status: 400 });
   }
 
@@ -136,10 +130,6 @@ export async function POST(request: Request) {
 
   const hasImage = image instanceof File && image.size > 0;
   const cheap = deterministicRejects({ title, line, href }, hasImage);
-  if (href.trim()) {
-    const liveUrl = await publicUrlReject(href.trim());
-    if (liveUrl && !cheap.includes(liveUrl)) cheap.push(liveUrl);
-  }
   if (cheap.length > 0) {
     return Response.json({
       ok: false,
@@ -156,12 +146,12 @@ export async function POST(request: Request) {
     });
   }
 
-  const stored = await storeRailMark(image, safeOrigin(request));
-  if ("error" in stored) {
+  const mark = await validateRailMark(image);
+  if ("error" in mark) {
     return Response.json({
       ok: false,
       remaining: MAX_REVIEWS - payment.attempts,
-      reasons: buyerReasons([stored.error]),
+      reasons: buyerReasons([mark.error]),
     });
   }
 
@@ -173,28 +163,40 @@ export async function POST(request: Request) {
       title: title.trim(),
       line: line.trim(),
       href: href.trim(),
-      markUrl: stored.url,
-      markBytes: stored.bytes,
-      markMediaType: stored.mediaType,
-      svgText: stored.svgText,
+      markBytes: mark.bytes,
+      markMediaType: mark.mediaType,
     });
   } catch (error) {
     console.error("[rail-setup] review failed", error);
     return Response.json({ error: "The review did not run. Try again." }, { status: 502 });
   }
 
+  let markUrl: string | null = null;
+  if (review.ok) {
+    try {
+      markUrl = await storeRailMark(mark);
+    } catch (error) {
+      console.error("[rail-setup] mark storage failed", error);
+      return Response.json({ error: "The mark could not be stored. Try again." }, { status: 502 });
+    }
+  }
+
   const after = await incrementReviewAttempt(payment.id);
   const remaining = Math.max(0, MAX_REVIEWS - after.attempts);
 
   if (review.ok) {
+    if (!markUrl) {
+      return Response.json({ error: "The mark could not be stored. Try again." }, { status: 502 });
+    }
     const published = await publishLiveSlot({
       paymentId: payment.id,
       name: title.trim(),
       line: line.trim(),
       href: href.trim(),
-      markUrl: stored.url,
+      markUrl,
     });
     if (!published.ok) {
+      await deleteRailMark(markUrl).catch((error) => console.error("[rail-setup] orphan mark cleanup failed", error));
       return Response.json(
         { error: published.reason === "full" ? "Every paying slot is taken." : "This payment cannot be used." },
         { status: published.reason === "full" ? 409 : 403 },

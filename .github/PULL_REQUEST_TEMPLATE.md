@@ -25,4 +25,4 @@ What changed and why?
 - [ ] I did not commit secrets or personal data.
 
 After merge, listing and website changes publish from `main`. All required
-checks and approval from `@icidab` must complete first.
+checks and approval from `@skillselion` must complete first.

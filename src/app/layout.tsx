@@ -7,7 +7,15 @@ import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { SiteFrame } from "@/components/SiteFrame";
 import { Analytics } from "@/components/analytics";
-import { DEFAULT_THEME, createThemeBootstrapScript, themeColorFor } from "@/lib/theme";
+import {
+  ACCENT_PALETTE,
+  ACCENT_STORAGE_KEY,
+  ACCENT_TEXT_MIN_CONTRAST,
+  DEFAULT_ACCENT,
+  DEFAULT_THEME,
+  THEME_STORAGE_KEY,
+  themeColorFor,
+} from "@/lib/theme";
 
 /*
  * Geist Sans and Geist Mono, from Vercel, under the SIL Open Font
@@ -52,7 +60,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" data-theme={DEFAULT_THEME} suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}>
       <head>
         <meta name="theme-color" content={themeColorFor(DEFAULT_THEME)} />
-        <script dangerouslySetInnerHTML={{ __html: createThemeBootstrapScript() }} />
+        {/* This tiny local script must run before first paint so a stored theme
+            does not flash. Keeping it external avoids executable code assembly. */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          src="/theme-bootstrap.js"
+          data-theme-storage-key={THEME_STORAGE_KEY}
+          data-accent-storage-key={ACCENT_STORAGE_KEY}
+          data-default-theme={DEFAULT_THEME}
+          data-default-accent={DEFAULT_ACCENT}
+          data-accent-contrast={ACCENT_TEXT_MIN_CONTRAST}
+          data-accent-palette={ACCENT_PALETTE.join(",")}
+        />
         <JsonLd data={organizationJsonLd()} />
         <JsonLd data={websiteJsonLd()} />
       </head>

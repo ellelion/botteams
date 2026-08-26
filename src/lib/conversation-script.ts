@@ -66,20 +66,6 @@ function firstClause(s: string): string {
   return clip(m ? m[0] : t, 92);
 }
 
-function words(text: string): string[] {
-  const stop = new Set(
-    "the a an and or of to for in on with from that this is are was be it we you they never only not does do should must can will just also than then into over under about after before while when where who what how why its it's their our your any all each every own still already yet been being have has had than more most less few one two new old same other than via per".split(
-      " ",
-    ),
-  );
-  const out: string[] = [];
-  for (const raw of text.toLowerCase().match(/[a-z][a-z0-9-]{2,}/g) ?? []) {
-    if (stop.has(raw) || out.includes(raw)) continue;
-    out.push(raw);
-  }
-  return out;
-}
-
 function seedKey(team: Team): string {
   return [
     team.slug,
@@ -94,24 +80,6 @@ function seedKey(team: Team): string {
   ].join("\n");
 }
 
-function coprimeStep(n: number, rng: Rng): number {
-  if (n <= 1) return 1;
-  for (let k = 0; k < 12; k++) {
-    const step = 1 + (rng.next() % n);
-    if (gcd(step, n) === 1) return step;
-  }
-  return 1;
-}
-
-function gcd(a: number, b: number): number {
-  while (b) {
-    const t = a % b;
-    a = b;
-    b = t;
-  }
-  return a;
-}
-
 function ownedRoutines(bot: TeamBot, routines: TeamRoutine[]): TeamRoutine[] {
   const role = roleOf(bot.name).toLowerCase();
   return routines.filter((r) => {
@@ -120,126 +88,12 @@ function ownedRoutines(bot: TeamBot, routines: TeamRoutine[]): TeamRoutine[] {
   });
 }
 
-function checkFrom(routine: TeamRoutine, connector: string | undefined, rng: Rng): string {
-  const stems = [
-    `Run ${routine.name}`,
-    `Log ${routine.name}`,
-    connector ? `Open ${connector} for ${routine.name}` : `Queue ${routine.name}`,
-    clip(routine.prompt, 42),
-    `${routine.name} · ${clip(routine.schedule, 28)}`,
-  ];
-  return rng.pick(stems);
-}
-
-
 /**
  * A real pass of this recipe, not a shuffled greeting pack.
  * Roster order is the story: first bot starts the week job,
  * each later bot reports from their own connectors and owned routine,
  * then hands the next named Bot a concrete next step.
  */
-function connectorUse(tool: string, bot: TeamBot, team: Team): { doing: string; status: string; check: string; screen: string; detail: string } {
-  const t = tool.toLowerCase();
-  const hay = `${bot.name} ${bot.persona} ${team.section} ${team.tagline} ${team.slug} ${team.body}`.toLowerCase();
-  if (/salesforce|hubspot/.test(t)) {
-    return {
-      doing: `reading the pipeline in ${tool}`,
-      status: `pipeline note parked. Nothing moved.`,
-      check: `${tool} → pipeline read`,
-      screen: `${tool} pipeline · open deals · 0 moved`,
-      detail: `${tool} pipeline read. Nothing moved.`,
-    };
-  }
-  if (/ahrefs|semrush|search console|indexnow|yandex|bing webmaster/.test(t) || (/seo|aeo|geo|findab/.test(hay) && /ahrefs|semrush|search/.test(t))) {
-    return {
-      doing: `gathering keywords and pages in ${tool}`,
-      status: `keywords parked in the draft. Not published.`,
-      check: `${tool} → keywords pulled`,
-      screen: `${tool} · keywords · 0 published`,
-      detail: `${tool} keywords pulled. Not published.`,
-    };
-  }
-  if (/github/.test(t)) {
-    return {
-      doing: `opening open work and drafting the next change`,
-      status: `draft on GitHub. Not merged.`,
-      check: `${tool} → draft ready · 0 merged`,
-      screen: `GitHub draft · 1 PR · 0 merged`,
-      detail: `GitHub draft ready. Not merged.`,
-    };
-  }
-  if (/linear/.test(t)) {
-    return {
-      doing: `reading this week's issues and cutting the ship list`,
-      status: `week list is cut. Nothing closed without you.`,
-      check: `${tool} → week list`,
-      screen: `Linear week list · open issues · 0 closed`,
-      detail: `Linear week list. Nothing closed.`,
-    };
-  }
-  if (/\bx\b|twitter/.test(t)) {
-    return {
-      doing: `drafting the public post in your voice`,
-      status: `post queued as a draft. 0 sent.`,
-      check: `${tool} → draft queued · 0 sent`,
-      screen: `X draft queue · 1 post · 0 sent`,
-      detail: `${tool} draft queued. 0 sent.`,
-    };
-  }
-  if (/stripe|ramp/.test(t)) {
-    return {
-      doing: `reading charges and cash for the week`,
-      status: `money note drafted. Funds not moved.`,
-      check: `${tool} → week read`,
-      screen: `${tool} week read · charges · 0 moved`,
-      detail: `${tool} week read. Funds not moved.`,
-    };
-  }
-  if (/gmail/.test(t)) {
-    return {
-      doing: `reading the inbox and parking replies`,
-      status: `replies drafted. 0 sent.`,
-      check: `${tool} → drafts parked · 0 sent`,
-      screen: `Gmail drafts · parked · 0 sent`,
-      detail: `Gmail drafts parked. 0 sent.`,
-    };
-  }
-  if (/calendar/.test(t)) {
-    return {
-      doing: `listing the week and the next slot`,
-      status: `week list is in Calendar. Not a ship yet.`,
-      check: `${tool} → week list`,
-      screen: `Calendar week list · slots · 0 booked out`,
-      detail: `Calendar week list. Not a ship yet.`,
-    };
-  }
-  if (/notion/.test(t)) {
-    return {
-      doing: `writing the week list in Notion`,
-      status: `list is in Notion. Not a ship yet.`,
-      check: `${tool} → week list`,
-      screen: `Notion week list · parked · 0 published`,
-      detail: `Notion week list. Not a ship yet.`,
-    };
-  }
-  if (/firecrawl|exa/.test(t)) {
-    return {
-      doing: `reading the live site the way another bot would`,
-      status: `scan noted. Next fix is a draft.`,
-      check: `${tool} → scan done`,
-      screen: `${tool} scan · live pages · 0 changed`,
-      detail: `${tool} scan done. Next fix is a draft.`,
-    };
-  }
-  return {
-    doing: `reading ${tool} for this desk`,
-    status: `note parked. Human if it goes out.`,
-    check: `${tool} → read`,
-    screen: `${tool} · read · 0 sent`,
-    detail: `${tool} read. Human if it goes out.`,
-  };
-}
-
 export function generateConversation(team: Team): ConversationTurn[] {
   const bots = team.botRoster;
   const rng = new Rng(hash32(seedKey(team)));
@@ -313,7 +167,6 @@ export function generateConversation(team: Team): ConversationTurn[] {
   turns.push(speak(lead, `Pulled ${leadTool}. ${firstClause(lead.persona)}`));
 
   const aName = grokDisplayBotName(lead.name);
-  const bName = grokDisplayBotName(second.name);
   const aJob = firstClause(lead.persona);
   const bJob = firstClause(second.persona);
   turns.push({

@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import { resolveConnectors } from "@/lib/connectors";
 import { en } from "@/lib/messages/en";
 
@@ -21,12 +22,13 @@ export function ConnectorRow({
       {marks.map((mark) => (
         <li key={mark.slug || mark.name} className={`connector-item${labeled ? "" : " has-tooltip"}`}>
           {mark.src ? (
-            <img
+            <Image
               className="connector-mark"
               src={mark.src}
               alt=""
               width={size}
               height={size}
+              unoptimized
             />
           ) : (
             <span className="connector-fallback" aria-hidden>

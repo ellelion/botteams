@@ -78,8 +78,3 @@ export function accentTextFor(accent: string, theme: Theme): string {
 export function themeColorFor(theme: Theme): string {
   return PAGE[theme];
 }
-
-export function createThemeBootstrapScript(): string {
-  const palette = JSON.stringify([...ACCENT_PALETTE]);
-  return `(function(){var p=${palette},d="${DEFAULT_ACCENT}",t="${DEFAULT_THEME}",a=d;try{var st=localStorage.getItem("${THEME_STORAGE_KEY}");if(st==="light"||st==="dark")t=st;var sa=(localStorage.getItem("${ACCENT_STORAGE_KEY}")||"").toLowerCase();if(p.indexOf(sa)>=0)a=sa;else if(sa)localStorage.removeItem("${ACCENT_STORAGE_KEY}")}catch(e){}var page=t==="dark"?"#0a0a0a":"#ffffff",ink=t==="dark"?"#ffffff":"#0a0a0a";function rgb(h){return[1,3,5].map(function(i){return parseInt(h.slice(i,i+2),16)})}function lum(h){var c=rgb(h).map(function(v){v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)});return.2126*c[0]+.7152*c[1]+.0722*c[2]}function cr(x,y){var X=lum(x),Y=lum(y);return(Math.max(X,Y)+.05)/(Math.min(X,Y)+.05)}function mix(x,y,n){var X=rgb(x),Y=rgb(y);return"#"+X.map(function(v,i){return Math.round(v+(Y[i]-v)*n).toString(16).padStart(2,"0")}).join("")}var at=ink;for(var i=0;i<=20;i++){var q=mix(a,ink,i/20);if(cr(q,page)>=${ACCENT_TEXT_MIN_CONTRAST}){at=q;break}}var on=cr("#0a0a0a",a)>=4.5?"#0a0a0a":cr("#ffffff",a)>=4.5?"#ffffff":cr("#000000",a)>=cr("#ffffff",a)?"#000000":"#ffffff";var root=document.documentElement;root.dataset.theme=t;root.style.setProperty("--accent",a);root.style.setProperty("--accent-text",at);root.style.setProperty("--on-accent",on);var meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute("content",page)})();`;
-}

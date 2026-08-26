@@ -7,6 +7,8 @@ import { site } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+const MAX_CHECKOUT_BYTES = 16 * 1024;
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /*
  * Open a hosted Checkout session for one side rail slot.
@@ -68,6 +70,11 @@ async function readInterval(request: Request): Promise<{ interval: unknown; emai
 }
 
 export async function POST(request: Request) {
+  const declaredBytes = Number(request.headers.get("content-length") ?? "0");
+  if (Number.isFinite(declaredBytes) && declaredBytes > MAX_CHECKOUT_BYTES) {
+    return fail(request, "The request is too large.", 413);
+  }
+
   let parsed: { interval: unknown; email?: string };
   try {
     parsed = await readInterval(request);
@@ -95,7 +102,10 @@ export async function POST(request: Request) {
     return fail(request, "Checkout is not configured yet.", 503);
   }
 
-  const email = parsed.email && parsed.email.includes("@") ? parsed.email.trim() : undefined;
+  const candidateEmail = parsed.email?.trim();
+  const email = candidateEmail && candidateEmail.length <= 254 && EMAIL.test(candidateEmail)
+    ? candidateEmail
+    : undefined;
 
   try {
     /* Restricted live keys for this app can create Checkout Sessions but

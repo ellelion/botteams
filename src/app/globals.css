@@ -2219,6 +2219,36 @@ a.chip-unverified:focus-visible {
   outline-offset: -3px;
   color: var(--accent-text);
 }
+.index-actions {
+  grid-column: 2;
+  grid-row: 1 / span 8;
+  position: sticky;
+  top: calc(var(--masthead-h) + 72px);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  align-self: start;
+  margin-top: 1px;
+  padding-left: 16px;
+  background: var(--page);
+  box-shadow: -16px 0 16px var(--page);
+}
+.index-actions .row-arrow-link {
+  grid-column: auto;
+  grid-row: auto;
+  position: static;
+  top: auto;
+  margin: 0;
+  padding: 6px 8px;
+  background: transparent;
+  box-shadow: none;
+}
+.index-actions .idx-copy-prompt {
+  height: 34px;
+  padding-inline: 12px;
+}
 .chevron {
   display: inline-flex;
   align-items: center;
@@ -2260,6 +2290,18 @@ a.chip-unverified:focus-visible {
   .index-body { padding-left: 0; }
   .index-row { grid-template-columns: minmax(0, 1fr); }
   .index-head, .index-body { grid-column: 1; }
+  .index-actions {
+    grid-column: 1;
+    grid-row: auto;
+    position: static;
+    top: auto;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 6px;
+    padding: 8px 0 0;
+    background: transparent;
+    box-shadow: none;
+  }
   .row-arrow-link {
     grid-column: 1;
     grid-row: auto;
@@ -2273,6 +2315,10 @@ a.chip-unverified:focus-visible {
     box-shadow: none;
     background: transparent;
     padding: 8px 0 0;
+  }
+  .index-actions .row-arrow-link {
+    width: auto;
+    padding: 0;
   }
   .row-arrow-link .row-arrow-text {
     color: var(--accent-text);
@@ -2423,6 +2469,9 @@ a.chip-unverified:focus-visible {
   /* Keep "View team" under the sticky chrome while an expanded row
      is read, instead of sliding it under search + filters. */
   .row-arrow-link {
+    top: 320px;
+  }
+  .index-actions {
     top: 320px;
   }
 }
@@ -3371,18 +3420,10 @@ a.chip-unverified:focus-visible {
   border-radius: var(--r-card);
   background: var(--card);
   color: inherit;
-  transition: background var(--dur) var(--ease);
-}
-.idx-card:hover,
-.idx-card:focus-visible { background: var(--surface-elevated); }
-.idx-card:hover .idx-card-name,
-.idx-card:focus-visible .idx-card-name {
-  color: var(--accent-text);
 }
 /* Cards fill the column. home-split is overflow:clip at lg, and the
    column is overflow-y:auto, so a 3px outer ring on the right card
    lost all 5px of the focus mark. */
-.idx-card:focus-visible { outline: 2px solid var(--accent-text); outline-offset: -3px; }
 .idx-card-cat {
   display: inline-flex;
   align-items: center;
@@ -3398,6 +3439,8 @@ a.chip-unverified:focus-visible {
   text-transform: none;
 }
 .idx-card-name {
+  display: inline-flex;
+  align-self: flex-start;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 1rem;
   font-weight: 500;
@@ -3405,6 +3448,9 @@ a.chip-unverified:focus-visible {
   overflow-wrap: anywhere;
   transition: color var(--dur) var(--ease);
 }
+.idx-card-name:hover,
+.idx-card-name:focus-visible { color: var(--accent-text); }
+.idx-card-name:focus-visible { outline-offset: 3px; }
 .idx-card-chips {
   display: flex;
   flex-wrap: wrap;
@@ -3429,6 +3475,38 @@ a.chip-unverified:focus-visible {
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
+.idx-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 12px;
+  padding-top: 4px;
+}
+.theme-control.theme-control-label.idx-copy-prompt {
+  /* “Copied” is shorter than “Copy prompt”. Reserve the widest state so
+       the flex row cannot unwrap and resize the card after a click. */
+  min-width: 6.3rem;
+}
+.idx-card .idx-copy-prompt:active {
+  /* The card is a stable reading surface. Press feedback must not move
+     an action inside it. */
+  transform: none;
+}
+.idx-card-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: color var(--dur) var(--ease);
+}
+.idx-card-view:hover,
+.idx-card-view:focus-visible { color: var(--accent-text); }
 
 @media (max-width: 720px) {
   /* Category and count drop out before the connectors do: at this width

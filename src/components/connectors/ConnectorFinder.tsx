@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useLayoutEffect, useMemo, useOptimistic, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useOptimistic, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
@@ -197,7 +197,7 @@ export function ConnectorFinder({
   const [isPending, startFilter] = useTransition();
   const [resume, setResume] = useState<FinderFilters>(serverFilters);
 
-  function commit(next: ConnectorFinderQuery) {
+  const commit = useCallback((next: ConnectorFinderQuery) => {
     const normalized = next.q.trim()
       ? { q: next.q.trim(), category: null, builtin: false, all: false }
       : { ...next, q: "" };
@@ -207,7 +207,7 @@ export function ConnectorFinder({
       const qs = connectorQuerySearch(normalized);
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     });
-  }
+  }, [pathname, router, setFilters, startFilter]);
 
   const reset = () => {
     setQuery("");
@@ -216,12 +216,12 @@ export function ConnectorFinder({
     searchRef.current?.focus();
   };
 
-  const clearSearchOnly = (opts?: { blur?: boolean }) => {
+  const clearSearchOnly = useCallback((opts?: { blur?: boolean }) => {
     setQuery("");
     commit({ q: "", category: resume.category, builtin: resume.builtin, all: resume.all });
     if (opts?.blur) searchRef.current?.blur();
     else searchRef.current?.focus();
-  };
+  }, [commit, resume]);
 
   const canResume = Boolean(resume.category || resume.builtin || resume.all);
 
@@ -237,9 +237,7 @@ export function ConnectorFinder({
       });
     }, 250);
     return () => window.clearTimeout(handle);
-    // commit writes the URL; the listed fields are the debounce inputs.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, initial.q, category, builtInOnly, browseAll]);
+  }, [query, initial.q, category, builtInOnly, browseAll, commit]);
 
   /* Focus only when the URL already asked for a search, so a first visit
      keeps keyboard order at the skip link and the masthead. */
@@ -264,7 +262,7 @@ export function ConnectorFinder({
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [resume]);
+  }, [clearSearchOnly]);
 
   const q = norm(query);
 

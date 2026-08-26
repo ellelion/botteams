@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
+import { setBoundedCache } from "@/lib/bounded-cache";
 import { mapListing, SKILLSELION_LISTINGS, type SkillselionHit } from "@/lib/skillselion";
 
 export const dynamic = "force-dynamic";
 
 const CACHE_MS = 5 * 60_000;
 const MAX_IDS = 20;
+const MAX_ID_LENGTH = 96;
+const MAX_RAW_LENGTH = 2048;
+const MAX_CACHE_ENTRIES = 500;
+const LISTING_ID = /^[a-z0-9][a-z0-9-]*$/i;
 const cache = new Map<string, { at: number; hit: SkillselionHit | null }>();
 
 /* Fly listings want x-frontend-secret. skillselion.com/api/upstream is the
@@ -38,13 +43,20 @@ async function fetchOne(id: string, headers: HeadersInit): Promise<SkillselionHi
     (await pull(FALLBACK, id, { Accept: "application/json" }));
 
   const hit = body && !Array.isArray(body) && typeof body === "object" ? mapListing(body as never) : null;
-  cache.set(id, { at: Date.now(), hit });
+  setBoundedCache(cache, id, { at: Date.now(), hit }, MAX_CACHE_ENTRIES);
   return hit;
 }
 
 export async function GET(req: Request) {
   const raw = new URL(req.url).searchParams.get("ids")?.trim() ?? "";
-  const ids = [...new Set(raw.split(",").map((s) => s.trim()).filter(Boolean))].slice(0, MAX_IDS);
+  if (raw.length > MAX_RAW_LENGTH) {
+    return NextResponse.json({ error: "ids is too long" }, { status: 400 });
+  }
+  const requested = raw.split(",").map((value) => value.trim()).filter(Boolean);
+  if (requested.some((id) => id.length > MAX_ID_LENGTH || !LISTING_ID.test(id))) {
+    return NextResponse.json({ error: "ids contains an invalid listing id" }, { status: 400 });
+  }
+  const ids = [...new Set(requested)].slice(0, MAX_IDS);
   if (ids.length === 0) {
     return NextResponse.json({ skills: [] as SkillselionHit[] });
   }

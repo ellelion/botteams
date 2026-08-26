@@ -11,10 +11,14 @@ export function CopyInstallerButton({
   text,
   disabled = false,
   disabledReason,
+  label: idleLabel = en.team.copy,
+  className = "",
 }: {
   text: string;
   disabled?: boolean;
   disabledReason?: string;
+  label?: string;
+  className?: string;
 }) {
   const reasonId = useId();
   const { copied, failed, copyText, pulse } = useCopyFeedback();
@@ -45,13 +49,13 @@ export function CopyInstallerButton({
     ? (disabled ? en.customize.blocked : en.team.copyFail)
     : copied
       ? en.team.copied
-      : en.team.copy;
+      : idleLabel;
 
   return (
     <>
       <button
         type="button"
-        className={`theme-control theme-control-label${failed ? " is-copy-fail" : ""}${disabled ? " is-copy-blocked" : ""}`}
+        className={`theme-control theme-control-label${className ? ` ${className}` : ""}${failed ? " is-copy-fail" : ""}${disabled ? " is-copy-blocked" : ""}`}
         onClick={onCopy}
         aria-disabled={disabled || undefined}
         aria-describedby={disabled && disabledReason ? reasonId : undefined}

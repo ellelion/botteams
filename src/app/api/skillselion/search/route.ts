@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
+import { setBoundedCache } from "@/lib/bounded-cache";
 import { mapListing, SKILLSELION_LISTINGS, type SkillselionHit } from "@/lib/skillselion";
 
 export const dynamic = "force-dynamic";
 
 const CACHE_MS = 60_000;
+const MAX_CACHE_ENTRIES = 250;
+const MAX_QUERY_LENGTH = 120;
 const cache = new Map<string, { at: number; hits: SkillselionHit[] }>();
 
 /* Fly listings want x-frontend-secret. skillselion.com/api/upstream is the
@@ -37,6 +40,9 @@ export async function GET(req: Request) {
   if (q.length < 2) {
     return NextResponse.json({ skills: [] as SkillselionHit[] });
   }
+  if (q.length > MAX_QUERY_LENGTH) {
+    return NextResponse.json({ error: "q is too long" }, { status: 400 });
+  }
 
   const key = q.toLowerCase();
   const hit = cache.get(key);
@@ -63,6 +69,6 @@ export async function GET(req: Request) {
 
   const rows = Array.isArray(body) ? body : [];
   const skills = rows.map(mapListing).filter((row): row is SkillselionHit => row !== null);
-  cache.set(key, { at: Date.now(), hits: skills });
+  setBoundedCache(cache, key, { at: Date.now(), hits: skills }, MAX_CACHE_ENTRIES);
   return NextResponse.json({ skills }, { headers: { "Cache-Control": "public, max-age=60" } });
 }

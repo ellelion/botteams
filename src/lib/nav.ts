@@ -15,9 +15,6 @@ export type NavItem = {
 export const MAIN_NAV: NavItem[] = [
   { href: "/", label: en.nav.teams, id: "teams" },
   { href: "/?kind=bot", label: en.nav.bots, id: "bots" },
-  { href: "/connectors", label: en.nav.connectorsNav, id: "connectors" },
-  { href: "/grok-bot", label: en.nav.guide, short: en.nav.guideShort, id: "guide" },
-  { href: "/guides", label: en.nav.guides, id: "guides" },
   { href: "/docs", label: en.nav.docs, id: "docs" },
   { href: "/api", label: en.nav.api, id: "api" },
   { href: "/sponsor", label: en.nav.sponsor, id: "sponsor" },

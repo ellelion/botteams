@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { randomBytes } from "node:crypto";
+import { randomInt } from "node:crypto";
 import type { RailPlan } from "@/lib/rail";
 
 /*
@@ -47,8 +47,9 @@ export function railCheckoutReady(plans: readonly RailPlan[]): boolean {
  */
 export function railIntegrationIdentifier(): string {
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
-  const bytes = randomBytes(8);
   let suffix = "";
-  for (const byte of bytes) suffix += alphabet[byte % alphabet.length];
+  for (let index = 0; index < 8; index += 1) {
+    suffix += alphabet[randomInt(alphabet.length)];
+  }
   return `botteams_rail_${suffix}`;
 }

@@ -21,7 +21,7 @@ function Chip({
   return (
     <a
       className="spon-chip"
-      href={sponsorHref(slot, "rail")}
+      href={sponsorHref(slot, campaign)}
       target="_blank"
       rel={slot.owned ? "nofollow noopener noreferrer" : "noopener sponsored"}
       aria-label={`${name}. ${en.nav.opensNew}`}

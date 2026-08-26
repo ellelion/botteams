@@ -3,6 +3,7 @@
 import { grokDisplayBotName, grokMemberName, grokRecipeTitle } from "@/lib/grok-names";
 import { Children, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { createPortal } from "react-dom";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { CopyInstallerButton } from "@/components/CopyInstallerButton";
@@ -444,7 +445,7 @@ export function Customize({
                 <li key={connector} className="cz-conn">
                   <span className="cz-conn-name">
                     {mark.src ? (
-                      <img src={mark.src} alt="" width={16} height={16} className="connector-mark" />
+                      <Image src={mark.src} alt="" width={16} height={16} className="connector-mark" unoptimized />
                     ) : (
                       <span className="connector-fallback" aria-hidden>{mark.name.slice(0, 1)}</span>
                     )}

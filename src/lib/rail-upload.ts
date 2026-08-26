@@ -1,54 +1,61 @@
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { randomBytes } from "node:crypto";
-
-const ALLOWED: Record<string, string> = {
-  "image/png": "png",
-  "image/jpeg": "jpg",
-  "image/webp": "webp",
-  "image/svg+xml": "svg",
-};
+import { del, put } from "@vercel/blob";
 
 const MAX_BYTES = 400 * 1024;
 
-export type StoredMark = {
-  url: string;
-  mediaType: string;
+export type SupportedMark = {
   bytes: Uint8Array;
-  svgText?: string;
+  mediaType: "image/png" | "image/jpeg" | "image/webp";
+  extension: "png" | "jpg" | "webp";
 };
 
-export function markMediaType(file: File): string | null {
-  if (ALLOWED[file.type]) return file.type;
-  const name = file.name.toLowerCase();
-  if (name.endsWith(".png")) return "image/png";
-  if (name.endsWith(".jpg") || name.endsWith(".jpeg")) return "image/jpeg";
-  if (name.endsWith(".webp")) return "image/webp";
-  if (name.endsWith(".svg")) return "image/svg+xml";
+type MarkError = { error: "image_not_a_mark" | "missing_field" };
+
+function hasPrefix(bytes: Uint8Array, prefix: readonly number[]): boolean {
+  return prefix.every((value, index) => bytes[index] === value);
+}
+
+export function detectMarkType(bytes: Uint8Array): Pick<SupportedMark, "mediaType" | "extension"> | null {
+  if (bytes.length >= 8 && hasPrefix(bytes, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) {
+    return { mediaType: "image/png", extension: "png" };
+  }
+  if (bytes.length >= 3 && hasPrefix(bytes, [0xff, 0xd8, 0xff])) {
+    return { mediaType: "image/jpeg", extension: "jpg" };
+  }
+  if (
+    bytes.length >= 12 &&
+    hasPrefix(bytes, [0x52, 0x49, 0x46, 0x46]) &&
+    hasPrefix(bytes.slice(8), [0x57, 0x45, 0x42, 0x50])
+  ) {
+    return { mediaType: "image/webp", extension: "webp" };
+  }
   return null;
 }
 
-export async function storeRailMark(file: File, origin: string): Promise<StoredMark | { error: "image_not_a_mark" | "missing_field" }> {
+export async function validateRailMark(file: File): Promise<SupportedMark | MarkError> {
   if (file.size <= 0) return { error: "missing_field" };
   if (file.size > MAX_BYTES) return { error: "image_not_a_mark" };
-  const mediaType = markMediaType(file);
-  if (!mediaType) return { error: "image_not_a_mark" };
 
   const bytes = new Uint8Array(await file.arrayBuffer());
-  const ext = ALLOWED[mediaType];
+  const detected = detectMarkType(bytes);
+  if (!detected) return { error: "image_not_a_mark" };
+
+  // A declared type may be absent, but it may not contradict the bytes.
+  if (file.type && file.type !== detected.mediaType) return { error: "image_not_a_mark" };
+  return { bytes, ...detected };
+}
+
+export async function storeRailMark(mark: SupportedMark): Promise<string> {
   const id = randomBytes(12).toString("hex");
-  const filename = `${id}.${ext}`;
-  const dir = path.join(process.cwd(), "public", "uploads", "rail");
-  await mkdir(dir, { recursive: true });
-  await writeFile(path.join(dir, filename), bytes);
+  const blob = await put(`rail/${id}.${mark.extension}`, Buffer.from(mark.bytes), {
+    access: "public",
+    addRandomSuffix: false,
+    cacheControlMaxAge: 60 * 60 * 24 * 365,
+    contentType: mark.mediaType,
+  });
+  return blob.url;
+}
 
-  const svgText = mediaType === "image/svg+xml" ? new TextDecoder().decode(bytes) : undefined;
-  if (svgText && /<script/i.test(svgText)) return { error: "image_not_a_mark" };
-
-  return {
-    url: `${origin}/uploads/rail/${filename}`,
-    mediaType,
-    bytes,
-    svgText,
-  };
+export async function deleteRailMark(url: string): Promise<void> {
+  await del(url);
 }

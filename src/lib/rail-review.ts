@@ -123,6 +123,7 @@ export function normalizeReview(raw: { ok: boolean; reasons: RejectKey[] }): Rev
 
 export const TITLE_MAX = 28;
 export const LINE_MAX = 52;
+export const HREF_MAX = 2048;
 
 export type SetupFields = {
   title: string;
@@ -139,6 +140,7 @@ export function deterministicRejects(fields: SetupFields, hasImage: boolean): Re
   if (!title || !line || !href || !hasImage) reasons.push("missing_field");
   if (title.length > TITLE_MAX) reasons.push("title_too_long");
   if (line.length > LINE_MAX) reasons.push("line_too_long");
+  if (href.length > HREF_MAX) reasons.push("bad_url");
   const urlReason = urlReject(href);
   if (href && urlReason) reasons.push(urlReason);
   return unique(reasons);
@@ -156,6 +158,7 @@ export function normalizeHref(raw: string): string {
 }
 
 export function urlReject(raw: string): RejectKey | null {
+  if (raw.length > HREF_MAX) return "bad_url";
   let url: URL;
   try {
     url = new URL(normalizeHref(raw));
@@ -170,34 +173,9 @@ export function urlReject(raw: string): RejectKey | null {
   return null;
 }
 
-export async function publicUrlReject(href: string): Promise<RejectKey | null> {
-  const normalized = normalizeHref(href);
-  const basic = urlReject(normalized);
-  if (basic) return basic;
-  try {
-    const res = await fetch(normalized, {
-      method: "GET",
-      redirect: "follow",
-      signal: AbortSignal.timeout(8000),
-      headers: { "User-Agent": "GrokBotTeamsRailReview/1.0" },
-    });
-    if (res.status === 401 || res.status === 403 || res.status === 404) return "bad_url";
-    if (res.status >= 500) return "bad_url";
-    const finalHost = new URL(res.url).hostname.toLowerCase();
-    if (SHORTENERS.has(finalHost) || [...SHORTENERS].some((s) => finalHost.endsWith(`.${s}`))) {
-      return "bad_url";
-    }
-    return null;
-  } catch {
-    return "bad_url";
-  }
-}
-
 export type ReviewInput = SetupFields & {
-  markUrl: string;
-  markBytes?: Uint8Array;
-  markMediaType?: string;
-  svgText?: string;
+  markBytes: Uint8Array;
+  markMediaType: "image/png" | "image/jpeg" | "image/webp";
 };
 
 function buildPrompt(input: ReviewInput): string {
@@ -218,8 +196,7 @@ function buildPrompt(input: ReviewInput): string {
     `Title (${input.title.length} chars): ${input.title}`,
     `Line (${input.line.length} chars): ${input.line}`,
     `URL: ${input.href}`,
-    `Mark URL: ${input.markUrl}`,
-    input.svgText ? `SVG mark source:\n${input.svgText.slice(0, 4000)}` : "",
+    "Mark: attached image.",
   ]
     .filter(Boolean)
     .join("\n");
@@ -231,13 +208,7 @@ export async function reviewListing(input: ReviewInput): Promise<ReviewResult> {
     | { type: "image"; image: Uint8Array; mediaType: string }
   > = [{ type: "text", text: buildPrompt(input) }];
 
-  if (input.markBytes && input.markMediaType && input.markMediaType !== "image/svg+xml") {
-    content.push({
-      type: "image",
-      image: input.markBytes,
-      mediaType: input.markMediaType,
-    });
-  }
+  content.push({ type: "image", image: input.markBytes, mediaType: input.markMediaType });
 
   const { object } = await generateObject({
     model: RAIL_REVIEW_MODEL,

@@ -7,16 +7,16 @@ import type { Team } from "@/lib/teams";
 export const recipeOgSize = { width: 1200, height: 630 } as const;
 
 const palette = {
-  background: "#06110e",
-  surface: "#0b201a",
-  accent: "#7ce7d4",
-  accentSoft: "#bafff1",
-  ink: "#f6fffd",
+  background: "#000000",
+  surface: "#000000",
+  accent: "#ffffff",
+  accentSoft: "#ffffff",
+  ink: "#ffffff",
   paper: "#ffffff",
 } as const;
 
 export function recipeOgImage(recipe: Team, assetOrigin: string): ImageResponse {
-  const kind = recipe.kind === "bot" ? "BOT" : "BOT TEAM";
+  const kind = recipe.kind === "bot" ? "GROK BOT" : "GROK BOT TEAM";
   const details = recipe.kind === "bot"
     ? `${recipe.connectors.length} connector${recipe.connectors.length === 1 ? "" : "s"}`
     : `${recipe.bots} bots · ${recipe.rooms.length} group chat${recipe.rooms.length === 1 ? "" : "s"}`;
@@ -34,7 +34,7 @@ export function recipeOgImage(recipe: Team, assetOrigin: string): ImageResponse 
           justifyContent: "space-between",
           padding: "64px 72px",
           color: palette.ink,
-          background: `linear-gradient(145deg, ${palette.background} 0%, #09251e 100%)`,
+          background: palette.background,
           overflow: "hidden",
         }}
       >

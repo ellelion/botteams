@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useMemo, useOptimistic, useRef, useState, useSyncExternalStore, useTransition, type ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { ConnectorRow } from "@/components/ConnectorRow";
 import { SectionIcon } from "@/components/icons/LineIcons";
@@ -88,7 +89,7 @@ function AllIcon() {
 function ConnectorGlyph({ name }: { name: string }) {
   const mark = resolveConnector(name);
   if (!mark.src) return <span className="connector-fallback" aria-hidden>{mark.name.slice(0, 1)}</span>;
-  return <img src={mark.src} alt="" width={16} height={16} className="connector-mark" />;
+  return <Image src={mark.src} alt="" width={16} height={16} className="connector-mark" unoptimized />;
 }
 
 /* The affordance that says "there is a page behind this row". In columns
@@ -162,8 +163,7 @@ function ListingAd({ slot, as }: { slot: SponsorSlot; as: "row" | "card" }) {
       <span className="idx-ad-body">
         <span className="idx-ad-name">
           {slot.mark ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img className="spon-chip-mark" src={slot.mark} alt="" width={16} height={16} />
+            <Image className="spon-chip-mark" src={slot.mark} alt="" width={16} height={16} unoptimized />
           ) : null}
           {slot.name ?? "Sponsor"}
         </span>
@@ -448,24 +448,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
         ) : row.kind === "slot" ? (
           <ListingSlot key={row.key} as="card" />
         ) : (
-          <Link key={row.team.slug} href={hrefFor(row.team)} className="idx-card">
-            <span className="idx-card-cat">
-              {kindParam === "all" ? `${row.team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
-              {row.team.section}
-            </span>
-            <span className="idx-card-name">{grokRecipeTitle(row.team.kind, row.team.name)}</span>
-            {row.team.featured || row.team.fromXai ? (
-              <span className="idx-card-chips">
-                {row.team.featured ? <FeaturedChip /> : null}
-                {row.team.fromXai ? <FromXaiChip as="span" /> : null}
-              </span>
-            ) : null}
-            <span className="idx-card-tag">{row.team.tagline}</span>
-            <span className="idx-card-foot">
-              <ConnectorRow names={row.team.connectors} size={15} />
-              <span className="idx-card-bots"><RosterShape bots={row.team.bots} rooms={row.team.rooms.length} routines={row.team.routines} allowTip={false} /></span>
-            </span>
-          </Link>
+          <TeamCatalogCard key={row.team.slug} team={row.team} showKind={kindParam === "all"} />
         ),
       )}
     </div>
@@ -731,6 +714,44 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
   );
 }
 
+function TeamCatalogCard({ team, showKind }: { team: Team; showKind: boolean }) {
+  const title = grokRecipeTitle(team.kind, team.name);
+
+  return (
+    <article className="idx-card">
+      <span className="idx-card-cat">
+        {showKind ? `${team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
+        {team.section}
+      </span>
+      <Link href={hrefFor(team)} className="idx-card-name">
+        {title}
+      </Link>
+      {team.featured || team.fromXai ? (
+        <span className="idx-card-chips">
+          {team.featured ? <FeaturedChip /> : null}
+          {team.fromXai ? <FromXaiChip as="span" /> : null}
+        </span>
+      ) : null}
+      <p className="idx-card-tag">{team.tagline}</p>
+      <div className="idx-card-foot">
+        <ConnectorRow names={team.connectors} size={15} />
+        <span className="idx-card-bots"><RosterShape bots={team.bots} rooms={team.rooms.length} routines={team.routines} allowTip={false} /></span>
+      </div>
+      <div className="idx-card-actions">
+        <CopyInstallerButton text={installerPrompt(team)} label={en.home.copyPrompt} className="idx-copy-prompt" />
+        <Link
+          href={hrefFor(team)}
+          className="idx-card-view"
+          aria-label={`${en.home.viewFull(team.kind)}: ${title}`}
+        >
+          <span>{en.home.viewFull(team.kind)}</span>
+          <TeamArrow />
+        </Link>
+      </div>
+    </article>
+  );
+}
+
 function TeamExpandable({
   team,
   variant,
@@ -779,14 +800,17 @@ function TeamExpandable({
           </div>
         </div>
       </div>
-      <Link
-        href={hrefFor(team)}
-        className="row-arrow row-arrow-link"
-        aria-label={`${en.home.viewFull(team.kind)}: ${title}`}
-      >
-        <span className="row-arrow-text">{en.home.viewFull(team.kind)}</span>
-        <TeamArrow />
-      </Link>
+      <div className="index-actions">
+        <CopyInstallerButton text={prompt} label={en.home.copyPrompt} className="idx-copy-prompt" />
+        <Link
+          href={hrefFor(team)}
+          className="row-arrow row-arrow-link"
+          aria-label={`${en.home.viewFull(team.kind)}: ${title}`}
+        >
+          <span className="row-arrow-text">{en.home.viewFull(team.kind)}</span>
+          <TeamArrow />
+        </Link>
+      </div>
       {open ? (
         <div className="index-body" id={bodyId}>
           <ul>
@@ -810,9 +834,6 @@ function TeamExpandable({
               </li>
             ))}
           </ul>
-          <div className="index-copy">
-            <CopyInstallerButton text={prompt} />
-          </div>
         </div>
       ) : null}
     </article>

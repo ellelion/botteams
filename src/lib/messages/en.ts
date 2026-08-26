@@ -108,6 +108,7 @@ export const en = {
     botCount: (n: number) => (n === 1 ? "1 Bot" : `${n} Bots`),
     colConnectors: "Connectors",
     openTeam: "Open team",
+    copyPrompt: "Copy prompt",
     viewFull: (kind: "team" | "bot") => kind === "bot" ? "View the full Bot" : "View the full team",
     expand: (title: string) => `Expand ${title}`,
     collapse: (title: string) => `Collapse ${title}`,

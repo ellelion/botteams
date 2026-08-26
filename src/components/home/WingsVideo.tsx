@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 /* A touch above natural speed: the wings beat livelier without reading
    as sped-up footage. Tune here; both theme clips follow. */
@@ -51,21 +52,23 @@ export function WingsVideo({ variant = "" }: { variant?: string }) {
       {/* fetchpriority high: this poster IS the page's LCP element, and
           both imgs download regardless (display:none does not stop <img>
           fetches), so prioritising costs no extra bytes. */}
-      <img
+      <Image
         className="wings-on-dark wings-poster"
         src="/brand/wings-white.webp"
         alt=""
         width={640}
         height={640}
         fetchPriority="high"
+        unoptimized
       />
-      <img
+      <Image
         className="wings-on-light wings-poster"
         src="/brand/wings-black.webp"
         alt=""
         width={640}
         height={640}
         fetchPriority="high"
+        unoptimized
       />
       {ready ? (
         <>
