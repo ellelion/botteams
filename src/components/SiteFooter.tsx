@@ -109,6 +109,21 @@ export function SiteFooter() {
                 loading="lazy"
               />
             </a>
+            {/* NewTool verifies this listing-specific backlink for its free plan. */}
+            <a
+              href="https://newtool.site/item/botteamsai"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Featured on NewTool.site. ${en.nav.opensNew}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
+              <img
+                src="https://newtool.site/badges/newtool-light.svg"
+                alt="Featured on NewTool.site"
+                height="54"
+                loading="lazy"
+              />
+            </a>
           </div>
           {/* Credit at the bottom of the footer, well clear of the mark. */}
           <a
