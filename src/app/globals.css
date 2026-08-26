@@ -4719,6 +4719,22 @@ html[data-theme="light"] .cz-check input:checked {
   font-size: 0.76rem;
   line-height: 1.5;
 }
+.foot-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.foot-badges a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 54px;
+}
+.foot-badges img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
 .foot-id {
   display: inline-flex;
   align-items: center;

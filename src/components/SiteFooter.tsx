@@ -26,7 +26,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="site-foot" aria-label={en.footer.aria}>
+    <footer id="site-footer" className="site-foot" aria-label={en.footer.aria}>
       <div className="foot-inner">
         <div className="foot-panes">
           <div className="foot-identity">
@@ -45,21 +45,39 @@ export function SiteFooter() {
         </div>
         <div className="foot-meta">
           <p className="foot-meta-note">{en.footer.notAffiliated}</p>
-          {/* Findly verifies this listing-specific embed in the public footer. */}
-          <a
-            href="https://findly.tools/botteams-ai?utm_source=botteams-ai"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Featured on Findly.tools. ${en.nav.opensNew}`}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
-            <img
-              src="https://findly.tools/badges/findly-tools-badge-light.svg"
-              alt="Featured on Findly.tools"
-              width="175"
-              height="55"
-            />
-          </a>
+          <div className="foot-badges" aria-label="Directory listings">
+            {/* Findly verifies this listing-specific embed in the public footer. */}
+            <a
+              href="https://findly.tools/botteams-ai?utm_source=botteams-ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Featured on Findly.tools. ${en.nav.opensNew}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
+              <img
+                src="https://findly.tools/badges/findly-tools-badge-light.svg"
+                alt="Featured on Findly.tools"
+                width="175"
+                height="55"
+              />
+            </a>
+            {/* Acid Tools verifies this exact listing link and remote badge image. */}
+            <a
+              href="https://acidtools.com/ai/botteams"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Listed on Acid Tools. ${en.nav.opensNew}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
+              <img
+                src="https://acidtools.com/assets/images/badge.png"
+                alt="Acid Tools"
+                width="175"
+                height="54"
+                loading="lazy"
+              />
+            </a>
+          </div>
           {/* Credit at the bottom of the footer, well clear of the mark. */}
           <a
             className="foot-grok"
