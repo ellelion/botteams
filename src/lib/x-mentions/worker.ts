@@ -29,7 +29,8 @@ import {
   mentionHandle,
   xReadConfig,
 } from "@/lib/x-mentions/config";
-import { recipePath, recipeUrl, serializeRecipe } from "@/lib/x-mentions/markdown";
+import { recipeOgUrl, recipePath, recipeUrl, serializeRecipe } from "@/lib/x-mentions/markdown";
+import { fallbackReplyText, replyText } from "@/lib/x-mentions/reply";
 import { fetchMentions, fetchReplyChain, replyOnX, resolveBotUserId } from "@/lib/x-mentions/x-client";
 import { listAll } from "@/lib/teams";
 import type { MentionRow, ScoutedRecipe, StoredRecipe } from "@/lib/x-mentions/types";
@@ -48,26 +49,6 @@ type WorkerSummary = {
   suppressedReplies: number;
   errors: number;
 };
-
-function replyText(recipes: StoredRecipe[]): string {
-  const lines = recipes.map((recipe) =>
-    `${recipe.outcome === "added" ? "Added" : "Already listed"} ${recipe.name}: ${recipe.url}`,
-  );
-  const full = lines.join("\n");
-  if (full.length <= 270) return full;
-  const added = recipes.filter((recipe) => recipe.outcome === "added").length;
-  return `${added > 0 ? `Added ${added}` : "Found"} ${recipes.length === 1 ? "recipe" : `${recipes.length} recipes`}: ${recipes.map((recipe) => recipe.url).join(" ")}`;
-}
-
-function fallbackReplyText(recipes: StoredRecipe[]): string {
-  const lines = recipes.map((recipe) =>
-    `${recipe.outcome === "added" ? "Added" : "Already listed"} ${recipe.name}. Open the directory from our profile and search: ${recipe.slug}.`,
-  );
-  const full = lines.join("\n");
-  if (full.length <= 270) return full;
-  const added = recipes.filter((recipe) => recipe.outcome === "added").length;
-  return `${added > 0 ? `Added ${added}` : "Found"} ${recipes.length === 1 ? "recipe" : `${recipes.length} recipes`}. Open the directory from our profile and search for the reviewed names.`;
-}
 
 async function sendBudgetedReply(
   recipes: StoredRecipe[],
@@ -100,17 +81,30 @@ async function sendBudgetedReply(
   return replyPostId;
 }
 
-async function pagesAreLive(recipes: StoredRecipe[]): Promise<boolean> {
+async function pagesAndCardsAreLive(recipes: StoredRecipe[]): Promise<boolean> {
   const results = await Promise.all(
     recipes.map(async (recipe) => {
       try {
-        const response = await fetch(recipe.url, {
-          method: "HEAD",
+        const page = await fetch(recipe.url, {
+          method: "GET",
           redirect: "follow",
           cache: "no-store",
           signal: AbortSignal.timeout(8000),
         });
-        return response.ok;
+        if (!page.ok) return false;
+        const html = await page.text();
+        const imageUrl = recipeOgUrl(recipe);
+        if (!html.includes(imageUrl)) return false;
+        const image = await fetch(imageUrl, {
+          method: "GET",
+          redirect: "follow",
+          cache: "force-cache",
+          signal: AbortSignal.timeout(15_000),
+        });
+        const contentType = image.headers.get("content-type") || "";
+        if (!image.ok || !contentType.startsWith("image/")) return false;
+        await image.arrayBuffer();
+        return true;
       } catch {
         return false;
       }
@@ -130,7 +124,7 @@ async function syncMergedSubmissions(summary: WorkerSummary): Promise<void> {
         continue;
       }
       let publishedRecipes = mention.recipes;
-      if (!(await pagesAreLive(publishedRecipes))) {
+      if (!(await pagesAndCardsAreLive(publishedRecipes))) {
         const presence = await Promise.all(
           publishedRecipes.map((recipe) => githubFileExists(recipePath(recipe))),
         );
@@ -144,7 +138,7 @@ async function syncMergedSubmissions(summary: WorkerSummary): Promise<void> {
           await replaceMentionRecipes(mention.mentionId, publishedRecipes);
         }
       }
-      if (!(await pagesAreLive(publishedRecipes))) {
+      if (!(await pagesAndCardsAreLive(publishedRecipes))) {
         await markMentionWaitingForDeploy(mention.mentionId);
         continue;
       }
@@ -159,11 +153,12 @@ async function syncMergedSubmissions(summary: WorkerSummary): Promise<void> {
   }
 }
 
-function stored(recipe: Pick<ScoutedRecipe, "slug" | "name" | "kind">, outcome: StoredRecipe["outcome"]): StoredRecipe {
+function stored(recipe: Pick<ScoutedRecipe, "slug" | "name" | "kind" | "tagline">, outcome: StoredRecipe["outcome"]): StoredRecipe {
   return {
     slug: recipe.slug,
     name: recipe.name,
     kind: recipe.kind,
+    tagline: recipe.tagline,
     url: recipeUrl(recipe),
     outcome,
   };
@@ -174,6 +169,7 @@ function existingStored(existing: ReturnType<typeof listAll>[number]): StoredRec
     slug: existing.slug,
     name: existing.name,
     kind: existing.kind,
+    tagline: existing.tagline,
     url: `https://botteams.ai/${existing.kind === "bot" ? "bots" : "teams"}/${existing.slug}`,
     outcome: "existing",
   };

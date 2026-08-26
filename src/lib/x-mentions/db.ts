@@ -22,6 +22,7 @@ function storedRecipes(value: unknown): StoredRecipe[] {
       typeof row.slug === "string" &&
       typeof row.name === "string" &&
       (row.kind === "bot" || row.kind === "team") &&
+      (row.tagline === undefined || typeof row.tagline === "string") &&
       typeof row.url === "string" &&
       (row.outcome === "added" || row.outcome === "existing")
     );
