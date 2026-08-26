@@ -12,11 +12,14 @@ not publish directly to `main`.
 3. The worker reads the reply chain, extracts up to three clear setups, checks
    for duplicates, and opens one pull request.
 4. A maintainer reviews the pull request against `CONTRIBUTING.md`.
-5. After merge and deployment, the worker replies under the tag. The first 20
-   replies each UTC day include the live page. Later replies tell the scout to
-   open the directory from the profile and search for the recipe slug. The Bot
-   sends at most 100 total replies per UTC day; later completed submissions get
-   no automated X reply. Existing recipes use the same daily budgets.
+5. After merge and deployment, the worker fetches the live page and its
+   listing-specific Open Graph image. Only after both succeed does it reply
+   under the tag with the recipe name, a short description, and the live page.
+   The first 20 replies each UTC day include the URL. Later replies include the
+   same description and tell the scout to open the directory from the profile
+   and search for the recipe slug. The Bot sends at most 100 total replies per
+   UTC day; later completed submissions get no automated X reply. Existing
+   recipes use the same daily budgets.
 
 The source author receives contributor credit. When someone else tags the post,
 that person receives `scouted_by` credit.
@@ -50,7 +53,8 @@ that person receives `scouted_by` credit.
 Each run:
 
 1. Checks open mention pull requests. A merged pull request is replied to only
-   after every page returns a successful response.
+   after every page returns a successful response, declares its own Open Graph
+   card, and the image has been generated and fetched successfully.
 2. Reads new mentions from X with `since_id`.
 3. Stores mentions and the cursor in the existing Ellelion Neon database.
 4. Claims at most five mentions with a database lock so overlapping runs do not

@@ -21,6 +21,7 @@ import { getBot, listBots } from "@/lib/teams";
 import { resolveConnector } from "@/lib/connectors";
 import { botJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
+import { recipeOgUrl } from "@/lib/x-mentions/markdown";
 
 export function generateStaticParams() {
   return listBots().map((bot) => ({ slug: bot.slug }));
@@ -32,11 +33,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!team) return {};
   const title = team.name;
   const description = team.tagline;
+  const image = recipeOgUrl(team);
   return {
     title,
     description,
     alternates: { canonical: `${site.url}/bots/${team.slug}` },
-    openGraph: { title: `${title} · ${site.name}`, description, url: `${site.url}/bots/${team.slug}`, type: "website" },
+    openGraph: {
+      title: `${title} · ${site.name}`,
+      description,
+      url: `${site.url}/bots/${team.slug}`,
+      type: "website",
+      images: [{ url: image, width: 1200, height: 630, alt: `${team.name}: ${team.tagline}` }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} · ${site.name}`,
+      description,
+      images: [image],
+    },
   };
 }
 

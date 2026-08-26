@@ -96,6 +96,7 @@ export type StoredRecipe = {
   slug: string;
   name: string;
   kind: ScoutedKind;
+  tagline?: string;
   url: string;
   outcome: "added" | "existing";
 };
