@@ -6,6 +6,8 @@ import type { Team } from "@/lib/teams";
 
 export const recipeOgSize = { width: 1200, height: 630 } as const;
 
+const rawConnectorAssetBase = "https://raw.githubusercontent.com/ellelion/botteams/main/public/";
+
 const palette = {
   background: "#000000",
   surface: "#000000",
@@ -15,13 +17,41 @@ const palette = {
   paper: "#ffffff",
 } as const;
 
-export function recipeOgImage(recipe: Team, assetOrigin: string): ImageResponse {
+async function connectorDataUri(src: string, assetOrigin: string): Promise<string | null> {
+  const relativeSrc = src.replace(/^\/+/, "");
+  const candidates = [
+    new URL(relativeSrc, `${assetOrigin.replace(/\/+$/, "")}/`),
+    new URL(relativeSrc, rawConnectorAssetBase),
+  ];
+
+  for (const url of candidates) {
+    try {
+      const response = await fetch(url, {
+        next: { revalidate: 86_400 },
+        signal: AbortSignal.timeout(4_000),
+      });
+      if (!response.ok) continue;
+      const mediaType = response.headers.get("content-type")?.split(";", 1)[0] || "application/octet-stream";
+      const bytes = Buffer.from(await response.arrayBuffer());
+      return `data:${mediaType};base64,${bytes.toString("base64")}`;
+    } catch {
+      /* Try the repository asset when the production origin cannot be fetched. */
+    }
+  }
+
+  return null;
+}
+
+export async function recipeOgImage(recipe: Team, assetOrigin: string): Promise<ImageResponse> {
   const kind = recipe.kind === "bot" ? "GROK BOT" : "GROK BOT TEAM";
   const details = recipe.kind === "bot"
     ? `${recipe.connectors.length} connector${recipe.connectors.length === 1 ? "" : "s"}`
     : `${recipe.bots} bots · ${recipe.rooms.length} group chat${recipe.rooms.length === 1 ? "" : "s"}`;
   const titleSize = recipe.name.length > 38 ? 54 : 66;
   const connectors = resolveConnectors(recipe.connectors);
+  const connectorImages = await Promise.all(
+    connectors.map((connector) => connector.src ? connectorDataUri(connector.src, assetOrigin) : null),
+  );
 
   return new ImageResponse(
     (
@@ -106,7 +136,7 @@ export function recipeOgImage(recipe: Team, assetOrigin: string): ImageResponse 
                 CONNECTORS
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                {connectors.map((connector) => (
+                {connectors.map((connector, index) => (
                   <div
                     key={connector.slug || connector.name}
                     style={{
@@ -116,16 +146,16 @@ export function recipeOgImage(recipe: Team, assetOrigin: string): ImageResponse 
                       alignItems: "center",
                       justifyContent: "center",
                       borderRadius: 12,
-                      background: connector.src ? palette.paper : palette.surface,
-                      border: connector.src ? "none" : `1px solid ${palette.accent}`,
+                      background: connectorImages[index] ? palette.paper : palette.surface,
+                      border: connectorImages[index] ? "none" : `1px solid ${palette.accent}`,
                       color: palette.accent,
                       fontSize: 20,
                       fontWeight: 700,
                     }}
                   >
-                    {connector.src ? (
+                    {connectorImages[index] ? (
                       <img
-                        src={new URL(connector.src, assetOrigin).toString()}
+                        src={connectorImages[index]}
                         alt=""
                         width={28}
                         height={28}
