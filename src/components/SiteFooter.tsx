@@ -93,6 +93,22 @@ export function SiteFooter() {
                 loading="lazy"
               />
             </a>
+            {/* AIBestTop verifies this exact homepage backlink for its free listing. */}
+            <a
+              href="https://aibesttop.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Listed on AIBestTop. ${en.nav.opensNew}`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
+              <img
+                src="https://aibesttop.com/badges/light.svg"
+                alt="Listed on AIBestTop"
+                width="120"
+                height="40"
+                loading="lazy"
+              />
+            </a>
           </div>
           {/* Credit at the bottom of the footer, well clear of the mark. */}
           <a
