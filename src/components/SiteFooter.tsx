@@ -193,6 +193,20 @@ export function SiteFooter() {
                 loading="lazy"
               />
             </a>
+            {/* MarketingDB requires this exact static linked badge for its free listing. */}
+            <a
+              href="https://marketingdb.live"
+              target="_blank"
+              rel="noopener noreferrer nofollow sponsored"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
+              <img
+                src="https://marketingdb.live/badge.svg"
+                alt="Listed on MarketingDB"
+                width="190"
+                height="44"
+              />
+            </a>
           </div>
           {/* Credit at the bottom of the footer, well clear of the mark. */}
           <a
