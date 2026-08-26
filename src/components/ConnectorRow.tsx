@@ -19,7 +19,7 @@ export function ConnectorRow({
   return (
     <ul className="connector-row" style={style} aria-label={en.team.connectors}>
       {marks.map((mark) => (
-        <li key={mark.slug || mark.name} className="connector-item">
+        <li key={mark.slug || mark.name} className={`connector-item${labeled ? "" : " has-tooltip"}`}>
           {mark.src ? (
             <img
               className="connector-mark"
@@ -34,7 +34,12 @@ export function ConnectorRow({
             </span>
           )}
           {labeled ? <span className="connector-name">{mark.name}</span> : null}
-          {!labeled ? <span className="sr-only">{mark.name}</span> : null}
+          {!labeled ? (
+            <>
+              <span className="sr-only">{mark.name}</span>
+              <span className="connector-tooltip" aria-hidden="true">{mark.name}</span>
+            </>
+          ) : null}
         </li>
       ))}
     </ul>
