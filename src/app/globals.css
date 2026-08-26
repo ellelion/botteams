@@ -3488,11 +3488,6 @@ a.chip-unverified:focus-visible {
        the flex row cannot unwrap and resize the card after a click. */
   min-width: 6.3rem;
 }
-.idx-card .idx-copy-prompt:active {
-  /* The card is a stable reading surface. Press feedback must not move
-     an action inside it. */
-  transform: none;
-}
 .idx-card-view {
   display: inline-flex;
   align-items: center;
@@ -3503,10 +3498,11 @@ a.chip-unverified:focus-visible {
   font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;
-  transition: color var(--dur) var(--ease);
+  transition: color var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 .idx-card-view:hover,
 .idx-card-view:focus-visible { color: var(--accent-text); }
+.idx-card-view:active { transform: scale(0.96); }
 
 @media (max-width: 720px) {
   /* Category and count drop out before the connectors do: at this width
@@ -8120,7 +8116,6 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
   .doc-toc-sum:active,
   .roster-shape-routines-sum:active,
   .index-name:active,
-  .idx-card:active,
   .index-ad:active,
   .hero-stat:active,
   .foot-link:active,
@@ -8137,6 +8132,7 @@ html:not([data-theme="dark"]) .talk-overlay-canvas .talk-stage {
 @media (prefers-reduced-motion: reduce) {
   .theme-control-label:active,
   .rp-secondary:active,
+  .idx-card-view:active,
   .theme-accent-swatch:active {
     transform: none;
   }

@@ -3,6 +3,7 @@ import { databaseUrl } from "@/lib/db";
 import { getRailInventory } from "@/lib/rail-inventory";
 import { RAIL_BRAND, RAIL_PLACEMENT, RAIL_PLANS, isRailInterval, railPlan } from "@/lib/rail";
 import { railIntegrationIdentifier, railPriceId, stripe } from "@/lib/stripe";
+import { RequestTooLargeError, requestWithLimitedBody } from "@/lib/request-limits";
 import { site } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -70,15 +71,11 @@ async function readInterval(request: Request): Promise<{ interval: unknown; emai
 }
 
 export async function POST(request: Request) {
-  const declaredBytes = Number(request.headers.get("content-length") ?? "0");
-  if (Number.isFinite(declaredBytes) && declaredBytes > MAX_CHECKOUT_BYTES) {
-    return fail(request, "The request is too large.", 413);
-  }
-
   let parsed: { interval: unknown; email?: string };
   try {
-    parsed = await readInterval(request);
-  } catch {
+    parsed = await readInterval(await requestWithLimitedBody(request, MAX_CHECKOUT_BYTES));
+  } catch (error) {
+    if (error instanceof RequestTooLargeError) return fail(request, "The request is too large.", 413);
     return fail(request, "Send JSON.", 400);
   }
 

@@ -1,7 +1,10 @@
 import { randomBytes } from "node:crypto";
 import { del, put } from "@vercel/blob";
+import sharp from "sharp";
 
 const MAX_BYTES = 400 * 1024;
+const MAX_DIMENSION = 2048;
+const MAX_PIXELS = MAX_DIMENSION * MAX_DIMENSION;
 
 export type SupportedMark = {
   bytes: Uint8Array;
@@ -42,6 +45,31 @@ export async function validateRailMark(file: File): Promise<SupportedMark | Mark
 
   // A declared type may be absent, but it may not contradict the bytes.
   if (file.type && file.type !== detected.mediaType) return { error: "image_not_a_mark" };
+
+  try {
+    const image = sharp(Buffer.from(bytes), {
+      failOn: "warning",
+      limitInputPixels: MAX_PIXELS,
+    });
+    const metadata = await image.metadata();
+    const expectedFormat = detected.extension === "jpg" ? "jpeg" : detected.extension;
+    if (
+      metadata.format !== expectedFormat ||
+      !metadata.width ||
+      !metadata.height ||
+      metadata.width > MAX_DIMENSION ||
+      metadata.height > MAX_DIMENSION ||
+      metadata.width * metadata.height > MAX_PIXELS ||
+      (metadata.pages ?? 1) !== 1
+    ) {
+      return { error: "image_not_a_mark" };
+    }
+    // Metadata alone can accept a truncated file. Decode every pixel before
+    // the image is sent to review or persisted.
+    await image.clone().raw().toBuffer();
+  } catch {
+    return { error: "image_not_a_mark" };
+  }
   return { bytes, ...detected };
 }
 

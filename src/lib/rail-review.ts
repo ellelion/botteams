@@ -140,7 +140,6 @@ export function deterministicRejects(fields: SetupFields, hasImage: boolean): Re
   if (!title || !line || !href || !hasImage) reasons.push("missing_field");
   if (title.length > TITLE_MAX) reasons.push("title_too_long");
   if (line.length > LINE_MAX) reasons.push("line_too_long");
-  if (href.length > HREF_MAX) reasons.push("bad_url");
   const urlReason = urlReject(href);
   if (href && urlReason) reasons.push(urlReason);
   return unique(reasons);

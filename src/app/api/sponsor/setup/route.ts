@@ -14,6 +14,7 @@ import { getRailInventory } from "@/lib/rail-inventory";
 import { buyerReasons, deterministicRejects, normalizeHref, reviewListing } from "@/lib/rail-review";
 import { deleteRailMark, storeRailMark, validateRailMark } from "@/lib/rail-upload";
 import { isRailSessionMeta } from "@/lib/rail";
+import { RequestTooLargeError, requestWithLimitedBody } from "@/lib/request-limits";
 import { site } from "@/lib/site";
 import { stripe } from "@/lib/stripe";
 
@@ -74,15 +75,13 @@ export async function POST(request: Request) {
     return Response.json({ error: "Setup is not configured yet." }, { status: 503 });
   }
 
-  const declaredBytes = Number(request.headers.get("content-length") ?? "0");
-  if (Number.isFinite(declaredBytes) && declaredBytes > MAX_FORM_BYTES) {
-    return Response.json({ error: "The submitted form is too large." }, { status: 413 });
-  }
-
   let form: FormData;
   try {
-    form = await request.formData();
-  } catch {
+    form = await (await requestWithLimitedBody(request, MAX_FORM_BYTES)).formData();
+  } catch (error) {
+    if (error instanceof RequestTooLargeError) {
+      return Response.json({ error: "The submitted form is too large." }, { status: 413 });
+    }
     return Response.json({ error: "Send the form as multipart." }, { status: 400 });
   }
 
@@ -181,26 +180,44 @@ export async function POST(request: Request) {
     }
   }
 
-  const after = await incrementReviewAttempt(payment.id);
+  const cleanupMark = async () => {
+    if (!markUrl) return;
+    await deleteRailMark(markUrl).catch((error) => console.error("[rail-setup] orphan mark cleanup failed", error));
+  };
+
+  let after: Awaited<ReturnType<typeof incrementReviewAttempt>>;
+  try {
+    after = await incrementReviewAttempt(payment.id);
+  } catch (error) {
+    await cleanupMark();
+    console.error("[rail-setup] attempt update failed", error);
+    return Response.json({ error: "The review result could not be saved. Try again." }, { status: 502 });
+  }
   const remaining = Math.max(0, MAX_REVIEWS - after.attempts);
 
   if (review.ok) {
     if (!markUrl) {
       return Response.json({ error: "The mark could not be stored. Try again." }, { status: 502 });
     }
-    const published = await publishLiveSlot({
-      paymentId: payment.id,
-      name: title.trim(),
-      line: line.trim(),
-      href: href.trim(),
-      markUrl,
-    });
-    if (!published.ok) {
-      await deleteRailMark(markUrl).catch((error) => console.error("[rail-setup] orphan mark cleanup failed", error));
-      return Response.json(
-        { error: published.reason === "full" ? "Every paying slot is taken." : "This payment cannot be used." },
-        { status: published.reason === "full" ? 409 : 403 },
-      );
+    try {
+      const published = await publishLiveSlot({
+        paymentId: payment.id,
+        name: title.trim(),
+        line: line.trim(),
+        href: href.trim(),
+        markUrl,
+      });
+      if (!published.ok) {
+        await cleanupMark();
+        return Response.json(
+          { error: published.reason === "full" ? "Every paying slot is taken." : "This payment cannot be used." },
+          { status: published.reason === "full" ? 409 : 403 },
+        );
+      }
+    } catch (error) {
+      await cleanupMark();
+      console.error("[rail-setup] publish failed", error);
+      return Response.json({ error: "The listing could not be published. Try again." }, { status: 502 });
     }
     return Response.json({ ok: true, live: true, remaining });
   }

@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import { describe, it } from "node:test";
 import { setBoundedCache } from "../src/lib/bounded-cache";
 import { deterministicRejects, HREF_MAX, urlReject } from "../src/lib/rail-review";
-import { detectMarkType } from "../src/lib/rail-upload";
+import { detectMarkType, validateRailMark } from "../src/lib/rail-upload";
+import { RequestTooLargeError, requestWithLimitedBody } from "../src/lib/request-limits";
 
 describe("sponsor input security", () => {
   it("detects allowed image formats from bytes", () => {
@@ -22,6 +24,16 @@ describe("sponsor input security", () => {
 
   it("rejects SVG and executable-looking input regardless of filename", () => {
     assert.equal(detectMarkType(new TextEncoder().encode("<svg><script>alert(1)</script></svg>")), null);
+  });
+
+  it("fully decodes an image instead of trusting a short signature", async () => {
+    const fakeJpeg = new File([new Uint8Array([0xff, 0xd8, 0xff])], "mark.jpg", { type: "image/jpeg" });
+    assert.deepEqual(await validateRailMark(fakeJpeg), { error: "image_not_a_mark" });
+
+    const pixel = await readFile("public/connectors/port.png");
+    const validPng = new File([pixel], "mark.png", { type: "image/png" });
+    const result = await validateRailMark(validPng);
+    assert.equal("error" in result, false);
   });
 
   it("rejects non-web and oversized destination URLs", () => {
@@ -44,5 +56,15 @@ describe("bounded proxy cache", () => {
     setBoundedCache(cache, "two", 2, 2);
     setBoundedCache(cache, "three", 3, 2);
     assert.deepEqual([...cache.entries()], [["two", 2], ["three", 3]]);
+  });
+});
+
+describe("request body limits", () => {
+  it("rejects a body even when Content-Length is absent", async () => {
+    const request = new Request("https://botteams.ai/api/checkout", {
+      method: "POST",
+      body: "a".repeat(32),
+    });
+    await assert.rejects(() => requestWithLimitedBody(request, 16), RequestTooLargeError);
   });
 });
