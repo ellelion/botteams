@@ -156,6 +156,27 @@ export function SiteFooter() {
                 loading="lazy"
               />
             </a>
+            {/* DevTool.io verifies this exact static linked badge for free listings. */}
+            <a
+              href="https://devtool.io"
+              target="_blank"
+              rel="noopener"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "6px 12px",
+                background: "#10b981",
+                color: "#fff",
+                borderRadius: "6px",
+                textDecoration: "none",
+                fontFamily: "sans-serif",
+                fontSize: "14px",
+                fontWeight: 600,
+              }}
+            >
+              Listed on DevTool.io
+            </a>
           </div>
           {/* Credit at the bottom of the footer, well clear of the mark. */}
           <a
