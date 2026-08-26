@@ -79,7 +79,10 @@ The names and comments live in `.env.example`:
 - X read credentials: `X_API_BEARER_TOKEN`, `X_USER_ID`
 - X OAuth 1.0a reply credentials: `X_API_KEY`, `X_API_KEY_SECRET`,
   `X_ACCESS_TOKEN`, `X_ACCESS_TOKEN_SECRET`
-- GitHub brand token: `BOTTEAMS_GITHUB_TOKEN`
+- GitHub App: `BOTTEAMS_GITHUB_APP_ID`, `BOTTEAMS_GITHUB_INSTALLATION_ID`,
+  and `BOTTEAMS_GITHUB_PRIVATE_KEY_BASE64`. Install it only on
+  `ellelion/botteams` with Contents, Pull requests, and Issues write access.
+  `BOTTEAMS_GITHUB_TOKEN` remains a local-development fallback.
 - Scheduler protection: `CRON_SECRET`
 - Daily URL budget: `X_DAILY_URL_REPLY_CAP` (optional; defaults to `20`)
 - Daily total reply budget: `X_DAILY_REPLY_CAP` (optional; defaults to `100`)
@@ -87,8 +90,8 @@ The names and comments live in `.env.example`:
   `AI_GATEWAY_API_KEY`
 
 Create the X App and access tokens under the `@Botteams_ai` brand account. The
-GitHub token must also be brand-owned and restricted to `ellelion/botteams`; it
-needs Contents, Pull requests, and Issues write access.
+production GitHub App must be installed only on `ellelion/botteams`; it needs
+Contents, Pull requests, and Issues write access.
 
 ## Cost and hosting
 

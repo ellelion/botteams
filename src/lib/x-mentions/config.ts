@@ -7,6 +7,10 @@ function required(name: string): string {
   return value;
 }
 
+function optional(name: string): string | undefined {
+  return process.env[name]?.trim() || undefined;
+}
+
 function handle(): string {
   return (process.env.X_HANDLE?.trim() || DEFAULT_HANDLE).replace(/^@/, "");
 }
@@ -34,8 +38,25 @@ export function githubConfig() {
   if (!owner || !repo || rest.length > 0) {
     throw new Error("BOTTEAMS_GITHUB_REPOSITORY must be owner/repository");
   }
+  const token = optional("BOTTEAMS_GITHUB_TOKEN");
+  const appId = optional("BOTTEAMS_GITHUB_APP_ID");
+  const installationId = optional("BOTTEAMS_GITHUB_INSTALLATION_ID");
+  const privateKeyBase64 = optional("BOTTEAMS_GITHUB_PRIVATE_KEY_BASE64");
+  const appValues = [appId, installationId, privateKeyBase64];
+  const configuredAppValues = appValues.filter(Boolean).length;
+  if (!token && configuredAppValues !== appValues.length) {
+    const message = configuredAppValues === 0
+      ? "BOTTEAMS_GITHUB_TOKEN or GitHub App credentials are not set"
+      : "BOTTEAMS_GITHUB_APP_ID, BOTTEAMS_GITHUB_INSTALLATION_ID, and BOTTEAMS_GITHUB_PRIVATE_KEY_BASE64 must be set together";
+    throw new Error(message);
+  }
   return {
-    token: required("BOTTEAMS_GITHUB_TOKEN"),
+    token,
+    app: token ? undefined : {
+      appId: appId!,
+      installationId: installationId!,
+      privateKey: Buffer.from(privateKeyBase64!, "base64").toString("utf8"),
+    },
     owner,
     repo,
     baseBranch: process.env.BOTTEAMS_GITHUB_BASE_BRANCH?.trim() || "main",
