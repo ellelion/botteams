@@ -11,6 +11,11 @@ applies semantic checks that JSON Schema cannot express, such as matching the
 filename to `slug` and checking that room members and routine owners name Bots
 in the same recipe.
 
+Prefer not to use GitHub? Reply under a public X post that describes a Bot or
+team setup and tag [@Botteams_ai](https://x.com/Botteams_ai). The mention worker
+reads that reply chain and opens a pull request. The person who tagged the post
+gets scout credit when they are not the source author.
+
 ## How pull requests work
 
 1. Fork the repository and create a branch from `main`.
@@ -18,6 +23,15 @@ in the same recipe.
 3. Run `npm ci` and `npm test` with the Node version in `.nvmrc`.
 4. Open a pull request and complete the checklist.
 5. Resolve review comments and keep the branch up to date with `main`.
+
+The X mention worker follows the same review path. It can only add new Markdown
+files under `bots/` or `teams/`, and every automated file starts as
+`status: example`. The `via-x` workflow rejects edits, deletions, non-recipe
+files, missing X attribution, and stronger status claims. The worker replies on
+X only after a maintainer merges the pull request and the live page is ready.
+The first 20 replies each UTC day include the direct link. Later replies use a
+profile-search fallback without a URL, up to 100 total replies per day. Further
+completed submissions receive no automated X reply.
 
 GitHub blocks contributors from changing `main` directly. The schema, lint,
 build, dependency, and security checks must pass, and code owner `@icidab`

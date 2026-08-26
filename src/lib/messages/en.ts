@@ -91,6 +91,8 @@ export const en = {
     contributeTitle: "How do I add a team?",
     contributeBody:
       "Every team here is one file. Front matter names the Bots, the group chat, the routines, and the connectors the account needs first. The installer prompt is generated from it, so the file is the product.",
+    contributeX:
+      "No GitHub needed: reply under a public X post that describes a Bot setup and tag @Botteams_ai. The worker drafts an example pull request, and a maintainer reviews it before it appears here.",
     contributePr: "Open a pull request",
     contributeSpec: "Read the spec",
     contributeGuide: "Contribution guide",
@@ -152,6 +154,18 @@ export const en = {
     limitsChecked: "Limits checked",
     statsAria: (teams: number, bots: number, day: string) =>
       `${teams} teams, ${bots} Bots, limits checked ${day}`,
+  },
+  xTag: {
+    trigger: (handle: string) => `Tag ${handle} on X`,
+    title: "Add a Bot by tagging us",
+    close: "Close tagging instructions",
+    stepOne: "Find a public X post that describes a Bot or team setup. It can be yours or someone else's.",
+    stepTwo: (handle: string) => `Reply under that post and tag ${handle}.`,
+    stepThree: "The Bot reads the reply chain and opens an example pull request. After a maintainer merges it, it replies up to 100 times a day: the first 20 include live links, then it uses profile-search fallbacks.",
+    review: "Tagged posts are suggestions, not permission to publish. Every draft stays an Example until someone runs it end to end.",
+    copy: (handle: string) => `Copy ${handle}`,
+    copied: "Copied. Now tag the post.",
+    copyFailed: "Could not copy. Select the handle above.",
   },
   customize: {
     open: "Customize",

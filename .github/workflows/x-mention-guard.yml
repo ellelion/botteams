@@ -1,0 +1,44 @@
+name: X mention guard
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restrict automated X submissions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          case ",$LABELS," in
+            *,via-x,*) ;;
+            *) echo "No via-x label. Guard does not apply."; exit 0 ;;
+          esac
+
+          gh api "repos/$REPO/pulls/$PR/files" --paginate \
+            --jq '.[] | [.status, .filename, .raw_url] | @tsv' > files.tsv
+          test -s files.tsv || { echo "::error::Empty via-x diff."; exit 1; }
+
+          bad=0
+          while IFS=$'\t' read -r status file raw_url; do
+            if [ "$status" != "added" ] || ! printf '%s' "$file" | grep -Eq '^(bots|teams)/[a-z0-9][a-z0-9-]*\.md$'; then
+              echo "::error::forbidden change: $status $file"
+              bad=1
+              continue
+            fi
+            body=$(curl --fail --silent --show-error "$raw_url") || { bad=1; continue; }
+            printf '%s\n' "$body" | grep -Eq '^status: ("example"|example)$' || {
+              echo "::error::$file must use status: example"
+              bad=1
+            }
+            printf '%s\n' "$body" | grep -Eq '^added_via: "https://x\.com/.+/status/[0-9]+"$' || {
+              echo "::error::$file must cite one X source post"
+              bad=1
+            }
+          done < files.tsv
+          exit "$bad"

@@ -23,6 +23,12 @@ A team is one markdown file in [`teams/`](./teams). Front matter names the Bots,
 the group chat, the routines, and the connectors. The installer prompt is
 generated from it, so the file is the product and GitHub is the CMS.
 
+To suggest a public setup without using GitHub, reply under its X post and tag
+[@Botteams_ai](https://x.com/Botteams_ai). The mention worker drafts an Example
+pull request for maintainer review and replies after merge. A daily link budget
+controls whether that reply contains the live URL or a profile-search fallback,
+and a total response budget caps automated X replies.
+
 Every team and bot must pass the public
 [JSON Schema](https://botteams.ai/schema/team.schema.json) plus the repository's
 semantic checks. `kind: team` or `kind: bot` defines the shape.

@@ -5370,6 +5370,26 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 .home-contribute-links a {
   font-size: 0.88rem;
 }
+.home-contribute-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  min-width: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent-text);
+  font: inherit;
+  font-size: 0.88rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.home-contribute-action:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
 /* Endpoint and download actions sat in 0.8rem parents (12.8px).
    Sponsor / empty recoveries already use 0.88rem for the same job. */
 .api-link {
@@ -5393,6 +5413,180 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   flex-direction: column;
   align-items: flex-start;
   gap: 0;
+}
+
+/* X contribution flow. The dialog inherits the ledger planes and uses
+   one floating shadow because it genuinely sits above the page. */
+.x-tag-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 420;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+.x-tag-scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: color-mix(in oklab, var(--page) 55%, rgba(0, 0, 0, 0.72));
+  cursor: pointer;
+}
+.x-tag-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 31rem);
+  max-height: min(42rem, calc(100dvh - 32px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 24px;
+  border-radius: var(--r-inner);
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow-float);
+  text-align: left;
+}
+.x-tag-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.x-tag-head h2 {
+  margin: 0;
+  font: 500 1.22rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.025em;
+}
+.x-tag-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  padding: 0;
+  border: 1px solid var(--pill-line);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.x-tag-close:hover,
+.x-tag-close:focus-visible {
+  color: var(--ink);
+  border-color: var(--ink);
+  background: var(--surface-elevated);
+}
+.x-tag-close:focus-visible,
+.x-tag-copy:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+.x-tag-steps {
+  display: grid;
+  gap: 9px;
+  margin: 22px 0 0;
+  padding-left: 1.3rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+.x-tag-steps li::marker {
+  color: var(--accent-text);
+  font-variant-numeric: tabular-nums;
+}
+.x-tag-thread {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-inner);
+  background: var(--surface);
+}
+.x-tag-post {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+.x-tag-post strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.x-tag-post p {
+  margin-top: 3px;
+}
+.x-tag-post p span { color: var(--accent-text); }
+.x-tag-reply {
+  position: relative;
+  margin: 14px 0 0 38px;
+}
+.x-tag-reply::before {
+  content: "";
+  position: absolute;
+  left: -23px;
+  top: -16px;
+  width: 1px;
+  height: 25px;
+  background: var(--line-strong);
+}
+.x-tag-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--surface-elevated);
+  color: var(--ink-soft);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.x-tag-avatar-you {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.x-tag-review {
+  margin-top: 16px;
+  color: var(--muted-strong);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+.x-tag-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 18px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--pill-fill);
+  color: var(--pill-fill-ink);
+  font: 600 0.84rem/1.2 var(--font-geist-sans), system-ui, sans-serif;
+  cursor: pointer;
+  transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.x-tag-copy:hover { transform: translateY(-1px); }
+.x-tag-copy.is-copy-fail {
+  background: transparent;
+  color: var(--beta);
+  box-shadow: inset 0 0 0 1px var(--beta);
+}
+@media (max-width: 640px) {
+  .home-contribute-action { min-height: 44px; }
+  .x-tag-wrap {
+    align-items: end;
+    padding: 0;
+  }
+  .x-tag-dialog {
+    width: 100%;
+    max-height: calc(100dvh - max(12px, env(safe-area-inset-top)));
+    padding: 20px max(18px, env(safe-area-inset-right)) calc(22px + env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+    border-radius: var(--r-inner) var(--r-inner) 0 0;
+  }
+  .x-tag-copy { width: 100%; }
 }
 
 
