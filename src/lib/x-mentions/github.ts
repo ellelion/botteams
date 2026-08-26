@@ -1,3 +1,4 @@
+import { createSign } from "node:crypto";
 import { githubConfig } from "@/lib/x-mentions/config";
 
 const GITHUB_API = "https://api.github.com";
@@ -11,13 +12,68 @@ type GitHubPull = {
 
 type GitHubRef = { object: { sha: string } };
 type GitHubCommit = { tree: { sha: string } };
+type GitHubInstallationToken = { token: string; expires_at: string };
+
+let installationTokenCache: { token: string; expiresAt: number } | null = null;
+
+function base64UrlJson(value: object): string {
+  return Buffer.from(JSON.stringify(value)).toString("base64url");
+}
+
+function githubAppJwt(appId: string, privateKey: string): string {
+  const now = Math.floor(Date.now() / 1000);
+  const unsigned = [
+    base64UrlJson({ alg: "RS256", typ: "JWT" }),
+    base64UrlJson({ iat: now - 60, exp: now + 9 * 60, iss: appId }),
+  ].join(".");
+  const signature = createSign("RSA-SHA256")
+    .update(unsigned)
+    .end()
+    .sign(privateKey)
+    .toString("base64url");
+  return `${unsigned}.${signature}`;
+}
+
+async function githubToken(): Promise<string> {
+  const { token, app } = githubConfig();
+  if (token) return token;
+  if (!app) throw new Error("GitHub authentication is not configured");
+  if (installationTokenCache && installationTokenCache.expiresAt > Date.now() + 60_000) {
+    return installationTokenCache.token;
+  }
+  const response = await fetch(
+    `${GITHUB_API}/app/installations/${encodeURIComponent(app.installationId)}/access_tokens`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${githubAppJwt(app.appId, app.privateKey)}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+      cache: "no-store",
+      signal: AbortSignal.timeout(15_000),
+    },
+  );
+  const payload = await response.json().catch(() => null) as GitHubInstallationToken | { message?: string } | null;
+  if (!response.ok || !payload || !("token" in payload)) {
+    const message = payload && "message" in payload && payload.message
+      ? payload.message
+      : `GitHub App token request failed with ${response.status}`;
+    throw new Error(message);
+  }
+  installationTokenCache = {
+    token: payload.token,
+    expiresAt: Date.parse(payload.expires_at),
+  };
+  return payload.token;
+}
 
 async function githubRequest<T>(
   path: string,
   init?: RequestInit,
   allow404 = false,
 ): Promise<T | null> {
-  const { token } = githubConfig();
+  const token = await githubToken();
   const response = await fetch(`${GITHUB_API}${path}`, {
     ...init,
     headers: {
