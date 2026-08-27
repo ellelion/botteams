@@ -371,7 +371,9 @@ function humanSteps(team: Team, state: CustomState): string[] {
     "- Set each Bot avatar (Bot actions → Edit Profile). Attach an image if you want a custom one.",
   ];
   if (!isSolo(team)) {
-    lines.push(`- Create a sidebar section named exactly: ${team.section}. Move the group chat and Bots into it.`);
+    /* Sidebar section is the team create name. team.section is the website
+       catalog bucket only (e.g. Founder OS) and must never be used here. */
+    lines.push(`- Create a sidebar section named exactly: ${grokTeamName(team.name)}. Move the group chat and Bots into it.`);
   }
   if (restricted.length > 0) {
     lines.push(
@@ -528,7 +530,7 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     "",
     solo ? "- The named Bot exists" : "- Named Bots exist",
     ...(solo ? [] : [`- Named group chat exists ("${r.roomName}", two to six Bots)`]),
-    ...(solo ? [] : [`- I have created section "${team.section}"`]),
+    ...(solo ? [] : [`- I have created section "${grokTeamName(team.name)}"`]),
     "- Each routine has a confirmed save (or I declined)",
     "- Connectors listed above are already connected",
     "",
