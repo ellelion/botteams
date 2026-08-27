@@ -1,6 +1,6 @@
 "use client";
 
-import { grokDisplayBotName, grokMemberName, grokRecipeTitle } from "@/lib/grok-names";
+import { createBotName, grokDisplayBotName, grokRecipeTitle } from "@/lib/grok-names";
 import { Children, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -509,7 +509,7 @@ export function Customize({
                       <input
                         type="text"
                         className="cz-input"
-                        value={state.names[bot.name] ?? grokMemberName(team.name, bot.name)}
+                        value={state.names[bot.name] ?? createBotName(team.kind, team.name, bot.name)}
                         disabled={!on}
                         onChange={(e) => patch({ names: { ...state.names, [bot.name]: e.target.value } })}
                         aria-invalid={blankName || clashName || undefined}

@@ -49,7 +49,7 @@ class Rng {
 }
 
 function roleOf(name: string): string {
-  return name.replace(/^.*?·\s*/, "").replace(/\s+Grok Bot$/i, "").replace(/\s+Bot$/i, "").trim() || name.trim();
+  return name.replace(/^.*?·\s*/, "").replace(/^.*?\s+Team\s+-\s+/i, "").replace(/\s+Grok Bot$/i, "").replace(/\s+Bot$/i, "").trim() || name.trim();
 }
 
 function clip(s: string, n: number): string {
