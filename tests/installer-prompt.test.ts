@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { CONNECTOR_CATALOG } from "../src/lib/connectors";
 import { catalogFamilyCoverage, connectorFamily } from "../src/lib/connector-families";
-import { createBotName, grokBotName, grokDisplayBotName, grokMemberName, grokRoomName } from "../src/lib/grok-names";
+import { createBotName, grokBotName, grokDisplayBotName, grokMemberName, grokRoomName, grokTeamName } from "../src/lib/grok-names";
 import { buildPrompt, defaultState, modeRule } from "../src/lib/customize";
 import { installerPrompt } from "../src/lib/installer";
 import { site } from "../src/lib/site";
@@ -120,10 +120,14 @@ describe("installer prompt", () => {
     assert.doesNotMatch(prompt, /Enable the ones listed here for the named Bots/);
 
     const afterHuman = prompt.slice(humanHeading);
+    const sidebarSection = grokTeamName(team.name);
+    assert.equal(sidebarSection, "Company Team");
     assert.match(afterHuman, /Set each Bot avatar/);
-    assert.match(afterHuman, /Create a sidebar section named exactly: Founder OS/);
+    assert.match(afterHuman, new RegExp(`Create a sidebar section named exactly: ${sidebarSection}`));
+    assert.match(afterHuman, new RegExp(`I have created section "${sidebarSection}"`));
     assert.match(afterHuman, /Settings → Plugins, disable the write tools/);
     assert.match(afterHuman, /Leave notifications on/);
+    assert.doesNotMatch(prompt, /Founder OS/);
     assert.doesNotMatch(roster, /set the avatar/i);
     assert.ok(humanHeading > prompt.indexOf("## 5. Skills"));
   });
