@@ -1,7 +1,8 @@
 import type { ConnectorMode, Team, TeamBot, TeamRoutine } from "@/lib/types";
 import { resolveConnector } from "@/lib/connectors";
+import { connectorFamily, type ConnectorFamily } from "@/lib/connector-families";
 import { seedSkillPicks } from "@/lib/skill-defaults";
-import { grokBotName, grokMemberName, grokRoomName, grokTeamName } from "@/lib/grok-names";
+import { createBotName, grokBotName, grokRoomName, grokTeamName } from "@/lib/grok-names";
 import { normalizeSkillPick, type SkillPick } from "@/lib/skillselion";
 
 /*
@@ -35,39 +36,59 @@ export const MODE_HINT: Record<ConnectorMode, string> = {
   ask: "Say what it will do, wait for a yes.",
 };
 
+const FAMILY_MODE: Record<ConnectorFamily, Record<ConnectorMode, (name: string) => string>> = {
+  mail: {
+    read: (n) => `Use ${n} read-only. Read and summarise mail. Do not draft, send, or delete anything in ${n}.`,
+    draft: (n) => `Use ${n} for drafts only. Draft the message, do not send.`,
+    ask: (n) => `Use ${n} only after a human says yes in the chat. State the mail you are about to send, wait for the reply, then act.`,
+  },
+  git: {
+    read: (n) => `Use ${n} read-only. Read and summarise it. Do not open a PR, create a branch, or merge.`,
+    draft: (n) => `Use ${n} for drafts only. Draft the PR or branch, never merge.`,
+    ask: (n) => `Use ${n} only after a human says yes in the chat. State the PR or branch, wait for the reply, then act. Never merge.`,
+  },
+  docs: {
+    read: (n) => `Use ${n} read-only. Read and summarise it. Do not create, edit, or publish anything in ${n}.`,
+    draft: (n) => `Use ${n} for drafts only. Write the page, never publish.`,
+    ask: (n) => `Use ${n} only after a human says yes in the chat. State the page you will write, wait for the reply, then act. Never publish.`,
+  },
+  calendar: {
+    read: (n) => `Use ${n} read-only. Read and summarise events. Do not create events or send invites.`,
+    draft: (n) => `Use ${n} for drafts only. Draft the event, do not send invites.`,
+    ask: (n) => `Use ${n} only after a human says yes in the chat. State the event, wait for the reply, then act. Do not send invites until then.`,
+  },
+  chat: {
+    read: (n) => `Use ${n} read-only. Read and summarise it. Do not post, send, or reply in ${n}.`,
+    draft: (n) => `Use ${n} for drafts only. Write the post, do not publish it.`,
+    ask: (n) => `Use ${n} only after a human says yes in the chat. Say the post, wait for a yes.`,
+  },
+  money: {
+    read: (n) => `Use ${n} read-only. Never move funds.`,
+    draft: (n) => `Use ${n} for drafts only. Never move funds.`,
+    ask: (n) => `Use ${n} only after a human says yes in the chat. Never move funds.`,
+  },
+  search: {
+    read: (n) => `Use ${n} read-only.`,
+    draft: (n) => `Use ${n} read-only.`,
+    ask: (n) => `Use ${n} read-only.`,
+  },
+  hosting: {
+    read: (n) => `Use ${n} read-only. Do not deploy to production.`,
+    draft: (n) => `Use ${n} for drafts only. Do not deploy to production.`,
+    ask: (n) => `Use ${n} only after a human says yes in the chat. Do not deploy to production.`,
+  },
+};
+
 export function modeRule(connector: string, mode: ConnectorMode): string {
-  if (mode === "read") {
-    return `Use ${connector} read-only. Read and summarise it. Do not create, edit, send, move, or delete anything in ${connector}.`;
-  }
-  if (mode === "draft") {
-    return `Use ${connector} for drafts only. Leave every draft unsent and every change unsaved so a human can review it.`;
-  }
-  return `Use ${connector} only after a human says yes in the chat. State exactly what you are about to do, wait for the reply, then act.`;
+  const mark = resolveConnector(connector);
+  const family = connectorFamily(mark.slug);
+  return FAMILY_MODE[family][mode](mark.name);
 }
 
-/* Connectors whose write side moves money or is otherwise not undoable.
-   These start on Read. Matched on the resolved connector slug so an alias
-   ("QuickBooks Online") lands on the same default as the canonical name. */
-const MONEY = new Set([
-  "stripe", "ramp", "brex", "mercury", "xero", "quickbooks", "bill-com", "plaid",
-  "chargebee", "paddle", "recurly", "netsuite", "gusto", "rippling", "deel",
-  "carta", "expensify", "navan", "tipalti", "wise", "payoneer", "square", "paypal",
-  "modern-treasury", "coinbase", "adyen",
-]);
-
-/* Connectors that put words in front of other people the moment they write.
-   These start on Ask before send. */
-const BROADCAST = new Set([
-  "slack", "discord", "x", "x-ads", "microsoft-teams", "telegram", "whatsapp",
-  "twilio", "intercom", "zendesk", "front", "hubspot", "salesforce", "mailchimp",
-  "customer-io", "klaviyo", "sendgrid", "linkedin", "reddit", "instagram",
-  "facebook", "youtube", "tiktok", "buffer", "hootsuite",
-]);
-
 export function defaultMode(connector: string): ConnectorMode {
-  const slug = resolveConnector(connector).slug;
-  if (MONEY.has(slug)) return "read";
-  if (BROADCAST.has(slug)) return "ask";
+  const family = connectorFamily(connector);
+  if (family === "money" || family === "search") return "read";
+  if (family === "chat") return "ask";
   return "draft";
 }
 
@@ -151,7 +172,7 @@ export type Resolved = {
 export function resolve(team: Team, state: CustomState): Resolved {
   const botRoster = activeBots(team, state).map((source) => ({
     source,
-    name: grokMemberName(team.name, finalName(state, source.name)),
+    name: createBotName(team.kind, team.name, finalName(state, source.name)),
     note: (state.notes[source.name] ?? "").trim(),
   }));
   const live = new Set(botRoster.map((bot) => bot.source.name));
@@ -160,11 +181,11 @@ export function resolve(team: Team, state: CustomState): Resolved {
     roomName: grokRoomName(state.roomName),
     /* A Bot that is off cannot sit in the room, so membership is filtered
        here rather than trusted from state. */
-    members: state.members.filter((m) => live.has(m)).map((m) => grokMemberName(team.name, finalName(state, m))),
+    members: state.members.filter((m) => live.has(m)).map((m) => createBotName(team.kind, team.name, finalName(state, m))),
     /* Same for a routine: its owner Bot has to exist to own it. */
     routines: team.routines
       .filter((r) => live.has(r.owner))
-      .map((r) => ({ source: r, owner: grokMemberName(team.name, finalName(state, r.owner)) })),
+      .map((r) => ({ source: r, owner: createBotName(team.kind, team.name, finalName(state, r.owner)) })),
     connectors: team.connectors,
   };
 }
@@ -254,19 +275,20 @@ export function check(team: Team, state: CustomState): Check {
 
 /* ── The prompt ─────────────────────────────────────────────────────── */
 
+function writeConnectors(team: Team, state: CustomState): string[] {
+  const restricted: string[] = [];
+  for (const connector of team.connectors) {
+    const mode = state.modes[connector] ?? teamMode(team, connector);
+    if (mode !== "ask") restricted.push(connector);
+  }
+  return restricted;
+}
+
 function connectorSection(team: Team, state: CustomState): string[] {
   const lines: string[] = [];
-  const needsPlugins: string[] = [];
   for (const connector of team.connectors) {
     const mode = state.modes[connector] ?? teamMode(team, connector);
     lines.push(`- ${connector}: ${MODE_LABEL[mode]}. ${modeRule(connector, mode)}`);
-    if (mode !== "ask") needsPlugins.push(connector);
-  }
-  if (needsPlugins.length > 0) {
-    lines.push("");
-    lines.push(
-      `Human: the lines above are instructions, not permissions. In Grok Bot open Settings, then Plugins, and disable the write tools for ${needsPlugins.join(", ")}. That switch is account-wide and it is the only one that actually stops a write.`,
-    );
   }
   return lines;
 }
@@ -298,19 +320,17 @@ function profileLines(name: string, persona: string): string[] {
     `- Name: exactly ${name}`,
     `- Title: ${botTitle(persona)}`,
     `- Description: ${botDescription(persona)}`,
-    "Then tell me to open Edit Profile and set the avatar. You cannot stamp a custom image yourself unless I attach one.",
-    "If you create this Bot from an existing Bot, ask the new Bot to set those profile fields after create.",
   ];
 }
 
-function skillsSection(team: Team, state: CustomState, botNames: string[]): string[] {
+function skillsSection(team: Team, state: CustomState): string[] {
   const picks = state.skillPicks;
-  const who = botNames.length === 1 ? botNames[0] : "each Bot named above";
   const lines: string[] = [
-    "Skills live under Settings → Plugins → Yours, and they are per Bot. Enable the ones listed here for the named Bots. Reference a skill with /.",
-    "You cannot flip the human Notifications toggle. Tell me to leave Settings → “Get notified when this Bot finishes or needs input” on.",
+    "Skills live under Settings → Plugins → Yours, and they are per Bot. Reference a skill with /.",
+    "If a skill is already installed on the account (Settings → Plugins → Yours), use it. Enable it for this Bot if / does not show it.",
+    "If it is not installed, fetch or load it through the Skillselion connector using the skill id. Do not install a second copy.",
+    "Connect the Skillselion connector only when a fetch is needed. Do not start OAuth from this prompt.",
     "Do not pin or hide a Bot unless I say so. Hide does not pause routines.",
-    "Sidebar sections are human-only: tell me to Move to → New section. A group chat holds two to six Bots. An account holds 50 Bots and group chats combined. One Bot can own 50 routines. Confirm cards stay on me.",
   ];
   if (team.routines.length > 0 || picks.length > 0) {
     lines.push("If a workflow should be demonstrated later, mention Teach a task after the first success (browser workflows).");
@@ -321,50 +341,64 @@ function skillsSection(team: Team, state: CustomState, botNames: string[]): stri
       lines.push("(none picked. Look skills up on Skillselion if I name one later.)");
       return lines;
     }
-    lines.push("Recipe skill names (look each one up on Skillselion, then enable it under Plugins → Yours):");
+    lines.push("Recipe skill names (look each one up on Skillselion, then enable it under Settings → Plugins → Yours):");
     for (const name of team.skills) lines.push(`- ${name}`);
     return lines;
   }
-  lines.push("Connect the Skillselion connector first if any skill below is Fetch at run (Settings → Plugins). Do not start OAuth from this prompt.");
-  lines.push("");
   for (const pick of picks) {
     const scoped =
       pick.scope === "team"
         ? "every Bot on this team (team scope)"
-        : `only ${pick.scope} (enable under Plugins → Yours for that Bot only)`;
+        : `only ${createBotName(team.kind, team.name, pick.scope)}`;
     lines.push(`### ${pick.name}`);
     lines.push(pick.url);
     if (pick.author) lines.push(`Creator: ${pick.author}`);
     if (pick.summary) lines.push(pick.summary);
+    lines.push(`Skill id: \`${pick.id}\`.`);
     lines.push(`Scope: ${scoped}.`);
-    if (pick.use === "install") {
-      if (pick.install) lines.push(`Install: ${pick.install}`);
-      else lines.push("Install it from the Skillselion page, then enable it.");
-      lines.push(`Then enable it under Settings → Plugins → Yours for ${pick.scope === "team" ? who : pick.scope}.`);
-    } else {
-      lines.push(`Do not install. When this job comes up, use the Skillselion connector to search/load \`${pick.id}\`. Connect Skillselion in Settings → Plugins first.`);
-    }
     lines.push("");
   }
+  return lines;
+}
+
+function humanSteps(team: Team, state: CustomState): string[] {
+  const restricted = writeConnectors(team, state);
+  const lines = [
+    "## Human steps",
+    "",
+    "These are yours. The Bot cannot do them.",
+    "",
+    "- Set each Bot avatar (Bot actions → Edit Profile). Attach an image if you want a custom one.",
+  ];
+  if (!isSolo(team)) {
+    lines.push(`- Create a sidebar section named exactly: ${team.section}. Move the group chat and Bots into it.`);
+  }
+  if (restricted.length > 0) {
+    lines.push(
+      `- In Settings → Plugins, disable the write tools for ${restricted.join(", ")}. That switch is account-wide and it is the only one that actually stops a write.`,
+    );
+  }
+  lines.push('- Leave notifications on: Settings → "Get notified when this Bot finishes or needs input".');
+  lines.push("");
   return lines;
 }
 
 export function buildPrompt(team: Team, state: CustomState, siteUrl: string, siteGithub: string): string {
   const r = resolve(team, state);
   const stock = new Set(team.botRoster.map((a) => a.name));
+  const solo = isSolo(team);
+  let section = 0;
+  const heading = (title: string) => `## ${++section}. ${title}`;
 
   const botRoster = r.botRoster
     .map(({ source, name, note }) => {
-      const renamed = name !== source.name;
       const reuse = source.reuse
         ? "If a Bot with this exact name already exists, reuse it. Do not create a duplicate."
         : "Create this Bot. Use the name exactly.";
       const connectors = source.connectors.length
         ? `Uses connectors (already on the account): ${source.connectors.join(", ")}`
         : "No team connectors assigned to this Bot.";
-      const lines = [`### ${name}`];
-      if (renamed && stock.has(source.name)) lines.push(`(Named "${source.name}" in the published recipe.)`);
-      lines.push(reuse, connectors, "", "Job:", source.persona, "", ...profileLines(name, source.persona));
+      const lines = [`### ${name}`, reuse, connectors, "", "Job:", source.persona, "", ...profileLines(name, source.persona)];
       if (note) {
         lines.push(
           "",
@@ -383,7 +417,7 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     .join("\n\n");
 
   const also = alsoSection(state);
-  const skillLines = skillsSection(team, state, r.botRoster.map((a) => a.name).filter(Boolean));
+  const skillLines = skillsSection(team, state);
 
   /* An already-installed team gets a diff, not a second copy of itself.
      Pasting the full recipe twice is how people end up with two Chiefs of
@@ -398,7 +432,7 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
         "",
         ...(renames.length > 0 ? renames.map((a) => `- Rename "${a.source.name}" to "${a.name}".`) : []),
         ...(dropped.length > 0 ? dropped.map((n) => `- "${n}" is no longer part of this team. Leave it alone. Do not delete anything without asking me.`) : []),
-        ...(isSolo(team) ? [] : [`- The group chat is now "${r.roomName}" with: ${r.members.join(", ")}.`]),
+        ...(solo ? [] : [`- The group chat is now "${r.roomName}" with: ${r.members.join(", ")}.`]),
         "- Re-read the connector rules below. They may have changed.",
         "",
       ]
@@ -412,10 +446,10 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     "# Grok Bot Teams installer",
     "",
     ...exampleBanner,
-    isSolo(team)
+    solo
       ? `Set up a new Bot for me called ${grokBotName(team.name)}. Walk me through anything you need, then save it.`
       : `Set up a team for me called ${grokTeamName(team.name)}. Create the named Bots, then the group chat, then save the routines.`,
-    "Ask me only for things you cannot see. Do not start OAuth. If a connector is missing, tell me to connect it in Settings, then Plugins.",
+    "Ask me only for things you cannot see. Do not start OAuth. If a connector is missing, tell me to connect it in Settings → Plugins.",
     "",
     `From ${siteUrl} (${team.slug}). Source: ${siteGithub}.`,
     "",
@@ -423,43 +457,37 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
     /* The heading has to agree with section 0. "Create these Bots" over a
        list the human already created is how you end up with two of each. */
     state.installed
-      ? (isSolo(team) ? "## 1. The Bot" : "## 1. The Bots on this team")
-      : (isSolo(team) ? "## 1. Create this Bot" : "## 1. Create these Bots"),
+      ? (solo ? heading("The Bot") : heading("The Bots on this team"))
+      : (solo ? heading("Create this Bot") : heading("Create these Bots")),
     "",
     state.installed
       ? "Check each one against what is already in the sidebar. Create only the ones that are missing, and rename the ones listed above."
-      : "Create each Bot below. Use the names exactly, including any prefix. After create, set Name, Title, and Description on the profile, then tell me to set the avatar.",
+      : "Create each Bot below. Use the names exactly. After create, set Name, Title, and Description on the profile.",
     "A Bot is persistent and named. Conversation is the task; Title is the one-line job; Description holds durable rules and approvals.",
     "",
     botRoster,
     "",
-    ...(isSolo(team)
+    ...(solo
       ? [
-          "## 2. No group chat, no sidebar section",
+          heading("No group chat, no sidebar section"),
           "",
           "This is one Bot. Do not create a group chat for it, and do not create a sidebar section: a section is for several chats that belong together.",
           "",
         ]
       : [
-          "## 2. Create this group chat",
+          heading("Create this group chat"),
           "",
           "Open a group chat with two to six of the Bots above. Do not add more than six.",
           "",
           `### ${r.roomName}`,
           `Members (${r.members.length}, two to six Bots): ${r.members.join(", ")}`,
           "",
-          "## 3. Sidebar section",
-          "",
-          "You cannot create sidebar sections. When the Bots and group chat exist, tell me to Move to, then New section.",
-          `I will name that section exactly: ${team.section}.`,
-          "Ask me to move the group chat and Bots into it.",
-          "",
         ]),
-    isSolo(team) ? "## 3. Routines (confirm card required)" : "## 4. Routines (confirm card required)",
+    heading("Routines (confirm card required)"),
     "",
     routines
       ? [
-          isSolo(team)
+          solo
             ? "Ping the Bot with each routine so it can save them."
             : "Ping each owner Bot with the routine they own so they can save it.",
           /* xAI's documented cap, stated where the human is about to
@@ -472,38 +500,39 @@ export function buildPrompt(team: Team, state: CustomState, siteUrl: string, sit
         ].join("\n")
       : "No routines in this recipe.",
     "",
-    isSolo(team) ? "## 4. Connectors and how far they go" : "## 5. Connectors and how far they go",
+    heading("Connectors and how far they go"),
     "",
     "Connectors are account-wide. They must already be connected.",
-    "If any are missing, tell me to connect them in Settings, then Plugins, first.",
+    "If any are missing, tell me to connect them in Settings → Plugins first.",
     "Do not walk an OAuth flow from this prompt.",
     "Every Bot on this account can reach every connected tool. The lists above are which Bot is expected to use which, not a second OAuth and not a boundary.",
     "",
     ...connectorSection(team, state),
     "",
-    isSolo(team) ? "## 5. Skills" : "## 6. Skills",
+    heading("Skills"),
     "",
     ...skillLines,
     "",
     ...(also.length > 0
       ? [
-          isSolo(team) ? "## 6. Also" : "## 7. Also",
+          heading("Also"),
           "",
-          isSolo(team) ? "Standing instructions for this Bot:" : "Standing instructions for every Bot on this team:",
+          solo ? "Standing instructions for this Bot:" : "Standing instructions for every Bot on this team:",
           "",
           ...also,
           "",
         ]
       : []),
+    ...humanSteps(team, state),
     "## Done when",
     "",
-    isSolo(team) ? "- The named Bot exists" : "- Named Bots exist",
-    ...(isSolo(team) ? [] : [`- Named group chat exists ("${r.roomName}", two to six Bots)`]),
-    ...(isSolo(team) ? [] : [`- I have created section "${team.section}"`]),
+    solo ? "- The named Bot exists" : "- Named Bots exist",
+    ...(solo ? [] : [`- Named group chat exists ("${r.roomName}", two to six Bots)`]),
+    ...(solo ? [] : [`- I have created section "${team.section}"`]),
     "- Each routine has a confirmed save (or I declined)",
     "- Connectors listed above are already connected",
     "",
-    isSolo(team) ? "Uninstall: delete the Bot in the Grok Bot sidebar." : "Uninstall: delete the Bots and group chats in the Grok Bot sidebar.",
+    solo ? "Uninstall: delete the Bot in the Grok Bot sidebar." : "Uninstall: delete the Bots and group chats in the Grok Bot sidebar.",
     "There is no remote uninstall from this catalog.",
   ].join("\n");
 }
