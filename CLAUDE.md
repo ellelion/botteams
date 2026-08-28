@@ -10,6 +10,9 @@ hostname only.
 ## Deploy policy
 
 - Pushes to `main` continue to auto-deploy to Vercel production.
+- The public host is `botteams.io` (apex). `www.botteams.io` redirects here.
+  The domain is already attached to the existing Vercel project. Do not buy a
+  domain or create a Vercel team.
 - Vercel Git previews are disabled for `cursor/**`, `claude/**`, and
   `codex/**` branches. Commit checkpoints locally, but do not spend a build on
   every agent push.

@@ -98,6 +98,11 @@ function FooterNavInner({
             </a>
           </li>
           <li>
+            <a className="foot-link" href={site.xUrl} rel="noopener noreferrer" target="_blank" aria-label={`${site.xHandle} on X. ${en.nav.opensNew}`}>
+              {site.xHandle}
+            </a>
+          </li>
+          <li>
             <Link className="foot-link" href="/terms" aria-current={termsCurrent ? "page" : undefined}>
               {en.footer.terms}
             </Link>
