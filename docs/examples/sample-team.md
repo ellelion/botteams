@@ -1,5 +1,5 @@
 ---
-$schema: https://botteams.ai/schema/team.schema.json
+$schema: https://botteams.io/schema/team.schema.json
 slug: sample-team
 name: Sample team
 tagline: Two Bots share a room. This file is the contribution template, not a live listing.

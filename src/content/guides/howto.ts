@@ -8,7 +8,7 @@ export const howtoGuides: Guide[] = [
     title: "How to install a Grok Bot team",
     headline: "How do you install a Grok Bot team?",
     description:
-      "Copy one installer prompt from botteams.ai, connect the connectors first, paste it into Grok Bot, and confirm each routine. Nothing installs on this site. 24 August 2026.",
+      "Copy one installer prompt from botteams.io, connect the connectors first, paste it into Grok Bot, and confirm each routine. Nothing installs on this site. 24 August 2026.",
     hero: "Pick a team on this directory, connect the connectors it lists, copy the installer prompt, and paste that text into Grok Bot. The prompt creates named Bots and a group chat of two to six. You confirm each routine. Nothing on this site signs in, starts OAuth, or touches your account.",
     sections: [
       {
@@ -21,7 +21,7 @@ export const howtoGuides: Guide[] = [
           },
           {
             type: "p",
-            text: "The prompt always says it is from botteams.ai and from this GitHub repo. It tells Grok Bot not to start OAuth. If a connector is missing, it tells you to open Settings, then Plugins.",
+            text: "The prompt always says it is from botteams.io and from this GitHub repo. It tells Grok Bot not to start OAuth. If a connector is missing, it tells you to open Settings, then Plugins.",
           },
         ],
       },

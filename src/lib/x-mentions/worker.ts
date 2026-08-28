@@ -170,7 +170,7 @@ function existingStored(existing: ReturnType<typeof listAll>[number]): StoredRec
     name: existing.name,
     kind: existing.kind,
     tagline: existing.tagline,
-    url: `https://botteams.ai/${existing.kind === "bot" ? "bots" : "teams"}/${existing.slug}`,
+    url: recipeUrl(existing),
     outcome: "existing",
   };
 }

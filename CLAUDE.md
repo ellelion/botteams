@@ -1,7 +1,8 @@
-# botteams.ai
+# botteams.io
 
-Public name is **botteams.ai**. Never **grokbotteams.ai** (or grokbotteam.ai) in
-user-facing copy, OG cards, README, or llms.txt.
+Public name is **botteams.io**. Never **grokbotteams.ai** (or grokbotteam.ai) in
+user-facing copy, OG cards, README, or llms.txt. botteams.ai is the retired
+hostname only.
 
 `kind` is the shape (`team` or `bot`). `status` is whether it is real
 (`installable`) or a format demo (`example`). Do not write `status: team`.
@@ -9,6 +10,9 @@ user-facing copy, OG cards, README, or llms.txt.
 ## Deploy policy
 
 - Pushes to `main` continue to auto-deploy to Vercel production.
+- The public host is `botteams.io` (apex). `www.botteams.io` redirects here.
+  The domain is already attached to the existing Vercel project. Do not buy a
+  domain or create a Vercel team.
 - Vercel Git previews are disabled for `cursor/**`, `claude/**`, and
   `codex/**` branches. Commit checkpoints locally, but do not spend a build on
   every agent push.

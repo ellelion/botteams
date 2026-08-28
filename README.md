@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://botteams.ai">
-    <img src="docs/readme-hero.jpg" alt="botteams.ai: Grok Bot teams directory" width="800" />
+  <a href="https://botteams.io">
+    <img src="docs/readme-hero.jpg" alt="botteams.io: Grok Bot teams directory" width="800" />
   </a>
 </p>
 
@@ -15,7 +15,7 @@ A public directory of company teams for Grok Bot. Pick a team, copy one installe
 prompt, paste it into Grok Bot. It creates the named Bots, the group chat, and
 proposes the routines for you to confirm.
 
-[botteams.ai](https://botteams.ai) · no accounts · MIT · not affiliated with xAI
+[botteams.io](https://botteams.io) · no accounts · MIT · not affiliated with xAI
 
 ## The directory is a repo
 
@@ -24,13 +24,13 @@ the group chat, the routines, and the connectors. The installer prompt is
 generated from it, so the file is the product and GitHub is the CMS.
 
 To suggest a public setup without using GitHub, reply under its X post and tag
-[@Botteams_ai](https://x.com/Botteams_ai). The mention worker drafts an Example
+[@botteams_bot](https://x.com/botteams_bot). The mention worker drafts an Example
 pull request for maintainer review and replies after merge. A daily link budget
 controls whether that reply contains the live URL or a profile-search fallback,
 and a total response budget caps automated X replies.
 
 Every team and bot must pass the public
-[JSON Schema](https://botteams.ai/schema/team.schema.json) plus the repository's
+[JSON Schema](https://botteams.io/schema/team.schema.json) plus the repository's
 semantic checks. `kind: team` or `kind: bot` defines the shape.
 `status: installable` or `status: example` defines whether it is ready to run.
 `bots` is the count and `bot_roster` is the ordered list of named Bots.
@@ -98,13 +98,13 @@ Per team, in the team file: `connector_modes` and `suggest`. See
 No key, no auth, CORS open.
 
 ```bash
-curl "https://botteams.ai/api/teams?integration=Stripe&limit=5"
-curl "https://botteams.ai/api/bots?category=Sales"
-curl "https://botteams.ai/api/teams?limit=100"
-curl "https://botteams.ai/api/teams?cursor=start&limit=100"
+curl "https://botteams.io/api/teams?integration=Stripe&limit=5"
+curl "https://botteams.io/api/bots?category=Sales"
+curl "https://botteams.io/api/teams?limit=100"
+curl "https://botteams.io/api/teams?cursor=start&limit=100"
 ```
 
-Full contract at [`/api`](https://botteams.ai/api). There is no per-team
+Full contract at [`/api`](https://botteams.io/api). There is no per-team
 endpoint by design; filter the collection instead.
 API version 2 returns the named Bots as `botRoster`.
 
@@ -128,7 +128,7 @@ A row is a **team**. The unit is a **Bot**, capital B. Group chats hold two to s
 `kind: team` or `kind: bot` is the shape. `status: installable` is a recipe
 you can run. `status: example` is a format demo. No other status values are valid.
 
-Canonical domain: botteams.ai.
+Canonical domain: botteams.io.
 
 ## Open source
 

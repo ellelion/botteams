@@ -114,14 +114,14 @@ export async function POST(request: Request) {
       line_items: [{ price, quantity: 1 }],
       success_url: `${origin}/sponsor/setup?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/sponsor`,
-      metadata: { brand: RAIL_BRAND, placement: RAIL_PLACEMENT, interval, site: "botteams.ai" },
+      metadata: { brand: RAIL_BRAND, placement: RAIL_PLACEMENT, interval, site: site.name },
       payment_intent_data: {
-        description: "botteams.ai side rail and listing row",
-        statement_descriptor: "BOTTEAMS.AI",
+        description: `${site.name} side rail and listing row`,
+        statement_descriptor: "BOTTEAMS.IO",
       },
       custom_text: {
         submit: {
-          message: "By paying you agree to the [Terms](https://botteams.ai/terms).",
+          message: `By paying you agree to the [Terms](${site.url}/terms).`,
         },
       },
       integration_identifier: railIntegrationIdentifier(),

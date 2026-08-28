@@ -1,4 +1,6 @@
-const DEFAULT_HANDLE = "Botteams_ai";
+import { site } from "@/lib/site";
+
+const DEFAULT_HANDLE = site.xHandle.replace(/^@/, "");
 const DEFAULT_REPOSITORY = "ellelion/botteams";
 
 function required(name: string): string {

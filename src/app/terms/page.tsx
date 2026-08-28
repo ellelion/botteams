@@ -15,7 +15,7 @@ export default function TermsPage() {
   return (
     <PageShell
       title="Terms"
-      lead="These terms are an agreement between you and Ellelion LLC for using botteams.ai. Using the site, or paying for a rail slot, means you agree. If you do not, do not use the site and do not pay."
+      lead="These terms are an agreement between you and Ellelion LLC for using botteams.io. Using the site, or paying for a rail slot, means you agree. If you do not, do not use the site and do not pay."
     >
       <PageJump
         items={[

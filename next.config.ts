@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 
-// Canonical public domain: botteams.ai
-// DNS stays outside this repo. The application still owns canonical host
-// redirects so a second hostname cannot become a duplicate public site.
+// Canonical public domain: botteams.io
+// Apex and www are attached to the existing Vercel project. DNS stays
+// outside this repo (Vercel nameservers). Do not buy a domain or create
+// a Vercel team from this codebase.
+// The application still owns canonical host redirects so www and the
+// retired botteams.ai hostname cannot become a second public site.
 
 // /teams/<slug> is the only team route. There is no rewrite and no
 // redirect from the old path: nothing has shipped to a customer, so an
@@ -59,8 +62,20 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/:path*",
+        has: [{ type: "host", value: "www.botteams.io" }],
+        destination: "https://botteams.io/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "botteams.ai" }],
+        destination: "https://botteams.io/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
         has: [{ type: "host", value: "www.botteams.ai" }],
-        destination: "https://botteams.ai/:path*",
+        destination: "https://botteams.io/:path*",
         permanent: true,
       },
     ];

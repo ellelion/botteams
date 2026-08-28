@@ -2,7 +2,7 @@ blank_issues_enabled: false
 contact_links:
   - name: Setup and usage question
     url: https://github.com/ellelion/botteams/discussions
-    about: Ask the community about using botteams.ai or Grok Bot recipes.
+    about: Ask the community about using botteams.io or Grok Bot recipes.
   - name: Private security report
     url: https://github.com/ellelion/botteams/security/advisories/new
     about: Report a vulnerability without publishing the details.

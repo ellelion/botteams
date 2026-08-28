@@ -1,20 +1,20 @@
-/* Public name is botteams.ai. Never grokbotteams.ai in user-facing copy. */
+/* Public name is botteams.io. Never grokbotteams.ai in user-facing copy. */
 export const site = {
-  name: "botteams.ai",
-  updatedAt: "2026-08-25",
+  name: "botteams.io",
+  updatedAt: "2026-08-28",
   verifiedOn: "2026-08-23",
-  title: "Grok Bot teams directory · botteams.ai",
+  title: "Grok Bot teams directory · botteams.io",
   description:
     "Public directory of company teams for Grok Bot. Copy one installer prompt, paste it into Grok Bot, and stand up a named team. Operated by Ellelion LLC. Not affiliated with xAI.",
-  url: "https://botteams.ai",
+  url: "https://botteams.io",
   company: "Ellelion LLC",
   email: "info@ellelion.com",
   address: "30 N Gould St Ste R, Sheridan, WY 82801, United States",
   github: "https://github.com/ellelion/botteams",
-  xHandle: "@Botteams_ai",
-  xUrl: "https://x.com/Botteams_ai",
+  xHandle: "@botteams_bot",
+  xUrl: "https://x.com/botteams_bot",
   entity:
-    "botteams.ai is a public directory of company teams for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
+    "botteams.io is a public directory of company teams for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
   /* The other Ellelion products. They are not "sisters", they are the
      rest of what this company ships. */
   ellelionSites: [
@@ -25,6 +25,8 @@ export const site = {
   grokHome: "https://grok.com",
   brandGuidelines: "https://x.ai/legal/brand-guidelines",
 } as const;
+
+export const SCHEMA_URL = `${site.url}/schema/team.schema.json`;
 
 export const APD_HOME = "https://agentpluginsdirectory.com";
 export const SKILLSELION_HOME = "https://skillselion.com";

@@ -209,14 +209,14 @@ export function SiteFooter() {
             </a>
             {/* Nick Launches verifies this exact listing-specific static badge for free launches. */}
             <a
-              href="https://nicklaunches.com/products/botteams-ai/?utm_source=botteams.ai&utm_medium=badge&utm_campaign=featured"
+              href="https://nicklaunches.com/products/botteams-ai/?utm_source=botteams.io&utm_medium=badge&utm_campaign=featured"
               target="_blank"
               rel="noopener"
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
               <img
                 src="https://nicklaunches.com/badges/featured.png"
-                alt="botteams.ai on Nick Launches"
+                alt="botteams.io on Nick Launches"
                 width="244"
                 height="56"
               />

@@ -121,7 +121,7 @@ suggest:
 conversation:
   - speaker: You
     role: user
-    text: what's going on with our website, botteams.ai
+    text: what's going on with our website, botteams.io
   - speaker: Product Grok Bot
     speakerKey: Company · Product
     text: Company team is the open feature. Watch is still local. listings and the footer are in. I didn't close the rest.
@@ -159,7 +159,7 @@ conversation_bots:
   Company · Product:
     - speaker: You
       role: user
-      text: what's actually open on botteams.ai
+      text: what's actually open on botteams.io
     - speaker: Product Grok Bot
       speakerKey: Company · Product
       text: three opens. Company team, Watch fidelity, domain pointing. I parked the rest. Thursday 30m is on Calendar.
@@ -175,7 +175,7 @@ conversation_bots:
   Company · Coding:
     - speaker: You
       role: user
-      text: what's open in code for botteams.ai
+      text: what's open in code for botteams.io
     - speaker: Coding Grok Bot
       speakerKey: Company · Coding
       text: overlay, rail select, and the scripts. all on the worktree. no merge. no prod deploy.
@@ -190,7 +190,7 @@ conversation_bots:
   Company · Findability:
     - speaker: You
       role: user
-      text: can anyone find botteams.ai yet
+      text: can anyone find botteams.io yet
     - speaker: Findability Grok Bot
       speakerKey: Company · Findability
       text: not really. GSC is on the Vercel host. Ahrefs is empty. I drafted a title and a first page note. I did not publish.
@@ -206,7 +206,7 @@ conversation_bots:
   Company · Marketing:
     - speaker: You
       role: user
-      text: draft the botteams.ai launch post. don't send
+      text: draft the botteams.io launch post. don't send
     - speaker: Marketing Grok Bot
       speakerKey: Company · Marketing
       text: draft is in Gmail. subject is "Install a Grok Bot team, not just one bot". I did not post.
@@ -221,7 +221,7 @@ conversation_bots:
   Company · Trust:
     - speaker: You
       role: user
-      text: anything legal I should know on botteams.ai
+      text: anything legal I should know on botteams.io
     - speaker: Trust Grok Bot
       speakerKey: Company · Trust
       text: footer says not affiliated with xAI. Created with Grok is in. I drafted a tighter About line. I did not publish or sign.
@@ -236,7 +236,7 @@ conversation_bots:
   Company · Money:
     - speaker: You
       role: user
-      text: any money on botteams.ai yet
+      text: any money on botteams.io yet
     - speaker: Money Grok Bot
       speakerKey: Company · Money
       text: Stripe is $0. domain is paid through 2028. Ramp has Ahrefs. I did not move funds.

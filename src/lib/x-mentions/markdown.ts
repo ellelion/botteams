@@ -1,3 +1,4 @@
+import { SCHEMA_URL, site } from "@/lib/site";
 import type { ScoutedRecipe } from "@/lib/x-mentions/types";
 
 function scalar(value: string): string {
@@ -21,17 +22,17 @@ export function recipePath(recipe: Pick<ScoutedRecipe, "kind" | "slug">): string
 }
 
 export function recipeUrl(recipe: Pick<ScoutedRecipe, "kind" | "slug">): string {
-  return `https://botteams.ai/${recipe.kind === "bot" ? "bots" : "teams"}/${recipe.slug}`;
+  return `${site.url}/${recipe.kind === "bot" ? "bots" : "teams"}/${recipe.slug}`;
 }
 
 export function recipeOgUrl(recipe: Pick<ScoutedRecipe, "kind" | "slug">): string {
-  return `https://botteams.ai/og/${recipe.kind === "bot" ? "bots" : "teams"}/${recipe.slug}`;
+  return `${site.url}/og/${recipe.kind === "bot" ? "bots" : "teams"}/${recipe.slug}`;
 }
 
 export function serializeRecipe(recipe: ScoutedRecipe): string {
   const lines = [
     "---",
-    `$schema: ${scalar("https://botteams.ai/schema/team.schema.json")}`,
+    `$schema: ${scalar(SCHEMA_URL)}`,
     `slug: ${scalar(recipe.slug)}`,
     `name: ${scalar(recipe.name)}`,
     `tagline: ${scalar(recipe.tagline)}`,

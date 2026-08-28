@@ -6,13 +6,13 @@ first. The installer prompt is generated from that file, so the file is the
 product. There is no database and no admin.
 
 The machine-readable source of truth is the public
-[team schema](https://botteams.ai/schema/team.schema.json). The validator also
+[team schema](https://botteams.io/schema/team.schema.json). The validator also
 applies semantic checks that JSON Schema cannot express, such as matching the
 filename to `slug` and checking that room members and routine owners name Bots
 in the same recipe.
 
 Prefer not to use GitHub? Reply under a public X post that describes a Bot or
-team setup and tag [@Botteams_ai](https://x.com/Botteams_ai). The mention worker
+team setup and tag [@botteams_bot](https://x.com/botteams_bot). The mention worker
 reads that reply chain and opens a pull request. The person who tagged the post
 gets scout credit when they are not the source author.
 
@@ -53,7 +53,7 @@ Before you open a pull request:
 - **It has the right shape.** A team has two to six Bots with distinct jobs and
   at least one group chat. A bot has exactly one Bot and no group chat.
 - **It is not an ad.** A team that exists to sell one product will be closed.
-  Sponsorship is a separate thing: see [/sponsor](https://botteams.ai/sponsor).
+  Sponsorship is a separate thing: see [/sponsor](https://botteams.io/sponsor).
 - **Guardrails are explicit.** If a Bot touches money, mail, or production,
   the persona says what it will not do. "Drafts only, never sends" is the
   house style for a reason.
@@ -65,7 +65,7 @@ alphanumerics and dashes only.
 
 ```yaml
 ---
-$schema: https://botteams.ai/schema/team.schema.json
+$schema: https://botteams.io/schema/team.schema.json
 slug: founder-os                    # required, equals the filename
 name: Founder OS                    # required
 tagline: One line for the job.      # required
@@ -184,7 +184,7 @@ asserted in the validate script, so breaking it fails CI.
 
 The category list is closed so a typo cannot quietly become a new category.
 Current values live in the `section` enum in the
-[public schema](https://botteams.ai/schema/team.schema.json). To add one,
+[public schema](https://botteams.io/schema/team.schema.json). To add one,
 change that enum in the same pull request and say why.
 
 ## Checks
@@ -211,7 +211,7 @@ roster, and a per-Bot connector that is not on the team.
 ## After merge
 
 GitHub is the CMS. There is no other admin. Merge to `main` deploys
-https://botteams.ai. A team file at `teams/<slug>.md` is live at
+https://botteams.io. A team file at `teams/<slug>.md` is live at
 `/teams/<slug>`. A bot file at `bots/<slug>.md` is live at `/bots/<slug>`.
 
 CI must pass first (`npm run validate` and `npm run build`). Vercel also

@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { ledgerOg as ledger } from "@/lib/ledger-theme";
 
-export const alt = "botteams.ai: company teams for Grok Bot. Copy one prompt and paste it into Grok Bot.";
+export const alt = "botteams.io: company teams for Grok Bot. Copy one prompt and paste it into Grok Bot.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -37,7 +37,7 @@ export default async function Image() {
           COMPANY TEAMS FOR GROK BOT
         </div>
         <div style={{ display: "flex", fontSize: 148, marginTop: 20 }}>
-          <span>botteams.ai</span>
+          <span>botteams.io</span>
           <span style={{ color: ledger.oxblood }}>.</span>
         </div>
         <div

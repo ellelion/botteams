@@ -7,5 +7,5 @@
 - Report security problems privately through [SECURITY.md](./SECURITY.md).
 
 Please do not use public issues for account credentials, private company data,
-or vulnerability details. botteams.ai does not control Grok Bot accounts or
+or vulnerability details. botteams.io does not control Grok Bot accounts or
 xAI connector access.

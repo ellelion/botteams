@@ -1,5 +1,6 @@
 import { createSign } from "node:crypto";
-import { githubConfig } from "@/lib/x-mentions/config";
+import { site } from "@/lib/site";
+import { githubConfig, mentionHandle } from "@/lib/x-mentions/config";
 
 const GITHUB_API = "https://api.github.com";
 
@@ -122,7 +123,7 @@ async function ensureViaXLabel(): Promise<void> {
     body: JSON.stringify({
       name: "via-x",
       color: "0f8f83",
-      description: "Recipe proposed by the @Botteams_ai mention worker",
+      description: `Recipe proposed by the ${mentionHandle()} mention worker`,
     }),
   });
 }
@@ -205,8 +206,8 @@ export async function openMentionPullRequest({
       message: `Add ${names.join(", ")} from X`,
       tree: tree.sha,
       parents: [baseRef.object.sha],
-      author: { name: "botteams.ai", email: "info@ellelion.com" },
-      committer: { name: "botteams.ai", email: "info@ellelion.com" },
+      author: { name: site.name, email: site.email },
+      committer: { name: site.name, email: site.email },
     }),
   });
   if (!commit) throw new Error("Could not create GitHub commit");
@@ -233,7 +234,7 @@ export async function openMentionPullRequest({
       head: branch,
       base: config.baseBranch,
       body: [
-        "Automated draft from an @Botteams_ai mention.",
+        `Automated draft from a ${mentionHandle()} mention.`,
         "",
         `Source: ${sourceUrl}`,
         `Scouted by: @${scout.replace(/^@/, "")}`,

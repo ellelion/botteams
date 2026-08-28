@@ -58,7 +58,7 @@ export default function DocsPage() {
         <table className="spec-table mt-4">
           <caption className="sr-only">Recipe fields</caption>
           <tbody>
-            <tr><th scope="row"><code>$schema</code></th><td>Optional editor hint. Use <code>https://botteams.ai/schema/team.schema.json</code>.</td></tr>
+            <tr><th scope="row"><code>$schema</code></th><td>Optional editor hint. Use <code>https://botteams.io/schema/team.schema.json</code>.</td></tr>
             <tr><th scope="row"><code>slug</code></th><td>Lowercase URL key. Must equal the markdown filename.</td></tr>
             <tr><th scope="row"><code>name</code></th><td>Team title on the directory.</td></tr>
             <tr><th scope="row"><code>tagline</code></th><td>One line for the job of the team.</td></tr>
@@ -145,7 +145,7 @@ export default function DocsPage() {
           <p>A bot installer creates one Bot and its routines. It never asks for a group chat or a sidebar section, because neither means anything for a single Bot.</p>
           <p>Sidebar sections are a human action. In Grok Bot, use Move to, then New section, and name the section exactly as the team lists it.</p>
           <p>Skills cannot be attached at Bot create time. A team may point at references such as the <a className="accent-hover underline underline-offset-2" href={STRIPE_BEST_PRACTICES} rel="nofollow noopener">stripe-best-practices skill on Skillselion</a> or a plugin in the <a className="accent-hover underline underline-offset-2" href={APD_HOME} rel="nofollow noopener">Agent Plugins Directory</a>. Those are named destinations the team expects, not installs this site performs.</p>
-          <p>Uninstall is sidebar delete. Remove the Bots and group chats in Grok Bot. There is no remote uninstall from botteams.ai.</p>
+          <p>Uninstall is sidebar delete. Remove the Bots and group chats in Grok Bot. There is no remote uninstall from {site.name}.</p>
         </div>
     </WingsSplit>
   );
