@@ -2,11 +2,11 @@ import { site } from "@/lib/site";
 
 export const en = {
   siteName: site.name,
-  wordmark: "botteams.ai",
+  wordmark: "botteams.io",
   h1: "Grok Bot teams directory",
   eyebrow: "Grok Bot teams",
   answer:
-    "botteams.ai is a directory of teams and Bots you paste into Grok Bot. Each team is named Bots, a group chat, and routines.",
+    "botteams.io is a directory of teams and Bots you paste into Grok Bot. Each team is named Bots, a group chat, and routines.",
   answerUse:
     "Use them at work, in a business, or for everyday life. Copy one installer prompt. Nothing is installed on this site.",
   onRamp: "Or start with one Bot.",
@@ -36,7 +36,7 @@ export const en = {
     api: "API",
     sponsor: "Sponsor",
     github: "GitHub",
-    homeAria: "botteams.ai, home",
+    homeAria: "botteams.io, home",
     mainAria: "Main",
     skip: "Skip to content",
     openMenu: "Open menu",
@@ -80,7 +80,7 @@ export const en = {
     faqInstallQ: "How do I install one?",
     faqInstallA:
       "Open a team. Copy the installer prompt. Paste it into Grok Bot. Connect the connectors the team lists first. The prompt creates the Bots and the group chat on your account.",
-    faqXaiQ: "Is botteams.ai affiliated with xAI?",
+    faqXaiQ: "Is botteams.io affiliated with xAI?",
     faqXaiA:
       "No. Ellelion LLC operates this directory. From xAI on a Bot is sourcing from xAI's published use cases, not a certification.",
     faqGuides: "Read the Grok Bot guides",
@@ -92,7 +92,7 @@ export const en = {
     contributeBody:
       "Every team here is one file. Front matter names the Bots, the group chat, the routines, and the connectors the account needs first. The installer prompt is generated from it, so the file is the product.",
     contributeX:
-      "No GitHub needed: reply under a public X post that describes a Bot setup and tag @Botteams_ai. The worker drafts an example pull request, and a maintainer reviews it before it appears here.",
+      "No GitHub needed: reply under a public X post that describes a Bot setup and tag @botteams_bot. The worker drafts an example pull request, and a maintainer reviews it before it appears here.",
     contributePr: "Open a pull request",
     contributeSpec: "Read the spec",
     contributeGuide: "Contribution guide",
@@ -452,7 +452,7 @@ export const en = {
       open: number,
       asOf: string,
     ) =>
-      `botteams.ai is a live directory of ${teams} named teams and ${bots} one-job Bots you paste into Grok Bot. Each team names the connectors to connect first, so a listing sits next to the tools an operator is about to pick. ${slots} rail slots. ${house} house listings. ${open} open. Checked ${asOf}.`,
+      `botteams.io is a live directory of ${teams} named teams and ${bots} one-job Bots you paste into Grok Bot. Each team names the connectors to connect first, so a listing sits next to the tools an operator is about to pick. ${slots} rail slots. ${house} house listings. ${open} open. Checked ${asOf}.`,
     factsTitle: "The directory today",
     factTeams: (n: number) =>
       `${n} named teams. Two to six Bots, one group chat, standing routines.`,

@@ -24,7 +24,7 @@ export function organizationJsonLd() {
       },
     },
     logo: { "@type": "ImageObject", url: `${site.url}/icon.png`, width: 512, height: 512 },
-    sameAs: [site.github],
+    sameAs: [site.github, site.xUrl],
     parentOrganization: { "@type": "Organization", name: site.company, url: "https://ellelion.com" },
     disambiguatingDescription: "Not affiliated with xAI.",
   };

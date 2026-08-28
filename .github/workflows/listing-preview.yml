@@ -40,7 +40,7 @@ jobs:
             const lines = listings.map(({ filename }) => {
               const [kind, name] = filename.split("/");
               const slug = name.replace(/\.md$/, "");
-              return `- \`${filename}\` -> https://botteams.ai/${kind}/${slug}`;
+              return `- \`${filename}\` -> https://botteams.io/${kind}/${slug}`;
             });
             const body = [
               "<!-- listing-preview -->",

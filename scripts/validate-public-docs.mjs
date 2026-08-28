@@ -29,10 +29,10 @@ for (const key of ["readme", "contributing", "docsPage"]) {
   }
 }
 
-requireText("readme", "https://botteams.ai/schema/team.schema.json");
+requireText("readme", "https://botteams.io/schema/team.schema.json");
 requireText("readme", "kind: team");
 requireText("readme", "status: installable");
-requireText("contributing", "https://botteams.ai/schema/team.schema.json");
+requireText("contributing", "https://botteams.io/schema/team.schema.json");
 requireText("contributing", "kind: team");
 requireText("contributing", "status: installable");
 requireText("contributing", "bot_roster:");
@@ -41,8 +41,8 @@ requireText("docsPage", "<code>installable</code>");
 requireText("docsPage", "<code>example</code>");
 requireText("docsPage", "<code>kind</code>");
 requireText("docsPage", "<code>bot_roster</code>");
-requireText("site", 'url: "https://botteams.ai"');
-requireText("schema", '"$id": "https://botteams.ai/schema/team.schema.json"');
+requireText("site", 'url: "https://botteams.io"');
+requireText("schema", '"$id": "https://botteams.io/schema/team.schema.json"');
 requireText("schema", '"bot_roster"');
 
 for (const key of ["contributing", "docsPage", "schema"]) {

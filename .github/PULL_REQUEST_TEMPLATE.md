@@ -20,7 +20,7 @@ What changed and why?
 ## Merge checks
 
 - [ ] `npm test` passes locally.
-- [ ] Public claims match `README.md`, `CONTRIBUTING.md`, and `botteams.ai`.
+- [ ] Public claims match `README.md`, `CONTRIBUTING.md`, and `botteams.io`.
 - [ ] I added or updated tests for changed behavior, or explained why none are needed.
 - [ ] I did not commit secrets or personal data.
 

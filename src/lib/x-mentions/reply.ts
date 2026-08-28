@@ -1,3 +1,4 @@
+import { site } from "@/lib/site";
 import type { StoredRecipe } from "@/lib/x-mentions/types";
 
 function shorten(value: string, maximum: number): string {
@@ -14,7 +15,7 @@ function singleReply(recipe: StoredRecipe, includeUrl: boolean): string {
   const lead = `${recipe.outcome === "added" ? "Added" : "Already listed"} ${recipe.name}.`;
   const destination = includeUrl
     ? recipe.url
-    : `Open botteams.ai and search: ${recipe.slug}.`;
+    : `Open ${site.name} and search: ${recipe.slug}.`;
   const descriptionLimit = Math.max(24, 270 - lead.length - destination.length - 2);
   return `${lead}\n${shorten(recipeDescription(recipe), descriptionLimit)}\n${destination}`;
 }
@@ -35,7 +36,7 @@ export function fallbackReplyText(recipes: StoredRecipe[]): string {
   if (recipes.length === 1) return singleReply(recipes[0], false);
   const lead = `${recipes.some((recipe) => recipe.outcome === "added") ? "Added" : "Found"} ${recipes.length} recipes.`;
   const first = recipes[0];
-  const destination = `Open botteams.ai and search: ${first.slug}.`;
+  const destination = `Open ${site.name} and search: ${first.slug}.`;
   const descriptionLimit = Math.max(24, 270 - lead.length - destination.length - 2);
   return `${lead}\n${shorten(recipeDescription(first), descriptionLimit)}\n${destination}`;
 }

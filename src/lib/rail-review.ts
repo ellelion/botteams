@@ -179,7 +179,7 @@ export type ReviewInput = SetupFields & {
 
 function buildPrompt(input: ReviewInput): string {
   return [
-    "You review one paid side-rail listing for botteams.ai.",
+    "You review one paid side-rail listing for botteams.io.",
     "Return only the structured object. No prose.",
     "ok is true only when every check passes. reasons is empty if and only if ok is true.",
     "Use only these reject keys: " + REJECT_KEYS.join(", ") + ".",

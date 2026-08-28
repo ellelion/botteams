@@ -1,5 +1,5 @@
 ---
-$schema: "https://botteams.ai/schema/team.schema.json"
+$schema: "https://botteams.io/schema/team.schema.json"
 slug: "customer-pulse-briefing-bot"
 name: "Customer Pulse Briefing Bot"
 tagline: "Reads Gmail and Slack every weekday at 09:00, drafts a Notion priority queue, and only replies after approval."

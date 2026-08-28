@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { randomInt } from "node:crypto";
 import type { RailPlan } from "@/lib/rail";
+import { site } from "@/lib/site";
 
 /*
  * Server only. Never import this from a client component: it reads the
@@ -22,7 +23,7 @@ export function stripe(): Stripe {
   if (!client) {
     client = new Stripe(key, {
       apiVersion: STRIPE_API_VERSION,
-      appInfo: { name: "botteams.ai", url: "https://botteams.ai" },
+      appInfo: { name: site.name, url: site.url },
     });
   }
   return client;

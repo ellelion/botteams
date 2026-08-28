@@ -23,7 +23,7 @@ const HOUSE_COUNT = houseSlots.length;
 export const metadata: Metadata = {
   title: "Sponsor",
   description:
-    "Put a tool on the side rail and the listing row next to 140 Grok Bot teams and 59 one-job Bots on botteams.ai. Twelve slots. $1,500, $4,000, or $7,500. Operated by Ellelion LLC.",
+    "Put a tool on the side rail and the listing row next to 140 Grok Bot teams and 59 one-job Bots on botteams.io. Twelve slots. $1,500, $4,000, or $7,500. Operated by Ellelion LLC.",
   alternates: { canonical: `${site.url}/sponsor` },
 };
 
@@ -58,7 +58,7 @@ export default async function SponsorPage() {
   const connectors = CONNECTOR_CATALOG.length;
   const { open, slots } = await getRailInventory();
   const canBuy = open > 0 && railCheckoutReady(RAIL_PLANS);
-  const mail = `mailto:${site.email}?subject=${encodeURIComponent("Sponsoring botteams.ai")}`;
+  const mail = `mailto:${site.email}?subject=${encodeURIComponent(`Sponsoring ${site.name}`)}`;
 
   const faqs = [
     { q: en.sponsor.faqPriceQ, a: en.sponsor.faqPriceA },

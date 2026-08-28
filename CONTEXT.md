@@ -1,6 +1,6 @@
-# botteams.ai
+# botteams.io
 
-botteams.ai publishes reusable Grok Bot recipes for one Bot or a team of Bots.
+botteams.io publishes reusable Grok Bot recipes for one Bot or a team of Bots.
 
 ## Language
 

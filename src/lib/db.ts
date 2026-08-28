@@ -2,7 +2,7 @@ import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
 
 /*
  * Shared Ellelion Neon. Table names are prefixed grokbotteams_ (historical).
- * Public name of the product is botteams.ai.
+ * Public name of the product is botteams.io.
  * so we never write into Agent Plugins Directory application tables.
  *
  * Lazy: next build must succeed without DATABASE_URL. A missing URL is

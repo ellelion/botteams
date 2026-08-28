@@ -7,7 +7,7 @@ body:
     id: location
     attributes:
       label: Documentation location
-      placeholder: README.md, CONTRIBUTING.md, or https://botteams.ai/docs
+      placeholder: README.md, CONTRIBUTING.md, or https://botteams.io/docs
     validations:
       required: true
   - type: textarea

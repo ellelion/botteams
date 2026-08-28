@@ -1,9 +1,9 @@
 # Pipeline tracker: What is Grok Bot?
 
-Canonical: `/grok-bot` on botteams.ai
+Canonical: `/grok-bot` on botteams.io
 Primary query: What is Grok Bot?
 Quoted sources: xAI Grok Bot docs and launch post (fetched 2026-08-24), this repository's team/bot counts.
-Voice profile: none. House voice from existing botteams.ai pages.
+Voice profile: none. House voice from existing botteams.io pages.
 Human-voice / write-content applied.
 
 ## Phases
@@ -54,7 +54,7 @@ Human-voice / write-content applied.
 ## Gap pass
 
 1. Footer also renders H2s (Product, Docs, Company, Ellelion). Site chrome on every page. Waived.
-2. Org-authored, no personal byline. Matches the rest of botteams.ai. Waived.
+2. Org-authored, no personal byline. Matches the rest of botteams.io. Waived.
 3. Page is dynamic (ƒ) like /docs. Crawlers still receive full HTML. Waived.
 
 ## What still looked generated, then fixed

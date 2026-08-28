@@ -65,7 +65,7 @@ export const jobGuides: Guide[] = [
         a: "No. SEO desk watches decaying pages. GEO/AEO desk watches who gets cited in answers. Use both if you care about both. Do not rename one Bot and call it a stack.",
       },
       {
-        q: "Do you run these desks on botteams.ai?",
+        q: "Do you run these desks on botteams.io?",
         a: "We write the recipes. We do not claim a secret ranking report from a Bot we ran overnight. The pages on this site are edited by people.",
       },
     ],

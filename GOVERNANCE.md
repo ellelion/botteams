@@ -1,6 +1,6 @@
 # Governance
 
-botteams.ai is maintained by Ellelion LLC. GitHub is the content management
+botteams.io is maintained by Ellelion LLC. GitHub is the content management
 system for the public directory, so repository governance is also publishing
 governance.
 

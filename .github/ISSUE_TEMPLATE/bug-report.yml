@@ -7,7 +7,7 @@ body:
     id: location
     attributes:
       label: Page, endpoint, or command
-      placeholder: https://botteams.ai/teams/founder-os or npm run validate
+      placeholder: https://botteams.io/teams/founder-os or npm run validate
     validations:
       required: true
   - type: textarea

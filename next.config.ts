@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
-// Canonical public domain: botteams.ai
+// Canonical public domain: botteams.io
 // DNS stays outside this repo. The application still owns canonical host
 // redirects so a second hostname cannot become a duplicate public site.
+// botteams.ai is the retired hostname and redirects here.
 
 // /teams/<slug> is the only team route. There is no rewrite and no
 // redirect from the old path: nothing has shipped to a customer, so an
@@ -59,8 +60,20 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/:path*",
+        has: [{ type: "host", value: "www.botteams.io" }],
+        destination: "https://botteams.io/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "botteams.ai" }],
+        destination: "https://botteams.io/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
         has: [{ type: "host", value: "www.botteams.ai" }],
-        destination: "https://botteams.ai/:path*",
+        destination: "https://botteams.io/:path*",
         permanent: true,
       },
     ];

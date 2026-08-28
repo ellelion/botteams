@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   creator: site.company,
   publisher: site.company,
   openGraph: { title: site.title, description: site.description, url: site.url, siteName: site.name, locale: "en_US", type: "website" },
-  twitter: { card: "summary_large_image", title: site.title, description: site.description },
+  twitter: { card: "summary_large_image", title: site.title, description: site.description, site: site.xHandle, creator: site.xHandle },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "IgAzFR5IFY00bPLdcKWNI_8_zaOiefyE_C3LAx_MJL8",
     yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || "38e78504e4477fab",

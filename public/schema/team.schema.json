@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://botteams.ai/schema/team.schema.json",
-  "title": "botteams.ai recipe",
-  "description": "The public schema for team and bot Markdown front matter on botteams.ai.",
+  "$id": "https://botteams.io/schema/team.schema.json",
+  "title": "botteams.io recipe",
+  "description": "The public schema for team and bot Markdown front matter on botteams.io.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -19,7 +19,7 @@
   ],
   "properties": {
     "$schema": {
-      "const": "https://botteams.ai/schema/team.schema.json"
+      "const": "https://botteams.io/schema/team.schema.json"
     },
     "slug": {
       "type": "string",

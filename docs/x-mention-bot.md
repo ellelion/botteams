@@ -1,14 +1,14 @@
 # X mention worker
 
-**Handle:** [@Botteams_ai](https://x.com/Botteams_ai)
+**Handle:** [@botteams_bot](https://x.com/botteams_bot)
 
-The worker turns a public X reply into a reviewable botteams.ai recipe. It does
+The worker turns a public X reply into a reviewable botteams.io recipe. It does
 not publish directly to `main`.
 
 ## User flow
 
 1. Find a public X post that describes a Bot or team setup.
-2. Reply under it and tag `@Botteams_ai`.
+2. Reply under it and tag `@botteams_bot`.
 3. The worker reads the reply chain, extracts up to three clear setups, checks
    for duplicates, and opens one pull request.
 4. A maintainer reviews the pull request against `CONTRIBUTING.md`.
@@ -93,7 +93,7 @@ The names and comments live in `.env.example`:
 - Existing services: `DATABASE_URL` and AI Gateway OIDC or
   `AI_GATEWAY_API_KEY`
 
-Create the X App and access tokens under the `@Botteams_ai` brand account. The
+Create the X App and access tokens under the `@botteams_bot` brand account. The
 production GitHub App must be installed only on `ellelion/botteams`; it needs
 Contents, Pull requests, and Issues write access.
 

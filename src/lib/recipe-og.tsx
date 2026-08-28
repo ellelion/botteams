@@ -2,6 +2,7 @@
 import { ImageResponse } from "next/og";
 import { GrokBotMark } from "@/components/icons/GrokBotMark";
 import { resolveConnectors } from "@/lib/connectors";
+import { site } from "@/lib/site";
 import type { Team } from "@/lib/teams";
 
 export const recipeOgSize = { width: 1200, height: 630 } as const;
@@ -88,7 +89,7 @@ export async function recipeOgImage(recipe: Team, assetOrigin: string): Promise<
               BT
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: 28, fontWeight: 700 }}>botteams.ai</div>
+              <div style={{ fontSize: 28, fontWeight: 700 }}>{site.name}</div>
               <div style={{ color: palette.accentSoft, fontSize: 18 }}>Grok Bot teams directory</div>
             </div>
           </div>

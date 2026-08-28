@@ -61,7 +61,7 @@ describe("bounded proxy cache", () => {
 
 describe("request body limits", () => {
   it("rejects a body even when Content-Length is absent", async () => {
-    const request = new Request("https://botteams.ai/api/checkout", {
+    const request = new Request("https://botteams.io/api/checkout", {
       method: "POST",
       body: "a".repeat(32),
     });
