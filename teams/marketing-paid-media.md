@@ -46,7 +46,7 @@ bot_roster:
     connectors:
       - Google Sheets
 rooms:
-  - name: Paid media desk
+  - name: Paid media desk group chat
     members:
       - Paid · Spend
       - Paid · Creative

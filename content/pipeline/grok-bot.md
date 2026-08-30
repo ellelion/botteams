@@ -29,7 +29,7 @@ Human-voice / write-content applied.
 | https://docs.x.ai/grok-bot/approvals-security-and-privacy | yes | 2026-08-24 fetch |
 | https://docs.x.ai/grok-bot/use-cases | yes | 2026-08-24 fetch |
 | https://x.ai/news/introducing-grok-bot | yes | 2026-08-24 fetch |
-| teams/ and bots/ in this repo | 140 teams, 59 bots, 56 from xAI | 2026-08-24 render |
+| teams/ and bots/ in this repo | 15 teams, 60 bots, 56 from xAI | 2026-08-30 catalog cut |
 | CONNECTOR_CATALOG.length | 342, checked 2026-08-21 | same array the /connectors page uses |
 | flaviocopes.com/grok-bot/ | read, not quoted | 2026-08-24 |
 | Skillselion skill catalog refresh | not quoted | skipped; no skills.sh skill is a citation in the piece |
@@ -48,7 +48,7 @@ Human-voice / write-content applied.
 | Internal links 3-8, verified | pass, 7 live 200s |
 | External primary sources 1-3 | pass, overview + get-started + launch |
 | Keyword in title / H1 / first sentence | pass |
-| One quotable finding | pass: shared computer is account-scoped; 140 teams / 59 bots on 24 August 2026 |
+| One quotable finding | pass: shared computer is account-scoped; 15 teams / 60 bots on 30 August 2026 |
 | No cannibalizing target | pass: homepage stays the directory |
 
 ## Gap pass

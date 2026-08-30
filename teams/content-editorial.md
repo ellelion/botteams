@@ -37,7 +37,7 @@ bot_roster:
     connectors:
       - Gmail
 rooms:
-  - name: Editorial desk
+  - name: Editorial desk group chat
     members:
       - Editorial · Claims
       - Editorial · Style

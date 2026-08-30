@@ -32,7 +32,10 @@ describe("create names", () => {
 
   it("keeps group chat names ending in group chat", () => {
     assert.equal(grokRoomName("Company group chat"), "Company group chat");
+    assert.equal(grokRoomName("Company team group chat"), "Company team group chat");
+    assert.equal(grokRoomName("Company team"), "Company team group chat");
     assert.equal(grokRoomName("Company HQ"), "Company HQ group chat");
+    assert.equal(grokRoomName("Founder HQ"), "Founder HQ group chat");
     assert.match(grokRoomName("Company"), /group chat$/);
   });
 });
@@ -87,7 +90,7 @@ describe("installer prompt", () => {
     for (const role of ["Product", "Coding", "Findability", "Marketing", "Trust", "Money"]) {
       assert.match(prompt, new RegExp(`### Company Team - ${role} Bot`));
     }
-    assert.match(prompt, /### Company group chat/);
+    assert.match(prompt, /### Company team group chat/);
 
     const createHeading = prompt.indexOf("## 1. Create these Bots");
     const groupHeading = prompt.indexOf("## 2. Create this group chat");

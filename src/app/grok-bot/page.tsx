@@ -336,8 +336,8 @@ export default function GrokBotGuidePage() {
               Guides
             </Link>
             . Related recipes on this directory: the{" "}
-            <Link className="accent-hover underline underline-offset-2" href="/teams/content-seo">
-              SEO desk
+            <Link className="accent-hover underline underline-offset-2" href="/teams/content-rank-desk">
+              Rank desk
             </Link>
             , the{" "}
             <Link className="accent-hover underline underline-offset-2" href="/teams/content-geo-aeo">

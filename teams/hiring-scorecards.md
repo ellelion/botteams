@@ -40,7 +40,7 @@ bot_roster:
       - Calendar
       - Gmail
 rooms:
-  - name: Scorecard desk
+  - name: Scorecard desk group chat
     members:
       - Score · Missing
       - Score · Thin

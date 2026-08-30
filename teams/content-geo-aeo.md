@@ -1,8 +1,8 @@
 ---
 slug: content-geo-aeo
 name: GEO / AEO desk team
-tagline: Treats generative answers as a citation problem, not a keyword list, and drafts the pages that earn those citations.
-bots: 5
+tagline: Treats generative answers as a citation problem. Finds who gets cited, gathers sources you can stand behind, and drafts the page that would earn the citation.
+bots: 4
 section: Content
 status: installable
 kind: team
@@ -22,51 +22,51 @@ connector_modes:
   Search Console: read
   Notion: draft
 bot_roster:
-  - name: GEO / AEO desk · Citations Bot
-    persona: Finds which answer engines already mention us, and which cite a competitor instead.
+  - name: GEO / AEO desk · Citations
+    persona: Finds which answer engines already mention us, and which cite a competitor instead. Quotes the cited URL. Never invents a mention.
+    brings: Names who got the citation, and the URL they used.
     icon: search
     connectors:
       - Web Search
       - Exa
-  - name: GEO / AEO desk · Video Bot
-    persona: Pulls YouTube answers on the same questions and notes what those videos cover that our pages do not.
-    icon: camera
+  - name: GEO / AEO desk · Sources
+    persona: Collects the citeable URLs behind those answers, including YouTube when the answer is a video. Drops keyword lists. Keeps sources a page can actually stand behind.
+    brings: Gathers sources. Drops keyword lists.
+    icon: clipboard
     connectors:
       - YouTube
-  - name: GEO / AEO desk · Gaps Bot
-    persona: Uses Ahrefs or Exa to name the questions worth answering, not the ones that already rank.
-    icon: pipeline
-    connectors:
       - Ahrefs
       - Exa
-  - name: GEO / AEO desk · Brief Bot
-    persona: Writes a citation-first brief in Notion. Angle, sources, and the claim we can actually stand behind.
+  - name: GEO / AEO desk · Pages
+    persona: Writes a citation-first page brief in Notion. Angle, sources, and the claim we can stand behind. Never publishes.
+    brings: Drafts the page that would earn the citation.
     icon: pen
     connectors:
       - Notion
-  - name: GEO / AEO desk · Recap Bot
-    persona: Reports what started getting cited and what still loses the answer box.
+  - name: GEO / AEO desk · Proof
+    persona: Checks whether a page we already published started getting cited. Reads Search Console and the same answer engines. Never claims a citation it did not see.
+    brings: Checks whether the page earned a citation.
     icon: recap
     connectors:
       - Search Console
+      - Web Search
       - Notion
 rooms:
   - name: GEO / AEO desk group chat
     members:
-      - GEO / AEO desk · Citations Bot
-      - GEO / AEO desk · Video Bot
-      - GEO / AEO desk · Gaps Bot
-      - GEO / AEO desk · Brief Bot
-      - GEO / AEO desk · Recap Bot
+      - GEO / AEO desk · Citations
+      - GEO / AEO desk · Sources
+      - GEO / AEO desk · Pages
+      - GEO / AEO desk · Proof
 routines:
   - name: Citation scan
-    owner: GEO / AEO desk · Citations Bot
+    owner: GEO / AEO desk · Citations
     schedule: Every Tuesday at 09:00
     prompt: List questions where answer engines cite a competitor and not us. Quote the cited URL. Do not invent a mention.
-  - name: Brief pile
-    owner: GEO / AEO desk · Brief Bot
+  - name: Page briefs
+    owner: GEO / AEO desk · Pages
     schedule: Every Thursday at 11:00
-    prompt: Turn the top three citation gaps into Notion briefs. Draft only. Never publish.
+    prompt: Turn the top three citation gaps into Notion page briefs. Use only sources Sources collected. Draft only. Never publish.
 suggest:
   - text: Never publish. Draft only.
     on: true
@@ -77,6 +77,6 @@ suggest:
   - text: Keep every draft in our house voice.
 ---
 
-Five Bots on generative-engine answers. This is not the SEO desk. That desk watches decaying pages. This one watches who gets cited when someone asks a model or an answer pack.
+Four Bots on generative-engine answers. This is not the Rank desk. That desk watches decaying pages in Search Console. This one watches who gets cited when someone asks a model or an answer pack.
 
 A similar job exists on botdirectory.ai. Our prompt is original. MIT. Not affiliated with xAI.

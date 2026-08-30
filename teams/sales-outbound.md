@@ -39,7 +39,7 @@ bot_roster:
     connectors:
       - HubSpot
 rooms:
-  - name: Outbound floor
+  - name: Outbound floor group chat
     members:
       - Outbound · List
       - Outbound · Research

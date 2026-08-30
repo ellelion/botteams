@@ -12,7 +12,7 @@ import { listAll } from "@/lib/teams";
 
 const TITLE = "Chief of Staff Grok Bot teams and Bots";
 const DESCRIPTION =
-  "Compare six Chief of Staff Grok Bot setups for daily briefings, founder operations, task coordination, board preparation, and company routines.";
+  "Compare five Chief of Staff Grok Bot setups for daily briefings, founder operations, task coordination, and company routines.";
 const URL = `${site.url}/collections/chief-of-staff`;
 
 const CHOICES = [
@@ -23,8 +23,8 @@ const CHOICES = [
   },
   {
     slug: "founder-os",
-    bestFor: "A founder coordinating money and inbox specialist Bots",
-    cadence: "Weekdays plus a Monday money brief",
+    bestFor: "A founder whose Chief of Staff routes Money and Inbox",
+    cadence: "Monday week board plus weekday inbox",
   },
   {
     slug: "xai-executive-assistant",
@@ -40,11 +40,6 @@ const CHOICES = [
     slug: "company",
     bestFor: "A six-Bot operating room where Product holds the week list",
     cadence: "Monday planning plus weekday routines",
-  },
-  {
-    slug: "founder-board",
-    bestFor: "Board preparation, decision capture, and action follow-up",
-    cadence: "Weekdays plus a Monday action check",
   },
 ] as const;
 
@@ -116,10 +111,10 @@ export default function ChiefOfStaffCollectionPage() {
             title="Chief of Staff Grok Bot setups"
           >
             <p className="mt-5 text-[0.95rem] leading-relaxed" style={{ color: ledger.inkSoft }}>
-              A Chief of Staff Grok Bot can run one morning briefing, coordinate a founder&apos;s specialist Bots, or hold a broader company rhythm together. This collection compares six installable setups by job, cadence, team size, and connectors, so you can start with the smallest setup that solves a weekly problem.
+              A Chief of Staff Grok Bot can run one morning briefing, coordinate a founder&apos;s specialist Bots, or hold a broader company rhythm together. This collection compares five installable setups by job, cadence, team size, and connectors, so you can start with the smallest setup that solves a weekly problem.
             </p>
             <p className="meta mt-3">
-              Updated <time dateTime={CHIEF_OF_STAFF_COLLECTION_UPDATED}>26 August 2026</time>
+              Updated <time dateTime={CHIEF_OF_STAFF_COLLECTION_UPDATED}>30 August 2026</time>
             </p>
           </WingsHero>
         }
@@ -153,7 +148,7 @@ export default function ChiefOfStaffCollectionPage() {
           </section>
 
           <section className="collection-section" aria-labelledby="chief-setups">
-            <h2 id="chief-setups">Six installable setups</h2>
+            <h2 id="chief-setups">Five installable setups</h2>
             <div className="collection-grid">
               {choices.map(({ recipe, href }) => {
                 const title = grokRecipeTitle(recipe.kind, recipe.name);

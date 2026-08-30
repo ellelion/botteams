@@ -23,7 +23,7 @@ const HOUSE_COUNT = houseSlots.length;
 export const metadata: Metadata = {
   title: "Sponsor",
   description:
-    "Put a tool on the side rail and the listing row next to 140 Grok Bot teams and 59 one-job Bots on botteams.io. Twelve slots. $1,500, $4,000, or $7,500. Operated by Ellelion LLC.",
+    "Put a tool on the side rail and the listing row next to 15 Grok Bot teams and 60 one-job Bots on botteams.io. Twelve slots. $1,500, $4,000, or $7,500. Operated by Ellelion LLC.",
   alternates: { canonical: `${site.url}/sponsor` },
 };
 

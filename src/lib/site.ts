@@ -1,7 +1,7 @@
 /* Public name is botteams.io. Never grokbotteams.ai in user-facing copy. */
 export const site = {
   name: "botteams.io",
-  updatedAt: "2026-08-28",
+  updatedAt: "2026-08-30",
   verifiedOn: "2026-08-23",
   title: "Grok Bot teams directory · botteams.io",
   description:
@@ -52,7 +52,7 @@ export const GROK_BOT_GUIDE_UPDATED = "2026-08-24";
 export const GUIDES_UPDATED = "2026-08-24";
 
 /* Date the Chief of Staff collection was reviewed against its recipe files. */
-export const CHIEF_OF_STAFF_COLLECTION_UPDATED = "2026-08-26";
+export const CHIEF_OF_STAFF_COLLECTION_UPDATED = "2026-08-30";
 
 export const COMPARE_DOCS = {
   coworkOverview: "https://claude.com/docs/cowork/overview",

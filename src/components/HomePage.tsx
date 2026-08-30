@@ -29,7 +29,7 @@ bot_roster:
     persona: Drafts mail. Never sends.
     connectors: [Gmail]
 rooms:
-  - name: Founder HQ
+  - name: Founder HQ group chat
     members: [Founder · Money, Founder · Inbox]
 routines:
   - name: Monday money brief

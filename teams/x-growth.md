@@ -1,7 +1,7 @@
 ---
 slug: x-growth
 name: X growth team
-tagline: Drafts X posts, reads replies and quotes, and proposes tests a human tweets.
+tagline: Drafts X posts, reads the replies, and proposes the next test a human tweets.
 bots: 4
 section: Marketing
 status: installable
@@ -18,44 +18,49 @@ connector_modes:
   Exa: read
   Notion: draft
 bot_roster:
-  - name: X growth · Listen
-    persona: Reads replies, quotes, and related talk on X and Exa. Never tweets and never replies as the brand.
-    icon: search
-    connectors:
-      - X
-      - Exa
   - name: X growth · Draft
-    persona: Drafts posts from what Listen heard. House voice. Never tweets.
+    persona: Writes the next posts in a solo voice from what actually shipped or what Replies heard. Parks variants in Notion. Never tweets.
+    brings: Drafts the posts. Never tweets.
     icon: pen
     connectors:
       - X
       - Notion
+  - name: X growth · Replies
+    persona: Reads replies, quotes, and related talk on X and Exa. Quotes the source. Never tweets and never replies as the brand.
+    brings: Reads replies and quotes. Never replies as the brand.
+    icon: search
+    connectors:
+      - X
+      - Exa
+  - name: X growth · Tests
+    persona: Turns listen notes into one proposed test a human can tweet. Hypothesis, variant, and how you will know. Never tweets.
+    brings: Proposes the next tweet test. Never tweets.
+    icon: pipeline
+    connectors:
+      - Notion
+      - X
   - name: X growth · Ads
-    persona: Reads X Ads spend and creative. Recommends a test. Never changes a budget and never spends.
+    persona: Reads X Ads spend and creative. Says what to stop. Never changes a budget and never spends.
+    brings: Reads ad spend. Never spends.
     icon: card
     connectors:
       - X Ads
-  - name: X growth · Recap
-    persona: Writes the week recap in Notion. What to post, what to stop, what the ads read said. Drafts only.
-    icon: recap
-    connectors:
-      - Notion
 rooms:
   - name: X growth group chat
     members:
-      - X growth · Listen
       - X growth · Draft
+      - X growth · Replies
+      - X growth · Tests
       - X growth · Ads
-      - X growth · Recap
 routines:
-  - name: Weekday listen
-    owner: X growth · Listen
+  - name: Weekday replies
+    owner: X growth · Replies
     schedule: Every weekday at 09:00
     prompt: List replies, quotes, and related talk from the last day on X and Exa. Quote the source. Do not tweet or reply.
-  - name: Friday recap
-    owner: X growth · Recap
+  - name: Friday test
+    owner: X growth · Tests
     schedule: Every Friday at 16:00
-    prompt: Recap drafts waiting, listen notes, and the ads read. Write it in Notion. Do not tweet. Do not spend.
+    prompt: Propose one test a human can tweet next week. Name the hypothesis and the variant. Write it in Notion. Do not tweet. Do not spend.
 skills:
   - find-skills
   - skill:coreyhaines31/marketingskills#social
@@ -70,10 +75,10 @@ suggest:
     on: true
 ---
 
-Four Bots on X.com only. Drafts, listen notes, and an ads read. The human tweets. Nobody spends.
+Four Bots for a solo account on X. Drafts the posts, reads the replies, proposes the next test, and reads ads spend. The human tweets. Nobody spends.
 
 ## Why this desk
 
-X growth · Listen reads X and Exa so the week starts from replies and quotes, not a blank prompt. X growth · Draft writes posts on X and parks variants in Notion. X growth · Ads reads X Ads and never touches spend. X growth · Recap writes the Friday note in Notion.
+X growth · Draft writes the posts. X growth · Replies reads what came back. X growth · Tests names the next experiment a human tweets. X growth · Ads reads X Ads and never touches spend.
 
 find-skills looks up a missing Skillselion skill at run time. skill:coreyhaines31/marketingskills#social keeps the drafts on social work. skill:petergyang/no-ai-slop#no-ai-slop keeps the posts short. skill:giulioco/skills#social-growth-engineer is the growth experiment frame for the week.

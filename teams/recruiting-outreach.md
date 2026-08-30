@@ -40,7 +40,7 @@ bot_roster:
     connectors:
       - Calendar
 rooms:
-  - name: Outreach desk
+  - name: Outreach desk group chat
     members:
       - Outreach · Draft
       - Outreach · Sequence

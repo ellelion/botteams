@@ -1,7 +1,7 @@
 ---
 slug: founder-os
 name: Founder OS
-tagline: "Three Bots for a founder with no team yet: the money read weekly, the inbox triaged, and a chief of staff holding the week together."
+tagline: Three Bots for a founder with no team yet. Money reads Stripe. Inbox drafts mail. Chief of Staff runs the week board and routes the room.
 bots: 3
 section: Founder OS
 status: installable
@@ -21,38 +21,49 @@ connector_modes:
   Notion: draft
 bot_roster:
   - name: Chief of Staff
-    persona: Coordinates the founder week, pings Money and Inbox, and keeps Founder HQ honest.
+    persona: Owns the week board in Notion and Calendar. Reads what Money and Inbox parked. Writes one HQ note that says who does what next. Never pings for sport. Never sends mail. Never moves funds.
+    brings: Routes the room. Writes the week board.
     reuse: true
     icon: staff
     connectors:
       - Calendar
       - Notion
   - name: Founder · Money
-    persona: Reads Stripe and drafts a calm weekly money brief. Never moves funds.
+    persona: Reads Stripe and Ramp. Drafts a calm weekly money brief. Never moves funds and never spends.
+    brings: Reads Stripe. Never moves funds.
     icon: card
     connectors:
       - Stripe
       - Ramp
   - name: Founder · Inbox
-    persona: Drafts founder mail. Never sends.
+    persona: Drafts founder mail. Never sends and never deletes a thread.
+    brings: Drafts founder mail. Never sends.
     icon: inbox
     connectors:
       - Gmail
 rooms:
-  - name: Founder HQ
+  - name: Founder HQ group chat
     members:
       - Chief of Staff
       - Founder · Money
       - Founder · Inbox
 routines:
+  - name: Monday week board
+    owner: Chief of Staff
+    schedule: Every Monday at 08:00
+    prompt: Write this week's board in Notion from Calendar and leftover HQ notes. Name what Money should read and what Inbox should draft. Do not send mail. Do not move funds.
   - name: Monday money brief
     owner: Founder · Money
     schedule: Every Monday at 09:00
-    prompt: Pull Stripe activity from the last seven days and draft a one-page brief in Founder HQ. Do not move funds.
+    prompt: Pull Stripe and Ramp from the last seven days. Draft a one-page brief in Founder HQ. Do not move funds. Do not spend.
   - name: Inbox sweep
     owner: Founder · Inbox
     schedule: Weekdays at 08:30
-    prompt: Draft replies to overnight founder mail. Do not send.
+    prompt: Draft replies to overnight founder mail. Do not send. Do not delete.
+  - name: Friday route
+    owner: Chief of Staff
+    schedule: Every Friday at 16:00
+    prompt: Collect Money's brief and Inbox leftovers into one HQ note. Say what still needs a human yes. Do not send. Do not move funds.
 skills: []
 suggest:
   - text: Never send mail. Draft only.
@@ -63,7 +74,7 @@ suggest:
   - text: Tell me what you did not get to.
 ---
 
-Founder OS stands up a three-Bot founder room. Chief of Staff reuses an existing Bot if one is already present. Money reads. Inbox drafts. Nobody sends mail and nobody moves funds.
+Founder OS stands up a three-Bot founder room. Chief of Staff writes the week board and routes Money and Inbox. Money reads. Inbox drafts. Nobody sends mail and nobody moves funds.
 
 ## Reference
 

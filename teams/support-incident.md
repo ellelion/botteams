@@ -39,7 +39,7 @@ bot_roster:
     connectors:
       - Intercom
 rooms:
-  - name: Incident support desk
+  - name: Incident support desk group chat
     members:
       - Incident · Detect
       - Incident · Link
