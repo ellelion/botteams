@@ -20,8 +20,9 @@ import { grokDisplayBotName, grokRecipeTitle } from "@/lib/grok-names";
 import { indexQuerySearch, type IndexKind, type IndexQuery } from "@/lib/catalog-query";
 import { focusWithoutPageScroll, scrollIntoRail, useScrollEdges } from "@/lib/use-scroll-edges";
 import { type Team } from "@/lib/types";
-import { houseSlots, sponsorHref, type SponsorSlot } from "@/data/sponsors";
+import { sponsorHref, type SponsorSlot } from "@/data/sponsors";
 import { SponsorTicker } from "@/components/SponsorTicker";
+import { interleaveListingRows, listingChromeSlots } from "@/lib/listing-sponsors";
 import { resolveConnector, resolveConnectors } from "@/lib/connectors";
 
 /*
@@ -124,31 +125,6 @@ function matchesQuery(team: Team, q: string): boolean {
 }
 
 
-const AD_EVERY = 7;
-const SLOT_EVERY = 21;
-
-type ListingRow =
-  | { kind: "team"; team: Team }
-  | { kind: "ad"; slot: SponsorSlot; key: string }
-  | { kind: "slot"; key: string };
-
-function interleaveAds(teams: Team[], ads: SponsorSlot[]): ListingRow[] {
-  const pool = ads.length ? ads : houseSlots;
-  const out: ListingRow[] = [];
-  let n = 0;
-  teams.forEach((team, i) => {
-    out.push({ kind: "team", team });
-    const k = i + 1;
-    if (k % SLOT_EVERY === 0) {
-      out.push({ kind: "slot", key: `slot-${i}` });
-    } else if (k % AD_EVERY === 0) {
-      const slot = pool[(n + 1) % pool.length];
-      out.push({ kind: "ad", slot, key: `ad-${i}-${slot.id}` });
-      n += 1;
-    }
-  });
-  return out;
-}
 
 function ListingAd({ slot, as }: { slot: SponsorSlot; as: "row" | "card" }) {
   return (
@@ -173,16 +149,6 @@ function ListingAd({ slot, as }: { slot: SponsorSlot; as: "row" | "card" }) {
   );
 }
 
-function ListingSlot({ as }: { as: "row" | "card" }) {
-  return (
-    <a className={as === "card" ? "idx-card idx-ad idx-ad-open" : "index-ad index-ad-open"} href="/sponsor">
-      <span className="idx-ad-kicker">{en.sponsor.takeSlot}</span>
-      <span className="idx-ad-body">
-        <span className="idx-ad-name">{en.sponsor.putListing}</span>
-      </span>
-    </a>
-  );
-}
 
 const VIEW_KEY = "botteams.indexView";
 const viewListeners = new Set<() => void>();
@@ -214,7 +180,15 @@ function writeView(next: View) {
   for (const listener of viewListeners) listener();
 }
 
-export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: IndexQuery }) {
+export function TeamIndex({
+  teams,
+  query: initial,
+  sponsors = [],
+}: {
+  teams: Team[];
+  query: IndexQuery;
+  sponsors?: SponsorSlot[];
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const resultsId = useId();
@@ -422,6 +396,8 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
     searchRef.current?.focus();
   }
 
+  const chrome = listingChromeSlots(sponsors);
+  const listingRows = interleaveListingRows(sorted, chrome);
   const listing = sorted.length === 0 ? (
     <div className={`idx-empty${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
       <p className="idx-empty-title">{en.home.emptyTitle(query.trim())}</p>
@@ -442,11 +418,9 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
     </div>
   ) : view === "cards" ? (
     <div className={`idx-cards${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
-      {interleaveAds(sorted, houseSlots).map((row) =>
+      {listingRows.map((row) =>
         row.kind === "ad" ? (
           <ListingAd key={row.key} slot={row.slot} as="card" />
-        ) : row.kind === "slot" ? (
-          <ListingSlot key={row.key} as="card" />
         ) : (
           <TeamCatalogCard key={row.team.slug} team={row.team} showKind={kindParam === "all"} />
         ),
@@ -454,11 +428,9 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
     </div>
   ) : (
     <div className={`team-table${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
-      {interleaveAds(sorted, houseSlots).map((row) =>
+      {listingRows.map((row) =>
         row.kind === "ad" ? (
           <ListingAd key={row.key} slot={row.slot} as="row" />
-        ) : row.kind === "slot" ? (
-          <ListingSlot key={row.key} as="row" />
         ) : (
           <TeamExpandable
             key={row.team.slug}
@@ -474,7 +446,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
 
   return (
     <section id="teams">
-      <SponsorTicker place="top" />
+      {chrome.length > 0 ? <SponsorTicker place="top" slots={chrome} /> : null}
       <div className="index-chrome">
         <form
           className="search-wrap"

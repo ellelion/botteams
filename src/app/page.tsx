@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { HomePage } from "@/components/HomePage";
 import { parseIndexQuery } from "@/lib/catalog-query";
+import { getListingChrome } from "@/lib/rail-inventory";
 import { listAll } from "@/lib/teams";
 import { teamListJsonLd } from "@/lib/seo";
 import { en } from "@/lib/messages/en";
@@ -41,10 +42,11 @@ export default async function Home({
 }) {
   const teams = listAll();
   const query = parseIndexQuery(await searchParams);
+  const sponsors = await getListingChrome();
   return (
     <>
       <JsonLd data={teamListJsonLd(teams)} />
-      <HomePage teams={teams} query={query} />
+      <HomePage teams={teams} query={query} sponsors={sponsors} />
     </>
   );
 }

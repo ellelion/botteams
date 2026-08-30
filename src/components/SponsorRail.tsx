@@ -1,10 +1,9 @@
 import {
-  SPONSOR_SLOTS_TOTAL,
   type Campaign,
   sponsorHref,
   type SponsorSlot,
 } from "@/data/sponsors";
-import { getRailInventory } from "@/lib/rail-inventory";
+import { getListingChrome } from "@/lib/rail-inventory";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 
@@ -34,18 +33,6 @@ function SlotRow({ slot, campaign }: { slot: SponsorSlot; campaign: Campaign }) 
   );
 }
 
-function AddYours({ open, total }: { open: number; total: number }) {
-  return (
-    <a className="add-yours" href="/sponsor">
-      <span className="add-yours-kicker">
-        {en.sponsor.addYours}
-        <span className="add-yours-arrow" aria-hidden>→</span>
-      </span>
-      <span className="add-yours-count">{en.sponsor.slotsLeft(open, total)}</span>
-    </a>
-  );
-}
-
 export async function SponsorRail({
   campaign = "rail",
   side = "stack",
@@ -53,7 +40,8 @@ export async function SponsorRail({
   campaign?: Campaign;
   side?: "left" | "right" | "stack";
 }) {
-  const { filled, open, slots } = await getRailInventory();
+  const filled = await getListingChrome();
+  if (filled.length === 0) return null;
 
   return (
     <aside
@@ -65,16 +53,10 @@ export async function SponsorRail({
           {en.sponsor.railTitle}
         </p>
         <ul className="side-rail-list">
-          {slots.map((slot) => (
+          {filled.map((slot) => (
             <SlotRow key={slot.id} slot={slot} campaign={campaign} />
           ))}
         </ul>
-        <AddYours open={open} total={SPONSOR_SLOTS_TOTAL} />
-        {side === "stack" ? (
-          <p className="mt-3 text-[0.72rem]" style={{ color: ledger.inkFaint }}>
-            {en.sponsor.railCta(filled, SPONSOR_SLOTS_TOTAL)}
-          </p>
-        ) : null}
       </div>
     </aside>
   );
