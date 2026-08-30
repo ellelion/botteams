@@ -4755,17 +4755,29 @@ html[data-theme="light"] .cz-check input:checked {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 4px 6px;
 }
 .foot-badges a {
   display: inline-flex;
   align-items: center;
-  min-height: 54px;
+  min-height: 0;
+  line-height: 0;
 }
 .foot-badges img {
   display: block;
-  max-width: 100%;
-  height: auto;
+  width: auto;
+  height: 20px;
+  max-height: 20px;
+}
+.foot-badge-plain {
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 4px;
+  background: #10b981;
+  color: #fff;
+  font: 600 9px/1 ui-sans-serif, system-ui, sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
 }
 .foot-id {
   display: inline-flex;

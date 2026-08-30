@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { houseSlots, type SponsorSlot } from "../src/data/sponsors";
 import {
@@ -73,10 +73,11 @@ describe("listing sponsor chrome", () => {
     assert.equal(rows[15]?.kind, "ad");
   });
 
-  it("keeps the /sponsor buy page and nav link", () => {
+  it("keeps the /sponsor buy page off public chrome", () => {
     assert.equal(existsSync("src/app/sponsor/page.tsx"), true);
     assert.equal(existsSync("src/app/sponsor/setup/page.tsx"), true);
-    assert.equal(MAIN_NAV.some((item) => item.href === "/sponsor"), true);
+    assert.equal(MAIN_NAV.some((item) => item.href === "/sponsor"), false);
+    assert.equal(readFileSync("src/components/FooterNav.tsx", "utf8").includes('href: "/sponsor"'), false);
     assert.equal(en.nav.sponsor, "Sponsor");
   });
 });

@@ -61,7 +61,6 @@ function FooterNavInner({
     { label: en.footer.bots, href: "/?kind=bot" },
     { label: en.footer.connectors, href: "/connectors" },
     { label: en.footer.chiefOfStaff, href: "/collections/chief-of-staff" },
-    { label: en.footer.sponsor, href: "/sponsor" },
   ];
   const docs: Item[] = [
     { label: en.footer.guide, href: "/grok-bot" },
