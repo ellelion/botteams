@@ -2,6 +2,11 @@
 slug: engineering-release
 name: Release desk
 tagline: Answers what actually shipped, what it changed, and whether anything got worse afterwards.
+bullets:
+  - Notes drafts the release notes
+  - Deploys tracks what went out
+  - After names regressions
+  - Rollback assembles the case. Never triggers one
 bots: 4
 section: Engineering
 status: installable

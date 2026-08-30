@@ -157,6 +157,7 @@ export default function ApiDocsPage() {
               `  "slug": "founder-os",`,
               `  "name": "Founder OS",`,
               `  "tagline": "Money, inbox, and a chief of staff in one founder room.",`,
+              `  "bullets": ["Chief of Staff runs the week board", "Money reads Stripe", "Inbox drafts founder mail"],`,
               `  "category": "Founder OS",`,
               `  "kind": "team",`,
               `  "status": "installable",`,

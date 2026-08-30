@@ -23,6 +23,7 @@ const TEAM_PROPERTIES: Record<keyof ApiTeam, Schema> = {
   slug: str("Stable identifier. Matches the filename under teams/ and the last path segment of detailUrl."),
   name: str("Display name of the team."),
   tagline: str("One line saying what the team does."),
+  bullets: { type: "array", items: { type: "string" }, description: "Listing-card lede. Teams have one short line per Bot. A solo Bot without a list repeats the tagline as a single item." },
   category: str("Section the team files under, and the value the category filter matches."),
   kind: { type: "string", enum: ["bot", "team"], description: "bot is one Bot doing one job with no group chat. team is two to six Bots in one group chat. The two never appear in the same collection." },
   status: { type: "string", enum: ["installable", "example"], description: "installable is a recipe to use. example is a format demonstration." },
@@ -92,7 +93,7 @@ export type ApiParam = { name: string; description: string; schema: Schema };
 
 /* One list, read by the spec and by the human page at /api. */
 export const PARAMS: ApiParam[] = [
-  { name: "q", description: "Free text. Matches name, tagline, category, slug, connector, Bot name, contributor, and the installer prompt.", schema: { type: "string" } },
+  { name: "q", description: "Free text. Matches name, tagline, bullets, category, slug, connector, Bot name, contributor, and the installer prompt.", schema: { type: "string" } },
   { name: "category", description: "Exact category, case-insensitive. One of the sections listed on the directory.", schema: { type: "string" } },
   { name: "integration", description: "Exact connector, case-insensitive and alias-aware. Calendar and Google Calendar match the same teams.", schema: { type: "string" } },
   { name: "page", description: "Page number, 1-based. Ignored in cursor mode.", schema: { type: "integer", minimum: 1, default: 1 } },

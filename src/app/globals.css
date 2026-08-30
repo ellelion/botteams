@@ -3424,6 +3424,12 @@ a.chip-unverified:focus-visible {
 /* Cards fill the column. home-split is overflow:clip at lg, and the
    column is overflow-y:auto, so a 3px outer ring on the right card
    lost all 5px of the focus mark. */
+.idx-card-topline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+}
 .idx-card-cat {
   display: inline-flex;
   align-items: center;
@@ -3461,6 +3467,32 @@ a.chip-unverified:focus-visible {
   font-size: 0.76rem;
   line-height: 1.5;
   overflow-wrap: anywhere;
+}
+.idx-card-lede {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+.idx-card-lede li {
+  position: relative;
+  padding-left: 1.05em;
+  overflow-wrap: anywhere;
+}
+.idx-card-lede li::before {
+  content: "";
+  position: absolute;
+  left: 0.12em;
+  top: 0.55em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink-soft) 72%, transparent);
 }
 .idx-card-foot {
   display: flex;

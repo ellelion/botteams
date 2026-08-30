@@ -17,6 +17,9 @@ const CONTRIBUTE_SAMPLE = `---
 slug: founder-os
 name: Founder OS
 tagline: Money and inbox in one founder room.
+bullets:
+  - Money reads Stripe
+  - Inbox drafts founder mail
 bots: 2
 section: Founder OS
 kind: team

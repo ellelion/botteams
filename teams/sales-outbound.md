@@ -2,6 +2,11 @@
 slug: sales-outbound
 name: Outbound desk
 tagline: Runs outbound where the research is real and the sequence stops the moment someone answers.
+bullets:
+  - List builds the target list
+  - Research finds the one thing worth mentioning
+  - Draft writes the message
+  - Stop drops anyone who replied
 bots: 4
 section: Sales
 status: installable

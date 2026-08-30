@@ -2,6 +2,11 @@
 slug: product-discovery
 name: Discovery desk
 tagline: Keeps product decisions attached to evidence, and says plainly when there is none.
+bullets:
+  - Questions names the question that would settle it
+  - Data answers what already exists
+  - Voice finds what customers already said
+  - Gap says when there is no evidence
 bots: 4
 section: Product
 status: installable

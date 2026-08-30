@@ -19,6 +19,7 @@ import { en } from "@/lib/messages/en";
 import { grokDisplayBotName, grokRecipeTitle } from "@/lib/grok-names";
 import { indexQuerySearch, type IndexKind, type IndexQuery } from "@/lib/catalog-query";
 import { focusWithoutPageScroll, scrollIntoRail, useScrollEdges } from "@/lib/use-scroll-edges";
+import { listingBullets } from "@/lib/listing-lede";
 import { type Team } from "@/lib/types";
 import { sponsorHref, type SponsorSlot } from "@/data/sponsors";
 import { SponsorTicker } from "@/components/SponsorTicker";
@@ -28,7 +29,7 @@ import { resolveConnector, resolveConnectors } from "@/lib/connectors";
 /*
  * Two index layouts, one filter model.
  *   ledger   grouped hairline rows. Densest, closest to the house style.
- *   cards    two-up with the tagline visible. Browsing rather than looking
+ *   cards    two-up with the lede bullets visible. Browsing rather than looking
  *            something up.
  */
 type View = "ledger" | "cards";
@@ -115,6 +116,7 @@ function matchesQuery(team: Team, q: string): boolean {
   const hay = [
     team.name,
     team.tagline,
+    ...team.bullets,
     team.section,
     team.slug,
     ...team.connectors,
@@ -688,23 +690,32 @@ export function TeamIndex({
 
 function TeamCatalogCard({ team, showKind }: { team: Team; showKind: boolean }) {
   const title = grokRecipeTitle(team.kind, team.name);
+  const lede = listingBullets(team);
 
   return (
     <article className="idx-card">
-      <span className="idx-card-cat">
-        {showKind ? `${team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
-        {team.section}
-      </span>
+      <div className="idx-card-topline">
+        <span className="idx-card-cat">
+          {showKind ? `${team.kind === "bot" ? en.home.labelBot : en.home.labelTeam} · ` : ""}
+          {team.section}
+        </span>
+        {team.featured || team.fromXai ? (
+          <span className="idx-card-chips">
+            {team.featured ? <FeaturedChip /> : null}
+            {team.fromXai ? <FromXaiChip as="span" /> : null}
+          </span>
+        ) : null}
+      </div>
       <Link href={hrefFor(team)} className="idx-card-name">
         {title}
       </Link>
-      {team.featured || team.fromXai ? (
-        <span className="idx-card-chips">
-          {team.featured ? <FeaturedChip /> : null}
-          {team.fromXai ? <FromXaiChip as="span" /> : null}
-        </span>
+      {lede.length > 0 ? (
+        <ul className="idx-card-lede">
+          {lede.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
       ) : null}
-      <p className="idx-card-tag">{team.tagline}</p>
       <div className="idx-card-foot">
         <ConnectorRow names={team.connectors} size={15} />
         <span className="idx-card-bots"><RosterShape bots={team.bots} rooms={team.rooms.length} routines={team.routines} allowTip={false} /></span>

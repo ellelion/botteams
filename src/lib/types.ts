@@ -72,6 +72,8 @@ export type Team = {
   kind: TeamKind;
   name: string;
   tagline: string;
+  /** One short line per Bot on team listing cards. Empty on a solo Bot that has no list. */
+  bullets: string[];
   bots: number;
   section: string;
   status: TeamStatus;

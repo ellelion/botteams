@@ -61,7 +61,8 @@ export default function DocsPage() {
             <tr><th scope="row"><code>$schema</code></th><td>Optional editor hint. Use <code>https://botteams.io/schema/team.schema.json</code>.</td></tr>
             <tr><th scope="row"><code>slug</code></th><td>Lowercase URL key. Must equal the markdown filename.</td></tr>
             <tr><th scope="row"><code>name</code></th><td>Team title on the directory.</td></tr>
-            <tr><th scope="row"><code>tagline</code></th><td>One line for the job of the team.</td></tr>
+            <tr><th scope="row"><code>tagline</code></th><td>One line for the job of the team. Search, API, and OG still use this.</td></tr>
+            <tr><th scope="row"><code>bullets</code></th><td>Required on teams. One short line per Bot. Listing cards render this list. Optional on a solo Bot; the card uses the tagline as a single item when it is absent.</td></tr>
             <tr><th scope="row"><code>bots</code></th><td>Count of Bots in the recipe. Must match the <code>bot_roster</code> list length.</td></tr>
             <tr><th scope="row"><code>section</code></th><td>Closed directory category. On a team, it is also the suggested sidebar section.</td></tr>
             <tr><th scope="row"><code>kind</code></th><td><code>team</code> (two to six Bots and a group chat) or <code>bot</code> (one Bot and no group chat).</td></tr>
@@ -112,6 +113,7 @@ export default function DocsPage() {
             <tr><th scope="row"><code>kind</code></th><td data-label="bots/"><code>bot</code></td><td data-label="teams/"><code>team</code></td></tr>
             <tr><th scope="row"><code>bots</code></th><td data-label="bots/">Always 1</td><td data-label="teams/">2 to 6, matching <code>bot_roster</code></td></tr>
             <tr><th scope="row"><code>bot_roster</code></th><td data-label="bots/">Exactly one Bot</td><td data-label="teams/">Two to six Bots</td></tr>
+            <tr><th scope="row"><code>bullets</code></th><td data-label="bots/">Optional. At most one line</td><td data-label="teams/">Required. One short line per Bot</td></tr>
             <tr><th scope="row"><code>rooms</code></th><td data-label="bots/">Forbidden. Empty or absent</td><td data-label="teams/">Required. Each holds 2 to 6 Bots</td></tr>
             <tr><th scope="row"><code>routines</code></th><td data-label="bots/">0 to 50 per owning Bot</td><td data-label="teams/">0 to 50 per owning Bot</td></tr>
             <tr><th scope="row">Verified</th><td data-label="bots/">Never</td><td data-label="teams/">When the roster fits the limits</td></tr>
