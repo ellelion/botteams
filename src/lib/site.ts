@@ -13,6 +13,8 @@ export const site = {
   github: "https://github.com/ellelion/botteams",
   xHandle: "@botteams_bot",
   xUrl: "https://x.com/botteams_bot",
+  iciDabHandle: "@ici_dab",
+  iciDabUrl: "https://x.com/ici_dab",
   entity:
     "botteams.io is a public directory of company teams for Grok Bot, operated by Ellelion LLC. Not affiliated with xAI.",
   /* The other Ellelion products. They are not "sisters", they are the

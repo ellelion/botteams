@@ -505,13 +505,6 @@ body {
 }
 .site-wordmark-text { font-weight: 500; letter-spacing: -0.012em; }
 .wings-mark { border-radius: 0; }
-/* The ellelion tile is #fcfcfb. On light paper that fill is ~1:1, so
-   the square disappears and only the strokes remain. --pill-line is
-   the 3:1 hairline used for other page-on-page chrome. Dark paper
-   already sees the white tile. */
-html:not([data-theme="dark"]) .wings-mark {
-  box-shadow: 0 0 0 1px var(--pill-line);
-}
 
 .site-masthead-actions {
   display: flex;
@@ -4738,20 +4731,24 @@ html[data-theme="light"] .cz-check input:checked {
 }
 .foot-meta {
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px 24px;
-  margin-top: 48px;
-  padding-top: 28px;
-  border-top: 1px solid var(--line);
+  margin-top: 28px;
+  padding-top: 0;
+  border-top: 0;
 }
-.foot-meta-note {
+.foot-credit {
+  margin: 0;
+  max-width: 52rem;
   color: var(--muted);
-  font-size: 0.76rem;
-  line-height: 1.5;
+  font-size: 0.7rem;
+  line-height: 1.55;
 }
+.foot-credit a {
+  color: inherit;
+  text-decoration: none;
+}
+.foot-credit a:hover,
+.foot-credit a:focus-visible { color: var(--ink); }
+.foot-credit a:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
 /* Directory backlinks stay in the footer HTML. Clip the box so they
    take no visual space and cannot form a click region. */
 .foot-badges {
@@ -4791,23 +4788,23 @@ html[data-theme="light"] .cz-check input:checked {
    or white mark and not a recolour. */
 .foot-mark { color: var(--ink); flex: none; }
 
-.foot-grok {
+.foot-credit .foot-grok {
   display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  /* Clear space beside the artwork. The words never touch it. */
-  gap: 14px;
-  min-height: 34px;
-  color: var(--ink-soft);
-  font: 500 0.7rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.1em;
-  transition: color var(--dur) var(--ease);
+  align-items: baseline;
+  gap: 6px;
+  min-height: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  vertical-align: baseline;
 }
-.foot-grok:hover,
-.foot-grok:focus-visible { color: var(--ink); }
-.foot-grok:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 4px; }
-.foot-mark-grok { width: 20px; height: 20px; flex: none; }
-.foot-mark-text { white-space: nowrap; }
+.foot-credit .foot-mark-grok {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  align-self: center;
+}
+.foot-credit .foot-mark-text { white-space: nowrap; }
 
 /* Leaves the site. Same icon on every row that does. */
 .foot-out { flex: none; opacity: 0.55; }
@@ -4822,7 +4819,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 900px) {
   /* Identity stacks above the map rather than squeezing beside it. */
   .foot-panes { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-  .foot-meta { margin-top: 36px; padding-top: 22px; }
+  .foot-meta { margin-top: 24px; padding-top: 0; }
 }
 @media (max-width: 1279px) {
   /* 1024 to 1279 still matches the 4-col default. Identity takes
@@ -4845,7 +4842,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .foot-col:last-child .foot-link { gap: 6px; font-size: 0.72rem; }
   .foot-link { min-height: 44px; }
   .foot-legal { max-width: none; }
-  .foot-meta { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .foot-meta { margin-top: 24px; }
+  .foot-credit,
+  .foot-credit a,
+  .foot-credit .foot-grok { min-height: 0; }
 }
 
 

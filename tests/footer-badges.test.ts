@@ -37,4 +37,17 @@ describe("footer directory badges", () => {
     assert.match(footer, /notAffiliated/);
     assert.match(footer, /createdWithGrok/);
   });
+
+  it("keeps a quiet credit line without a second footer nav", () => {
+    assert.match(footer, /className="foot-credit"/);
+    assert.match(footer, /https:\/\/ellelion\.com/);
+    assert.match(footer, /https:\/\/x\.com\/ici_dab|iciDabUrl/);
+    assert.match(footer, /Created with Grok|createdWithGrok/);
+    assert.equal(footer.includes("Built with Grok"), false);
+    assert.equal(footer.includes("API docs"), false);
+    assert.equal(footer.includes("For agents"), false);
+    const meta = css.slice(css.indexOf(".foot-meta {"), css.indexOf(".foot-meta {") + 220);
+    assert.equal(/border-top:\s*1px/.test(meta), false);
+    assert.equal(css.includes("html:not([data-theme=\"dark\"]) .wings-mark"), false);
+  });
 });

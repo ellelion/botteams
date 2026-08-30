@@ -44,7 +44,42 @@ export function SiteFooter() {
           </Suspense>
         </div>
         <div className="foot-meta">
-          <p className="foot-meta-note">{en.footer.notAffiliated}</p>
+          <p className="foot-credit">
+            © {year}, {en.footer.creditReserved}{" "}
+            <a
+              href="https://ellelion.com"
+              rel="nofollow noopener noreferrer"
+              target="_blank"
+              aria-label={`Ellelion.com. ${en.nav.opensNew}`}
+            >
+              Ellelion.com
+            </a>
+            {", "}
+            {en.footer.creditBy}{" "}
+            <a
+              href={site.iciDabUrl}
+              rel="nofollow noopener noreferrer"
+              target="_blank"
+              aria-label={`${site.iciDabHandle} on X. ${en.nav.opensNew}`}
+            >
+              {site.iciDabHandle}
+            </a>
+            {", "}
+            {en.footer.creditGod}
+            <span aria-hidden> · </span>
+            {en.footer.notAffiliated}
+            <span aria-hidden> · </span>
+            <a
+              className="foot-grok"
+              href={site.grokHome}
+              rel="nofollow noopener noreferrer"
+              target="_blank"
+              aria-label={`${en.footer.createdWithGrok}. ${en.nav.opensNew}`}
+            >
+              <GrokLogomark className="foot-mark-grok" />
+              <span className="foot-mark-text">{en.footer.createdWithGrok}</span>
+            </a>
+          </p>
           {/* Clipped, not removed. Directories still get the outbound href. */}
           <div className="foot-badges" aria-hidden="true">
             {/* Findly verifies this listing-specific embed in the public footer. */}
@@ -222,17 +257,6 @@ export function SiteFooter() {
               />
             </a>
           </div>
-          {/* Credit at the bottom of the footer, well clear of the mark. */}
-          <a
-            className="foot-grok"
-            href={site.grokHome}
-            rel="nofollow noopener noreferrer"
-            target="_blank"
-            aria-label={`${en.footer.createdWithGrok}. ${en.nav.opensNew}`}
-          >
-            <GrokLogomark className="foot-mark-grok" />
-            <span className="foot-mark-text">{en.footer.createdWithGrok}</span>
-          </a>
         </div>
       </div>
     </footer>

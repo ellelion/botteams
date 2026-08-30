@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 /*
- * The BT site mark — grey "BT" with a teal dot on the T bar (ellelion.com).
+ * The BT site mark: grey BT with a teal dot on the T bar. No tile, no outline.
  * Decorative: it always sits next to a text label, so it stays aria-hidden.
  *
  * `layoutSize` lets the mark render visually large while only occupying
