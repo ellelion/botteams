@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { TeamIndex } from "@/components/home/TeamIndex";
+import type { SponsorSlot } from "@/data/sponsors";
 import { RevealText } from "@/components/home/RevealText";
 import { HeroStats } from "@/components/home/HeroStats";
 import { StoryBeat } from "@/components/home/StoryBeat";
@@ -16,6 +17,9 @@ const CONTRIBUTE_SAMPLE = `---
 slug: founder-os
 name: Founder OS
 tagline: Money and inbox in one founder room.
+bullets:
+  - Money reads Stripe
+  - Inbox drafts founder mail
 bots: 2
 section: Founder OS
 kind: team
@@ -38,7 +42,15 @@ routines:
     prompt: Read Stripe. Draft the weekly money brief. Never move funds.
 ---`;
 
-export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery }) {
+export function HomePage({
+  teams,
+  query,
+  sponsors = [],
+}: {
+  teams: Team[];
+  query: IndexQuery;
+  sponsors?: SponsorSlot[];
+}) {
   const teamCount = teams.filter((t) => t.kind === "team").length;
   const botCount = teams.filter((t) => t.kind === "bot").length;
   const catalogActive =
@@ -143,7 +155,7 @@ export function HomePage({ teams, query }: { teams: Team[]; query: IndexQuery })
         </>
       }
     >
-      <TeamIndex teams={teams} query={query} />
+      <TeamIndex teams={teams} query={query} sponsors={sponsors} />
       <div className="home-more lg:hidden">
         <details name="home-more">
           <summary>{en.home.howSummary}</summary>

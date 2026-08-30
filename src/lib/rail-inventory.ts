@@ -1,7 +1,9 @@
+import { cache } from "react";
 import { connection } from "next/server";
 import { databaseUrl } from "@/lib/db";
 import { listLivePayingSlots } from "@/lib/rail-db";
 import { SPONSOR_SLOTS_TOTAL, houseSlots, type SponsorSlot } from "@/data/sponsors";
+import { listingChromeSlots } from "@/lib/listing-sponsors";
 
 export type RailInventory = {
   filled: number;
@@ -23,7 +25,7 @@ function pack(paid: SponsorSlot[]): RailInventory {
   };
 }
 
-export async function getRailInventory(): Promise<RailInventory> {
+export const getRailInventory = cache(async function getRailInventory(): Promise<RailInventory> {
   try {
     await connection();
     let paid: SponsorSlot[] = [];
@@ -43,6 +45,12 @@ export async function getRailInventory(): Promise<RailInventory> {
   } catch {
     return pack([]);
   }
+});
+
+/** Listing/home chrome. Empty when the rail is only house upsell. */
+export async function getListingChrome(): Promise<SponsorSlot[]> {
+  const { slots } = await getRailInventory();
+  return listingChromeSlots(slots);
 }
 
 export async function openPayingCount(): Promise<number> {

@@ -2,6 +2,11 @@
 slug: content-editorial
 name: Editorial standards
 tagline: Reads drafts before a human editor does, catching claims without sources, house-style breaks, and the things that get fixed at the last minute.
+bullets:
+  - Claims flags facts without a source
+  - Style lists house-style breaks
+  - Links checks they resolve
+  - Handoff writes the note the editor reads first
 bots: 4
 section: Content
 status: installable

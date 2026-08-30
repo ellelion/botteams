@@ -69,6 +69,9 @@ $schema: https://botteams.io/schema/team.schema.json
 slug: founder-os                    # required, equals the filename
 name: Founder OS                    # required
 tagline: One line for the job.      # required
+bullets:                            # required on teams, one short line per Bot
+  - Money reads Stripe
+  - Inbox drafts founder mail
 bots: 2                             # required, must equal the bot_roster length
 section: Founder OS                 # required, from the closed list below
 kind: team                          # required: team or bot

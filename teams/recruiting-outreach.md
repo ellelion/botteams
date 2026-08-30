@@ -2,6 +2,11 @@
 slug: recruiting-outreach
 name: Outreach desk
 tagline: Writes outreach that names the person's actual work, and stops the sequence the moment someone replies.
+bullets:
+  - Draft names the person's actual work
+  - Sequence holds the follow-ups
+  - Replies sorts interested, not now, and no
+  - Book drafts the scheduling message
 bots: 4
 section: Recruiting
 status: installable

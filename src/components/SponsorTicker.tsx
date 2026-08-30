@@ -1,12 +1,8 @@
 "use client";
 
-import {
-  type Campaign,
-  houseSlots,
-  sponsorHref,
-  type SponsorSlot,
-} from "@/data/sponsors";
+import { type Campaign, sponsorHref, type SponsorSlot } from "@/data/sponsors";
 import { HideNextIndicator } from "@/components/HideNextIndicator";
+import { listingChromeSlots } from "@/lib/listing-sponsors";
 import { en } from "@/lib/messages/en";
 import { useScrollEdges } from "@/lib/use-scroll-edges";
 
@@ -42,36 +38,31 @@ function ChipRow({
   slots: SponsorSlot[];
   campaign: Campaign;
 }) {
-  const base = slots.length ? slots : houseSlots;
-  const rail = useScrollEdges<HTMLDivElement>(base.length);
+  const rail = useScrollEdges<HTMLDivElement>(slots.length);
   return (
     <div
       ref={rail}
       className="spon-mq-copy scroll-fade"
     >
-      {base.map((slot, i) => (
+      {slots.map((slot, i) => (
         <Chip key={`${slot.id}-${i}`} slot={slot} campaign={campaign} />
       ))}
-      <a
-        className="spon-chip spon-chip-add"
-        href="/sponsor"
-      >
-        {en.sponsor.addYours}
-      </a>
     </div>
   );
 }
 
 export function SponsorTicker({
   campaign = "rail",
-  slots = houseSlots,
+  slots,
   place = "top",
 }: {
   campaign?: Campaign;
-  slots?: SponsorSlot[];
+  slots: SponsorSlot[];
   place?: "top" | "bottom";
 }) {
-  const list = place === "bottom" ? [...slots].reverse() : slots;
+  const filled = listingChromeSlots(slots);
+  if (filled.length === 0) return null;
+  const list = place === "bottom" ? [...filled].reverse() : filled;
   return (
     <div className={`spon-mq spon-mq--${place}`} aria-label={en.sponsor.listingKicker}>
       {place === "bottom" ? <HideNextIndicator /> : null}

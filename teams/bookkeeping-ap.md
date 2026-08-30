@@ -2,6 +2,11 @@
 slug: bookkeeping-ap
 name: Accounts payable
 tagline: "Watches what the company owes: bills in, duplicates caught, and nothing paid twice or paid late by accident."
+bullets:
+  - Intake pulls amount, due date, and supplier
+  - Duplicates flags bills already in the ledger
+  - Due lists what falls due this week
+  - Cards names spend with no receipt
 bots: 4
 section: Bookkeeping
 status: installable

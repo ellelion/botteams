@@ -1,7 +1,12 @@
 ---
 slug: content-geo-aeo
 name: GEO / AEO desk team
-tagline: Treats generative answers as a citation problem. Finds who gets cited, gathers sources you can stand behind, and drafts the page that would earn the citation.
+tagline: Treats generative answers as a citation problem.
+bullets:
+  - Citations names who got cited
+  - Sources gathers URLs a page can stand behind
+  - Pages drafts the citation-first brief
+  - Proof checks whether the page earned a citation
 bots: 4
 section: Content
 status: installable

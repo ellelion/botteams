@@ -2,6 +2,11 @@
 slug: hiring-scorecards
 name: Interview scorecards
 tagline: Keeps hiring decisions evidence-based by chasing the scorecard while the interview is still fresh.
+bullets:
+  - Missing names interviews with no scorecard
+  - Thin flags ratings with no evidence
+  - Panel checks the attributes the role needs
+  - Summary drafts the decision from the evidence
 bots: 4
 section: Hiring
 status: installable

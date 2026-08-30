@@ -656,6 +656,9 @@ export function toMarkdown(team: Team, state: CustomState): string {
     `slug: ${team.slug}`,
     `name: ${yamlScalar(isSolo(team) ? grokBotName(team.name) : grokTeamName(team.name))}`,
     `tagline: ${yamlScalar(team.tagline)}`,
+    ...(team.bullets.length
+      ? ["bullets:", ...team.bullets.map((line) => `  - ${yamlScalar(line)}`)]
+      : []),
     `bots: ${r.botRoster.length}`,
     `section: ${yamlScalar(team.section)}`,
     `kind: ${team.kind}`,

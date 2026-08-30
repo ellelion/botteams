@@ -44,13 +44,50 @@ export function SiteFooter() {
           </Suspense>
         </div>
         <div className="foot-meta">
-          <p className="foot-meta-note">{en.footer.notAffiliated}</p>
-          <div className="foot-badges" aria-label="Directory listings">
+          <p className="foot-credit">
+            © {year}, {en.footer.creditReserved}{" "}
+            <a
+              href="https://ellelion.com"
+              rel="nofollow noopener noreferrer"
+              target="_blank"
+              aria-label={`Ellelion.com. ${en.nav.opensNew}`}
+            >
+              Ellelion.com
+            </a>
+            {", "}
+            {en.footer.creditBy}{" "}
+            <a
+              href={site.iciDabUrl}
+              rel="nofollow noopener noreferrer"
+              target="_blank"
+              aria-label={`${site.iciDabHandle} on X. ${en.nav.opensNew}`}
+            >
+              {site.iciDabHandle}
+            </a>
+            {", "}
+            {en.footer.creditGod}
+            <span aria-hidden> · </span>
+            {en.footer.notAffiliated}
+            <span aria-hidden> · </span>
+            <a
+              className="foot-grok"
+              href={site.grokHome}
+              rel="nofollow noopener noreferrer"
+              target="_blank"
+              aria-label={`${en.footer.createdWithGrok}. ${en.nav.opensNew}`}
+            >
+              <GrokLogomark className="foot-mark-grok" />
+              <span className="foot-mark-text">{en.footer.createdWithGrok}</span>
+            </a>
+          </p>
+          {/* Clipped, not removed. Directories still get the outbound href. */}
+          <div className="foot-badges" aria-hidden="true">
             {/* Findly verifies this listing-specific embed in the public footer. */}
             <a
               href="https://findly.tools/botteams-ai?utm_source=botteams-ai"
               target="_blank"
               rel="noopener noreferrer"
+              tabIndex={-1}
               aria-label={`Featured on Findly.tools. ${en.nav.opensNew}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
@@ -66,6 +103,7 @@ export function SiteFooter() {
               href="https://acidtools.com/ai/botteams"
               target="_blank"
               rel="noopener noreferrer"
+              tabIndex={-1}
               aria-label={`Listed on Acid Tools. ${en.nav.opensNew}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
@@ -82,6 +120,7 @@ export function SiteFooter() {
               href="https://aitechviral.com/ai/botteams"
               target="_blank"
               rel="noopener noreferrer"
+              tabIndex={-1}
               aria-label={`Listed on AI Tech Viral. ${en.nav.opensNew}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
@@ -98,6 +137,7 @@ export function SiteFooter() {
               href="https://aibesttop.com"
               target="_blank"
               rel="noopener noreferrer"
+              tabIndex={-1}
               aria-label={`Listed on AIBestTop. ${en.nav.opensNew}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
@@ -114,6 +154,7 @@ export function SiteFooter() {
               href="https://newtool.site/item/botteamsai"
               target="_blank"
               rel="noopener noreferrer"
+              tabIndex={-1}
               aria-label={`Featured on NewTool.site. ${en.nav.opensNew}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
@@ -129,6 +170,7 @@ export function SiteFooter() {
               href="https://deeplaunch.io"
               target="_blank"
               rel="noopener noreferrer"
+              tabIndex={-1}
               aria-label={`Featured on DeepLaunch.io. ${en.nav.opensNew}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
@@ -145,6 +187,7 @@ export function SiteFooter() {
               href="https://dododirectory.com"
               target="_blank"
               rel="dofollow"
+              tabIndex={-1}
               aria-label={`Featured on DodoDirectory. ${en.nav.opensNew}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
@@ -158,22 +201,11 @@ export function SiteFooter() {
             </a>
             {/* DevTool.io verifies this exact static linked badge for free listings. */}
             <a
+              className="foot-badge-plain"
               href="https://devtool.io"
               target="_blank"
               rel="noopener"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "6px 12px",
-                background: "#10b981",
-                color: "#fff",
-                borderRadius: "6px",
-                textDecoration: "none",
-                fontFamily: "sans-serif",
-                fontSize: "14px",
-                fontWeight: 600,
-              }}
+              tabIndex={-1}
             >
               Listed on DevTool.io
             </a>
@@ -182,6 +214,7 @@ export function SiteFooter() {
               href="https://dofollow.tools"
               target="_blank"
               rel="noopener noreferrer"
+              tabIndex={-1}
               aria-label={`Featured on Dofollow.Tools. ${en.nav.opensNew}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
@@ -198,6 +231,7 @@ export function SiteFooter() {
               href="https://marketingdb.live"
               target="_blank"
               rel="noopener noreferrer nofollow sponsored"
+              tabIndex={-1}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
               <img
@@ -212,6 +246,7 @@ export function SiteFooter() {
               href="https://nicklaunches.com/products/botteams-ai/?utm_source=botteams.io&utm_medium=badge&utm_campaign=featured"
               target="_blank"
               rel="noopener"
+              tabIndex={-1}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- the directory verifier requires its exact remote badge image */}
               <img
@@ -222,17 +257,6 @@ export function SiteFooter() {
               />
             </a>
           </div>
-          {/* Credit at the bottom of the footer, well clear of the mark. */}
-          <a
-            className="foot-grok"
-            href={site.grokHome}
-            rel="nofollow noopener noreferrer"
-            target="_blank"
-            aria-label={`${en.footer.createdWithGrok}. ${en.nav.opensNew}`}
-          >
-            <GrokLogomark className="foot-mark-grok" />
-            <span className="foot-mark-text">{en.footer.createdWithGrok}</span>
-          </a>
         </div>
       </div>
     </footer>

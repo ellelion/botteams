@@ -505,13 +505,6 @@ body {
 }
 .site-wordmark-text { font-weight: 500; letter-spacing: -0.012em; }
 .wings-mark { border-radius: 0; }
-/* The ellelion tile is #fcfcfb. On light paper that fill is ~1:1, so
-   the square disappears and only the strokes remain. --pill-line is
-   the 3:1 hairline used for other page-on-page chrome. Dark paper
-   already sees the white tile. */
-html:not([data-theme="dark"]) .wings-mark {
-  box-shadow: 0 0 0 1px var(--pill-line);
-}
 
 .site-masthead-actions {
   display: flex;
@@ -3424,6 +3417,12 @@ a.chip-unverified:focus-visible {
 /* Cards fill the column. home-split is overflow:clip at lg, and the
    column is overflow-y:auto, so a 3px outer ring on the right card
    lost all 5px of the focus mark. */
+.idx-card-topline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+}
 .idx-card-cat {
   display: inline-flex;
   align-items: center;
@@ -3461,6 +3460,32 @@ a.chip-unverified:focus-visible {
   font-size: 0.76rem;
   line-height: 1.5;
   overflow-wrap: anywhere;
+}
+.idx-card-lede {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--ink-soft);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+.idx-card-lede li {
+  position: relative;
+  padding-left: 1.05em;
+  overflow-wrap: anywhere;
+}
+.idx-card-lede li::before {
+  content: "";
+  position: absolute;
+  left: 0.12em;
+  top: 0.55em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink-soft) 72%, transparent);
 }
 .idx-card-foot {
   display: flex;
@@ -4632,7 +4657,7 @@ html[data-theme="light"] .cz-check input:checked {
 .foot-inner {
   max-width: none;
   margin: 0;
-  padding: 72px 0 calc(56px + env(safe-area-inset-bottom));
+  padding: 72px 0 calc(8px + env(safe-area-inset-bottom, 0px));
 }
 .foot-cols {
   display: grid;
@@ -4705,35 +4730,53 @@ html[data-theme="light"] .cz-check input:checked {
   flex-direction: column;
 }
 .foot-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px 24px;
-  margin-top: 48px;
-  padding-top: 28px;
-  border-top: 1px solid var(--line);
-}
-.foot-meta-note {
-  color: var(--muted);
-  font-size: 0.76rem;
-  line-height: 1.5;
-}
-.foot-badges {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-.foot-badges a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 54px;
-}
-.foot-badges img {
+  position: relative;
   display: block;
-  max-width: 100%;
-  height: auto;
+  width: 100%;
+  margin-top: 16px;
+  padding-top: 0;
+  border-top: 0;
+}
+.foot-credit {
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+.foot-credit a {
+  color: inherit;
+  text-decoration: none;
+}
+.foot-credit a:hover,
+.foot-credit a:focus-visible { color: var(--ink); }
+.foot-credit a:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
+/* Directory backlinks stay in the footer HTML. Clip the box so they
+   take no visual space and cannot form a click region. */
+.foot-badges {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+.foot-badges a,
+.foot-badges img {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 .foot-id {
   display: inline-flex;
@@ -4750,23 +4793,23 @@ html[data-theme="light"] .cz-check input:checked {
    or white mark and not a recolour. */
 .foot-mark { color: var(--ink); flex: none; }
 
-.foot-grok {
+.foot-credit .foot-grok {
   display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  /* Clear space beside the artwork. The words never touch it. */
-  gap: 14px;
-  min-height: 34px;
-  color: var(--ink-soft);
-  font: 500 0.7rem/1 var(--font-geist-mono), ui-monospace, monospace;
-  letter-spacing: 0.1em;
-  transition: color var(--dur) var(--ease);
+  align-items: baseline;
+  gap: 6px;
+  min-height: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  vertical-align: baseline;
 }
-.foot-grok:hover,
-.foot-grok:focus-visible { color: var(--ink); }
-.foot-grok:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 4px; }
-.foot-mark-grok { width: 20px; height: 20px; flex: none; }
-.foot-mark-text { white-space: nowrap; }
+.foot-credit .foot-mark-grok {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  align-self: center;
+}
+.foot-credit .foot-mark-text { white-space: nowrap; }
 
 /* Leaves the site. Same icon on every row that does. */
 .foot-out { flex: none; opacity: 0.55; }
@@ -4781,7 +4824,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 900px) {
   /* Identity stacks above the map rather than squeezing beside it. */
   .foot-panes { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-  .foot-meta { margin-top: 36px; padding-top: 22px; }
+  .foot-meta { margin-top: 14px; padding-top: 0; }
 }
 @media (max-width: 1279px) {
   /* 1024 to 1279 still matches the 4-col default. Identity takes
@@ -4795,7 +4838,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 1023px) {
   /* Same 2-column map x.ai uses on a phone. Do not collapse to one
      tall list of 44px rows. A 4-column nowrap map overflows at 820. */
-  .foot-inner { padding: 40px 0 calc(80px + env(safe-area-inset-bottom, 0px)); }
+  .foot-inner { padding: 40px 0 calc(8px + env(safe-area-inset-bottom, 0px)); }
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 16px; }
   .foot-col ul { margin-top: 6px; }
   .foot-col li > .foot-link { white-space: normal; }
@@ -4804,7 +4847,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .foot-col:last-child .foot-link { gap: 6px; font-size: 0.72rem; }
   .foot-link { min-height: 44px; }
   .foot-legal { max-width: none; }
-  .foot-meta { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .foot-meta { margin-top: 12px; }
+  .foot-credit,
+  .foot-credit a,
+  .foot-credit .foot-grok { min-height: 0; }
+}
+html:has(.spon-mq--bottom) .foot-inner {
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
 }
 
 
@@ -6458,8 +6507,10 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     font-size: 0.72rem;
     padding: 0 12px 0 9px;
   }
-  .page-rails-main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
-  html { scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+  .page-rails:has(.spon-mq--bottom) .page-rails-main {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  }
+  html:has(.spon-mq--bottom) { scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
   .foot-link,
   .foot-grok {
     scroll-margin-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
@@ -6582,7 +6633,7 @@ html:not([data-theme="dark"]) :is(.spon-mark, .spon-chip-mark)[src$="/agent-plug
   font-size: 0.82rem;
 }
 @media (min-width: 1280px) {
-  .page-rails {
+  .page-rails:has(.side-rail) {
     grid-template-columns: minmax(0, 1fr) 12.5rem;
     gap: 2rem;
     align-items: stretch;

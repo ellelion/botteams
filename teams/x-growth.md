@@ -1,7 +1,12 @@
 ---
 slug: x-growth
 name: X growth team
-tagline: Drafts X posts, reads the replies, and proposes the next test a human tweets.
+tagline: Drafts X posts, reads the replies, and proposes the next test.
+bullets:
+  - Draft writes the next posts
+  - Replies reads what people said
+  - Tests proposes the next tweet test
+  - Ads reads spend and says what to stop
 bots: 4
 section: Marketing
 status: installable

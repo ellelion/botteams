@@ -1,7 +1,11 @@
 ---
 slug: founder-os
 name: Founder OS
-tagline: Three Bots for a founder with no team yet. Money reads Stripe. Inbox drafts mail. Chief of Staff runs the week board and routes the room.
+tagline: Money, inbox, and a chief of staff in one founder room.
+bullets:
+  - Chief of Staff runs the week board
+  - Money reads Stripe
+  - Inbox drafts founder mail
 bots: 3
 section: Founder OS
 status: installable

@@ -12,6 +12,7 @@ export type ApiTeam = {
   slug: string;
   name: string;
   tagline: string;
+  bullets: string[];
   category: string;
   kind: string;
   status: string;
@@ -46,6 +47,7 @@ export function toApiTeam(team: Team): ApiTeam {
     slug: team.slug,
     name: team.name,
     tagline: team.tagline,
+    bullets: team.bullets.length ? team.bullets : [team.tagline],
     category: team.section,
     kind: team.kind,
     status: team.status,
@@ -95,7 +97,7 @@ export function applyFilters(teams: ApiTeam[], f: Filters): ApiTeam[] {
   if (f.q) {
     const q = f.q.toLowerCase();
     out = out.filter((t) =>
-      [t.name, t.tagline, t.category, t.slug, t.contributor ?? "", ...t.connectors, ...t.botRoster.map((a) => a.name), t.installer]
+      [t.name, t.tagline, t.category, t.slug, t.contributor ?? "", ...t.bullets, ...t.connectors, ...t.botRoster.map((a) => a.name), t.installer]
         .join(" ")
         .toLowerCase()
         .includes(q),

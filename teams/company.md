@@ -1,7 +1,14 @@
 ---
 slug: company
 name: Company team
-tagline: Six Bots run a solo company week. Product holds the list. Coding drafts the ship. Findability writes the citation fix. Marketing drafts the public words. Trust reads the legal line. Money reads Stripe.
+tagline: Six Bots run a solo company week.
+bullets:
+  - Product holds the week list
+  - Coding drafts the GitHub change
+  - Findability drafts the citation fix
+  - Marketing drafts the public words
+  - Trust reads the legal line
+  - Money reads Stripe
 bots: 6
 section: Founder OS
 status: installable

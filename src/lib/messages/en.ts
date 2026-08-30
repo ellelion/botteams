@@ -558,6 +558,9 @@ export const en = {
     ellelion: "Ellelion",
     operated: "Operated by",
     notAffiliated: "Not affiliated with xAI.",
+    creditReserved: "all rights reserved to",
+    creditBy: "by",
+    creditGod: "with the help of God",
     marksAria: "Source and tooling",
     /* One of the two phrases x.ai approves beside its logomark. "Built
        with Grok" is their own first-party footer, not a badge for us. */

@@ -2,6 +2,11 @@
 slug: support-incident
 name: Support during incidents
 tagline: "Handles the support side of an outage: one accurate message, updated, instead of forty different answers."
+bullets:
+  - Detect notices the ticket spike
+  - Link connects it to the open incident
+  - Message drafts one holding update
+  - Affected lists the accounts that hit it
 bots: 4
 section: Support
 status: installable

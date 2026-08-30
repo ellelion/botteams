@@ -1,7 +1,12 @@
 ---
 slug: indie-distribution
 name: Indie distribution team
-tagline: Turns a real release into changelog notes, an X draft, a Show HN, and directory listing notes a human posts.
+tagline: Turns a real release into the public notes a human posts.
+bullets:
+  - Changelog writes the ship note
+  - X drafts the post
+  - HN drafts the Show HN
+  - Listings drafts directory notes
 bots: 4
 section: Creator
 status: installable

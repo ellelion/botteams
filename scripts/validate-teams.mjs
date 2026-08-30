@@ -164,6 +164,22 @@ for (const { file, dir, kind: folderKind } of entries) {
       fail(file + ": routines[" + i + "] needs name, owner, schedule, prompt");
     }
   });
+  if (folderKind === "team") {
+    if (!Array.isArray(data.bullets) || data.bullets.length !== (data.bot_roster?.length ?? 0)) {
+      fail(file + ": teams need bullets: one short line per Bot");
+    } else {
+      data.bullets.forEach((line, i) => {
+        if (!isNonEmptyString(line)) fail(file + ": bullets[" + i + "] must be a non-empty string");
+        if (String(line).includes("\u2014") || String(line).includes("\u2013")) {
+          fail(file + ": bullets[" + i + "] must not use an em or en dash");
+        }
+      });
+    }
+  } else if (data.bullets !== undefined) {
+    if (!Array.isArray(data.bullets) || data.bullets.length > 1) {
+      fail(file + ": a bot has at most one lede bullet");
+    }
+  }
   if (data.skills !== undefined && !Array.isArray(data.skills)) fail(file + ": skills must be an array when present");
   if (data.from_xai !== undefined && data.from_xai !== true) fail(file + ": from_xai must be true when present, or absent");
 

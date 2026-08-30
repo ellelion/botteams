@@ -177,6 +177,8 @@ export function parseTeam(raw: string, filename: string): Team {
   }
   if (typeof data.name !== "string") throw new Error(`${filename}: missing name`);
   if (typeof data.tagline !== "string") throw new Error(`${filename}: missing tagline`);
+  const bullets = data.bullets === undefined ? [] : asStringArray(data.bullets, "bullets").map((line) => line.trim());
+  if (bullets.some((line) => !line)) throw new Error(`${filename}: bullets must be non-empty strings`);
   const bots = typeof data.bots === "number" ? data.bots : data.seats;
   if (typeof bots !== "number") throw new Error(`${filename}: missing bots`);
   if (typeof data.section !== "string") throw new Error(`${filename}: missing section`);
@@ -210,6 +212,7 @@ export function parseTeam(raw: string, filename: string): Team {
     kind,
     name: data.name,
     tagline: data.tagline,
+    bullets,
     bots,
     section: data.section,
     status,
@@ -242,6 +245,9 @@ export function parseTeam(raw: string, filename: string): Team {
     conversation: asConversation(data.conversation),
     conversationByBot: asConversationBots(data.conversation_bots),
   };
+  if (kind === "team" && team.bullets.length !== team.botRoster.length) {
+    throw new Error(`${filename}: teams need one bullets line per Bot`);
+  }
   if (!team.conversation && isFirstParty(team) && team.botRoster.length > 0) {
     team.conversation = generateConversation(team);
   }

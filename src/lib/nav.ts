@@ -17,7 +17,6 @@ export const MAIN_NAV: NavItem[] = [
   { href: "/?kind=bot", label: en.nav.bots, id: "bots" },
   { href: "/docs", label: en.nav.docs, id: "docs" },
   { href: "/api", label: en.nav.api, id: "api" },
-  { href: "/sponsor", label: en.nav.sponsor, id: "sponsor" },
   { href: site.github, label: en.nav.github, id: "github", external: true },
 ];
 

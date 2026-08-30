@@ -22,6 +22,29 @@ describe("catalog cut", () => {
     assert.equal(listBots().length, 60);
   });
 
+  it("gives every team one listing bullet per Bot", () => {
+    for (const team of listTeams()) {
+      assert.equal(team.bullets.length, team.botRoster.length, team.slug);
+      for (const line of team.bullets) {
+        assert.match(line, /\S/, `${team.slug} empty bullet`);
+        assert.equal(line.includes("\u2014") || line.includes("\u2013"), false, `${team.slug} dash in "${line}"`);
+      }
+    }
+  });
+
+  it("exposes those bullets on the public team API", () => {
+    const company = allApiTeams().find((team) => team.slug === "company");
+    assert.ok(company);
+    assert.equal(company.bullets.length, 6);
+    assert.equal(company.tagline, "Six Bots run a solo company week.");
+    const bots = allApiBots();
+    assert.equal(bots.length, 60);
+    for (const bot of bots) {
+      assert.ok(bot.bullets.length >= 1, bot.slug);
+      assert.ok(bot.bullets.length <= 1, bot.slug);
+    }
+  });
+
   it("snapshots API collection sizes to the same counts", () => {
     assert.equal(allApiTeams().length, 15);
     assert.equal(allApiBots().length, 60);

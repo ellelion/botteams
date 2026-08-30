@@ -2,6 +2,11 @@
 slug: marketing-paid-media
 name: Paid media desk
 tagline: Reads live spend and creative, recommends the next reallocation and the next test, then waits.
+bullets:
+  - Spend reads the channels against the cap
+  - Creative names what is working
+  - Tests keeps the hypothesis backlog
+  - Recap writes the weekly spend note
 bots: 4
 section: Marketing
 status: installable

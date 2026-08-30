@@ -2,6 +2,11 @@
 slug: content-rank-desk
 name: Rank desk
 tagline: Reads Search Console and DataForSEO once a week, names what moved, and writes the next fix instead of another dashboard.
+bullets:
+  - Queries reads what gained or lost impressions
+  - Positions flags rank jumps
+  - Plan writes the next fix
+  - Recap drafts the weekly mail
 bots: 4
 section: Content
 status: installable
