@@ -4737,6 +4737,7 @@ html[data-theme="light"] .cz-check input:checked {
   flex-direction: column;
 }
 .foot-meta {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -4751,33 +4752,29 @@ html[data-theme="light"] .cz-check input:checked {
   font-size: 0.76rem;
   line-height: 1.5;
 }
+/* Directory backlinks stay in the footer HTML. Clip the box so they
+   take no visual space and cannot form a click region. */
 .foot-badges {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 6px;
-}
-.foot-badges a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 0;
-  line-height: 0;
-}
-.foot-badges img {
-  display: block;
-  width: auto;
-  height: 20px;
-  max-height: 20px;
-}
-.foot-badge-plain {
-  height: 20px;
-  padding: 0 7px;
-  border-radius: 4px;
-  background: #10b981;
-  color: #fff;
-  font: 600 9px/1 ui-sans-serif, system-ui, sans-serif;
-  text-decoration: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
+  border: 0;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+.foot-badges a,
+.foot-badges img {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 .foot-id {
   display: inline-flex;
