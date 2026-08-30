@@ -47,7 +47,9 @@ describe("footer directory badges", () => {
     assert.equal(footer.includes("API docs"), false);
     assert.equal(footer.includes("For agents"), false);
     const meta = css.slice(css.indexOf(".foot-meta {"), css.indexOf(".foot-meta {") + 220);
+    const credit = css.slice(css.indexOf(".foot-credit {"), css.indexOf(".foot-credit {") + 180);
     assert.equal(/border-top:\s*1px/.test(meta), false);
+    assert.match(credit, /text-align:\s*center/);
     assert.equal(css.includes("html:not([data-theme=\"dark\"]) .wings-mark"), false);
   });
 });

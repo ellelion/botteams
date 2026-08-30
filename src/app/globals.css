@@ -4657,7 +4657,7 @@ html[data-theme="light"] .cz-check input:checked {
 .foot-inner {
   max-width: none;
   margin: 0;
-  padding: 72px 0 calc(56px + env(safe-area-inset-bottom));
+  padding: 72px 0 calc(16px + env(safe-area-inset-bottom, 0px));
 }
 .foot-cols {
   display: grid;
@@ -4737,7 +4737,8 @@ html[data-theme="light"] .cz-check input:checked {
 }
 .foot-credit {
   margin: 0;
-  max-width: 52rem;
+  max-width: none;
+  text-align: center;
   color: var(--muted);
   font-size: 0.7rem;
   line-height: 1.55;
@@ -4833,7 +4834,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 1023px) {
   /* Same 2-column map x.ai uses on a phone. Do not collapse to one
      tall list of 44px rows. A 4-column nowrap map overflows at 820. */
-  .foot-inner { padding: 40px 0 calc(80px + env(safe-area-inset-bottom, 0px)); }
+  .foot-inner { padding: 40px 0 calc(16px + env(safe-area-inset-bottom, 0px)); }
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 16px; }
   .foot-col ul { margin-top: 6px; }
   .foot-col li > .foot-link { white-space: normal; }
