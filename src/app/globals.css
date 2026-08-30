@@ -4657,7 +4657,7 @@ html[data-theme="light"] .cz-check input:checked {
 .foot-inner {
   max-width: none;
   margin: 0;
-  padding: 72px 0 calc(16px + env(safe-area-inset-bottom, 0px));
+  padding: 72px 0 calc(8px + env(safe-area-inset-bottom, 0px));
 }
 .foot-cols {
   display: grid;
@@ -4731,17 +4731,21 @@ html[data-theme="light"] .cz-check input:checked {
 }
 .foot-meta {
   position: relative;
-  margin-top: 28px;
+  display: block;
+  width: 100%;
+  margin-top: 16px;
   padding-top: 0;
   border-top: 0;
 }
 .foot-credit {
-  margin: 0;
+  display: block;
+  width: 100%;
   max-width: none;
+  margin: 0;
   text-align: center;
   color: var(--muted);
   font-size: 0.7rem;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 .foot-credit a {
   color: inherit;
@@ -4820,7 +4824,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 900px) {
   /* Identity stacks above the map rather than squeezing beside it. */
   .foot-panes { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-  .foot-meta { margin-top: 24px; padding-top: 0; }
+  .foot-meta { margin-top: 14px; padding-top: 0; }
 }
 @media (max-width: 1279px) {
   /* 1024 to 1279 still matches the 4-col default. Identity takes
@@ -4834,7 +4838,7 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
 @media (max-width: 1023px) {
   /* Same 2-column map x.ai uses on a phone. Do not collapse to one
      tall list of 44px rows. A 4-column nowrap map overflows at 820. */
-  .foot-inner { padding: 40px 0 calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .foot-inner { padding: 40px 0 calc(8px + env(safe-area-inset-bottom, 0px)); }
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 16px; }
   .foot-col ul { margin-top: 6px; }
   .foot-col li > .foot-link { white-space: normal; }
@@ -4843,10 +4847,13 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
   .foot-col:last-child .foot-link { gap: 6px; font-size: 0.72rem; }
   .foot-link { min-height: 44px; }
   .foot-legal { max-width: none; }
-  .foot-meta { margin-top: 24px; }
+  .foot-meta { margin-top: 12px; }
   .foot-credit,
   .foot-credit a,
   .foot-credit .foot-grok { min-height: 0; }
+}
+html:has(.spon-mq--bottom) .foot-inner {
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
 }
 
 
