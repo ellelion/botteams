@@ -4,6 +4,7 @@ import {
   sponsorHref,
   type SponsorSlot,
 } from "@/data/sponsors";
+import { SPONSORSHIPS } from "@/lib/flags";
 import { getRailInventory } from "@/lib/rail-inventory";
 import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
@@ -53,6 +54,7 @@ export async function SponsorRail({
   campaign?: Campaign;
   side?: "left" | "right" | "stack";
 }) {
+  if (!SPONSORSHIPS) return null;
   const { filled, open, slots } = await getRailInventory();
 
   return (

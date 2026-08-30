@@ -121,6 +121,11 @@ npm test           # all local merge checks
 
 Node 22.12.0 (see `.nvmrc`).
 
+Sponsorship chrome on listings and home is off by default. Set
+`NEXT_PUBLIC_SPONSORSHIPS=1` in `.env.local` or the host env and restart
+Next.js to restore the side rail, ticker, and in-list sponsor rows. The
+`/sponsor` page stays up either way. See `src/lib/flags.ts`.
+
 ## Language
 
 A row is a **team**. The unit is a **Bot**, capital B. Group chats hold two to six Bots. No em-dashes.

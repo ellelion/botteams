@@ -7,6 +7,7 @@ import {
   type SponsorSlot,
 } from "@/data/sponsors";
 import { HideNextIndicator } from "@/components/HideNextIndicator";
+import { SPONSORSHIPS } from "@/lib/flags";
 import { en } from "@/lib/messages/en";
 import { useScrollEdges } from "@/lib/use-scroll-edges";
 
@@ -71,6 +72,7 @@ export function SponsorTicker({
   slots?: SponsorSlot[];
   place?: "top" | "bottom";
 }) {
+  if (!SPONSORSHIPS) return null;
   const list = place === "bottom" ? [...slots].reverse() : slots;
   return (
     <div className={`spon-mq spon-mq--${place}`} aria-label={en.sponsor.listingKicker}>

@@ -54,6 +54,7 @@ Before you open a pull request:
   at least one group chat. A bot has exactly one Bot and no group chat.
 - **It is not an ad.** A team that exists to sell one product will be closed.
   Sponsorship is a separate thing: see [/sponsor](https://botteams.io/sponsor).
+  Listing ads stay behind `NEXT_PUBLIC_SPONSORSHIPS` (off by default).
 - **Guardrails are explicit.** If a Bot touches money, mail, or production,
   the persona says what it will not do. "Drafts only, never sends" is the
   house style for a reason.

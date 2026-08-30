@@ -23,6 +23,8 @@ import { type Team } from "@/lib/types";
 import { houseSlots, sponsorHref, type SponsorSlot } from "@/data/sponsors";
 import { SponsorTicker } from "@/components/SponsorTicker";
 import { resolveConnector, resolveConnectors } from "@/lib/connectors";
+import { SPONSORSHIPS } from "@/lib/flags";
+import { listingRows } from "@/lib/listing-rows";
 
 /*
  * Two index layouts, one filter model.
@@ -123,32 +125,6 @@ function matchesQuery(team: Team, q: string): boolean {
   return hay.includes(q);
 }
 
-
-const AD_EVERY = 7;
-const SLOT_EVERY = 21;
-
-type ListingRow =
-  | { kind: "team"; team: Team }
-  | { kind: "ad"; slot: SponsorSlot; key: string }
-  | { kind: "slot"; key: string };
-
-function interleaveAds(teams: Team[], ads: SponsorSlot[]): ListingRow[] {
-  const pool = ads.length ? ads : houseSlots;
-  const out: ListingRow[] = [];
-  let n = 0;
-  teams.forEach((team, i) => {
-    out.push({ kind: "team", team });
-    const k = i + 1;
-    if (k % SLOT_EVERY === 0) {
-      out.push({ kind: "slot", key: `slot-${i}` });
-    } else if (k % AD_EVERY === 0) {
-      const slot = pool[(n + 1) % pool.length];
-      out.push({ kind: "ad", slot, key: `ad-${i}-${slot.id}` });
-      n += 1;
-    }
-  });
-  return out;
-}
 
 function ListingAd({ slot, as }: { slot: SponsorSlot; as: "row" | "card" }) {
   return (
@@ -442,7 +418,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
     </div>
   ) : view === "cards" ? (
     <div className={`idx-cards${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
-      {interleaveAds(sorted, houseSlots).map((row) =>
+      {listingRows(sorted, houseSlots).map((row) =>
         row.kind === "ad" ? (
           <ListingAd key={row.key} slot={row.slot} as="card" />
         ) : row.kind === "slot" ? (
@@ -454,7 +430,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
     </div>
   ) : (
     <div className={`team-table${isPending ? " is-pending" : ""}`} aria-busy={isPending || undefined}>
-      {interleaveAds(sorted, houseSlots).map((row) =>
+      {listingRows(sorted, houseSlots).map((row) =>
         row.kind === "ad" ? (
           <ListingAd key={row.key} slot={row.slot} as="row" />
         ) : row.kind === "slot" ? (
@@ -474,7 +450,7 @@ export function TeamIndex({ teams, query: initial }: { teams: Team[]; query: Ind
 
   return (
     <section id="teams">
-      <SponsorTicker place="top" />
+      {SPONSORSHIPS ? <SponsorTicker place="top" /> : null}
       <div className="index-chrome">
         <form
           className="search-wrap"

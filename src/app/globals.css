@@ -6458,10 +6458,12 @@ html[data-theme="dark"] .grok-mark-on-dark { display: inline-block; }
     font-size: 0.72rem;
     padding: 0 12px 0 9px;
   }
-  .page-rails-main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
-  html { scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
-  .foot-link,
-  .foot-grok {
+  /* Reserve ticker space only when the bar is in the tree. The flag
+     removes the node; do not keep a blank 80px dock. */
+  body:has(.spon-mq--bottom) .page-rails-main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+  html:has(.spon-mq--bottom) { scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+  body:has(.spon-mq--bottom) .foot-link,
+  body:has(.spon-mq--bottom) .foot-grok {
     scroll-margin-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   }
 }
@@ -6582,13 +6584,13 @@ html:not([data-theme="dark"]) :is(.spon-mark, .spon-chip-mark)[src$="/agent-plug
   font-size: 0.82rem;
 }
 @media (min-width: 1280px) {
-  .page-rails {
+  .page-rails:has(.side-rail) {
     grid-template-columns: minmax(0, 1fr) 12.5rem;
     gap: 2rem;
     align-items: stretch;
     padding-inline: 1rem 1.25rem;
   }
-  .page-rails-main {
+  .page-rails:has(.side-rail) .page-rails-main {
     padding-bottom: var(--sec-y);
   }
   .side-rail--left,
