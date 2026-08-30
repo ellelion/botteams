@@ -40,7 +40,7 @@ bot_roster:
     connectors:
       - Ramp
 rooms:
-  - name: Payables desk
+  - name: Payables desk group chat
     members:
       - AP · Intake
       - AP · Duplicates

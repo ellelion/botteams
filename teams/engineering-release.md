@@ -39,7 +39,7 @@ bot_roster:
     connectors:
       - Linear
 rooms:
-  - name: Release room
+  - name: Release room group chat
     members:
       - Release · Notes
       - Release · Deploys

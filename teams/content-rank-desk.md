@@ -39,7 +39,7 @@ bot_roster:
     connectors:
       - Gmail
 rooms:
-  - name: Rank desk
+  - name: Rank desk group chat
     members:
       - Rank · Queries
       - Rank · Positions

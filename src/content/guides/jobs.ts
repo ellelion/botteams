@@ -8,8 +8,8 @@ export const jobGuides: Guide[] = [
     title: "Grok Bot for SEO",
     headline: "Can Grok Bot do SEO and AEO?",
     description:
-      "Grok Bot can draft SEO and AEO work that stops before publish. This directory has an SEO desk, a GEO/AEO desk, and an SEO/AEO Auditor. 24 August 2026.",
-    hero: "Grok Bot can watch Search Console, draft a brief, and stop before anyone publishes. It is a poor choice for unsupervised site edits. This directory has an SEO desk, a GEO/AEO desk, an SEO/AEO Auditor, and an on-page fixer. All of them write the plan. None of them change the site.",
+      "Grok Bot can draft SEO and AEO work that stops before publish. This directory has a Rank desk, a GEO/AEO desk, and an SEO/AEO Auditor. 30 August 2026.",
+    hero: "Grok Bot can watch Search Console, draft a brief, and stop before anyone publishes. It is a poor choice for unsupervised site edits. This directory has a Rank desk, a GEO/AEO desk, an SEO/AEO Auditor, and an on-page fixer. All of them write the plan. None of them change the site.",
     sections: [
       {
         id: "what-the-job-owns",
@@ -21,7 +21,7 @@ export const jobGuides: Guide[] = [
           },
           {
             type: "p",
-            text: "On this directory the [SEO desk](/teams/content-seo) watches decaying pages before it asks for a new post. The [GEO / AEO desk](/teams/content-geo-aeo) watches who gets cited when someone asks a model. Those are different rooms. Do not merge them into one 'content' Bot and hope.",
+            text: "On this directory the [Rank desk](/teams/content-rank-desk) watches decaying pages before it asks for a new post. The [GEO / AEO desk](/teams/content-geo-aeo) watches who gets cited when someone asks a model. Those are different rooms. Do not merge them into one 'content' Bot and hope.",
           },
         ],
       },
@@ -34,8 +34,8 @@ export const jobGuides: Guide[] = [
             items: [
               "[SEO / AEO Auditor](/bots/xai-seo-aeo-auditor) for one Bot on rank and citation movement.",
               "[On-page SEO fixer](/bots/on-page-seo-fixer) for a draft fix, still not a publish.",
-              "[SEO desk](/teams/content-seo) for four Bots on decay, gaps, briefs, and recap.",
-              "[GEO / AEO desk](/teams/content-geo-aeo) for five Bots on citations, video, gaps, briefs, and recap.",
+              "[Rank desk](/teams/content-rank-desk) for four Bots on queries, positions, a fix plan, and a recap.",
+              "[GEO / AEO desk](/teams/content-geo-aeo) for four Bots on citations, sources, page briefs, and proof.",
             ],
           },
           {
@@ -61,8 +61,8 @@ export const jobGuides: Guide[] = [
         a: "No. It can draft the brief and the fix. A person still publishes. This page exists so 'Grok Bot for SEO' does not turn into a promise we cannot source.",
       },
       {
-        q: "Is the GEO/AEO desk the same as the SEO desk?",
-        a: "No. SEO desk watches decaying pages. GEO/AEO desk watches who gets cited in answers. Use both if you care about both. Do not rename one Bot and call it a stack.",
+        q: "Is the GEO/AEO desk the same as the Rank desk?",
+        a: "No. Rank desk watches decaying pages. GEO/AEO desk watches who gets cited in answers. Use both if you care about both. Do not rename one Bot and call it a stack.",
       },
       {
         q: "Do you run these desks on botteams.io?",
@@ -73,7 +73,7 @@ export const jobGuides: Guide[] = [
       { href: XAI_DOCS.useCases, label: "docs.x.ai/grok-bot/use-cases" },
     ],
     related: [
-      { href: "/teams/content-seo", label: "SEO desk" },
+      { href: "/teams/content-rank-desk", label: "Rank desk" },
       { href: "/teams/content-geo-aeo", label: "GEO / AEO desk" },
       { href: "/guides/install-a-grok-bot-team", label: "Install a team" },
     ],
@@ -241,7 +241,7 @@ export const jobGuides: Guide[] = [
         blocks: [
           {
             type: "p",
-            text: "[Talent Scout](/bots/xai-talent-scout) is our write-up of that job. Hiring teams on the directory, such as [Hiring](/teams/hiring), are group chats around pipeline and offers. Start with the one Bot if you only want a nightly shortlist.",
+            text: "[Talent Scout](/bots/xai-talent-scout) is our write-up of that job. Hiring teams on the directory, such as [Interview scorecards](/teams/hiring-scorecards), are group chats around evidence and outreach. Start with the one Bot if you only want a nightly shortlist.",
           },
         ],
       },
@@ -265,7 +265,7 @@ export const jobGuides: Guide[] = [
     ],
     related: [
       { href: "/bots/xai-talent-scout", label: "Talent Scout installer" },
-      { href: "/teams/hiring", label: "Hiring team" },
+      { href: "/teams/hiring-scorecards", label: "Interview scorecards" },
       { href: "/guides/install-a-grok-bot-team", label: "Install a team" },
     ],
   },

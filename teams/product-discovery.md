@@ -39,7 +39,7 @@ bot_roster:
     connectors:
       - Glean
 rooms:
-  - name: Discovery desk
+  - name: Discovery desk group chat
     members:
       - Discovery · Questions
       - Discovery · Data

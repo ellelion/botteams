@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { retiredTeamRedirects } from "./src/data/retired-teams";
 
 // Canonical public domain: botteams.io
 // Apex and www are attached to the existing Vercel project. DNS stays
@@ -7,9 +8,8 @@ import type { NextConfig } from "next";
 // The application still owns canonical host redirects so www and the
 // retired botteams.ai hostname cannot become a second public site.
 
-// /teams/<slug> is the only team route. There is no rewrite and no
-// redirect from the old path: nothing has shipped to a customer, so an
-// alias would only be a second name to keep alive.
+// /teams/<slug> is the only team route. Retired slugs redirect from the
+// map in src/data/retired-teams.ts so old URLs do not 404.
 
 const scriptSources = [
   "'self'",
@@ -78,6 +78,10 @@ const nextConfig: NextConfig = {
         destination: "https://botteams.io/:path*",
         permanent: true,
       },
+      /* Retired catalog slugs. Path-only destinations so www and the
+         retired hostname still land on botteams.io after the host rules
+         above. A successor team wins when one is obvious; the rest go home. */
+      ...retiredTeamRedirects(),
     ];
   },
   async headers() {
