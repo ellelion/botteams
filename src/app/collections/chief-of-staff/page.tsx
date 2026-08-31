@@ -10,6 +10,11 @@ import { breadcrumbJsonLd } from "@/lib/seo";
 import { CHIEF_OF_STAFF_COLLECTION_UPDATED, site } from "@/lib/site";
 import { listAll } from "@/lib/teams";
 
+/* Rendered ahead of time and revalidated hourly. Without an explicit
+   revalidate these render per request, so the origin answers every
+   crawler hit with `no-store` and the CDN cannot cache the page. */
+export const revalidate = 3600;
+
 const TITLE = "Chief of Staff Grok Bot teams and Bots";
 const DESCRIPTION =
   "Compare five Chief of Staff Grok Bot setups for daily briefings, founder operations, task coordination, and company routines.";

@@ -7,6 +7,11 @@ import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { APD_HOME, STRIPE_BEST_PRACTICES, XAI_DOCS, XAI_USE_CASE_GALLERY, site } from "@/lib/site";
 
+/* Rendered ahead of time and revalidated hourly. Without an explicit
+   revalidate these render per request, so the origin answers every
+   crawler hit with `no-store` and the CDN cannot cache the page. */
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Team spec",
   description: "Ellelion recipe format for Grok Bot teams and bots. Maps onto the Grok Bot nouns xAI documents: Bot, group chat, routine, profile. Not an xAI file format.",

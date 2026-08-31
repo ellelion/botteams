@@ -3,6 +3,11 @@ import { notFound } from "next/navigation";
 import { GuidePage } from "@/components/GuidePage";
 import { getGuide, guideUpdated, guideUrl, listGuides } from "@/lib/guides";
 
+/* Rendered ahead of time and revalidated hourly. Without an explicit
+   revalidate these render per request, so the origin answers every
+   crawler hit with `no-store` and the CDN cannot cache the page. */
+export const revalidate = 3600;
+
 export function generateStaticParams() {
   return listGuides().map((guide) => ({ slug: guide.slug }));
 }

@@ -9,6 +9,11 @@ import { PARAMS } from "@/lib/openapi";
 import { listBots, listTeams } from "@/lib/teams";
 import { site } from "@/lib/site";
 
+/* Rendered ahead of time and revalidated hourly. Without an explicit
+   revalidate these render per request, so the origin answers every
+   crawler hit with `no-store` and the CDN cannot cache the page. */
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "API",
   description:

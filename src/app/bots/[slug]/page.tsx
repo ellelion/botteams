@@ -23,6 +23,11 @@ import { botJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { recipeOgUrl } from "@/lib/x-mentions/markdown";
 
+/* Rendered ahead of time and revalidated hourly. Without an explicit
+   revalidate these render per request, so the origin answers every
+   crawler hit with `no-store` and the CDN cannot cache the page. */
+export const revalidate = 3600;
+
 export function generateStaticParams() {
   return listBots().map((bot) => ({ slug: bot.slug }));
 }
