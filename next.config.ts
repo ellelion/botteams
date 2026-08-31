@@ -59,30 +59,11 @@ const nextConfig: NextConfig = {
      sponsored rail label. Hide it; errors still overlay. */
   devIndicators: false,
   async redirects() {
-    return [
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "www.botteams.io" }],
-        destination: "https://botteams.io/:path*",
-        permanent: true,
-      },
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "botteams.ai" }],
-        destination: "https://botteams.io/:path*",
-        permanent: true,
-      },
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "www.botteams.ai" }],
-        destination: "https://botteams.io/:path*",
-        permanent: true,
-      },
-      /* Retired catalog slugs. Path-only destinations so www and the
-         retired hostname still land on botteams.io after the host rules
-         above. A successor team wins when one is obvious; the rest go home. */
-      ...retiredTeamRedirects(),
-    ];
+    /* Host-based redirects (www.botteams.io and the retired botteams.ai) now
+       live in Cloudflare. Matching on `host` here makes every response depend
+       on a request header, so Next rendered the whole site on demand and
+       answered `no-store` — the CDN could not cache a single page. */
+    return retiredTeamRedirects();
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
