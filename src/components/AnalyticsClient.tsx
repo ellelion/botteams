@@ -9,9 +9,16 @@ function analyticsAllowed(): boolean {
   return !(navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl;
 }
 
-export function AnalyticsClient({ clientId }: { clientId: string }) {
+export function AnalyticsClient({ clientId, apiUrl }: { clientId: string; apiUrl: string }) {
   const allowed = useSyncExternalStore(subscribeToPrivacySetting, analyticsAllowed, () => false);
 
   if (!allowed) return null;
-  return <OpenPanelComponent clientId={clientId} trackScreenViews trackOutgoingLinks />;
+  return (
+    <OpenPanelComponent
+      clientId={clientId}
+      apiUrl={apiUrl}
+      trackScreenViews
+      trackOutgoingLinks
+    />
+  );
 }

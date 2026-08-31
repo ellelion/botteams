@@ -18,9 +18,18 @@ const scriptSources = [
   ...(process.env.NODE_ENV === "development" ? ["'unsafe-eval'"] : []),
 ];
 
+// Where OpenPanel events are posted. Self-hosted since 2026-08-31, so this is
+// analytics.ellelion.com and no longer api.openpanel.dev. Must match the
+// apiUrl passed to <OpenPanelComponent> (src/components/analytics.tsx) - a
+// mismatch is silent, since CSP blocks the beacon with no visible error.
+// op1.js itself still comes from openpanel.dev, which script-src allows above.
+const openpanelApiOrigin = process.env.NEXT_PUBLIC_OPENPANEL_API_URL
+  ? new URL(process.env.NEXT_PUBLIC_OPENPANEL_API_URL).origin
+  : "https://analytics.ellelion.com";
+
 const connectSources = [
   "'self'",
-  "https://api.openpanel.dev",
+  openpanelApiOrigin,
   ...(process.env.NODE_ENV === "development" ? ["ws:", "wss:"] : []),
 ];
 
