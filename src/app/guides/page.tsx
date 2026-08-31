@@ -6,10 +6,10 @@ import { GUIDE_CLUSTERS, guideUpdated, guideUrl, guidesIndexUrl, listGuides } fr
 import { articleJsonLd, breadcrumbJsonLd, itemListJsonLd } from "@/lib/seo";
 import { site } from "@/lib/site";
 
-/* Rendered ahead of time and revalidated hourly. Without an explicit
-   revalidate these render per request, so the origin answers every
-   crawler hit with `no-store` and the CDN cannot cache the page. */
-export const revalidate = 3600;
+/* Prerendered. Next defaults these to on-demand rendering even though
+   they read nothing per-request, which makes the origin answer
+   `no-store` and leaves the CDN unable to cache any page. */
+export const dynamic = 'force-static';
 
 const TITLE = "Grok Bot guides";
 const HEADLINE = "Grok Bot guides";

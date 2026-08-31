@@ -7,10 +7,10 @@ import { ledger } from "@/lib/ledger-theme";
 import { en } from "@/lib/messages/en";
 import { APD_HOME, STRIPE_BEST_PRACTICES, XAI_DOCS, XAI_USE_CASE_GALLERY, site } from "@/lib/site";
 
-/* Rendered ahead of time and revalidated hourly. Without an explicit
-   revalidate these render per request, so the origin answers every
-   crawler hit with `no-store` and the CDN cannot cache the page. */
-export const revalidate = 3600;
+/* Prerendered. Next defaults these to on-demand rendering even though
+   they read nothing per-request, which makes the origin answer
+   `no-store` and leaves the CDN unable to cache any page. */
+export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: "Team spec",
