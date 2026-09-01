@@ -9,7 +9,11 @@ hostname only.
 
 ## Deploy policy
 
-- Pushes to `main` continue to auto-deploy to Vercel production.
+- **Production is Dokploy on the Ellelion VPS (`152.53.18.182`), service
+  `botteams-web`, deployed from `ellelion/botteams` branch `main`.** Vercel is
+  retired (2026-09-01): its Git integration is disconnected, its crons are
+  disabled, and it only answers stale-DNS clients. Do not deploy there.
+- Pushes to `main` do NOT auto-deploy — trigger `application.deploy` in Dokploy.
 - The public host is `botteams.io` (apex). `www.botteams.io` redirects here.
   The domain is already attached to the existing Vercel project. Do not buy a
   domain or create a Vercel team.
