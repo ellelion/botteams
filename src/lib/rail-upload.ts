@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { del, put } from "@vercel/blob";
+import { del, put } from "@/lib/r2";
 import sharp from "sharp";
 
 const MAX_BYTES = 400 * 1024;
@@ -74,14 +74,15 @@ export async function validateRailMark(file: File): Promise<SupportedMark | Mark
 }
 
 export async function storeRailMark(mark: SupportedMark): Promise<string> {
+  // The id is already 96 bits of randomness, so no extra suffix is needed and
+  // the key stays exactly what the caller can predict from the returned URL.
+  // (put() sets a one-year immutable cache header for every object.)
   const id = randomBytes(12).toString("hex");
-  const blob = await put(`rail/${id}.${mark.extension}`, Buffer.from(mark.bytes), {
-    access: "public",
+  const stored = await put(`rail/${id}.${mark.extension}`, Buffer.from(mark.bytes), {
     addRandomSuffix: false,
-    cacheControlMaxAge: 60 * 60 * 24 * 365,
     contentType: mark.mediaType,
   });
-  return blob.url;
+  return stored.url;
 }
 
 export async function deleteRailMark(url: string): Promise<void> {
