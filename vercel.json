@@ -6,11 +6,5 @@
       "claude/**": false,
       "codex/**": false
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron/x-mentions",
-      "schedule": "*/5 * * * *"
-    }
-  ]
+  }
 }
