@@ -47,8 +47,8 @@ that person receives `scouted_by` credit.
 
 ## Runtime flow
 
-`GET /api/cron/x-mentions` runs every five minutes through Vercel Cron.
-`CRON_SECRET` protects the route.
+Dokploy on the VPS schedules `GET https://botteams.io/api/cron/x-mentions`
+every five minutes. `CRON_SECRET` protects the route.
 
 Each run:
 
@@ -99,7 +99,7 @@ Contents, Pull requests, and Issues write access.
 
 ## Cost and hosting
 
-The five-minute schedule needs Vercel Pro. X uses pay-per-use API credits. X
+The five-minute schedule is Dokploy on the VPS, not Vercel. X uses pay-per-use API credits. X
 currently prices owned mention reads per returned resource and charges more for
 a reply that includes a URL. The daily URL budget caps that high-cost write;
 successful submissions over the cap receive a lower-cost reply without a URL.
